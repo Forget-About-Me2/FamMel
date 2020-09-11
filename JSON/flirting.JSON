@@ -1,0 +1,86 @@
+{
+  "flirt": {
+    "low": [
+      "she's cute",
+      "she's pretty",
+      "she's nice",
+      "she has nice eyes",
+      "you like the way she dresses",
+      "you like her hair"],
+    "lowcell": [
+      "she sounds cute",
+      "she's smart",
+      "she's nice",
+      "she has a beautiful voice",
+      "you like her accent",
+      "you like her wit"],
+    "med": [
+      "she's sexy",
+      "she's gorgeous",
+      "she looks hot",
+      "she has a cute butt",
+      "she has sexy legs",
+      "she dresses sexy"],
+    "medcell": [
+      "she sounds sexy",
+      "she's vivacious",
+      "she sounds so hot",
+      "she has a luscious accent",
+      "she has a sexy voice",
+      "her voice is sexy"],
+    "high": [
+      "she's making you hot",
+      "you bet she's gorgeous naked",
+      "you'd like to shower with her tomorrow",
+      "she's given you a hard-on",
+      "you envy her panties",
+      "you envy her bra"]
+  },
+  "respons" : {
+    "low": [
+      "{0} blushes: <b>Thanks!</b>" ,
+      "{0} looks away embarassed: <b>Gee!</b>",
+      "{0} smiles: <b>That's so nice.</b>",
+      "{0} brings one finger to her lips: <b>You're too nice!</b>",
+      "{0} laughs: <b>How kind of you!</b>",
+      "{0} giggles: <b>I feel so special</b>"],
+    "lowcell": [
+      "{0} sounds excited: <b>Thanks!</b>",
+      "{0} sounds embarassed: <b>Gee!</b>",
+      "{0} giggles: <b>That's so nice.</b>",
+      "{0} sighs: <b>You're too nice!</b>",
+      "{0} laughs: <b>How kind of you!</b>",
+      "{0} gushes: <b>I feel so special</b>"],
+    "med": [
+      "{0} protests: <b>You're making me blush!</b>",
+      "{0} laughs: <b>You're too much!</b>",
+      "{0} pouts teasingly: <b>Stop it!</b>",
+      "{0} covers her eyes: <b>You're embarassing me!</b>",
+      "{0} says with mock sincerity: <b>You're too much!</b>",
+      "{0} touches your arm: <b>Stop kidding!</b>"],
+    "medcell": [
+      "{0} protests: <b>You're making me blush!</b>",
+      "{0} laughs: <b>You're too much!</b>",
+      "{0} pouts teasingly: <b>Stop it!</b>",
+      "{0} gushes: <b>You're embarassing me!</b>",
+      "{0} says with mock sincerity: <b>You're too much!</b>",
+      "{0} scolds: <b>Stop kidding!</b>"],
+    "high": [
+      "{0} says in a sultry voice: You're not the only one getting hot!",
+      "{0} teases: <b>do you want to find out?</b><br>She quickly flashes the front of her blouse open.",
+      "{0} giggles: <b>Are you sure you want to wait until tomorrow?</b>",
+      "{0} makes a grab for your dick: <b>Let's just check that, shall we?</b>",
+      "{0} laughs and moves like she's going to flash you: <b>Do you want to join them down there?</b>",
+      "{0} covers her face in mock humility: <b>How do you know I'm wearing one?</b>"],
+    "bad": [
+      "{0}Hey now! That was uncalled for.",
+      "{0}Watch your luck, buddy!" ,
+      "{0}Stop it!" ,
+      "{0}Don't.  Just don't.",
+      "{0}Don't be gross." ,
+      "{0}What the?"],
+    "neutral": [
+      "{0} nods"
+    ]
+  }
+}

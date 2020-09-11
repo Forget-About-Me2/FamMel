@@ -1,0 +1,19 @@
+{
+  "intro" : [] ,
+  "choices" : [
+    ["curloc", "Start the game."],
+    ["options", "Options."]
+  ],
+  "girlname" : [],
+  "money": [],
+  "always" : [
+    "This game is a date simulation with a desperation twist.",
+    "Your goal is to get your date in bed with a full bladder, before the night is over.",
+    "On your way there, convince your date to hold her pee, pee in a glass, squat outside, or even take you into the restroom with her.  Just don't make her wet her panties...",
+    "Attraction points are your key to success.  They indicate how much she's into you, and therefore what she will do for you.",
+    "Shyness points control how shy she acts around you.",
+    "The bladder meter shows how much she's holding ... and she has definite physical limits in this department.",
+    "What's in her tummy slowly flows to her bladder as time passes... with realistic modeling.",
+    "There are many useful objects you can get in the game.  Don't blow all your cash in one place."
+  ]
+}

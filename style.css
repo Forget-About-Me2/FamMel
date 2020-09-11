@@ -1,0 +1,131 @@
+height, body{
+    background-color: #ffffe0;
+    overflow: hidden;
+    height: 100%;
+}
+
+#titlebar {
+    background-color: #ffff66;
+    height: 30px;
+    position: sticky;
+    top:  0;
+}
+
+#credits {
+    padding-left: 20px;
+    padding-top: 2px;
+    font-size: 18px;
+    height: 20px;
+    vertical-align: center;
+    text-align: left;
+    float: left;
+}
+
+#version {
+    text-align: right;
+    padding-right: 20px;
+    padding-top: 3px;
+    font-size: 18px;
+    height: 20px;
+    vertical-align: center;
+    float: right;
+}
+
+#gamescreen {
+    display: block;
+    height: 90%;
+    width: 75vw;
+    margin: 0 auto;
+}
+
+.normal-text {
+    text-align: left;
+}
+
+#choices {
+    vertical-align: center;
+}
+
+.choices-start {
+    position: relative;
+    float: left;
+    left:30vw;
+    padding: 0;
+}
+
+.choices-items-start {
+    padding-bottom: 10px;
+    position: relative;
+}
+
+.left-choice {
+    padding-right: 1%;
+}
+
+.right-choice {
+    padding-left: 1%;
+}
+
+#picture {
+    display: table-cell;
+    float:right;
+    height: 27vh;
+}
+
+#emptypicture {
+    display: table-cell;
+    float:left;
+    height: 100vh;
+    padding-left: 25%
+}
+
+#textsp {
+    overflow-y: auto;
+    max-height: calc(100% - 150px);
+    float: left;
+    width: 60vw;
+    /*line-height: 2;*/
+}
+
+
+#stats-bar {
+    width:100%;
+    padding-right: 10px;
+    padding-bottom: 15px;
+    border-spacing:0;
+}
+
+.stats-cells {
+    text-align: center;
+    background-color: #ffff90;
+}
+
+.stats-cells-yellow {
+    text-align: center;
+    background-color: #ffff90;
+    width:12.5%;
+}
+
+.stats-cells-white {
+    text-align: center;
+    background-color: #ffffe0;
+    width:12.5%;
+}
+
+#statsp {
+    position: sticky;
+    vertical-align: bottom;
+    bottom: 20px;
+    background-color: #ffffe0;
+}
+
+#objsp {
+    padding-left: 15px;
+}
+
+.title {
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    padding-right: 10%;
+}

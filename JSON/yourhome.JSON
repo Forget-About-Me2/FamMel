@@ -1,0 +1,112 @@
+{
+  "yourhome" : {
+    "intro": [
+     ["You have a hot date tonight at 8 pm.",
+    "girlname0",
+    "You've heard she might be into desperation play... but you're not sure."],
+      [""]
+    ],
+    "girlname": [
+      "Her name is {0}."
+    ],
+    "always": [
+      "So what are you going to do?"
+    ],
+    "money": [],
+    "choices": [
+      ["gostore", "Go to the store"],
+      ["callher", "Call her on the phone"],
+      ["youpee", "Pee before you leave"],
+      ["ypredrink", "Drink some water"],
+      ["pickup", "Pick her up"]
+    ]},
+  "store": {
+    "intro": [],
+    "girlname": [
+      "Her name is {0}."
+    ],
+    "money": [
+      "You have ${0}"
+    ],
+    "always": ["money0",
+      "What are you going to buy?"],
+    "choices": [
+      ["buy(0)", "An overpriced bottle of water ($10)"],
+      ["buy(1)", "A bouquet of red roses ($20)"],
+      ["buy(2)", "A pair of diamond earrings ($60)"],
+      ["buy(3)", "A flower vase ($30)"],
+      ["buy(4)", "A shot glass ($10)"],
+      ["buy(5)", "A roll of paper towels ($10)"],
+      ["buy(6)", "A pair of sexy panties ($30)"],
+      ["buy(7)", "A bottle of fancy champagne ($50)"],
+      ["yourhome", "Nothing"]
+    ],
+  "buying": [
+    ["bottle of water", "10", "water"],
+    ["bouquet of red roses", "20", "roses"],
+    ["pair of diamond earrings", "60", "earrings"],
+    ["flower vase", "30", "vase"],
+    ["shot glass", "10", "shotglass"],
+    ["roll of paper towels", "10", "ptowels"],
+    ["pair of sexy panties", "30","panties"],
+    ["bottle of fancy champagne", "50", "champagne"]
+  ]},
+  "callher": {
+   "intro": [
+    ["girlname0",
+    "girltalk0",
+    "<b>YOU:</b> Hey!"],
+     ["girlname1"]
+    ],
+    "girlname": [
+      "{0} answers after a couple of rings.",
+      "You're on the phone with {0}.",
+      "<b>{0}:</b> Hey. Listen. I've gotta go now. Bye!",
+      "<b>{0}:</b> Okay ... What do you want me to do?"
+    ],
+    "girltalk": [
+      "{0}Hello?",
+      "{0}Where are you?",
+      "{0}You're late.",
+      "{0}You're in big trouble, mister. Get over here now!",
+      "{0}Hey do you realise what time it is???",
+      "{0}Klik! Byeeeeeeeeeeeeeeeeee...",
+      "{0}Just kidding. But get your ass in gear over there!",
+      "{0}Hey. Listen. I've gotta go now. Bye!",
+      "{0}Okay ... What do you want me to do?"
+    ],
+    "money": [],
+    "always": [],
+    "dialogue": {
+      "callher": [
+      [
+        "girltalk1",
+        "girltalk2",
+        "girltalk3",
+        "She hung up on you. And she sounds pretty upset."
+      ],
+      [
+        "girltalk4",
+        "girltalk5",
+        "...",
+        "girltalk6"
+      ],
+      [
+        "girltalk7",
+        "She hangs up."
+      ]],
+      "favor":
+      [["<b>YOU:</b> Hey!  I have a little favor to ask you...",
+      "girltalk8"]
+    ]},
+    "choices": [
+      ["goback", "Continue..."],
+      ["favor", "Ask her for a favor"],
+      ["goback", "Say <i>See you soon</i> and hang up."],
+      ["gotta", "I was just wondering ... do you need to pee right now?"],
+      ["pantyq", "Can you tell me what color panties you're going to wear tonight?"],
+      ["predrink", "Do you think you could drink a couple glasses of water before we go out tonight?"],
+      ["curloc", "nevermind..."]
+    ]
+}
+}

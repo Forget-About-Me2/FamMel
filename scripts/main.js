@@ -1,0 +1,1 @@
+let randcounter = 0; // text randomizer
