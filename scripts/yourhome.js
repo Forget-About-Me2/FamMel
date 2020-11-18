@@ -33,8 +33,8 @@ function yourhome() {
 function gostore() {
     if (locstack[0] !== "gostore") {
         pushloc("gostore");
-        locationMSetup("yourhome", "store");
     }
+    locationMSetup("yourhome", "store");
     if (askholditcounter > 0 && bladder > blademer && bladder < bladlose && !waitcounter) {
         cellphone();
     } else {

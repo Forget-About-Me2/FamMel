@@ -107,7 +107,7 @@ function options() {
     checked.forEach(i => vars[i] = ["checked"]);
     vars[26] = [yourcustomurge];
     vars[27] = [money]
-
+    console.log(vars);
     let curtext = formatAll(json.html, vars);
     curtext = c([locstack[0], "Continue..."], curtext);
     setText(curtext);

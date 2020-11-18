@@ -468,7 +468,7 @@ String.prototype.format = String.prototype.f = function() {
 };
 
 function formatString(expr, arguments){
-    return expr.format([arguments]);
+    return expr.format(arguments);
 }
 
 //formats all Strings in exprList with the corresponding value in values
@@ -527,7 +527,7 @@ function setupQuotes(){
 
 //This sets up all variables that this location uses.
 function locationSetup(tag){
-    locjson = calledjsons[tag];
+    locjson = JSON.parse(JSON.stringify(calledjsons[tag]));
     locjson.girlname = addGirlname(locjson.girlname);
     //TODO this can be more efficient (arraylist with all options)
     replaceWCI("intro", "girlname");
@@ -538,7 +538,8 @@ function locationSetup(tag){
 
 //Setup of location when there are multiple locations in json file
 function locationMSetup(tag, subtag){
-    locjson = calledjsons[tag][subtag]
+    locjson = JSON.parse(JSON.stringify(calledjsons[tag][subtag]));
+    console.log(locjson);
     if (locjson.hasOwnProperty("girlname"))
         locjson.girlname = addGirlname(locjson.girlname);
     if (locjson.hasOwnProperty("money"))
@@ -625,15 +626,15 @@ function handleFlirt(curtext){
         low += "cell";
         med += "cell";
     }
-    result.push(flirtquotes[low][randcounter]);
+    result.push([flirtquotes[low][randcounter]]);
     choice.push("flirt_l");
     incrandom();
     if (Math.floor(Math.random() * 7) === 0 || locstack[0] !== "callher"){
         choice.push("flirt_h");
-        result.push(flirtquotes["high"][randcounter]);
+        result.push([flirtquotes["high"][randcounter]]);
     } else {
         choice.push("flirt_m");
-        result.push(flirtquotes[med][randcounter]);
+        result.push([flirtquotes[med][randcounter]]);
     }
     const build = "Tell her {0}.";
     for (let i = 0; i < result.length; i++){
