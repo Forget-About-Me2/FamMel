@@ -1,0 +1,80 @@
+{
+  "yourhome": [
+    "You head to your bathroom, not bothering to close the door.",
+    "You stand in front of your toilet as you pull your dick out and start peeing, you urine splashes in the bowl."
+  ],
+  "thehome": [
+    ["YOU: Can I use your toilet?",
+    "girlname0",
+    "girltalk0",
+    "You head to her bathroom, leaving the door slightly ajar."],
+    ["You quickly lift the toilet lid and seat before pulling yourself out and you start to pee loudly.You imagine her being in there with you watching you relieve yourself."]
+  ],
+  "remaining": [
+    "You walk toward the restroom."
+  ],
+  "locked": {
+    "bar": [
+      "You try the door but it won't budge."
+    ],
+    "club": [
+      "You arrive in the hallway to see a huge line of other men waiting for the toilet.",
+      "There is no way you are going to wait for that!"
+    ],
+    "urgency": [
+      "You groan in frustration, your hand sneaks downwards to your crotch giving it a quick message before heading back.",
+      "You shift your weight uncomfortable before walking back with a sigh.",
+      "girlname0"
+    ],
+    "cbar": [
+      "YOU: It's <b><i>still</i></b> fucking locked!",
+      "YOU: It's <b><i>still</i></b> locked!  What's taking so long?",
+      "YOU: It's still locked!",
+      "YOU: It was locked!"
+    ],
+    "cclub": [
+      "YOU: The line's still really fucking long.",
+      "YOU: I think the line's getting longer...",
+      "YOU: The line's still really really long.",
+      "YOU: There was a huge line."
+    ],
+    "girlname" : [
+      "You sigh before walking back to {0}."
+    ]
+  },
+  "thebar": [
+    "YOU: It's <b><i>still</i></b> fucking locked!",
+    "YOU: It's <b><i>still</i></b> locked!  What's taking so long?",
+    "YOU: It's still locked!",
+    "YOU: It was locked!"
+  ],
+  "youpeeprivate": [
+    "You run up to the closest urinal, you panic as you feel it starting to come out but you quickly unzip and get the relieve you so desperately needed.",
+    "You grab your crotch as you quickly make your way over to a urinal, you struggle to control it long enough to unzip, but you manage and find yourself enjoying the relieve of letting out all that pent up pee.",
+    "You rush into the restroom and waste no time to walking over to a free urinal, you find yourself finally relaxing, pee shooting out of your penis for almost a full minute.",
+    "You rush into the restroom, but to your dismay all urinals are occupied, you quickly dive into the stall, which thankfully is still empty, you're too desperate to even close the door before emptying your overfilled bladder.",
+    "You practically dance in front of the urinal as you struggle to free yourself before your sphincter is finally allowed to relaxed and your full bladder empties into the urinal.",
+    "You practically dive into the stall, in front of the toilet you struggle to control yourself long enough to pul your dick out of your boxers before emptying your overtaxed bladder into the toilet."
+  ],
+  "youpeeprivate2": [
+    "You walk up to a urinal, slowly unzipping your trousers before using it.",
+    "You walk up to a free urinal, pulling yourself out of your boxers before releasing your pent up pee.",
+    "You wait until a urinal frees up before you relieve your filled bladder.",
+    "The bathroom is empty, you briefly consider going into the sink but you are afraid of getting caught.",
+    "You walk into the restroom, to find that all urinals are occupied, you instead choose to do your business in the empty stall.",
+    "You kinda wish she had followed you into the bathroom, to see you empty your bladder into the toilet."
+  ],
+  "beg": [[
+    "<b>YOU: </b> I really can't hold it any longer I got to go!",
+    "girltalk1"],
+    [["ypeeshot", "Pee in the shot glass"],
+    ["ypeevase", "Pee in the vase."],
+    ["curloc", "I have no ideas."]]],
+  "girlname": [
+    "{0} nods"
+  ],
+  "girltalk": [
+    "{0} It's the third door on your right.",
+    "{0} Do you have any ideas?"
+  ]
+}

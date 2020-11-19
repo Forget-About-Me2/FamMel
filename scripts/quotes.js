@@ -4,8 +4,10 @@ const jsonlocs = ["options", "start", "thebar", "yourhome"]; //List of locations
 let jsonvars = {}; //List of variables that might need to be inserted in the string found in the json
 let calledjsons = {}
 
-var flirtquotes; //This stores all possible flirts called from the JSON
-var flirtresps; //This stores all possible responses called from the JSON
+let flirtquotes; //This stores all possible flirts called from the JSON
+let flirtresps; //This stores all possible responses called from the JSON
+let ypeelines; //This stores all dialogues regarding to going to the bathroom called from the JSON
+let needs; //This stores descriptions of her needs called from the JSON
 
 var respfeelup=[" puts her hand on her chest: <b>You're making me hot.</b>", " squeezes her breasts between her upper arms: <b>Stop it - that's embarassing.</b>", " giggles and crosses her legs: <b>You're making me wet!</b>", " grabs your butt: <b>You're turning me on.</b>", " laughs and curtseys: <b>Stop trying to get me excited!</b>", " covers her face: <b>Don't look at me like that!</b>"];
 
@@ -259,29 +261,31 @@ var nkdpeekiss=["She presses her bare body onto yours and returns your kiss pass
 //  Generic descriptions of her needing to pee, separated into
 //  standing vs sitting situations
 //
-var needlose=["<i>She's bent over double and running in place, a look of panic in her eyes.</i>","<i>She has her hand jammed in her crotch and her breath is coming in short gasps.</i>","<i>She is frozen in place with her crossed legs straining and her face is flushed bright red.</i>", "<i>She is panting with each spasm and has her hand between her legs, pulling up on her crotch.</i>","<i>She has both hands pressed tightly into her crotch, squeezing her breasts between her arms.</i>", "<i>She is rubbing her pee hole rapidly with her full hand and gasping as she fights to hold it in.</i>"];
+//TODO comment
 
-var sitneedlose=["<i>She's bent over and can't stop squirming, a look of panic in her eyes.</i>", "<i>She has her hand jammed in her crotch and her breath is coming in short gasps.</i>", "<i>She is frozen in place with her crossed legs straining and her face is flushed bright red.</i>",  "<i>She is panting with each spasm and has her hand between her legs, pulling up on her crotch.</i>", "<i>She has both hands pressed tightly into her crotch, squeezing her breasts between her arms.</i>",  "<i>She is rubbing her crotch rapidly with her full hand and gasping as she fights to hold it in.</i>"];
-
-var tubneedlose=["<i>She's bent over and can't stop squirming, a look of panic in her eyes.</i>", "<i>She has her hand jammed in her crotch and her breath is coming in short gasps.</i>", "<i>She is frozen in place with her crossed legs straining and her face is flushed bright red.</i>",  "<i>She is panting with each spasm and has her hand between her legs, pulling up on her crotch.</i>", "<i>She has both hands pressed tightly into her crotch, squeezing her breasts between her arms.</i>",  "<i>She is rubbing her crotch rapidly with her full hand and gasping as she fights to hold it in.</i>"];
-
-var needemer=["<i>She is dancing from foot to foot, her hand clenched into a tight fist.</i>", "<i>Goosebumps suddenly form on her arm, and she reaches quickly behind her butt to give her crotch a squeeze.</i>", "<i>She is bent forward, a hand on her thigh, and she is wiggling her bottom back and forth.</i>", "<i>She is leaning to one side, her right leg raised and crossed over to put pressure on her pussy.</i>", "<i>Her dress has ridden up and you can see her thighs suddenly tense with effort.</i>", "<i>She quickly curtseys and then straightens back up, rubbing her hands over her thighs.</i>"];
-
-var sitneedemer=["<i>She is squirming back and forth, her hand clenched into a tight fist.</i>", "<i>Goosebumps suddenly form on her arm, and she reaches quickly between her legs to give her crotch a squeeze.</i>", "<i>She is bent forward, a hand on her thigh, and she is wiggling her bottom back and forth.</i>", "<i>She is leaning to one side, her right leg raised and crossed over to put pressure on her pussy.</i>", "<i>Her dress has ridden up and you can see her thighs suddenly tense with effort.</i>", "<i>She quickly bends backwards, raising her ass, and then falls back down, rubbing her hands over her thighs.</i>"];
-
-var tubneedemer=["<i>She is squirming back and forth, her hand clenched into a tight fist.</i>", "<i>Goosebumps suddenly form on her arm, and she reaches quickly between her legs to give her crotch a squeeze.</i>", "<i>She is bent forward, a hand on her thigh, and she is wiggling her bottom back and forth.</i>", "<i>She is leaning to one side, her right leg raised and crossed over to put pressure on her pussy.</i>", "<i>You can see her thighs suddenly tense with effort under the water.</i>", "<i>She quickly bends backwards, raising her ass, and then falls back down.</i>"];
-
-var needneed=["<i>She is resting her hand on her hip and standing bent slightly forward.</i>", "<i>She runs her hands through her hair.</i>", "<i>Her hands are close by her sides, fingers slightly clenched.</i>", "<i>She brings her hand up to her cheek and rubs it once.</i>", "<i>She crosses and uncrosses her legs.</i>", "<i>She shifts her weight first to her right and then to her left.</i>"];
-
-var sitneedneed=["<i>She is resting her hands in her lap and bent slightly forward.</i>", "<i>She runs her hands through her hair.</i>", "<i>Her hands are close by her sides, fingers slightly clenched.</i>", "<i>She brings her hand up to her cheek and rubs it once.</i>", "<i>She crosses and uncrosses her legs.</i>", "<i>She shifts her butt first to her right and then to her left.</i>"];
-
-var tubneedneed=["<i>She is resting her hands in her lap and bent slightly forward.</i>", "<i>She runs her hands through her hair.</i>", "<i>Her hands are close by her sides, fingers slightly clenched.</i>", "<i>She brings her hand up to her cheek and rubs it once.</i>", "<i>She crosses and uncrosses her legs.</i>", "<i>She shifts her butt first to her right and then to her left.</i>"];
-
-var needurge=["<i>You notice her flat, toned tummy.</i>", "<i>She purses her delicate red lips.</i>", "<i>You notice her full, firm breasts pressed against the fabric of her tight blouse.</i>", "<i>You notice her nails are painted a dark shade of red.</i>", "<i>The outline of her nipples through the thin strech blouse makes you wonder if she's really wearing a bra.</i>", "<i>You notice her firm, pert butt.</i>"];
-
-var sitneedurge=["<i>You notice her flat, toned tummy.</i>", "<i>She purses her delicate red lips.</i>", "<i>You notice her full, firm breasts pressed against the fabric of her tight blouse.</i>", "<i>You notice her nails are painted a dark shade of red.</i>", "<i>The outline of her nipples through the thin strech blouse makes you wonder if she's really wearing a bra.</i>", "<i>You notice her firm, pert butt.</i>"];
-
-var tubneedurge=["<i>You notice her flat, toned tummy.</i>", "<i>She purses her delicate red lips.</i>", "<i>You notice her full, firm breasts just under the surface of the water.</i>", "<i>You notice her nails are painted a dark shade of red.</i>", "<i>You stare at her toned, naked body disappearing down into the murk of the water.</i>", "<i>You notice the graceful curve of her arm.</i>"];
+// var needlose=["<i>She's bent over double and running in place, a look of panic in her eyes.</i>","<i>She has her hand jammed in her crotch and her breath is coming in short gasps.</i>","<i>She is frozen in place with her crossed legs straining and her face is flushed bright red.</i>", "<i>She is panting with each spasm and has her hand between her legs, pulling up on her crotch.</i>","<i>She has both hands pressed tightly into her crotch, squeezing her breasts between her arms.</i>", "<i>She is rubbing her pee hole rapidly with her full hand and gasping as she fights to hold it in.</i>"];
+//
+// var sitneedlose=["<i>She's bent over and can't stop squirming, a look of panic in her eyes.</i>", "<i>She has her hand jammed in her crotch and her breath is coming in short gasps.</i>", "<i>She is frozen in place with her crossed legs straining and her face is flushed bright red.</i>",  "<i>She is panting with each spasm and has her hand between her legs, pulling up on her crotch.</i>", "<i>She has both hands pressed tightly into her crotch, squeezing her breasts between her arms.</i>",  "<i>She is rubbing her crotch rapidly with her full hand and gasping as she fights to hold it in.</i>"];
+//
+// var tubneedlose=["<i>She's bent over and can't stop squirming, a look of panic in her eyes.</i>", "<i>She has her hand jammed in her crotch and her breath is coming in short gasps.</i>", "<i>She is frozen in place with her crossed legs straining and her face is flushed bright red.</i>",  "<i>She is panting with each spasm and has her hand between her legs, pulling up on her crotch.</i>", "<i>She has both hands pressed tightly into her crotch, squeezing her breasts between her arms.</i>",  "<i>She is rubbing her crotch rapidly with her full hand and gasping as she fights to hold it in.</i>"];
+//
+// var needemer=["<i>She is dancing from foot to foot, her hand clenched into a tight fist.</i>", "<i>Goosebumps suddenly form on her arm, and she reaches quickly behind her butt to give her crotch a squeeze.</i>", "<i>She is bent forward, a hand on her thigh, and she is wiggling her bottom back and forth.</i>", "<i>She is leaning to one side, her right leg raised and crossed over to put pressure on her pussy.</i>", "<i>Her dress has ridden up and you can see her thighs suddenly tense with effort.</i>", "<i>She quickly curtseys and then straightens back up, rubbing her hands over her thighs.</i>"];
+//
+// var sitneedemer=["<i>She is squirming back and forth, her hand clenched into a tight fist.</i>", "<i>Goosebumps suddenly form on her arm, and she reaches quickly between her legs to give her crotch a squeeze.</i>", "<i>She is bent forward, a hand on her thigh, and she is wiggling her bottom back and forth.</i>", "<i>She is leaning to one side, her right leg raised and crossed over to put pressure on her pussy.</i>", "<i>Her dress has ridden up and you can see her thighs suddenly tense with effort.</i>", "<i>She quickly bends backwards, raising her ass, and then falls back down, rubbing her hands over her thighs.</i>"];
+//
+// var tubneedemer=["<i>She is squirming back and forth, her hand clenched into a tight fist.</i>", "<i>Goosebumps suddenly form on her arm, and she reaches quickly between her legs to give her crotch a squeeze.</i>", "<i>She is bent forward, a hand on her thigh, and she is wiggling her bottom back and forth.</i>", "<i>She is leaning to one side, her right leg raised and crossed over to put pressure on her pussy.</i>", "<i>You can see her thighs suddenly tense with effort under the water.</i>", "<i>She quickly bends backwards, raising her ass, and then falls back down.</i>"];
+//
+// var needneed=["<i>She is resting her hand on her hip and standing bent slightly forward.</i>", "<i>She runs her hands through her hair.</i>", "<i>Her hands are close by her sides, fingers slightly clenched.</i>", "<i>She brings her hand up to her cheek and rubs it once.</i>", "<i>She crosses and uncrosses her legs.</i>", "<i>She shifts her weight first to her right and then to her left.</i>"];
+//
+// var sitneedneed=["<i>She is resting her hands in her lap and bent slightly forward.</i>", "<i>She runs her hands through her hair.</i>", "<i>Her hands are close by her sides, fingers slightly clenched.</i>", "<i>She brings her hand up to her cheek and rubs it once.</i>", "<i>She crosses and uncrosses her legs.</i>", "<i>She shifts her butt first to her right and then to her left.</i>"];
+//
+// var tubneedneed=["<i>She is resting her hands in her lap and bent slightly forward.</i>", "<i>She runs her hands through her hair.</i>", "<i>Her hands are close by her sides, fingers slightly clenched.</i>", "<i>She brings her hand up to her cheek and rubs it once.</i>", "<i>She crosses and uncrosses her legs.</i>", "<i>She shifts her butt first to her right and then to her left.</i>"];
+//
+// var needurge=["<i>You notice her flat, toned tummy.</i>", "<i>She purses her delicate red lips.</i>", "<i>You notice her full, firm breasts pressed against the fabric of her tight blouse.</i>", "<i>You notice her nails are painted a dark shade of red.</i>", "<i>The outline of her nipples through the thin strech blouse makes you wonder if she's really wearing a bra.</i>", "<i>You notice her firm, pert butt.</i>"];
+//
+// var sitneedurge=["<i>You notice her flat, toned tummy.</i>", "<i>She purses her delicate red lips.</i>", "<i>You notice her full, firm breasts pressed against the fabric of her tight blouse.</i>", "<i>You notice her nails are painted a dark shade of red.</i>", "<i>The outline of her nipples through the thin strech blouse makes you wonder if she's really wearing a bra.</i>", "<i>You notice her firm, pert butt.</i>"];
+//
+// var tubneedurge=["<i>You notice her flat, toned tummy.</i>", "<i>She purses her delicate red lips.</i>", "<i>You notice her full, firm breasts just under the surface of the water.</i>", "<i>You notice her nails are painted a dark shade of red.</i>", "<i>You stare at her toned, naked body disappearing down into the murk of the water.</i>", "<i>You notice the graceful curve of her arm.</i>"];
 
 //
 //  Interpreted descriptions of how she looks like she has to pee
@@ -523,6 +527,10 @@ async function getjsonT(tag){
 
 function setupQuotes(){
     getjson("flirting", flirtSetup);
+    getjson("needs", function (){
+        needs = json;
+    });
+    getjson("youpee", yPeeSetup);
 }
 
 //This sets up all variables that this location uses.
@@ -604,6 +612,15 @@ function replaceCheck(rpstring, tag){
     }
 }
 
+function LreplaceCheck(rpstring, list, tag){
+    if (rpstring.includes(tag)){
+        rpstring = rpstring.replace(tag, "");
+        return list[Number(rpstring)];
+    } else {
+        return rpstring;
+    }
+}
+
 function flirtSetup(){
     flirtquotes = json.flirt;
     let rawresp = json.respons;
@@ -642,7 +659,32 @@ function handleFlirt(curtext){
     }
     return curtext;
 }
+
+function yPeeSetup(){
+    json["girlname"] = replaceWCL(json["girlname"], "girlname");
+    json["girltalk"] = replaceWCL(json["girltalk"], "girltalk");
+    json["locked"]["girlname"] = replaceWCL(json["locked"]["girlname"], "girlname");
+    let templist = json["thehome"][0];
+    let result = [];
+    templist.forEach(item => result.push(LreplaceCheck(item, json["girlname"], "girlname")));
+    templist = result;
+    result = []
+    console.log(templist);
+    templist.forEach(item => result.push(LreplaceCheck(item, json["girltalk"], "girltalk")));
+    json["thehome"][0] = result;
+    result = [];
+    templist = json["locked"]["urgency"]
+    templist.forEach(item => result.push(LreplaceCheck(item, json["locked"]["girlname"], "girlname")));
+    json["locked"]["urgency"] = result;
+    result = [];
+    templist = json["beg"][0];
+    templist.forEach(item => result.push(LreplaceCheck(item, json["girltalk"], "girltalk")));
+    json["beg"][0] = result;
+    ypeelines = json;
+}
+
 function printIntro(curtext, index){
+    console.log(locjson);
     locjson.intro[index].forEach(item => curtext.push(item));
     return curtext;
 }
@@ -654,6 +696,11 @@ function printAlways(curtext) {
 
 function printDialogue(curtext, loc, index){
     locjson.dialogue[loc][index].forEach(item => curtext.push(item));
+    return curtext;
+}
+
+function printList(curtext, list){
+    list.forEach(item => curtext.push(item));
     return curtext;
 }
 
