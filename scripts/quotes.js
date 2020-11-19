@@ -258,36 +258,6 @@ var nkdpeekiss=["She presses her bare body onto yours and returns your kiss pass
 
 
 //
-//  Generic descriptions of her needing to pee, separated into
-//  standing vs sitting situations
-//
-//TODO comment
-
-// var needlose=["<i>She's bent over double and running in place, a look of panic in her eyes.</i>","<i>She has her hand jammed in her crotch and her breath is coming in short gasps.</i>","<i>She is frozen in place with her crossed legs straining and her face is flushed bright red.</i>", "<i>She is panting with each spasm and has her hand between her legs, pulling up on her crotch.</i>","<i>She has both hands pressed tightly into her crotch, squeezing her breasts between her arms.</i>", "<i>She is rubbing her pee hole rapidly with her full hand and gasping as she fights to hold it in.</i>"];
-//
-// var sitneedlose=["<i>She's bent over and can't stop squirming, a look of panic in her eyes.</i>", "<i>She has her hand jammed in her crotch and her breath is coming in short gasps.</i>", "<i>She is frozen in place with her crossed legs straining and her face is flushed bright red.</i>",  "<i>She is panting with each spasm and has her hand between her legs, pulling up on her crotch.</i>", "<i>She has both hands pressed tightly into her crotch, squeezing her breasts between her arms.</i>",  "<i>She is rubbing her crotch rapidly with her full hand and gasping as she fights to hold it in.</i>"];
-//
-// var tubneedlose=["<i>She's bent over and can't stop squirming, a look of panic in her eyes.</i>", "<i>She has her hand jammed in her crotch and her breath is coming in short gasps.</i>", "<i>She is frozen in place with her crossed legs straining and her face is flushed bright red.</i>",  "<i>She is panting with each spasm and has her hand between her legs, pulling up on her crotch.</i>", "<i>She has both hands pressed tightly into her crotch, squeezing her breasts between her arms.</i>",  "<i>She is rubbing her crotch rapidly with her full hand and gasping as she fights to hold it in.</i>"];
-//
-// var needemer=["<i>She is dancing from foot to foot, her hand clenched into a tight fist.</i>", "<i>Goosebumps suddenly form on her arm, and she reaches quickly behind her butt to give her crotch a squeeze.</i>", "<i>She is bent forward, a hand on her thigh, and she is wiggling her bottom back and forth.</i>", "<i>She is leaning to one side, her right leg raised and crossed over to put pressure on her pussy.</i>", "<i>Her dress has ridden up and you can see her thighs suddenly tense with effort.</i>", "<i>She quickly curtseys and then straightens back up, rubbing her hands over her thighs.</i>"];
-//
-// var sitneedemer=["<i>She is squirming back and forth, her hand clenched into a tight fist.</i>", "<i>Goosebumps suddenly form on her arm, and she reaches quickly between her legs to give her crotch a squeeze.</i>", "<i>She is bent forward, a hand on her thigh, and she is wiggling her bottom back and forth.</i>", "<i>She is leaning to one side, her right leg raised and crossed over to put pressure on her pussy.</i>", "<i>Her dress has ridden up and you can see her thighs suddenly tense with effort.</i>", "<i>She quickly bends backwards, raising her ass, and then falls back down, rubbing her hands over her thighs.</i>"];
-//
-// var tubneedemer=["<i>She is squirming back and forth, her hand clenched into a tight fist.</i>", "<i>Goosebumps suddenly form on her arm, and she reaches quickly between her legs to give her crotch a squeeze.</i>", "<i>She is bent forward, a hand on her thigh, and she is wiggling her bottom back and forth.</i>", "<i>She is leaning to one side, her right leg raised and crossed over to put pressure on her pussy.</i>", "<i>You can see her thighs suddenly tense with effort under the water.</i>", "<i>She quickly bends backwards, raising her ass, and then falls back down.</i>"];
-//
-// var needneed=["<i>She is resting her hand on her hip and standing bent slightly forward.</i>", "<i>She runs her hands through her hair.</i>", "<i>Her hands are close by her sides, fingers slightly clenched.</i>", "<i>She brings her hand up to her cheek and rubs it once.</i>", "<i>She crosses and uncrosses her legs.</i>", "<i>She shifts her weight first to her right and then to her left.</i>"];
-//
-// var sitneedneed=["<i>She is resting her hands in her lap and bent slightly forward.</i>", "<i>She runs her hands through her hair.</i>", "<i>Her hands are close by her sides, fingers slightly clenched.</i>", "<i>She brings her hand up to her cheek and rubs it once.</i>", "<i>She crosses and uncrosses her legs.</i>", "<i>She shifts her butt first to her right and then to her left.</i>"];
-//
-// var tubneedneed=["<i>She is resting her hands in her lap and bent slightly forward.</i>", "<i>She runs her hands through her hair.</i>", "<i>Her hands are close by her sides, fingers slightly clenched.</i>", "<i>She brings her hand up to her cheek and rubs it once.</i>", "<i>She crosses and uncrosses her legs.</i>", "<i>She shifts her butt first to her right and then to her left.</i>"];
-//
-// var needurge=["<i>You notice her flat, toned tummy.</i>", "<i>She purses her delicate red lips.</i>", "<i>You notice her full, firm breasts pressed against the fabric of her tight blouse.</i>", "<i>You notice her nails are painted a dark shade of red.</i>", "<i>The outline of her nipples through the thin strech blouse makes you wonder if she's really wearing a bra.</i>", "<i>You notice her firm, pert butt.</i>"];
-//
-// var sitneedurge=["<i>You notice her flat, toned tummy.</i>", "<i>She purses her delicate red lips.</i>", "<i>You notice her full, firm breasts pressed against the fabric of her tight blouse.</i>", "<i>You notice her nails are painted a dark shade of red.</i>", "<i>The outline of her nipples through the thin strech blouse makes you wonder if she's really wearing a bra.</i>", "<i>You notice her firm, pert butt.</i>"];
-//
-// var tubneedurge=["<i>You notice her flat, toned tummy.</i>", "<i>She purses her delicate red lips.</i>", "<i>You notice her full, firm breasts just under the surface of the water.</i>", "<i>You notice her nails are painted a dark shade of red.</i>", "<i>You stare at her toned, naked body disappearing down into the murk of the water.</i>", "<i>You notice the graceful curve of her arm.</i>"];
-
-//
 //  Interpreted descriptions of how she looks like she has to pee
 //
 var interplose=["She looks like she's losing control.", "She looks like she's going to blow any second.", "She looks like she's seconds away from peeing herself.", "She looks like she can't maintain bladder control any longer.", "She looks like she's going to pee any second.", "She looks like she can't hold it a second longer."];
