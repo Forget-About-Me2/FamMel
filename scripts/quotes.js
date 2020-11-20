@@ -487,6 +487,7 @@ async function getjson(fileID, callback){
 
 //This requests a json file from the webserver using the location tag
 async function getjsonT(tag){
+    console.log(tag);
     const file = "JSON/" + tag + ".JSON";
     // console.log("Trying to get: " + file);
     const response= await fetch(file);

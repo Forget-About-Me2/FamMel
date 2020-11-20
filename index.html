@@ -615,6 +615,7 @@ CHANGES BY Forget_About_Me
 
     //TODO this probably can be done more efficient
     function goback() {
+        console.log(locstack);
         if (locstack[0] === "beachsex") {
             s("You both slowly get up from the sand and dust yourselves off.");
             s("You put yourself back together and help " + girlname + " make herself presentable.");
@@ -719,9 +720,12 @@ CHANGES BY Forget_About_Me
             poploc();
             c(locstack[0], "Continue...");
         } else {
+            console.log(locstack);
             poploc();
+            console.log(locstack);
             eval(locstack[0] + "()");
         }
+
     }
 
 

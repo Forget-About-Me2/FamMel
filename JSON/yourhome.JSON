@@ -62,7 +62,9 @@
       "{0} answers after a couple of rings.",
       "You're on the phone with {0}.",
       "<b>{0}:</b> Hey. Listen. I've gotta go now. Bye!",
-      "<b>{0}:</b> Okay ... What do you want me to do?"
+      "<b>{0}:</b> Okay ... What do you want me to do?",
+      "{0} sounds uncertain: I don't know about that...",
+      "{0} brightens up: Convince me."
     ],
     "girltalk": [
       "{0}Hello?",
@@ -78,7 +80,13 @@
       "{0}Not especially. Why do you ask?",
       "{0}Yeah, I sorta do have to go. How'd you know?",
       "{0}Actually, I have to pee pretty bad. How'd you know",
-      "{0}Oh, really?"
+      "{0}Oh, really?",
+      "{0}I don't think so, mister.",
+      "{0}You'd think it was sexy? Then I'll do it!",
+      "{0}Make sure you're on time, okay?",
+      "{0}That's not going to be good enough...",
+      "{0}See you soon, though...",
+      "{0}For diamonds, I'll give it a try..."
     ],
     "money": [],
     "always": [],
@@ -110,7 +118,24 @@
         "girltalk11",
         "girltalk12"
       ],
-      ["girltalk13"]]},
+      ["girltalk13"],
+      [
+        "girlname4",
+        "girlname5",
+        "girltalk14"]
+      ],
+    "bribes": [[
+      "girltalk15",
+      "girltalk16"
+      ],
+      [
+      "girltalk17",
+      "girltalk18"
+      ],
+      [
+      "girltalk19",
+      "girltalk16"
+      ]]},
     "choices": [
       ["goback", "Continue..."],
       ["favor", "Ask her for a favor"],
@@ -122,7 +147,12 @@
       ["ohreally", "You just sounded distracted, that's all."],
       ["waitpickup", "Do you mind waiting to pee until I come and pick you up?"],
       ["peephone", "Well, since you have to pee so bad, would you take the phone with you into the bathroom?"],
-      ["curloc", "Continue..."]
+      ["curloc", "Continue..."],
+      ["luckybribe", "It'll be <i>so</i> sexy!"],
+      ["declinebribe", "It'll be <i>so</i> sexy!"],
+      ["declinebribe", "Pretty please!"],
+      ["acceptbribe", "I'll bring you diamonds!"],
+      ["declinebribe", "I'll bring you roses!"]
     ]
 }
 }

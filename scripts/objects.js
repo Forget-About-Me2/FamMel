@@ -9,7 +9,7 @@ objects = {
     },
     "earrings" : {
         "value": 0,
-        "description": "{0} bottle{1} of water"
+        "description": "{0} pair{1} of earrings"
     },
     "vase" : {
         "value": 0,
@@ -66,7 +66,7 @@ function standobjs() {
 }
 
 function haveItem(item){
-    return objects[item] > 0;
+    return objects[item].value > 0;
 }
 
 // displaypos function prints the given object.

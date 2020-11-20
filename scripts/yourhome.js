@@ -16,7 +16,6 @@ function yourhome() {
         curtext = printIntro(curtext, 0);
     } else {
         if (locstack[0] !== "yourhome" || onphone){
-            poploc();
             locationMSetup("yourhome", "yourhome");
             onphone = 0;
         }
@@ -54,7 +53,9 @@ function gostore() {
 }
 
 function buy(number){
+    console.log(number);
     const item = locjson.buying[number];
+    console.log(item);
     const price = Number(item[1]);
     let curtext = [];
     if (money >= price){
@@ -149,50 +150,58 @@ function ohreally() {
     sayText(curtext);
 }
 
+//TODO maybe option to bluff about bribe with consequences later
 function waitpickup() {
+    let curtext = []
     if (attraction > 13) {
-        s(girlname + " sounds uncertain: I don't know about that...");
-        s(girlname + " brightens up: Convince me.");
-
+        curtext = printSDialogue(curtext, "gotta", 2, 0, 1);
+        let choice = [12]
         if (randomchoice(phoneholdthresh) && attraction > 60) {
-            c("luckybribe", "It'll be <i>so</i> sexy!");
-        } else {
-            c("declinebribe", "It'll be <i>so</i> sexy!");
+            choice = [11];
         }
-
-        c("declinebribe", "Pretty please!");
-        if (earrings > 0)
-            c("acceptbribe", "I'll bring you diamonds!");
-        if (roses > 0)
-            c("declinebribe", "I'll bring you roses!");
+        choice.push(13);
+        if (haveItem("earrings"))
+            choice.push(14);
+        console.log(haveItem("earrings"));
+        if (haveItem("roses"))
+            choice.push(15);
+        curtext = printChoices(curtext, choice);
     } else {
-        s(girltalk + "I don't think so, mister.");
+        curtext = printSDialogue(curtext, "gotta", 2, 2, 2);
         flushdrank();
         attraction = 0;
-        c(locstack[0], "Continue...");
+        curtext = printChoices(curtext, [10]);
     }
-}
-
-
-
-function acceptbribe() {
-    s(girltalk + "For diamonds, I'll give it a try...");
-    s(girltalk + "Make sure you're on time, okay?");
-    askholditcounter++;
-    c(locstack[0], "Continue...");
+    sayText(curtext);
 }
 
 function luckybribe() {
-    s(girltalk + "You'd think it was sexy?  Then I'll do it!");
-    s(girltalk + "Make sure you're on time, okay?");
+    let curtext = printDialogue([],"bribes", 0);
+    // s(girltalk + "You'd think it was sexy?  Then I'll do it!");
+    // s(girltalk + "Make sure you're on time, okay?");
     askholditcounter++;
-    c(locstack[0], "Continue...");
+    // c(locstack[0], "Continue...");
+    curtext = printChoices(curtext, [10]);
+    sayText(curtext);
 }
 
 function declinebribe() {
-    s(girltalk + "That's not going to be good enough....");
-    s(girltalk + "See you soon, though.");
-    c(locstack[0], "Continue...");
+    let curtext = printDialogue([], "bribes", 1);
+    // s(girltalk + "That's not going to be good enough....");
+    // s(girltalk + "See you soon, though.");
+    // c(locstack[0], "Continue...");
+    curtext = printChoices(curtext, [10]);
+    sayText(curtext);
+}
+
+function acceptbribe() {
+    let curtext = printDialogue([], "bribes", 2);
+    // s(girltalk + "For diamonds, I'll give it a try...");
+    // s(girltalk + "Make sure you're on time, okay?");
+    askholditcounter++;
+    // c(locstack[0], "Continue...");
+    curtext = printChoices(curtext, [10]);
+    sayText(curtext);
 }
 
 function peephone() {
