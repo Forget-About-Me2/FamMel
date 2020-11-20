@@ -121,26 +121,32 @@ function favor() {
 }
 
 function gotta() {
+    let curtext = []
     if (shyness > 80) {
-        s(girltalk + "Nope.");
+        curtext = printSDialogue(curtext, "gotta", 0, 0, 0);
         attraction -= 2;
         shyness += 5;
     } else if (bladder < bladurge) {
-        s(girltalk + "Not especially.  Why do you ask?");
+        curtext = printSDialogue(curtext, "gotta", 0, 1, 1);
     } else {
         if (bladder < bladneed || shyness > 75) {
-            s(girltalk + "Yeah, I sorta do have to go.  How'd you know?");
+            curtext = printSDialogue(curtext, "gotta", 0, 2, 2);
         } else {
-            s(girltalk + "Actually, I have to pee pretty bad.  How'd you know?");
+            curtext = printSDialogue(curtext, "gotta", 0, 3, 3);
         }
     }
 
-    c("ohreally", "You just sounded distracted, that's all.");
-    c("waitpickup", "Do you mind waiting to pee until I come and pick you up?");
-    if (bladder >= bladneed && shyness <= 75) {
-        c("peephone", "Well, since you have to pee so bad, would you take the phone with you into the bathroom?");
-    }
-    c(locstack[0], "Never mind.");
+    if (bladder >= bladneed && shyness <= 75)
+        curtext = printChoices(curtext, [9])
+    curtext = printChoices(curtext, [7,8,6]);
+    sayText(curtext);
+}
+
+function ohreally() {
+    attraction -= 5;
+    let curtext = printDialogue([], "gotta", 1);
+    curtext = printChoices(curtext, [10]);
+    sayText(curtext);
 }
 
 function waitpickup() {
@@ -166,6 +172,8 @@ function waitpickup() {
         c(locstack[0], "Continue...");
     }
 }
+
+
 
 function acceptbribe() {
     s(girltalk + "For diamonds, I'll give it a try...");

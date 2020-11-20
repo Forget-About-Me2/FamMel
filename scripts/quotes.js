@@ -669,6 +669,14 @@ function printDialogue(curtext, loc, index){
     return curtext;
 }
 
+//Only prints specified part of dialogue
+function printSDialogue(curtext, loc, index, begin, end){
+    for(let i = begin; i <= end; i++){
+        curtext.push(locjson.dialogue[loc][index][i]);
+    }
+    return curtext;
+}
+
 function printList(curtext, list){
     list.forEach(item => curtext.push(item));
     return curtext;

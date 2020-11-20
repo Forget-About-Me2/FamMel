@@ -73,7 +73,12 @@
       "{0}Klik! Byeeeeeeeeeeeeeeeeee...",
       "{0}Just kidding. But get your ass in gear over there!",
       "{0}Hey. Listen. I've gotta go now. Bye!",
-      "{0}Okay ... What do you want me to do?"
+      "{0}Okay ... What do you want me to do?",
+      "{0}Nope.",
+      "{0}Not especially. Why do you ask?",
+      "{0}Yeah, I sorta do have to go. How'd you know?",
+      "{0}Actually, I have to pee pretty bad. How'd you know",
+      "{0}Oh, really?"
     ],
     "money": [],
     "always": [],
@@ -98,7 +103,14 @@
       "favor":
       [["<b>YOU:</b> Hey!  I have a little favor to ask you...",
       "girltalk8"]
-    ]},
+    ],
+      "gotta":  [[
+        "girltalk9",
+        "girltalk10",
+        "girltalk11",
+        "girltalk12"
+      ],
+      ["girltalk13"]]},
     "choices": [
       ["goback", "Continue..."],
       ["favor", "Ask her for a favor"],
@@ -106,7 +118,11 @@
       ["gotta", "I was just wondering ... do you need to pee right now?"],
       ["pantyq", "Can you tell me what color panties you're going to wear tonight?"],
       ["predrink", "Do you think you could drink a couple glasses of water before we go out tonight?"],
-      ["curloc", "nevermind..."]
+      ["curloc", "Nevermind..."],
+      ["ohreally", "You just sounded distracted, that's all."],
+      ["waitpickup", "Do you mind waiting to pee until I come and pick you up?"],
+      ["peephone", "Well, since you have to pee so bad, would you take the phone with you into the bathroom?"],
+      ["curloc", "Continue..."]
     ]
 }
 }
