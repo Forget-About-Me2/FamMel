@@ -89,7 +89,7 @@ function callher() {
 
     if (late) {
         let startI = curtext.length;
-        curtext = printDialogue(curtext, "callher",0)
+        curtext = printDialogue(curtext, "callher",0);
         if (askholditcounter) curtext = displaygottavoc(curtext, startI+2);
         attraction -= 5;
         shyness -= 10;
@@ -177,113 +177,72 @@ function waitpickup() {
 
 function luckybribe() {
     let curtext = printDialogue([],"bribes", 0);
-    // s(girltalk + "You'd think it was sexy?  Then I'll do it!");
-    // s(girltalk + "Make sure you're on time, okay?");
     askholditcounter++;
-    // c(locstack[0], "Continue...");
     curtext = printChoices(curtext, [10]);
     sayText(curtext);
 }
 
 function declinebribe() {
     let curtext = printDialogue([], "bribes", 1);
-    // s(girltalk + "That's not going to be good enough....");
-    // s(girltalk + "See you soon, though.");
-    // c(locstack[0], "Continue...");
     curtext = printChoices(curtext, [10]);
     sayText(curtext);
 }
 
 function acceptbribe() {
     let curtext = printDialogue([], "bribes", 2);
-    // s(girltalk + "For diamonds, I'll give it a try...");
-    // s(girltalk + "Make sure you're on time, okay?");
     askholditcounter++;
-    // c(locstack[0], "Continue...");
     curtext = printChoices(curtext, [10]);
     sayText(curtext);
 }
 
 function peephone() {
+    let curtext = [];
     gottagoflag = 0;
     if (attraction > 30) {
         if (bladder > blademer && shyness < 75) {
-            s(girltalk + "You're a naughty boy, aren't you?");
-            s(girltalk + "But I'm about to wet my panties if I don't go, so you can come too - but no peeking.");
-            displaygottavoc();
-            s("There's a bunch of clanking on the other end, quick footsteps, and a door closes.  You hear the toilet seat being lifted up, and the rustle of clothing.");
-            s(girltalk + "Are you ready?  Want me to put the phone down there so you can hear?  Oh!  It's coming!");
-            s("The hisssssssss of a huge pee fills your receiver for nearly a minute before you hear a couple of last squirts and the wiping of toilet paper against pussy lips.");
-            s(girltalk + "Damn.  That's soooo much better.");
+            curtext = printDialogue(curtext, "peephone", 0);
             attraction += 10;
             flushdrank();
         } else {
-            s(girltalk + "Oooooo....  that's pretty kinky.  But I think I can hold it until I'm off the phone.");
+            curtext = printDialogue(curtext, "peephone", 1);
         }
     } else {
-        s(girltalk + "Somehow, I don't think that's happening.  Bye now.");
+        curtext = printDialogue(curtext, "peephone", 2);
         bladder = 0;
     }
-    c(locstack[0], "Continue...");
+    curtext = printChoices(curtext, [10]);
+    sayText(curtext);
 }
 
 function pantyq() {
+    let curtext = [];
     if (attraction < 10 || shyness > 85) {
-        s(girltalk + "You're just going to have to guess... I'm not telling.");
-        c(locstack[0], "Continue...");
+        curtext = printDialogue(curtext, "panties", 0);
+        curtext = printChoices(curtext, [10])
+        // s(girltalk + "You're just going to have to guess... I'm not telling.");
+        // c(locstack[0], "Continue...");
     } else {
         if (attraction < 20 || shyness > 80) {
-            s(girltalk + "They're black ... and lacy.");
-            c(locstack[0], "Continue...");
+            curtext = printDialogue(curtext, "panties", 1);
+            // s(girltalk + "They're black ... and lacy.");
+            // c(locstack[0], "Continue...");
+            curtext = printChoices(curtext, [10])
         } else {
-            s(girltalk + "What color do you want me to wear tonight?");
-            c("pantiesblack", "Black and lacy.");
-            c("pantieswhite", "White cotton.");
-            c("pantiesblue", "Blue silk.");
-            c("pantiesred", "Red thong.");
-            c("nopanties", "No panties.");
+            curtext = printDialogue(curtext, "panties", 2);
+            let choices = [];
+            for (let i = 16;i < 21; i++){
+                choices.push(i);
+            }
+            curtext = printChoices(curtext, choices);
+            // s(girltalk + "What color do you want me to wear tonight?");
+            // c("changepanties('lacy black')", "Black and lacy.");
+            // c("changepanties('white cotton')", "White cotton.");
+            // c("changepanties('blue silk')", "Blue silk.");
+            // c("changepanties('red thong')", "Red thong.");
+            // c("changepanties('none')", "No panties.");
         }
     }
-}
-
-function changepanties(newcolor) {
-    if (pantycolor === newcolor) {
-        s(girltalk + "That's what I have on already!");
-    } else {
-        if (pantycolor === "none") {
-            s(girltalk + "Okay, I'll put on my " + newcolor + " panties for you.");
-        } else {
-            s(girltalk + "I'm peeling off my " + pantycolor + " panties...");
-            if (newcolor !== "none")
-                s(girltalk + "and slipping into on my " + newcolor + " ones.");
-            else
-                s(girltalk + "but you have to promise not to peek at me!");
-        }
-    }
-    pantycolor = newcolor;
-    setupquotes();  // quotes rely heavily on panty color...
-    c(locstack[0], "Continue...");
-}
-
-//TODO make one function for this
-function pantiesblack() {
-    changepanties("lacy black");
-}
-
-function pantieswhite() {
-    changepanties("white cotton");
-}
-
-function pantiesblue() {
-    changepanties("blue silk");
-}
-
-function pantiesred() {
-    changepanties("red thong");
-}
-
-function nopanties() {
-    changepanties("none");
+    sayText(curtext);
 }
 
 function predrink() {

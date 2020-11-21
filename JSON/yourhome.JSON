@@ -86,7 +86,18 @@
       "{0}Make sure you're on time, okay?",
       "{0}That's not going to be good enough...",
       "{0}See you soon, though...",
-      "{0}For diamonds, I'll give it a try..."
+      "{0}For diamonds, I'll give it a try...",
+      "{0}You're a naughty boy, aren't you?",
+      "{0}But I'm about to wet my panties if I don't go, so you can come too - but no peeking.",
+      "{0}Are you ready?  Want me to put the phone down there so you can hear?  Oh!  It's coming!",
+      "{0}Damn.  That's soooo much better.",
+      "{0}Oooooo....  that's pretty kinky.  But I think I can hold it until I'm off the phone.",
+      "{0}Somehow, I don't think that's happening.  Bye now.",
+      "{0}You're just going to have to guess... I'm not telling.",
+      "{0}They're black ... and lacy.",
+      "{0}What color do you want me to wear tonight?",
+      "{0}That's what I have on already!",
+      "{0}but you have to promise not to peek!"
     ],
     "money": [],
     "always": [],
@@ -135,7 +146,47 @@
       [
       "girltalk19",
       "girltalk16"
-      ]]},
+      ]],
+    "peephone": [[
+      "girltalk20",
+      "girltalk21",
+      "There's a bunch of clanking on the other end, quick footsteps, and a door closes.  You hear the toilet seat being lifted up, and the rustle of clothing.",
+      "girltalk22",
+      "The hisssssssss of a huge pee fills your receiver for nearly a minute before you hear a couple of last squirts and the wiping of toilet paper against pussy lips.",
+      "girltalk23"
+    ],
+    [
+      "girltalk24"
+    ],
+    [
+      "girltalk25"
+    ]],
+    "panties":  [
+      [
+        "girltalk26"
+      ],
+      [
+        "girltalk27"
+      ],
+      [
+        "girltalk28"
+      ]
+    ],
+    "changepanties":[
+      [
+        "{0}Okay, I'll put on my {1} panties for you."
+      ],
+      [
+        "girltalk29"
+      ],
+      [
+        "{0}I'm peeling off my {1} panties..."
+      ],
+      [
+        "{0}and slipping on my {1} ones."
+      ],
+      ["girltalk30"]
+]},
     "choices": [
       ["goback", "Continue..."],
       ["favor", "Ask her for a favor"],
@@ -152,7 +203,12 @@
       ["declinebribe", "It'll be <i>so</i> sexy!"],
       ["declinebribe", "Pretty please!"],
       ["acceptbribe", "I'll bring you diamonds!"],
-      ["declinebribe", "I'll bring you roses!"]
+      ["declinebribe", "I'll bring you roses!"],
+      ["changepanties(0)", "Black and lacy."],
+      ["changepanties(1)", "White cotton."],
+      ["changepanties(2)", "Blue silk."],
+      ["changepanties(3)", "Red thong."],
+      ["changepanties(4)", "No panties."]
     ]
 }
 }

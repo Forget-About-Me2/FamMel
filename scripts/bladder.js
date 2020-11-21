@@ -1,5 +1,51 @@
 //This file contains all functions related to peeing
 
+// DisplayGottaVoc function prints a quasi-random vocalization from "+girlname+"
+// indication her sincere hope to find a bathroom soon.
+function displaygottavoc(curtext, index) {
+    let textchoice = [];
+    if (askholditcounter > 0 && bladder > bladurge && randomchoice(3)) {
+        textchoice.push(girltalk + "" + wanthold[randcounter]);
+    }
+
+    if (bladder >= bladneed && !brokeice) {
+        textchoice.push(girlname + " looks embarassed.");
+        textchoice.push(girltalk + "Jesus, I'm sorry.");
+    }
+
+    if (locstack[0] === "driveout") {
+        if (bladder >= bladlose - 10) {
+            textchoice.push(girltalk + "" + carlosequotes[randcounter]);
+        } else if (bladder >= blademer) {
+            textchoice.push(girltalk + "" + caremerquotes[randcounter]);
+        } else if (bladder >= bladneed) {
+            textchoice.push(girltalk + "" + carneedquotes[randcounter]);
+        } else if (bladder >= bladurge) {
+            textchoice.push(girltalk + "" + carurgequotes[randcounter]);
+        } else {
+        }
+    } else {
+        if (bladder >= bladlose - 10) {
+            textchoice.push(girltalk + "" + losequotes[randcounter]);
+        } else if (bladder >= blademer) {
+            textchoice.push(girltalk + "" + emerquotes[randcounter]);
+        } else if (bladder >= bladneed) {
+            textchoice.push(girltalk + "" + needquotes[randcounter]);
+        } else if (bladder >= bladurge) {
+            textchoice.push(girltalk + "" + urgequotes[randcounter]);
+        }
+    }
+    if (bladder >= bladneed) gottagoflag = 1;
+    if (bladder >= bladurge) brokeice = 1;
+    incrandom();
+    if (textchoice.length === 1){
+        curtext.splice(index, 0, textchoice[0]);
+    } else {
+        textchoice.forEach(text => {curtext.splice(index, 0, text); index++});
+    }
+    return curtext;
+}
+
 //TODO lose control when bursting on the way
 function indepee() {
     gottagoflag = 0;
@@ -243,3 +289,4 @@ function youbegtoilet(curtext) {
     curtext = callChoice(ypeelines["beg"][1][2], curtext);
     return curtext;
 }
+

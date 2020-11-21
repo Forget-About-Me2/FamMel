@@ -504,6 +504,7 @@ function setupQuotes(){
     getjson("youpee", yPeeSetup);
 }
 
+//TODO handle formatting differently, probably have a list of indexes that need to be replaced instead
 //This sets up all variables that this location uses.
 function locationSetup(tag){
     locjson = JSON.parse(JSON.stringify(calledjsons[tag]));
@@ -533,6 +534,7 @@ function locationMSetup(tag, subtag){
     replaceWCI("intro", "girltalk");
     replaceWCT("always", "girltalk");
     if (locjson.hasOwnProperty("dialogue")){
+        console.log(locjson["dialogue"]);
         for (let [key, value] of Object.entries(locjson.dialogue)){
             if(locjson.dialogue.hasOwnProperty(key)){
                 value = replaceWCLI(value, "girlname");
@@ -567,6 +569,7 @@ function replaceWCL(strlist, tag){
 
 //Replacing the variable wildcards of the given tag for the given list of lists
 function replaceWCLI(strlist, tag){
+    console.log(strlist);
     let result = [];
     strlist.forEach(item => result.push(replaceWCL(item, tag)));
     return result;
@@ -674,6 +677,14 @@ function printDialogue(curtext, loc, index){
 function printSDialogue(curtext, loc, index, begin, end){
     for(let i = begin; i <= end; i++){
         curtext.push(locjson.dialogue[loc][index][i]);
+    }
+    return curtext;
+}
+
+function printFormatDialogue(curtext, loc, index, begin, end, values){
+    for(let i = begin; i <= end; i++){
+        const temp = locjson.dialogue[loc][index][i]
+        curtext.push(formatString(temp, values));
     }
     return curtext;
 }
