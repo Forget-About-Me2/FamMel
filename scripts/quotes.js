@@ -669,6 +669,7 @@ function printAlways(curtext) {
 }
 
 function printDialogue(curtext, loc, index){
+    console.log(index);
     locjson.dialogue[loc][index].forEach(item => curtext.push(item));
     return curtext;
 }

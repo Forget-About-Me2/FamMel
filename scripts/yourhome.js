@@ -219,13 +219,9 @@ function pantyq() {
     if (attraction < 10 || shyness > 85) {
         curtext = printDialogue(curtext, "panties", 0);
         curtext = printChoices(curtext, [10])
-        // s(girltalk + "You're just going to have to guess... I'm not telling.");
-        // c(locstack[0], "Continue...");
     } else {
         if (attraction < 20 || shyness > 80) {
             curtext = printDialogue(curtext, "panties", 1);
-            // s(girltalk + "They're black ... and lacy.");
-            // c(locstack[0], "Continue...");
             curtext = printChoices(curtext, [10])
         } else {
             curtext = printDialogue(curtext, "panties", 2);
@@ -234,37 +230,38 @@ function pantyq() {
                 choices.push(i);
             }
             curtext = printChoices(curtext, choices);
-            // s(girltalk + "What color do you want me to wear tonight?");
-            // c("changepanties('lacy black')", "Black and lacy.");
-            // c("changepanties('white cotton')", "White cotton.");
-            // c("changepanties('blue silk')", "Blue silk.");
-            // c("changepanties('red thong')", "Red thong.");
-            // c("changepanties('none')", "No panties.");
         }
     }
     sayText(curtext);
 }
 
 function predrink() {
+    let curtext = [];
     if (attraction < 10) {
-        s(girltalk + "I don't get what you're talking about.");
+        curtext = printDialogue(curtext, "predrink", 0);
+        // s(girltalk + "I don't get what you're talking about.");
         attraction = 0;
     } else {
         if (tummy < maxtummy / 2 && attraction > 12) {
-            s(girltalk + "Well, I guess it's good to stay hydrated.");
-            s("She drinks two glasses of refreshing water.");
+            curtext = printDialogue(curtext, "predrink", 1);
+            // s(girltalk + "Well, I guess it's good to stay hydrated.");
+            // s("She drinks two glasses of refreshing water.");
             tummy += 200;
             drankwaters += 2;
         } else if (tummy < maxtummy && attraction > 15) {
-            s(girltalk + "Well, if you want me to, I'll do it.");
-            s("She drinks two glasses of refreshing water.");
+            curtext = printDialogue(curtext, "predrink", 2);
+            // s(girltalk + "Well, if you want me to, I'll do it.");
+            // s("She drinks two glasses of refreshing water.");
             tummy += 200;
             drankwaters += 2;
         } else {
-            s(girltalk + "I just don't feel thirsty right now.");
+            curtext = printDialogue(curtext, "predrink", 3);
+            // s(girltalk + "I just don't feel thirsty right now.");
         }
     }
-    c(locstack[0], "Continue...");
+    curtext = printChoices(curtext, [10]);
+    // c(locstack[0], "Continue...");
+    sayText(curtext);
 }
 
 function cellphone() {

@@ -97,7 +97,11 @@
       "{0}They're black ... and lacy.",
       "{0}What color do you want me to wear tonight?",
       "{0}That's what I have on already!",
-      "{0}but you have to promise not to peek!"
+      "{0}but you have to promise not to peek!",
+      "{0}I don't get what you're talking about.",
+      "{0}Well, I guess it's good to stay hydrated.",
+      "{0}Well, if you want me to, I'll do it.",
+      "{0}I just don't feel thirsty right now."
     ],
     "money": [],
     "always": [],
@@ -186,7 +190,23 @@
         "{0}and slipping on my {1} ones."
       ],
       ["girltalk30"]
-]},
+    ],
+    "predrink": [
+      [
+        "girltalk31"
+      ],
+      [
+        "girltalk32",
+        "She drinks two glasses of refreshing water."
+      ],
+      [
+        "girltalk33"
+      ],
+      [
+        "girltalk34"
+      ]
+    ]}
+  ,
     "choices": [
       ["goback", "Continue..."],
       ["favor", "Ask her for a favor"],
