@@ -8,6 +8,7 @@ let flirtquotes; //This stores all possible flirts called from the JSON
 let flirtresps; //This stores all possible responses called from the JSON
 let ypeelines; //This stores all dialogues regarding to going to the bathroom called from the JSON
 let needs; //This stores descriptions of her needs called from the JSON
+let drinklines; //This stores all lines regarding drinking from the JSON
 
 var respfeelup=[" puts her hand on her chest: <b>You're making me hot.</b>", " squeezes her breasts between her upper arms: <b>Stop it - that's embarassing.</b>", " giggles and crosses her legs: <b>You're making me wet!</b>", " grabs your butt: <b>You're turning me on.</b>", " laughs and curtseys: <b>Stop trying to get me excited!</b>", " covers her face: <b>Don't look at me like that!</b>"];
 
@@ -487,9 +488,7 @@ async function getjson(fileID, callback){
 
 //This requests a json file from the webserver using the location tag
 async function getjsonT(tag){
-    console.log(tag);
     const file = "JSON/" + tag + ".JSON";
-    // console.log("Trying to get: " + file);
     const response= await fetch(file);
     json = await response.json();
     calledjsons[tag] = json;
@@ -502,6 +501,9 @@ function setupQuotes(){
         needs = json;
     });
     getjson("youpee", yPeeSetup);
+    getjson("drinking", function (){
+        drinklines = json;
+    })
 }
 
 //TODO handle formatting differently, probably have a list of indexes that need to be replaced instead
@@ -519,7 +521,6 @@ function locationSetup(tag){
 //Setup of location when there are multiple locations in json file
 function locationMSetup(tag, subtag){
     locjson = JSON.parse(JSON.stringify(calledjsons[tag][subtag]));
-    console.log(locjson);
     if (locjson.hasOwnProperty("girlname"))
         locjson.girlname = addGirlname(locjson.girlname);
     if (locjson.hasOwnProperty("money"))
@@ -534,7 +535,6 @@ function locationMSetup(tag, subtag){
     replaceWCI("intro", "girltalk");
     replaceWCT("always", "girltalk");
     if (locjson.hasOwnProperty("dialogue")){
-        console.log(locjson["dialogue"]);
         for (let [key, value] of Object.entries(locjson.dialogue)){
             if(locjson.dialogue.hasOwnProperty(key)){
                 value = replaceWCLI(value, "girlname");
@@ -569,7 +569,6 @@ function replaceWCL(strlist, tag){
 
 //Replacing the variable wildcards of the given tag for the given list of lists
 function replaceWCLI(strlist, tag){
-    console.log(strlist);
     let result = [];
     strlist.forEach(item => result.push(replaceWCL(item, tag)));
     return result;
@@ -643,7 +642,6 @@ function yPeeSetup(){
     templist.forEach(item => result.push(LreplaceCheck(item, json["girlname"], "girlname")));
     templist = result;
     result = []
-    console.log(templist);
     templist.forEach(item => result.push(LreplaceCheck(item, json["girltalk"], "girltalk")));
     json["thehome"][0] = result;
     result = [];
@@ -658,7 +656,6 @@ function yPeeSetup(){
 }
 
 function printIntro(curtext, index){
-    console.log(locjson);
     locjson.intro[index].forEach(item => curtext.push(item));
     return curtext;
 }
@@ -669,7 +666,6 @@ function printAlways(curtext) {
 }
 
 function printDialogue(curtext, loc, index){
-    console.log(index);
     locjson.dialogue[loc][index].forEach(item => curtext.push(item));
     return curtext;
 }
