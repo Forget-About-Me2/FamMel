@@ -239,28 +239,21 @@ function predrink() {
     let curtext = [];
     if (attraction < 10) {
         curtext = printDialogue(curtext, "predrink", 0);
-        // s(girltalk + "I don't get what you're talking about.");
         attraction = 0;
     } else {
         if (tummy < maxtummy / 2 && attraction > 12) {
             curtext = printDialogue(curtext, "predrink", 1);
-            // s(girltalk + "Well, I guess it's good to stay hydrated.");
-            // s("She drinks two glasses of refreshing water.");
             tummy += 200;
             drankwaters += 2;
         } else if (tummy < maxtummy && attraction > 15) {
             curtext = printDialogue(curtext, "predrink", 2);
-            // s(girltalk + "Well, if you want me to, I'll do it.");
-            // s("She drinks two glasses of refreshing water.");
             tummy += 200;
             drankwaters += 2;
         } else {
             curtext = printDialogue(curtext, "predrink", 3);
-            // s(girltalk + "I just don't feel thirsty right now.");
         }
     }
     curtext = printChoices(curtext, [10]);
-    // c(locstack[0], "Continue...");
     sayText(curtext);
 }
 
