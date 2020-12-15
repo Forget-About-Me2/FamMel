@@ -599,8 +599,6 @@ CHANGES BY Forget_About_Me
     //   desc - description of choice to display.
     // curtext - a list of all current lines that will be printed during the scene
     function c(choice, curtext) {
-        console.log("c");
-        console.log(curtext);
         const html = "<li><a href=\"javascript:go('" + choice[0] + "')\">" + choice[1] + "</a>"
         curtext.push(html);
         //TODO decide if this is needed?
@@ -619,7 +617,6 @@ CHANGES BY Forget_About_Me
 
     //TODO this probably can be done more efficient
     function goback() {
-        console.log(locstack);
         if (locstack[0] === "beachsex") {
             s("You both slowly get up from the sand and dust yourselves off.");
             s("You put yourself back together and help " + girlname + " make herself presentable.");
@@ -724,9 +721,7 @@ CHANGES BY Forget_About_Me
             poploc();
             c(locstack[0], "Continue...");
         } else {
-            console.log(locstack);
             poploc();
-            console.log(locstack);
             eval(locstack[0] + "()");
         }
 

@@ -152,7 +152,7 @@ function youpee() {
     gottagoflag = 0;
     let peed = 0;
     if (locstack[0] === "yourhome") {
-        curtext = printList(ypeelines["yourhome"], curtext);
+        curtext = printList(curtext, ypeelines["yourhome"]);
         flushyourdrank();
         peed = 1
     } else if (locstack[0] === "thehome" ||
@@ -190,7 +190,6 @@ function youpee() {
     else {
         curtext = c([locstack[0], "Continue..."], curtext);
     }
-    console.log(curtext);
     sayText(curtext);
 }
 
@@ -283,26 +282,18 @@ function displayneed(curtext) {
     return curtext;
 }
 
-//TODO Add different quote for holding and not holding, also more variation
 function displayyourneed(curtext) {
-    console.log(yneeds);
         if (yourbladder >= yourbladlose && !holdself) {
             curtext.push(pickrandom(yneeds["burst"]));
-            // s("Your bladder feels like it's about to burst.");
         } else if (yourbladder > yourblademer) {
             curtext.push(pickrandom(yneeds["desperate"]));
-            // s("You feel pretty desperate to pee now.");
         } else if (yourbladder > yourbladneed) {
             curtext.push(pickrandom(yneeds["need"]));
-            // s("You feel like you could use a good pee, but nothing urgent.");
         } else if (yourbladder > yourbladurge) {
             curtext.push(pickrandom(yneeds["urge"]));
-            // s("You feel the barest sensation of a filling bladder");
         } else if (locstack[0] === "drinkinggame") {
             curtext.push(pickrandom(yneeds["empty"]));
-            // s("Your bladder feels fine.")
         }
-        console.log(curtext);
         return curtext
 }
 

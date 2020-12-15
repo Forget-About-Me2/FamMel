@@ -98,39 +98,11 @@ function go(tag) {
         eval(tag + "()");
     }
 
-//TODO comment
-    // if (slopen && ulopen) slopen=0;
-    //
-    // if (ulopen) {
-    //   ulopen = 0;
-    //   document.getElementById('textsp').innerHTML += "</ul>";
-    // }
-
     if (tag !== "hidescreen") {
         comma = 0;
         document.getElementById('objsp').innerHTML = "You are carrying: ";
         const obj = Object.values(objects);
         obj.forEach(value => displaypos(value));
-        //
-        // if (earrings > 0) displaypos(earrings, "earrings", "pair", "s");
-        // if (roses > 0) displaypos(roses, "roses", "boquet", "s");
-        // if (panties > 0) displaypos(panties, "sexy panties", "pair", "s");
-        // if (vase > 0) displaypos(vase, "vase", "", "s");
-        // if (shotglass > 0) displaypos(shotglass, "shotglass", "", "es");
-        // if (ptowels > 0) displaypos(ptowels, "paper towels", "roll", "s");
-        // if (water > 0) displaypos(water, "water", "bottle", "s");
-        // if (beer > 0) displaypos(beer, "beer", "bottle", "s");
-        // if (soda > 0) displaypos(soda, "soda", "cup", "s");
-        // if (cocktail > 0) displaypos(cocktail, "cocktail", "glass", "es");
-        // if (wetpanties > 0) displaypos(wetpanties, "wet panties", "pair", "s");
-        // if (champagne > 0 && champagnecounter === 0) displaypos(champagne, "champagne", "bottle", "s");
-        // else if (champagne > 0 && champagnecounter < 6) displaypos(champagne, "champagne", "half-empty bottle", "s");
-        // else if (champagne > 0) displaypos(champagne, "champagne", "empty bottle", "s");
-        // if (barkey > 0) displaypos(barkey, "key to the bar", "", "s");
-        // if (clubkey > 0) displaypos(clubkey, "key to the club", "", "s");
-        // if (theaterkey > 0) displaypos(theaterkey, "key to the theater", "", "s");
-        // if (herkeys > 0) displaypos(herkeys, "keys", "set", "s");
-        // if (hercellphone > 0) displaypos(hercellphone, "cellphone", "", "s");
         if (comma === 0) {
             document.getElementById('objsp').innerHTML += " nothing.";
         }
@@ -163,7 +135,6 @@ function pickrandom(list) {
 //Main reason we have a seperate function is because we need have to wait for yneeds to be assigned for the first scene
 //as it's called in there and this is the cleanest solution I can think of
 function gamestart(){
-    console.log("hallo?")
     //TODO it's a very bad idea to have two functions with almost identical names
     setupquotes();
     setupQuotes();

@@ -490,8 +490,6 @@ async function getjson(fileID, callback){
 //This requests a json file from the webserver using the location tag
 async function getjsonT(tag){
     const file = "JSON/" + tag + ".JSON";
-    console.log("getloc");
-    console.log(file);
     const response= await fetch(file);
     json = await response.json();
     calledjsons[tag] = json;
@@ -504,12 +502,10 @@ function setupQuotes(){
     getjson("needs", function (){
         needs = json;
     });
-    console.log("oh no");
     getjson("yneeds", function (){
         yneeds = json;
         //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
         //And this is the cleanest way to not have everything crying
-        console.log("pls");
         go("yourhome");
     });
     getjson("youpee", yPeeSetup);
@@ -711,15 +707,11 @@ function printChoices(curtext, selection){
 
 //Prints all choices
 function printAllChoices(curtext){
-    console.log("allchoices");
-    console.log("curtext")
     locjson.choices.forEach(item => curtext = callChoice(item, curtext) );
     return curtext;
 }
 
 function callChoice(choice, curtext){
-    console.log("callchoice")
-    console.log(curtext);
     if(choice[0] === "curloc") {
         return c([locstack[0], choice[1]], curtext);
     } else {
