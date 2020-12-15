@@ -1,7 +1,7 @@
 {
   "intro" : [] ,
   "choices" : [
-    ["curloc", "Start the game."],
+    ["gamestart()", "Start the game."],
     ["options", "Options."]
   ],
   "girlname" : [],

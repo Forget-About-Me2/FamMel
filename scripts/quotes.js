@@ -8,6 +8,7 @@ let flirtquotes; //This stores all possible flirts called from the JSON
 let flirtresps; //This stores all possible responses called from the JSON
 let ypeelines; //This stores all dialogues regarding to going to the bathroom called from the JSON
 let needs; //This stores descriptions of her needs called from the JSON
+let yneeds; //This stores descriptions of your needs called from the JSON
 let drinklines; //This stores all lines regarding drinking from the JSON
 
 var respfeelup=[" puts her hand on her chest: <b>You're making me hot.</b>", " squeezes her breasts between her upper arms: <b>Stop it - that's embarassing.</b>", " giggles and crosses her legs: <b>You're making me wet!</b>", " grabs your butt: <b>You're turning me on.</b>", " laughs and curtseys: <b>Stop trying to get me excited!</b>", " covers her face: <b>Don't look at me like that!</b>"];
@@ -489,16 +490,27 @@ async function getjson(fileID, callback){
 //This requests a json file from the webserver using the location tag
 async function getjsonT(tag){
     const file = "JSON/" + tag + ".JSON";
+    console.log("getloc");
+    console.log(file);
     const response= await fetch(file);
     json = await response.json();
     calledjsons[tag] = json;
     eval(tag+"()");
 }
 
+//calls all json requests to get recurring quotes
 function setupQuotes(){
     getjson("flirting", flirtSetup);
     getjson("needs", function (){
         needs = json;
+    });
+    console.log("oh no");
+    getjson("yneeds", function (){
+        yneeds = json;
+        //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
+        //And this is the cleanest way to not have everything crying
+        console.log("pls");
+        go("yourhome");
     });
     getjson("youpee", yPeeSetup);
     getjson("drinking", function (){
@@ -699,11 +711,15 @@ function printChoices(curtext, selection){
 
 //Prints all choices
 function printAllChoices(curtext){
+    console.log("allchoices");
+    console.log("curtext")
     locjson.choices.forEach(item => curtext = callChoice(item, curtext) );
     return curtext;
 }
 
 function callChoice(choice, curtext){
+    console.log("callchoice")
+    console.log(curtext);
     if(choice[0] === "curloc") {
         return c([locstack[0], choice[1]], curtext);
     } else {

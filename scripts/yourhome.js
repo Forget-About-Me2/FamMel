@@ -8,9 +8,6 @@ function yourhome() {
     let curtext = [];
     if (didintro === 0) {
         locationMSetup("yourhome", "yourhome");
-        setupquotes();
-        setupQuotes();
-        if (debugmode) magic();
         didintro = 1;
         slopen = 0;
         curtext = printIntro(curtext, 0);
@@ -22,7 +19,7 @@ function yourhome() {
         curtext = printIntro(curtext, 1);
     }
     curtext = printAlways(curtext);
-    displayyourneed();
+    curtext = displayyourneed(curtext);
     curtext = printAllChoices(curtext);
     sayText(curtext)
 }
@@ -44,9 +41,9 @@ function gostore() {
             bladder = 0;
             prepeed = 1;
         }
-        displayyourneed();
         let curtext = [];
         curtext = printAlways(curtext);
+        curtext = displayyourneed(curtext);
         curtext = printAllChoices(curtext);
         sayText(curtext);
     }
@@ -72,6 +69,7 @@ function buy(number){
 //  This is a subroutine - valid location with push and pop.
 //
 //TODO you can't see her looking away on the phone
+//TODO show your need?
 function callher() {
     let curtext = [];
     if (locstack[0] !== "callher") {

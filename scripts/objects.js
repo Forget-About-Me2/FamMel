@@ -99,15 +99,11 @@ function ypredrink() {
     let curtext = []
     if (yourtummy < ymaxtummy) {
         curtext = printList(curtext, drinklines["ypredrink"][0]);
-        // s("You drink two glasses of water, hoping it will go through you quickly.");
         yourtummy += 200;
         ydrankwaters += 2;
     } else {
         curtext = printList(curtext, drinklines["ypredrink"][1]);
-        // s("You considering drinking some water to get your bladder filled quicker.");
-        // s("But your stomach feels way to full to add more.")
     }
     curtext = c([locstack[0], "Continue..."], curtext);
-    // c(locstack[0], "Continue...");
     sayText(curtext);
 }

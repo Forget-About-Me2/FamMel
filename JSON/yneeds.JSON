@@ -1,0 +1,22 @@
+ {
+  "burst": [
+    "Your bladder feels like it's about to burst.",
+    "You really can't hold on any more"],
+  "desperate": [
+   "You feel pretty desperate to pee now.",
+    "You struggle to hold on to your bladder"
+  ],
+  "need": [
+    "You feel like you could use a good pee, but nothing urgent.",
+    "You're definitely aware of your bladder"
+  ],
+  "urge": [
+    "You feel the barest sensation of a filling bladder",
+    "You're starting to feel your bladder",
+    "You're barely aware of your bladder"
+  ],
+  "empty": [
+    "Your bladder feels fine.",
+    "You don't feel any need to pee whatsoever"
+  ]
+}
