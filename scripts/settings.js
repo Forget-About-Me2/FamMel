@@ -71,6 +71,8 @@ function setLocal(varName, value){
 }
 
 //TODO fix so you can't choose 0 or lower
+//TODO maybe introduce bladder limits to protect users
+//TODO option to turn oof playerbladder
 function options() {
 
     let vars = new Array(29).fill([""]); //This array is used to format the html with values

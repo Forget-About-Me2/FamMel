@@ -169,6 +169,7 @@ CHANGES BY Forget_About_Me
 *Fixed the loop with a certain end-scene of the drinking game
 *Changed the way pictures are added
 *Changed with how much cocktails increase max-tummy
+*Tweaked chance of finding key to hopefully be a bit more favourable
 */
 
     //TODO potentially clean up if statements with multiple locations
@@ -324,6 +325,7 @@ CHANGES BY Forget_About_Me
     let spurtthresh = 5; // Likelihood of her spurting rather than wetting
     let yspurtthresh = 3; // Likelihood of you spurting rather than wetting
     let bribeaskthresh = 8; //Likelihood she'll hold it if you ask her when desperate
+    let lookaroundthresh = 5; //Likelihood you'll find a key when looking around.
 
     //  Attraction thresholds
     const ptogetherthreshold = 100; // She'll take you with her to the bathroom.
@@ -839,16 +841,21 @@ CHANGES BY Forget_About_Me
     //
     //  Take a look around the location.
     //
-    //TODO slowly increase the chance
+    //TODO maybe change chance differently
     function lookaround() {
-        incrandom();
+        const findkey = randomchoice(lookaroundthresh);
         s("You take a moment to glance around.");
         if (locstack[0] === "thebar") s(barview[randcounter]);
         if (locstack[0] === "theclub") s(clubview[randcounter]);
         if (locstack[0] === "themakeout") s(makeview[randcounter]);
-        if (randcounter === 5) c("lookkey", "Investigate...");
+        if (findkey) c("lookkey", "Investigate...");
+        //Each time you look around the chance of success increases by 10%
+        //if it's 90% it will be reset to 10%
+        lookaroundthresh = (lookaroundthresh + 1) % 9;
+        if (lookaroundthresh === 0){
+            lookaroundthresh = 1;
+        }
         c(locstack[0], "Continue...");
-        incrandom();
     }
 
     function lookkey() {
