@@ -10,6 +10,7 @@ let ypeelines; //This stores all dialogues regarding to going to the bathroom ca
 let needs; //This stores descriptions of her needs called from the JSON
 let yneeds; //This stores descriptions of your needs called from the JSON
 let drinklines; //This stores all lines regarding drinking from the JSON
+let appearance; // This stores the appearance quotes from the JSON
 
 var respfeelup=[" puts her hand on her chest: <b>You're making me hot.</b>", " squeezes her breasts between her upper arms: <b>Stop it - that's embarassing.</b>", " giggles and crosses her legs: <b>You're making me wet!</b>", " grabs your butt: <b>You're turning me on.</b>", " laughs and curtseys: <b>Stop trying to get me excited!</b>", " covers her face: <b>Don't look at me like that!</b>"];
 
@@ -512,6 +513,10 @@ function setupQuotes(){
     getjson("drinking", function (){
         drinklines = json;
     })
+    //TODO format this json better?
+    getjson("appearance", function (){
+        appearance = json;
+    } )
 }
 
 //TODO handle formatting differently, probably have a list of indexes that need to be replaced instead
@@ -662,6 +667,7 @@ function yPeeSetup(){
     json["beg"][0] = result;
     ypeelines = json;
 }
+
 
 function printIntro(curtext, index){
     locjson.intro[index].forEach(item => curtext.push(item));

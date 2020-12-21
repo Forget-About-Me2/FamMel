@@ -109,8 +109,14 @@ function go(tag) {
     }
 }
 
-
-
+//  increment the random number counter.
+function incrandom() {
+    const now = new Date();
+    const seed = now.getSeconds();
+    //TODO figure out random + seed
+    randcounter += Math.floor(Math.random(seed) * 2) + 1;
+    if (randcounter > randmax) randcounter -= (randmax + 1);
+}
 
 //  Randomness Chooser
 //  1 corresponds to 10% likelihood.
@@ -129,6 +135,12 @@ function pickrandom(list) {
     let number = Math.random() * list.length;
     number = Math.floor(number);
     return list[number];
+}
+
+//Girl curses
+function voccurse() {
+    s(girltalk + " " + curseword[randcounter]);
+    incrandom();
 }
 
 //This setups the game when you click start
