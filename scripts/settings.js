@@ -72,8 +72,9 @@ function setLocal(varName, value){
 
 //TODO fix so you can't choose 0 or lower
 //TODO maybe introduce bladder limits to protect users
-//TODO option to turn oof playerbladder
+//TODO option to turn off playerbladder
 function options() {
+    //When this function is called the var json will be set to the json used for options
 
     let vars = new Array(29).fill([""]); //This array is used to format the html with values
     let checked = []; //This is a list to keep track of which options are checked
@@ -111,7 +112,7 @@ function options() {
     vars[27] = [money]
     console.log(vars);
     let curtext = formatAll(json.html, vars);
-    curtext = c([locstack[0], "Continue..."], curtext);
+    curtext = c(["gamestart()", "Continue..."], curtext);
     setText(curtext);
 
 //TODO debug mode

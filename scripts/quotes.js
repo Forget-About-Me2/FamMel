@@ -481,6 +481,7 @@ let json = null;
 let locjson = null; //This is the main json for the current location
 
 //This requests a json from the webserver with a given filename and callback function
+//TODO probably find a way to store this
 async function getjson(fileID, callback){
     const file = "JSON/" + fileID + ".JSON";
     const response= await fetch(file);
@@ -499,11 +500,13 @@ async function getjsonT(tag){
 
 //calls all json requests to get recurring quotes
 function setupQuotes(){
+    console.log("quotes?");
     getjson("flirting", flirtSetup);
     getjson("needs", function (){
         needs = json;
     });
     getjson("yneeds", function (){
+        console.log("hello?");
         yneeds = json;
         //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
         //And this is the cleanest way to not have everything crying
