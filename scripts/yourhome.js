@@ -15,6 +15,7 @@ function yourhome() {
         if (locstack[0] !== "yourhome" || onphone){
             locationMSetup("yourhome", "yourhome");
             onphone = 0;
+            poploc();
         }
         curtext = printIntro(curtext, 1);
     }
