@@ -12,10 +12,10 @@ function yourhome() {
         slopen = 0;
         curtext = printIntro(curtext, 0);
     } else {
-        if (locstack[0] !== "yourhome" || onphone){
+        if (locstack[0] !== "yourhome" || onphone || shopping){
             locationMSetup("yourhome", "yourhome");
             onphone = 0;
-            poploc();
+            shopping = 0;
         }
         curtext = printIntro(curtext, 1);
     }
@@ -30,6 +30,7 @@ function yourhome() {
 function gostore() {
     if (locstack[0] !== "gostore") {
         pushloc("gostore");
+        shopping=1;
     }
     locationMSetup("yourhome", "store");
     if (askholditcounter > 0 && bladder > blademer && bladder < bladlose && !waitcounter) {

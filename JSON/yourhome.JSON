@@ -39,7 +39,7 @@
       ["buy(5)", "A roll of paper towels ($10)"],
       ["buy(6)", "A pair of sexy panties ($30)"],
       ["buy(7)", "A bottle of fancy champagne ($50)"],
-      ["yourhome", "Nothing"]
+      ["goback", "Nothing"]
     ],
   "buying": [
     ["bottle of water", "10", "water"],
