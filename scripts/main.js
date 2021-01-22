@@ -87,8 +87,9 @@ function go(tag) {
         document.getElementById('thepic').innerHTML = "<table style='text-align:right'><tr><td style='width:100px'><pre>&nbsp;</pre></table>";
     }
 
-    //TODO don't pull same json twice
-    if(jsonlocs.includes(tag)){
+    if(jsonlocs.includes(tag)&&!calledjsons.hasOwnProperty(tag)){
+        //checks whether the given location has a corresponding JSON file and calls it if it hasn't been called before
+        console.log("calltag: " + tag);
         getjsonT(tag);
     } else if (tag.includes("(")){
         //this is a terrible way to deal with choice functions but it works so hey

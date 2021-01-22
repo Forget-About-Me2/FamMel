@@ -1,11 +1,12 @@
 //TODO implement option to match colours to descriptions (maybe type it in yourself?)
-pantydescriptions = [
+let pantydescriptions = [
     "lacy black",
     "white cotton",
     "blue silk",
     "red thong",
     "none"
 ]
+
 
 function changepanties(choice) {
     const newcolor = pantydescriptions[choice];
@@ -27,3 +28,4 @@ function changepanties(choice) {
     curtext = printChoices(curtext, [10]);
     sayText(curtext);
 }
+

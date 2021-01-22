@@ -1,8 +1,8 @@
 //TODO make a more general function for handling curtext
 
-const jsonlocs = ["options", "start", "thebar", "yourhome"]; //List of locations that have a corresponding json file
-let jsonvars = {}; //List of variables that might need to be inserted in the string found in the json
-let calledjsons = {}
+const jsonlocs = ["options", "start", "thebar", "yourhome", "herhome"]; //List of locations that have a corresponding json file
+let jsonvars = {}; //Dictiornary list of variables that might need to be inserted in the string found in the json
+let calledjsons = {}//Dictionary list of all location that have already been queried, this saves them being queried multiple times meaning less requests for the server
 
 let flirtquotes; //This stores all possible flirts called from the JSON
 let flirtresps; //This stores all possible responses called from the JSON
@@ -544,7 +544,7 @@ function locationMSetup(tag, subtag){
     if (locjson.hasOwnProperty("girltalk"))
         locjson.girltalk = addGirlTalk(locjson.girltalk)
     //TODO this can be more efficient (arraylist with all options) with property
-    replaceWCI("intro", "girlname")
+    replaceWCI("intro", "girlname");
     replaceWCT("always", "girlname");
     replaceWCI("intro", "money");
     replaceWCT("always", "money");
@@ -578,6 +578,8 @@ function replaceWCI(jsontag, tag){
 
 //Replacing the variable wildcards of the given tag for the given list
 function replaceWCL(strlist, tag){
+    console.log("fuck");
+    console.log(strlist);
     let result = [];
     strlist.forEach(item => result.push(replaceCheck(item, tag)));
     return result;

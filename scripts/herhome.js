@@ -1,11 +1,18 @@
 // All functions connected to her house. This is both pickup and endgame
 
+function herhome() {
+    //TODO switch?
+    //This chooses the appropriate function to continue in the location herhome
+    if (locstack[0] === "yourhome") pickup();
+}
+
 //TODO fix this scene
 function pickup() {
     if (locstack[0] !== "pickup") { // happens first time only.
+        locationMSetup("herhome", "pickup");
         pushloc("pickup");
         s("You get in your car and drive over to " + girlname + "'s place.");
-        s(girlname + firstmtgquote);
+        s(girlname + appearance["clothes"][heroutfit]["firstmtgquote"]);
         if (pantycolor !== "none")
             s(firstmtgtightquote);
         else s(firstmtgtightquotebare);
@@ -59,4 +66,8 @@ function pickup() {
         }
         c("leavehm", "Say let's get going.");
     }
+}
+
+function callPickup(){
+
 }

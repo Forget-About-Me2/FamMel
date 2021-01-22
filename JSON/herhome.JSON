@@ -1,14 +1,21 @@
 {
   "pickup": {
     "intro": [
-      "girlname0",
+      ["girlname0",
       "clothes0",
       "girltalk0",
       "You also see the bulge of her overfull bladder.",
       "girltalk1",
       "girltalk2",
-      "She seems pretty upset."
-    ]
+      "She seems pretty upset."]
+    ],
+    "girlname": [
+      "You get in your car and drive over to {0}'s place."
+    ],
+    "always": [],
+    "girltalk": [],
+    "money": [],
+    "choices": []
 
   }
 }

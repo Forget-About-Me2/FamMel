@@ -18,7 +18,7 @@
       ["callher", "Call her on the phone"],
       ["youpee", "Pee before you leave"],
       ["ypredrink", "Drink some water"],
-      ["pickup", "Pick her up"]
+      ["herhome", "Pick her up"]
     ]},
   "store": {
     "intro": [],
