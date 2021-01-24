@@ -515,11 +515,14 @@ function setupQuotes(){
     getjson("youpee", yPeeSetup);
     getjson("drinking", function (){
         drinklines = json;
-    })
+        console.log(drinklines);
+    });
     //TODO format this json better?
     getjson("appearance", function (){
+        console.log("This is illegal");
         appearance = json;
-    } )
+        console.log(appearance);
+    } );
 }
 
 //TODO handle formatting differently, probably have a list of indexes that need to be replaced instead
@@ -648,6 +651,13 @@ function handleFlirt(curtext){
     for (let i = 0; i < result.length; i++){
         curtext = c([choice[i], formatString(build, result[i])], curtext);
     }
+    return curtext;
+}
+
+//Girl curses
+//TODO implement curses in json
+function voccurse(curtext) {
+    curtext.push(girltalk + " " + pickrandom(curseword));
     return curtext;
 }
 

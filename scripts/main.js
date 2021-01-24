@@ -138,11 +138,7 @@ function pickrandom(list) {
     return list[number];
 }
 
-//Girl curses
-function voccurse() {
-    s(girltalk + " " + curseword[randcounter]);
-    incrandom();
-}
+
 
 //This setups the game when you click start
 //Main reason we have a seperate function is because we need have to wait for yneeds to be assigned for the first scene

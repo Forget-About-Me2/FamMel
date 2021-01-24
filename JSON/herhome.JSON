@@ -1,16 +1,16 @@
 {
   "pickup": {
     "intro": [
-      ["girlname0",
-      "clothes0",
-      "girltalk0",
-      "You also see the bulge of her overfull bladder.",
-      "girltalk1",
-      "girltalk2",
-      "She seems pretty upset.",
-      "girltalk3",
-      "girlname1",
-      "girlname2"],
+      ["girlname0"],
+      ["girltalk0"],
+      ["You also see the bulge of her overfull bladder."],
+      ["girltalk1",
+      "girltalk2"],
+      ["She seems pretty upset."],
+      ["girltalk3"],
+      ["girlname1"],
+      ["girlname2"],
+      ["girltalk4"],
       ["girlname3"]
     ],
     "girlname": [

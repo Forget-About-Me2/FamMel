@@ -65,7 +65,9 @@ function flushyourdrank() {
 // Showneed
 // Showneed calculates how she's going to indicate
 // her current level of need ( if at all ) based on her situation
-function showneed() {
+function showneed(curtext) {
+    //TODO turn quotes into JSON
+
     // Clear the gottagoflag.  It will be set by displaygottavoc().
     gottagoflag = 0;
 
@@ -78,20 +80,20 @@ function showneed() {
     // no matter what.
 
     if (bladder >= (bladlose - 25) && shyness < 90) {
-        if (externalflirt) voccurse();
-        displaygottavoc();
+        if (externalflirt) curtext = voccurse(curtext);
+        curtext = displaygottavoc(curtext);
     } else if (changevenueflag) {
         // She's almost always going to ask to go if you're off somewhere
         if ((bladder >= blademer) ||
             (bladder >= bladneed && shyness < 70)) {
             if (waitcounter === 0) {  // did you just ask her to wait?
-                s(girltalk + "Hey! Before we go...");
+                curtext.push(girltalk + "Hey! Before we go...");
                 waitcounter = 4;
-                displaygottavoc();
+                curtext = displaygottavoc(curtext);
             } else {
-                s(girlname + " looks like she really has to pee, but she doesn't say anything.");
+                curtext.push(girlname + " looks like she really has to pee, but she doesn't say anything.");
                 if (askholditcounter)
-                    s("After all, you did ask her to hold it.");
+                    curtext.push("After all, you did ask her to hold it.");
             }
         }
     } else if (waitcounter === 0 && !externalflirt) {
@@ -100,24 +102,25 @@ function showneed() {
         // Shyness < 80 is enough to ask if she's having a bladder emergency
         if (shyness < 80 && bladder > blademer) {
             waitcounter = 6;
-            displaygottavoc();
+            curtext = displaygottavoc(curtext);
             // Shyness < 60 is enough to ask if she's merely needing to pee bad
         } else if (shyness < 60 && bladder > bladneed) {
             waitcounter = 10;
-            displaygottavoc();
+            curtext = displaygottavoc(curtext);
             // Shyness < 40 and she's letting you know at 1st urge.
         } else if (shyness < 40 && bladder > bladurge) {
             waitcounter = 12;
-            displaygottavoc();
+            curtext = displaygottavoc(curtext);
             // Otherwise, she may or may not show symptoms of having to go
         } else if ((Math.random() * bladlose) < bladder) {
-            displayneed();
+            curtext = displayneed(curtext);
         }
         // Otherwise, she may or may not show symptoms of having to go
     } else if ((Math.random() * bladlose) < bladder) {
-        displayneed();
+        curtext = displayneed(curtext);
     }
     changevenueflag = 0;
+    return curtext;
 }
 
 
@@ -159,10 +162,14 @@ function displaygottavoc(curtext, index) {
     if (bladder >= bladneed) gottagoflag = 1;
     if (bladder >= bladurge) brokeice = 1;
     incrandom();
-    if (textchoice.length === 1){
-        curtext.splice(index, 0, textchoice[0]);
+    if(index){
+        if (textchoice.length === 1){
+            curtext.splice(index, 0, textchoice[0]);
+        } else {
+            textchoice.forEach(text => {curtext.splice(index, 0, text); index++});
+        }
     } else {
-        textchoice.forEach(text => {curtext.splice(index, 0, text); index++});
+        textchoice.forEach(text => curtext.push(text));
     }
     return curtext;
 }
@@ -403,18 +410,20 @@ function displayneed(curtext) {
 }
 
 function displayyourneed(curtext) {
-        if (yourbladder >= yourbladlose && !holdself) {
-            curtext.push(pickrandom(yneeds["burst"]));
-        } else if (yourbladder > yourblademer) {
-            curtext.push(pickrandom(yneeds["desperate"]));
-        } else if (yourbladder > yourbladneed) {
-            curtext.push(pickrandom(yneeds["need"]));
-        } else if (yourbladder > yourbladurge) {
-            curtext.push(pickrandom(yneeds["urge"]));
-        } else if (locstack[0] === "drinkinggame") {
-            curtext.push(pickrandom(yneeds["empty"]));
-        }
-        return curtext
+    console.log(yneeds);
+    console.log(curtext);
+    if (yourbladder >= yourbladlose && !holdself) {
+        curtext.push(pickrandom(yneeds["burst"]));
+    } else if (yourbladder > yourblademer) {
+        curtext.push(pickrandom(yneeds["desperate"]));
+    } else if (yourbladder > yourbladneed) {
+        curtext.push(pickrandom(yneeds["need"]));
+    } else if (yourbladder > yourbladurge) {
+        curtext.push(pickrandom(yneeds["urge"]));
+    } else if (locstack[0] === "drinkinggame") {
+        curtext.push(pickrandom(yneeds["empty"]));
+    }
+    return curtext
 }
 
 //TODO make this more fancy

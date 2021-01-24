@@ -34,6 +34,15 @@ objects = {
             "half-empty ",
             "empty "
         ]
+    },
+    "beer":{
+        "value":0
+    },
+    "soda":{
+        "value":0
+    },
+    "cocktail":{
+        "value":0
     }
 }
 
