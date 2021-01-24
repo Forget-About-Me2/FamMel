@@ -40,29 +40,31 @@ objects = {
 //TODO add a mention need option
 //TODO integrate champagne from thehouse
 // standobjs function allows one to use the normal objects.
-function standobjs() {
-    if (roses > 0) c("giveroses", "Give her a boquet of roses.");
+function standobjs(curtext) {
+    if (haveItem("roses") > 0)
+        curtext = c(["giveroses", "Give her a boquet of roses."], curtext);
     if (locstack[0] !== "dodance") {
-        if (haveItem("water") && locstack[0] !== "thebar") {
-            c("drinkchosen", "Do something with the water.");
-        }
+        if (haveItem("water") && locstack[0] !== "thebar")
+           curtext = c(["drinkchosen", "Do something with the water."], curtext);
+
         if (haveItem("beer") && locstack[0] !== "driveout") {
-            c("beerchosen", "Do something with the beer.");
+            curtext = c(["beerchosen", "Do something with the beer."], curtext);
         }
         if (haveItem("soda")) {
-            c("sodachosen", "Do something with the soda");
+            curtext = c(["sodachosen", "Do something with the soda"], curtext);
         }
         if (haveItem("cocktail") && locstack[0] !== "driveout") {
-            c("cocktailchosen", "Do something with the cocktail");
+            curtext = c(["cocktailchosen", "Do something with the cocktail"], curtext);
         }
     }
     if (randomchoice(5) && gottagoflag < 1 && showedneed > 0 && !askholditcounter)
-        c("askpee", "Ask her if she has to pee.");
+        curtext = c(["askpee", "Ask her if she has to pee."], curtext);
     else if (flirtedflag < maxflirts && noflirtflag < 1) {
-        handleFlirt();
+        curtext = handleFlirt(curtext);
     } else if (gottagoflag < 1 && askholditcounter) {
-        c("askcanhold", "You ask her how she's doing.")
+        curtext = c(["askcanhold", "You ask her how she's doing."],curtext);
     }
+    return curtext;
 }
 
 function haveItem(item){
