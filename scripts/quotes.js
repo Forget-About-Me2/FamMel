@@ -500,13 +500,11 @@ async function getjsonT(tag){
 
 //calls all json requests to get recurring quotes
 function setupQuotes(){
-    console.log("quotes?");
     getjson("flirting", flirtSetup);
     getjson("needs", function (){
         needs = json;
     });
     getjson("yneeds", function (){
-        console.log("hello?");
         yneeds = json;
         //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
         //And this is the cleanest way to not have everything crying
@@ -515,13 +513,10 @@ function setupQuotes(){
     getjson("youpee", yPeeSetup);
     getjson("drinking", function (){
         drinklines = json;
-        console.log(drinklines);
     });
     //TODO format this json better?
     getjson("appearance", function (){
-        console.log("This is illegal");
         appearance = json;
-        console.log(appearance);
     } );
 }
 
@@ -581,8 +576,6 @@ function replaceWCI(jsontag, tag){
 
 //Replacing the variable wildcards of the given tag for the given list
 function replaceWCL(strlist, tag){
-    console.log("fuck");
-    console.log(strlist);
     let result = [];
     strlist.forEach(item => result.push(replaceCheck(item, tag)));
     return result;
@@ -662,8 +655,8 @@ function voccurse(curtext) {
 }
 
 function yPeeSetup(){
-    json["girlname"] = replaceWCL(json["girlname"], "girlname");
-    json["girltalk"] = replaceWCL(json["girltalk"], "girltalk");
+    json["girlname"] = addGirlname(json["girlname"]);
+    json["girltalk"] = addGirlTalk(json["girltalk"]);
     json["locked"]["girlname"] = replaceWCL(json["locked"]["girlname"], "girlname");
     let templist = json["thehome"][0];
     let result = [];

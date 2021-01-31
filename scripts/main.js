@@ -89,7 +89,6 @@ function go(tag) {
 
     if(jsonlocs.includes(tag)&&!calledjsons.hasOwnProperty(tag)){
         //checks whether the given location has a corresponding JSON file and calls it if it hasn't been called before
-        console.log("calltag: " + tag);
         getjsonT(tag);
     } else if (tag.includes("(")){
         //this is a terrible way to deal with choice functions but it works so hey
@@ -144,8 +143,6 @@ function pickrandom(list) {
 //Main reason we have a seperate function is because we need have to wait for yneeds to be assigned for the first scene
 //as it's called in there and this is the cleanest solution I can think of
 function gamestart(){
-    //TODO it's a very bad idea to have two functions with almost identical names
-    setupquotes();
     setupQuotes();
     if (debugmode) magic();
 }

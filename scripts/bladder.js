@@ -410,8 +410,6 @@ function displayneed(curtext) {
 }
 
 function displayyourneed(curtext) {
-    console.log(yneeds);
-    console.log(curtext);
     if (yourbladder >= yourbladlose && !holdself) {
         curtext.push(pickrandom(yneeds["burst"]));
     } else if (yourbladder > yourblademer) {
@@ -1317,7 +1315,6 @@ function wetherself3() {
             wetpanties += 1;
         }
         pantycolor = "none";
-        setupquotes(); // she now is wearing NO PANTIES
     } else if (pantycolor === "none")
         s(girltalk + "Good thing I wasn't wearing panties, I guess.");
     s(dryquote[randcounter]);
@@ -1412,7 +1409,6 @@ function givedrypanties() {
     s("She slips into the clean panties with a smile.");
     panties -= 1;
     pantycolor = "sexy";
-    setupquotes();
     if (wetlegs < 1) attraction += 5;
     if (wetlegs > 0) {
         s("Her still dripping pussy dampens the crotch of the new panties.");

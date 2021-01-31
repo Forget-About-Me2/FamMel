@@ -52,9 +52,7 @@ function gostore() {
 }
 
 function buy(number){
-    console.log(number);
     const item = locjson.buying[number];
-    console.log(item);
     const price = Number(item[1]);
     let curtext = [];
     if (money >= price){
@@ -162,7 +160,6 @@ function waitpickup() {
         choice.push(13);
         if (haveItem("earrings"))
             choice.push(14);
-        console.log(haveItem("earrings"));
         if (haveItem("roses"))
             choice.push(15);
         curtext = printChoices(curtext, choice);

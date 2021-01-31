@@ -110,7 +110,6 @@ function options() {
     checked.forEach(i => vars[i] = ["checked"]);
     vars[26] = [yourcustomurge];
     vars[27] = [money]
-    console.log(vars);
     let curtext = formatAll(json.html, vars);
     curtext = c(["gamestart()", "Continue..."], curtext);
     setText(curtext);
@@ -144,7 +143,6 @@ function exitcustomgirl() {
 function setheroutfit(outfitname) {
     setLocal("heroutfit", outfitname);
     heroutfit = outfitname;
-    setupquotes();
 }
 
 function setImagesShow(value){
