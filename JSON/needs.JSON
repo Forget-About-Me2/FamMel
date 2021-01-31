@@ -82,5 +82,22 @@
     "<i>You notice her full, firm breasts just under the surface of the water.</i>",
     "<i>You notice her nails are painted a dark shade of red.</i>",
     "<i>You stare at her toned, naked body disappearing down into the murk of the water.</i>",
-    "<i>You notice the graceful curve of her arm.</i>"]
+    "<i>You notice the graceful curve of her arm.</i>"],
+  "preventpee": [
+    ["nopeesolodrink", "Suggest that she have another drink instead."],
+    ["remindpayholdit", "girlname0"],
+    ["holdit", "Ask her to hold it in."],
+    ["ptogether", "Ask her not to leave you alone."],
+    ["pgirlsroom", "Tell her it would be sexy if you could watch."],
+    ["pnorestroom", "Tell her she can go, but not in the restrooms."],
+    ["pdrinkinggame", "Tell her she can go, but afterwards you should play a drinking game."],
+    ["pphotogame", "Tell her she can go, but you want to take a couple pictures first."],
+    ["nextstop", "Tell her you'll stop the next place you see."],
+    ["allowpee", "Tell her she's better go, then."],
+    ["indepee", "Ignore her request to use the toilet."]
+
+  ],
+  "girlname": [
+    "Remind {0} you're paying her to hold it."
+  ]
 }

@@ -547,7 +547,6 @@ function bribeearrings() {
 
 function bribeask() {
     s("<b>YOU:</b> Pretty please!");
-    bribeaskthresh -= askholditcounter * 0.1;
     if (randomchoice(bribeaskthresh) && (
         (bladder >= bladlose && attraction > holditlosethresh) ||
         (bladder >= blademer && attraction > holditemerthresh) ||
@@ -561,6 +560,7 @@ function bribeask() {
         displaygottavoc();
         c("indepee", "Continue...");
     }
+    bribeaskthresh -= askholditcounter * 0.1;
 }
 
 function bribefavor() {
