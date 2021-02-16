@@ -33,19 +33,46 @@ var feelthigh=["You feel her thigh muscles contracting and relaxing as she tries
 
 // her exclamations how much she drank since she peed and
 // how long she's been controlling herself.
-var drankburst=["without peeing once!", "and they're bursting my bladder!" , "and I've really got to go!", "and my bladder's not that big!" , "and I haven't gone to the bathroom yet!" , "and I'm not a camel!"];
+// var drankburst=[
+//     "without peeing once!",
+//     "and they're bursting my bladder!",
+//     "and I've really got to go!",
+//     "and my bladder's not that big!",
+//     "and I haven't gone to the bathroom yet!" , "and I'm not a camel!"
+// ];
 
-var surpriseexcl=["You've gotta be kidding!", "Oh come on!" , "What??!?" , "Whaddaya mean??!?" , "No way!?  Really?", "You're joking, right?"];
+// var surpriseexcl= [
+//     "You've gotta be kidding!",
+//     "Oh come on!",
+//     "What??!?",
+//     "Whaddaya mean??!?",
+//     "No way!?  Really?",
+//     "You're joking, right?"
+// ];
 
 var okayforyou=["Okay, since you're asking so nicely.  I'll hold it a little longer." , "Well... okay. I'll control myself if it makes you happy." , "Alright - I'll hold it in for you a little bit longer.", "If you insist - I'll try to hold it a little more." , "Okay.  I'll wait a bit more if that's what you want.", "Fine.  I'll wait a just little longer if you'd like me to."];
 
-var holdingtime=["I've been holding it for", "I've haven't gone for", "I've had to pee for", "I've already lasted", "My bladder's been filling for", "I've been waiting for"];
+// var holdingtime=[
+//     "I've been holding it for",
+//     "I've haven't gone for",
+//     "I've had to pee for",
+//     "I've already lasted",
+//     "My bladder's been filling for",
+//     "I've been waiting for"
+// ];
 
 // her apologies for asking to go
 var wanthold=["I know you asked me to wait, but...", "I know you told me not to go, but...", "I know you wanted me to hold it, but..." , "I know you asked me not to pee, but...", "I know you wanted me to control my bladder, but..." , "I know you didn't want me to go, but..."];
 
-// You ask her to hold it longer
-var askhold=["But we're having so much fun - can't you wait a little bit?", "It would be nice if you could wait just a little longer.", "Can you try to hold on just a little bit longer - I know where there's a really great bathroom.", "Would you wait just a bit?  For me?", "I bet you can hold it for a bit longer - we're having so much fun!", "Why now?  I'm sure you can wait just a bit."];
+// // You ask her to hold it longer
+// var askhold=[
+//     "But we're having so much fun - can't you wait a little bit?",
+//     "It would be nice if you could wait just a little longer.",
+//     "Can you try to hold on just a little bit longer - I know where there's a really great bathroom.",
+//     "Would you wait just a bit?  For me?",
+//     "I bet you can hold it for a bit longer - we're having so much fun!",
+//     "Why now?  I'm sure you can wait just a bit."
+// ];
 
 // Description of her holding her pee just for you
 var sheholds=["She needs to pee badly, but she's holding it for you.",
@@ -334,13 +361,40 @@ var holdokayquotes=["I don't even feel the slightest need to go.",
 //  for displayholdquip()
 //
 
-var quiplose=["I've never in my life had to go so bad, but I'll try to hold it for you.", "I <i>can't</i> wait - but I'm trying as hard as I can.","I'm trying to control it.  I'm trying to control...","I can feel it coming out, but I'm holding as hard as I can.", "God! Don't pee!  Don't pee! Don't pee!", "It's pulsing! Gotta hold!  Gotta hold!"];
+var quiplose=[
+    "I've never in my life had to go so bad, but I'll try to hold it for you.",
+    "I <i>can't</i> wait - but I'm trying as hard as I can.",
+    "I'm trying to control it.  I'm trying to control...",
+    "I can feel it coming out, but I'm holding as hard as I can.",
+    "God! Don't pee!  Don't pee! Don't pee!",
+    "It's pulsing! Gotta hold!  Gotta hold!"
+];
 
-var quipemer=["I'm desperate here, but I'll try to hold on.", "I'll try to wait, but I <b><i>really</i></b> need to go.", "I don't know how much longer I can wait, but I'm trying.", "I don't think I can hold it much longer, but I'm trying.", "I don't think I've had to go this bad in a long time, but I'm gonna hold it.", "I'll try to control my bladder for you."];
+var quipemer=[
+    "I'm desperate here, but I'll try to hold on.",
+    "I'll try to wait, but I <b><i>really</i></b> need to go.",
+    "I don't know how much longer I can wait, but I'm trying.",
+    "I don't think I can hold it much longer, but I'm trying.",
+    "I don't think I've had to go this bad in a long time, but I'm gonna hold it.",
+    "I'll try to control my bladder for you."
+];
 
-var quipneed=["I've gotta go soon, but I'll wait.", "I can wait a little bit ... I guess.", "I'm awfully full, but I can hold it.", "I don't want to explode my bladder, but I'll wait.", "I can hold it... I think.", "I need to go, but I've held it longer than this before."];
+var quipneed=[
+    "I've gotta go soon, but I'll wait.",
+    "I can wait a little bit ... I guess.",
+    "I'm awfully full, but I can hold it.",
+    "I don't want to explode my bladder, but I'll wait.",
+    "I can hold it... I think.",
+    "I need to go, but I've held it longer than this before."];
 
-var quipurge=["I don't have to go very bad yet.  I can wait.","I don't really need to pee that bad yet.",  "I'm fine.  I can hold it.", "I've held it longer lots of times.", "I don't need the little girls room yet - I can wait.","I don't need the little girls room yet - I can wait.",  "No problem.  I'll hold it."];
+var quipurge=[
+    "I don't have to go very bad yet.  I can wait.",
+    "I don't really need to pee that bad yet.",
+    "I'm fine.  I can hold it.",
+    "I've held it longer lots of times.",
+    "I don't need the little girls room yet - I can wait.",
+    "No problem.  I'll hold it."
+];
 
 //
 //  She's embarassed she couldn't hold it.
@@ -476,6 +530,12 @@ function addGirlTalk(quotes){
     return result;
 }
 
+function addGirlGasp(quotes){
+    let result = [];
+    quotes.forEach(item => result.push(item.format([girlgasp])));
+    return result;
+}
+
 const quoteID = "";
 let json = null;
 let locjson = null; //This is the main json for the current location
@@ -501,9 +561,7 @@ async function getjsonT(tag){
 //calls all json requests to get recurring quotes
 function setupQuotes(){
     getjson("flirting", flirtSetup);
-    getjson("needs", function (){
-        needs = json;
-    });
+    getjson("needs", needSetup);
     getjson("yneeds", function (){
         yneeds = json;
         //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
@@ -542,6 +600,7 @@ function locationMSetup(tag, subtag){
     if (locjson.hasOwnProperty("girltalk"))
         locjson.girltalk = addGirlTalk(locjson.girltalk)
     //TODO this can be more efficient (arraylist with all options) with property
+    //TODO instead of using {0} format outright replace the name0 thing with the right value
     replaceWCI("intro", "girlname");
     replaceWCT("always", "girlname");
     replaceWCI("intro", "money");
@@ -588,6 +647,13 @@ function replaceWCLI(strlist, tag){
     return result;
 }
 
+//Replacing the variable wildcard of the given tag for the given list, using the given checklist
+function replaceWCLC(strlist, checklist, tag){
+    let result = [];
+    strlist.forEach(item => result.push(LreplaceCheck(item,checklist, tag)));
+    return result;
+}
+
 
 function replaceCheck(rpstring, tag){
     const list = locjson[tag];
@@ -621,6 +687,7 @@ function flirtSetup(){
     }
 }
 
+
 function handleFlirt(curtext){
     let result = [];
     let choice = [];
@@ -645,6 +712,15 @@ function handleFlirt(curtext){
         curtext = c([choice[i], formatString(build, result[i])], curtext);
     }
     return curtext;
+}
+
+function needSetup(){
+    needs = json;
+    needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
+    needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
+    needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girltalk"], "girltalk");
+    needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girlgasp"], "girlgasp");
+
 }
 
 //Girl curses
@@ -730,6 +806,12 @@ function printAllChoices(curtext){
 //Prints the given selection of choices for the given choices list
 function printChoicesList(curtext, selection, list){
     selection.forEach(index => curtext = callChoice(list[index], curtext));
+    return curtext;
+}
+
+//Prints all the choices for the given choices list
+function printAllChoicesList(curtext, list){
+    list.forEach(item => curtext = callChoice(item, curtext))
     return curtext;
 }
 

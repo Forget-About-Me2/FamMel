@@ -437,7 +437,7 @@ function youbegtoilet(curtext) {
 //
 //  She says how long she's been waiting to pee.
 //
-function displaywaited() {
+function displaywaited(curtext) {
     let timewaited = " ";
     let halftimewaited;
     halftimewaited = Math.floor((thetime - lastpeetime) / 30);
@@ -455,13 +455,13 @@ function displaywaited() {
     }
 
     if (halftimewaited > 1)
-        s(girltalk + holdingtime[randcounter] + timewaited + "!");
+        curtext.push(girltalk + pickrandom(needs["holdingtime"]) + timewaited + "!");
 }
 
 //
 //  She says how much she's drank since she last peed.
 //
-function displaydrank() {
+function displaydrank(curtext) {
 
     let sentence = " ";
     comma = 0;
@@ -505,26 +505,35 @@ function displaydrank() {
     }
 
     if ((drankwaters + drankbeers + drankcocktails + dranksodas) > 0) {
-        s(girltalk + "I drank " + sentence + " " + drankburst[randcounter]);
-        incrandom();
+        curtext.push(girltalk + "I drank " + sentence + " " + pickrandom(needs["drankburst"]));
     }
+
+    return curtext;
 }
 
 //
 //  You try to convince her to hold it.
 //
-function convinceher() {
+function convinceher(curtext) {
+    let selection = []; //Used to keep track of which options need to be printed
     if (roses > 0) {
-        c("briberoses", "Try to bribe her with roses.")
+        selection.push(0);
+        // c("briberoses", "Try to bribe her with roses.")
     }
     if (earrings > 0) {
-        c("bribeearrings", "Try to bribe her with earrings.")
+        selection.push(1);
+        // c("bribeearrings", "Try to bribe her with earrings.")
     }
     if (owedfavor > 0) {
-        c("bribefavor", "Call in a favor");
+        selection.push(2);
+        // c("bribefavor", "Call in a favor");
     }
-    c("bribeask", "Ask her nicely");
-    c("indepee", "Just let her go...");
+    selection.push(3);
+    selection.push(4);
+    curtext = printChoicesList(curtext, selection, needs["convinceher"]);
+    // c("bribeask", "Ask her nicely");
+    // c("indepee", "Just let her go...");
+    return curtext;
 }
 
 function briberoses() {
@@ -609,51 +618,62 @@ function remindpayholdit() {
 //
 //TODO fix it that if you are at her place after you asked her and she doesn't have to go you always fail
 function holdit() {
-    s("<b>YOU:</b> " + askhold[randcounter]);
-    incrandom();
+    let curtext = [];
+    curtext.push(pickrandom(needs["askhold"]));
     gottagoflag = 0;
     waitcounter = 6;
     if ((bladder >= bladlose && attraction > holditlosethresh) ||
         (bladder >= blademer && attraction > holditemerthresh) ||
         (bladder >= bladneed && attraction > holditneedthresh)) {
         if (bladder >= blademer) {
-            s(girltalk + surpriseexcl[randcounter]);
+            curtext.push(girltalk + pickrandom(needs["surpriseexcl"])); //TODO this shouldn't be allowed
             if (randomchoice(5))
-                displaydrank(); else displaywaited();
-            s(girltalk + "I don't know...");
-            if (locstack[0] !== "gostore") displayneed();
-            else displaygottavoc();
-            convinceher();
+                curtext = displaydrank(curtext);
+            else
+                curtext = displaywaited(curtext);
+            curtext.push(needs["holdit"]["dialogue"][0]);
+            if (locstack[0] !== "gostore") curtext = displayneed(curtext);
+            else curtext = displaygottavoc(curtext);
+            curtext = convinceher(curtext);
         } else {
-            displayholdquip();
+            curtext = displayholdquip(curtext);
             askholditcounter++;
             if (bladder >= bladlose) {
                 if (locstack[0] === "gostore") {
-                    s(girltalk + "Ummm...  Oh.   Oh.  Uh. ohmygod.  ohmygod. ohmygod.");
-                    s(girlgasp + "I can't hold it - it's - it's coming out!");
+                    //TODO maybe put in one thing to print all lines
+                    curtext.push(needs["holdit"]["dialogue"][1]);
+                    curtext.push(needs["holdit"]["dialogue"][2]);
+                    curtext.push(needs["holdit"]["dialogue"][3]);
+                    // s(girltalk + "Ummm...  Oh.   Oh.  Uh. ohmygod.  ohmygod. ohmygod.");
+                    // s(girlgasp + "I can't hold it - it's - it's coming out!");
                     bladder = 0;
                     askholditcounter = 0;
                     waitcounter = 0;
                     attraction = 0;
-                    s(girltalk + "I'm so embarassed - I'll go clean up.");
+                    // s(girltalk + "I'm so embarassed - I'll go clean up.");
                 } else {
-                    displayneed();
+                    curtext = displayneed(curtext);
                 }
             }
-            c(locstack[0], "Continue...");
+            curtext = printAllChoicesList(curtext, needs["holdit"]["choices"]);
+            // c(locstack[0], "Continue...");
         }
     } else {
         if (locstack[0] === "gostore") {
-            s(girlname + "Sorry.");
-            s("She's hung up on you.");
+            curtext.push(needs["holdit"]["dialogue"][4]);
+            curtext.push(needs["holdit"]["dialogue"][5]);
+            // s(girlname + "Sorry.");
+            // s("She's hung up on you.");
             attraction -= 5;
             bladder = 0;
         } else {
-            s(girltalk + "Not gonna happen, bub.");
+            curtext.push(needs["holdit"]["dialogue"][6]);
+            // s(girltalk + "Not gonna happen, bub.");
             attraction -= 5;
-            indepee();
+            curtext = indepee(curtext);
         }
     }
+    sayText(curtext);
 }
 
 function allowpee() {
@@ -1097,19 +1117,23 @@ function ypeeoutside3c() {
 
 //  DisplayHoldQuip function prints a quasi-random quip from "+girlname+"
 //  saying she's going to try to hold it for you.
-function displayholdquip() {
-    if (bladder >= bladlose) {
-        s(girltalk + quiplose[randcounter]);
-    } else if (bladder >= blademer) {
-        s(girltalk + quipemer[randcounter]);
-    } else if (bladder >= bladneed) {
-        s(girltalk + quipneed[randcounter]);
-    } else if (bladder >= bladurge) {
-        s(girltalk + quipurge[randcounter]);
-    } else {
-        s(girltalk + "I'm a big girl now - I can handle it.");
-    }
-    incrandom();
+function displayholdquip(curtext) {
+    //TODO is the noneed ever used?
+    let need = "noneed" //How full her bladder is influences what she says
+    if (bladder >= bladlose)
+        need = "lose";
+        // s(girltalk + quiplose[randcounter]);
+    else if (bladder >= blademer)
+        need = "emer"
+        // s(girltalk + quipemer[randcounter]);
+    else if (bladder >= bladneed)
+        need = "need"
+        // s(girltalk + quipneed[randcounter]);
+    else if (bladder >= bladurge)
+        need = "urge";
+        // s(girltalk + quipurge[randcounter]);
+    curtext.push(girltalk + pickrandom(needs["holdquip"][need]));
+    return curtext;
 }
 
 

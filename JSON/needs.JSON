@@ -101,5 +101,105 @@
   "girlname": [
     "Remind {0} you're paying her to hold it.",
     "Tell {0} you'll pay her to hold it."
-  ]
+  ],
+  "holdit": {
+    "dialogue": [
+      "girltalk0",
+      "girltalk1",
+      "girlgasp0",
+      "girltalk2",
+      "girlname4",
+      "She's hung up on you.",
+      "girltalk3"
+  ],
+  "girltalk": [
+    "{0} I don't know...",
+    "{0} Ummm...  Oh.   Oh.  Uh. ohmygod.  ohmygod. ohmygod.",
+    "{0} I'm so embarassed - I'll go clean up.",
+    "{0} Not gonna happen, bub.",
+    "{0} Sorry"
+  ],
+  "choices": [
+    ["curloc", "Continue..."]
+  ],
+  "girlgasp": [
+    "{0} I can't hold it - it's - it's coming out!"
+  ]}
+  ,
+  "askhold": [
+    "<b>YOU:</b> But we're having so much fun - can't you wait a little bit?",
+    "<b>YOU:</b> It would be nice if you could wait just a little longer.",
+    "<b>YOU:</b> Can you try to hold on just a little bit longer - I know where there's a really great bathroom.",
+    "<b>YOU:</b> Would you wait just a bit?  For me?",
+    "<b>YOU:</b> I bet you can hold it for a bit longer - we're having so much fun!",
+    "<b>YOU:</b> Why now?  I'm sure you can wait just a bit."
+  ],
+  "surpriseexcl": [
+    "You've gotta be kidding!",
+    "Oh come on!",
+    "What??!?",
+    "Whaddaya mean??!?",
+    "No way!?  Really?",
+    "You're joking, right?"
+  ],
+  "drankburst": [
+    "without peeing once!",
+    "and they're bursting my bladder!",
+    "and I've really got to go!",
+    "and my bladder's not that big!",
+    "and I haven't gone to the bathroom yet!",
+    "and I'm not a camel!"
+  ],
+  "holdingtime": [
+    "I've been holding it for",
+    "I've haven't gone for",
+    "I've had to pee for",
+    "I've already lasted",
+    "My bladder's been filling for",
+    "I've been waiting for"
+  ],
+  "convinceher": [
+    ["briberoses", "Try to bribe her with roses."],
+    ["bribeearrings", "Try to bribe her with earrings."],
+    ["bribefavor", "Call in a favor"],
+    ["bribeask", "Ask her nicely"],
+    ["indepee", "Just let her go..."]
+  ],
+  "holdquip": {
+    "lose":[
+      "I've never in my life had to go so bad, but I'll try to hold it for you.",
+      "I <i>can't</i> wait - but I'm trying as hard as I can.",
+      "I'm trying to control it.  I'm trying to control...",
+      "I can feel it coming out, but I'm holding as hard as I can.",
+      "God! Don't pee!  Don't pee! Don't pee!",
+      "It's pulsing! Gotta hold!  Gotta hold!"
+    ],
+    "emer": [
+      "I'm desperate here, but I'll try to hold on.",
+      "I'll try to wait, but I <b><i>really</i></b> need to go.",
+      "I don't know how much longer I can wait, but I'm trying.",
+      "I don't think I can hold it much longer, but I'm trying.",
+      "I don't think I've had to go this bad in a long time, but I'm gonna hold it.",
+      "I'll try to control my bladder for you."
+    ],
+    "need": [
+      "I've gotta go soon, but I'll wait.",
+      "I can wait a little bit ... I guess.",
+      "I'm awfully full, but I can hold it.",
+      "I don't want to explode my bladder, but I'll wait.",
+      "I can hold it... I think.",
+      "I need to go, but I've held it longer than this before."
+    ],
+    "urge": [
+      "I don't have to go very bad yet.  I can wait.",
+      "I don't really need to pee that bad yet.",
+      "I'm fine.  I can hold it.",
+      "I've held it longer lots of times.",
+      "I don't need the little girls room yet - I can wait.",
+      "No problem.  I'll hold it."
+    ],
+    "noneed": [
+      "I'm a big girl now - I can handle it."
+    ]
+  }
 }
