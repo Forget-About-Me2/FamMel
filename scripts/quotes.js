@@ -713,7 +713,9 @@ function printList(curtext, list){
     return curtext;
 }
 
-//Prints the given selection of choices
+
+
+//Prints the given selection of choices for the current location
 function printChoices(curtext, selection){
     selection.forEach(index => curtext = callChoice(locjson.choices[index], curtext));
     return curtext;
@@ -722,6 +724,12 @@ function printChoices(curtext, selection){
 //Prints all choices
 function printAllChoices(curtext){
     locjson.choices.forEach(item => curtext = callChoice(item, curtext) );
+    return curtext;
+}
+
+//Prints the given selection of choices for the given choices list
+function printChoicesList(curtext, selection, list){
+    selection.forEach(index => curtext = callChoice(list[index], curtext));
     return curtext;
 }
 

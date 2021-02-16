@@ -1195,42 +1195,46 @@ function pstory2() {
 }
 
 //TODO make her less demanding
-function preventpee() {
+function preventpee(curtext) {
 
     // If she's not in obviously dire straits, your
     // admonitions, whatever they are, will effectly
     // have answered her request to pee.  So the flag
     // will be cleared.
 
+    let choices = [] // This keeps track of the options you can choose from so they can be printed at the end
+
     if (bladder < bladlose - 50)
         gottagoflag = 0;
 
     if (locstack[0] === "solobar") {
-        c("nopeesolodrink", "Suggest that she have another drink instead.");
+        choices.push(0); //Suggest she has a drink
         if (askholditcounter)
-            c("remindpayholdit", "Remind " + girlname + " you're paying her to hold it.");
+            choices.push(1); //Remind that you are paying her
         else
-            c("payholdit", "Tell " + girlname + " you'll pay her to hold it.");
-    } else {
-        c("holdit", "Ask her to hold it in.");
-    }
+            choices.push(2); //Pay her
+    } else
+        choices.push(3); //Hold it
 
-    if (locstack[0] === "dodance") c("ptogether", "Ask her not to leave you alone.");
+    if (locstack[0] === "dodance")
+        choices.push(4); //Pee together
     if (locstack[0] === "darkbar" || locstack[0] === "darkmovie" || locstack[0] === "darkclub")
-        c("pgirlsroom", "Tell her it would be sexy if you could watch.");
+        choices.push(5); //Watch
     if (locstack[0] === "darkmovie")
-        c("pnorestroom", "Tell her she can go, but not in the restrooms.");
+        choices.push(6); //No restroom
     if (locstack[0] === "darkbar")
-        c("pdrinkinggame", "Tell her she can go, but afterwards you should play a drinking game.");
+        choices.push(7); //pdrinkinggame
     if (locstack[0] === "darkclub")
-        c("pphotogame", "Tell her she can go, but you want to take a couple pictures first.");
+        choices.push(8); //pphotegame
     if (locstack[0] === "driveout") {
-        c("nextstop", "Tell her you'll stop the next place you see.");
+        choices.push(9); //nextstop
     } else if (locstack[0] !== "solobar") {
-        c("allowpee", "Tell her she's better go, then.");
+        choices.push(10); //allowpee
     }
     if (locstack[0] !== "solobar")
-        c("indepee", "Ignore her request to use the toilet.");
+        choices.push(11); //indepee
+
+    return printChoicesList(curtext, choices, needs["preventpee"]);
 }
 
 

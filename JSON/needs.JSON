@@ -86,6 +86,7 @@
   "preventpee": [
     ["nopeesolodrink", "Suggest that she have another drink instead."],
     ["remindpayholdit", "girlname0"],
+    ["payholdit", "girlname1"],
     ["holdit", "Ask her to hold it in."],
     ["ptogether", "Ask her not to leave you alone."],
     ["pgirlsroom", "Tell her it would be sexy if you could watch."],
@@ -98,6 +99,7 @@
 
   ],
   "girlname": [
-    "Remind {0} you're paying her to hold it."
+    "Remind {0} you're paying her to hold it.",
+    "Tell {0} you'll pay her to hold it."
   ]
 }
