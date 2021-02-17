@@ -175,7 +175,7 @@ function displaygottavoc(curtext, index) {
 }
 
 //TODO lose control when bursting on the way
-function indepee() {
+function indepee(curtext=[], called=false) {
     gottagoflag = 0;
     //TODO the locstack aren't compeltely correct
     if (haveherpurse) {
@@ -184,92 +184,70 @@ function indepee() {
         locstack[0] === "thebedroom" ||
         locstack[0] === "pickup" ||
         locstack[0] === "fuckher6") {
-        s(girlname + " heads for the bathroom, leaving the door slightly ajar.");
+        curtext.push(peelines["thehome"][0]);
+        // s(girlname + " heads for the bathroom, leaving the door slightly ajar.");
     } else if (locstack[0] === "themakeout" ||
         locstack[0] === "thehottub" ||
         locstack[0] === "driveout" ||
         locstack[0] === "thehome" ||
         locstack[0] === "thebedroom" ||
         locstack[0] === "thewalk" || locstack[0] === "theyard" || locstack[0] === "thebeach") {
-        s(girlname + " heads for the restroom and then realizes:");
-    } else s(girlname + " runs toward the restroom.");
-
-    if (locstack[0] === "thebar" && randomchoice(rrlockedthresh)) {
-        bathroomlocked();
-        if (rrlockedflag > 3) {
-            s(girltalk + "It's <b><i>still</i></b> fucking locked!");
-        } else if (rrlockedflag > 2) {
-            s(girltalk + "It's <b><i>still</i></b> locked!  What's taking her so long?");
-        } else if (rrlockedflag) {
-            s(girltalk + "It's still locked!");
-        } else {
-            s(girltalk + "It was locked!");
-        }
-        rrlockedflag++;
-        displayneed();
-    } else if (locstack[0] === "theclub" && randomchoice(rrlinethresh)) {
-        bathroomlocked();
-        if (rrlockedflag) {
-            s(girltalk + "The line's not getting any smaller.");
-        } else {
-            s(girltalk + "There was a huge line.");
-        }
-        rrlockedflag++;
-        displayneed();
-    } else if (locstack[0] === "dodance" && randomchoice(rrlinethresh)) {
-        bathroomlocked();
-        if (rrlockedflag > 3) {
-            s(girltalk + "The line's still really fucking long.");
-        } else if (rrlockedflag > 2) {
-            s(girltalk + "I think the line's getting longer...");
-        } else if (rrlockedflag) {
-            s(girltalk + "The line's still really really long.");
-        } else {
-            s(girltalk + "There was a huge line.");
-        }
-        rrlockedflag++;
-        displayneed();
+        curtext.push(peelines["noneavailable"][0]);
+        // s(girlname + " heads for the restroom and then realizes:");
+    } else
+        curtext = printList(curtext, peelines["remaining"]);
+        // s(girlname + " runs toward the restroom.");
+    if ((locstack[0] === "thebar" && randomchoice(rrlockedthresh) ) || ((locstack[0] === "theclub" || locstack[0] === "dodance") && randomchoice(rrlinethresh)) ){
+        curtext = bathroomlocked(curtext);
     } else if (locstack[0] === "themakeout") {
-        s("There is no restroom out here in the boonies.");
+        curtext.push(peelines["noneavailable"][1]);
+        // s("There is no restroom out here in the boonies.");
         displayneed();
     } else if (locstack[0] === "driveout") {
-        s("There is no restroom in the car.");
+        curtext.push(peelines["noneavailable"][2]);
+        // s("There is no restroom in the car.");
         displayneed();
     } else if (locstack[0] === "thewalk" || locstack[0] === "theyard" || locstack[0] === "thebeach" || locstack[0] === "thehottub") {
-        s("There is no restroom around.");
+        // s("There is no restroom around.");
+        curtext.push(peelines["noneavailable"][3]);
         displayneed();
         interpbladder();
     } else if (locstack[0] === "thehome" ||
         locstack[0] === "thebedroom" ||
         locstack[0] === "fuckher6") {
-        s("You hear a quick clatter and a gasp as she lifts the toilet lid.  She starts to pee violently, a loud hiss accompanying the splash of the urine in the bowl.  You imagine being in there with her as she relieves her bladder.");
+        curtext.push(peelines["thehome"][1]);
+        // s("You hear a quick clatter and a gasp as she lifts the toilet lid.  She starts to pee violently, a loud hiss accompanying the splash of the urine in the bowl.  You imagine being in there with her as she relieves her bladder.");
         flushdrank();
     } else if (locstack[0] === "pickup") {
-        s("You hear a quick clatter of the toilet lid, and then the hissing and splashing of her urine in the bowl.");
+        curtext.push(peelines["thehome"][2]);
+        // s("You hear a quick clatter of the toilet lid, and then the hissing and splashing of her urine in the bowl.");
         flushdrank();
     } else if (locstack[0] === "solobar") {
         if (bladder > bladlose - 25)
-            s(barpeeprivate[randcounter]);
+            curtext.push(pickrandom(peelines["barpeeprivate"]));
         else
-            s(barpeeprivate2[randcounter]);
-        incrandom();
+            curtext.push(pickrandom(peelines["barpeeprivate2"]));
         //TODO check validity of these attraction
         attraction -= 2;
         flushdrank();
     } else {
         if (bladder > bladlose - 25)
-            s(peeprivate[randcounter]);
+            curtext.push(pickrandom(appearance[heroutfit]["peeprivate"]));
         else
-            s(peeprivate2[randcounter]);
-        incrandom();
+            curtext.push(pickrandom(appearance[heroutfit]["peeprivate2"]));
         //TODO check validity of these attraction
         attraction -= 2;
         flushdrank();
     }
-    if (bladder >= bladlose - 25 && locstack[0] !== "thehottub") begtoilet();
+    if (bladder >= bladlose - 25 && locstack[0] !== "thehottub") curtext = begtoilet(curtext);
     else {
-        c(locstack[0], "Continue...");
+        curtext = c([locstack[0], "Continue..."], curtext);
     }
+    //If the function has been called by another function, send the result back otherwise print it yourself
+    if (called)
+        return curtext;
+    else
+        sayText(curtext);
 }
 
 //TODO lose control when bursting on the way
@@ -285,24 +263,24 @@ function youpee() {
     } else if (locstack[0] === "thehome" ||
         locstack[0] === "thebedroom" || locstack[0] === "pickup" || locstack[0] === "fuckher6") {
         if(locstack[0] !== "fuckher6") {
-            curtext = printList(ypeelines["thehome"][0], curtext);
+            curtext = printList(curtext, ypeelines["thehome"][0]);
         }
-        curtext = printList(ypeelines["thehome"][1], curtext);
+        curtext = printList(curtext, ypeelines["thehome"][1]);
         flushyourdrank();
         peed = 1
     } else {
-        curtext = printList(ypeelines["remaining"], curtext);
+        curtext = printList(curtext, ypeelines["remaining"]);
     }
 
-    if ((locstack[0] === "thebar" || locstack[0] === "theclub" || locstack[0] === "dodance") && randomchoice(rrlockedthresh)) {
-        youbathroomlocked();
+    if ((locstack[0] === "thebar" && randomchoice(rrlockedthresh) ) || ((locstack[0] === "theclub" || locstack[0] === "dodance") && randomchoice(rrlinethresh)) ) {
+        curtext = youbathroomlocked(curtext);
     }
 
     else if (locstack[0] === "darkbar" || locstack[0] === "darkmovie" || locstack[0] === "darkclub") {
         //TODO potentially cycle between quotes
         if (yourbladder > yourbladlose - 25)
             curtext = printList(ypeelines["youpeeprivate"][0], curtext);
-        else if (!peed)
+        else
             curtext = printList(ypeelines["youpeeprivate2"][0], curtext);
         flushyourdrank();
     } else {
@@ -320,29 +298,21 @@ function youpee() {
     sayText(curtext);
 }
 
-function bathroomlocked() {
+//TODO your and her bathroomlocked can probably be intertwened, only difference is start and the locked variable
+function bathroomlocked(curtext) {
+    const locked = peelines["locked"]
+    //Description of her reaction, based on how badly she has to go
     if (bladder > blademer)
-        s("She quickly runs back looking shaken.");
-    else if (bladder > bladneed)
-        s("Momentarily, she returns looking uncomfortable.");
-    else
-        s("She returns looking unfulfilled.");
-}
-
-function youbathroomlocked(curtext) {
-    const locked = ypeelines["locked"];
-    if (locstack[0] === "thebar")
-        curtext.push(locked["bar"]);
-    else {
-        curtext.push(locked["club"]);
-    }
-    if (yourbladder > yourblademer)
         curtext.push(locked["urgency"][0]);
-    else if (yourbladder > yourbladneed)
+        // s("She quickly runs back looking shaken.");
+    else if (bladder > bladneed)
         curtext.push(locked["urgency"][1]);
+        // s("Momentarily, she returns looking uncomfortable.");
     else
-        curtext.push(locked["urgency"[2]]);
+        curtext.push(locked["urgency"][2]);
+        // s("She returns looking unfulfilled.");
     if(locstack[0] === "thebar") {
+        //She tells you the bathroom was locked, depending on how often you tried already
         if (yrrlockedflag > 3) {
             curtext.push(locked["cbar"][0]);
         } else if (yrrlockedflag > 2) {
@@ -353,6 +323,7 @@ function youbathroomlocked(curtext) {
             curtext.push(locked["cbar"][3]);
         }
     } else {
+        //She tells you the line was too long, depending on how often she tried already
         if (yrrlockedflag > 3) {
             curtext.push(locked["cclub"][0]);
         } else if (yrrlockedflag > 2) {
@@ -363,8 +334,53 @@ function youbathroomlocked(curtext) {
             curtext.push(locked["cclub"][3]);
         }
     }
-    yrrlockedflag++;
-    displayneed(curtext);
+
+    rrlockedflag++; //Increase how often she tried
+    curtext = displayneed(curtext);
+    return curtext;
+
+}
+
+function youbathroomlocked(curtext) {
+    const locked = ypeelines["locked"];
+    //Description of the situation
+    if (locstack[0] === "thebar")
+        curtext.push(locked["bar"]);
+    else {
+        curtext.push(locked["club"]);
+    }
+    //Description of your reaction, based on how badly you have to go
+    if (yourbladder > yourblademer)
+        curtext.push(locked["urgency"][0]);
+    else if (yourbladder > yourbladneed)
+        curtext.push(locked["urgency"][1]);
+    else
+        curtext.push(locked["urgency"[2]]);
+    if(locstack[0] === "thebar") {
+        //Tell her the bathroom was locked, depending on how often you tried already
+        if (yrrlockedflag > 3) {
+            curtext.push(locked["cbar"][0]);
+        } else if (yrrlockedflag > 2) {
+            curtext.push(locked["cbar"][1]);
+        } else if (yrrlockedflag) {
+            curtext.push(locked["cbar"][2]);
+        } else {
+            curtext.push(locked["cbar"][3]);
+        }
+    } else {
+        //Tell her the line was too long, depending on how often you tried already
+        if (yrrlockedflag > 3) {
+            curtext.push(locked["cclub"][0]);
+        } else if (yrrlockedflag > 2) {
+            curtext.push(locked["cclub"][1]);
+        } else if (yrrlockedflag) {
+            curtext.push(locked["cclub"][2]);
+        } else {
+            curtext.push(locked["cclub"][3]);
+        }
+    }
+    yrrlockedflag++; //Increase how often you tried
+    curtext = displayneed(curtext);
     return curtext;
 }
 
@@ -631,7 +647,7 @@ function holdit() {
                 curtext = displaydrank(curtext);
             else
                 curtext = displaywaited(curtext);
-            curtext.push(needs["holdit"]["dialogue"][0]);
+            curtext.push(needs["holdit"]["dialogue"][0]); //She's not sure, you have to convince her
             if (locstack[0] !== "gostore") curtext = displayneed(curtext);
             else curtext = displaygottavoc(curtext);
             curtext = convinceher(curtext);
@@ -643,32 +659,27 @@ function holdit() {
                     //TODO maybe put in one thing to print all lines
                     curtext.push(needs["holdit"]["dialogue"][1]);
                     curtext.push(needs["holdit"]["dialogue"][2]);
-                    curtext.push(needs["holdit"]["dialogue"][3]);
-                    // s(girltalk + "Ummm...  Oh.   Oh.  Uh. ohmygod.  ohmygod. ohmygod.");
-                    // s(girlgasp + "I can't hold it - it's - it's coming out!");
+                    curtext.push(needs["holdit"]["dialogue"][3]); //She's wetting herself over the phone
                     bladder = 0;
                     askholditcounter = 0;
                     waitcounter = 0;
                     attraction = 0;
-                    // s(girltalk + "I'm so embarassed - I'll go clean up.");
                 } else {
                     curtext = displayneed(curtext);
                 }
             }
             curtext = printAllChoicesList(curtext, needs["holdit"]["choices"]);
-            // c(locstack[0], "Continue...");
         }
     } else {
         if (locstack[0] === "gostore") {
             curtext.push(needs["holdit"]["dialogue"][4]);
             curtext.push(needs["holdit"]["dialogue"][5]);
-            // s(girlname + "Sorry.");
-            // s("She's hung up on you.");
+            //She's not holding it while on the phone
             attraction -= 5;
             bladder = 0;
         } else {
             curtext.push(needs["holdit"]["dialogue"][6]);
-            // s(girltalk + "Not gonna happen, bub.");
+            // she's not holding it for you
             attraction -= 5;
             curtext = indepee(curtext);
         }

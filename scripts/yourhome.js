@@ -103,6 +103,7 @@ function callher() {
         cantwait();
     } else {
         if (shyness > 80) shyness -= 1;
+        //TODO This also prints highflirts while in the original that can't happen over the phone
         if(flirtedflag < maxflirts){
             curtext = handleFlirt(curtext);
         }

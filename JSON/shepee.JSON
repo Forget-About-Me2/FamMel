@@ -1,0 +1,67 @@
+{
+  "thehome": [
+    "girlname0",
+    "You hear a quick clatter and a gasp as she lifts the toilet lid.  She starts to pee violently, a loud hiss accompanying the splash of the urine in the bowl.  You imagine being in there with her as she relieves her bladder.",
+    "You hear a quick clatter of the toilet lid, and then the hissing and splashing of her urine in the bowl."
+  ],
+  "noneavailable": [
+    "girlname1",
+    "There is no restroom out here in the boonies.",
+    "There is no restroom in the car.",
+    "There is no restroom around."
+  ],
+  "remaining": [
+    "girlname2"
+  ],
+  "locked": {
+    "urgency": [
+      "She quickly runs back looking shaken.",
+      "Momentarily, she returns looking uncomfortable.",
+      "She returns looking unfulfilled."
+    ],
+    "cbar": [
+      "girltalk0",
+      "girltalk1",
+      "girltalk2",
+      "girltalk3"
+    ],
+    "cclub": [
+      "girltalk4",
+      "girltalk5",
+      "girltalk6",
+      "girltalk7"
+    ],
+    "girltalk": [
+      "{0} It's <b><i>still</i></b> fucking locked!",
+      "{0} It's <b><i>still</i></b> locked!  What's taking so long?",
+      "{0} It's still locked!",
+      "{0} It was locked!",
+      "{0} The line's still really fucking long.",
+      "{0} I think the line's getting longer...",
+      "{0} The line's still really really long.",
+      "{0} There was a huge line."
+    ]
+  },
+  "barpeeprivate": [
+    "You can imagine her panic in the bathroom as she sees the toilet and feels it starting to come out before she even has a chance to pull aside her short shorts",
+    "You visualize her grabbing her crotch through her short shorts the moment she sees the toilet and struggling to control it long enough to peel them off",
+    "You can imagine her finally relaxing over the toilet, pee pouring from her crotch for nearly a full minute.",
+    "You can imagine her in front of the toilet, too desperate to even close the door before emptying her overfilled bladder",
+    "You can only guess at her frenzied antics in front of the toilet as her struggling pee hole is finally allowed to relax and her full bladder empties into the toilet.",
+    "You imagine her struggles to control herself just long enough to get her clothing out of the way before she empties her overtaxed bladder into the toilet."
+  ],
+  "barpeeprivate2": [
+    "You are left to imagine the her finding a stall, carefully closing the door and peeling down her short shorts to use the toilet in private.",
+    "You are left alone with only your imagination of her releasing her pent up pee into the toilet.",
+    "You can only speculate what she's doing in there - Is there a line?  Does she consider the sink?  The floor drain?",
+    "You can only fantasize about her final relief on the toilet - the pee pouring from her naked crotch",
+    "You can just imagine the relief she feels as she pees in the privacy of the toilet.",
+    "You can barely suppress the impulse to hold on to her - to follow her to the toilet where she quickly sits and empties her bladder."
+  ],
+  "girlname": [
+    "{0} heads for the bathroom, leaving the door, leaving the door slightly ajar.",
+    "{0} heads for the restroom and then realizes:",
+    "{0} runs towards the restroom."
+  ]
+
+}

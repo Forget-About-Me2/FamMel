@@ -6,7 +6,8 @@ let calledjsons = {}//Dictionary list of all location that have already been que
 
 let flirtquotes; //This stores all possible flirts called from the JSON
 let flirtresps; //This stores all possible responses called from the JSON
-let ypeelines; //This stores all dialogues regarding to going to the bathroom called from the JSON
+let ypeelines; //This stores all dialogues regarding to you going to the bathroom called from the JSON
+let peelines; //This stores all dialogues regarding to her going to the bathroom called from the JSON
 let needs; //This stores descriptions of her needs called from the JSON
 let yneeds; //This stores descriptions of your needs called from the JSON
 let drinklines; //This stores all lines regarding drinking from the JSON
@@ -106,9 +107,23 @@ var bargirlnames=["Tiffany", "Brittney", "Vanessa" , "Maya", "Angelina", "Samant
 //
 //  Private Peeing for Solobargirl
 //
-var barpeeprivate=Array("You can imagine her panic in the bathroom as she sees the toilet and feels it starting to come out before she even has a chance to pull aside her short shorts", "You visualize her grabbing her crotch through her short shorts the moment she sees the toilet and struggling to control it long enough to peel them off", "You can imagine her finally relaxing over the toilet, pee pouring from her crotch for nearly a full minute.", "You can imagine her in front of the toilet, too desperate to even close the door before emptying her overfilled bladder", "You can only guess at her frenzied antics in front of the toilet as her struggling pee hole is finally allowed to relax and her full bladder empties into the toilet.", "You imagine her struggles to control herself just long enough to get her clothing out of the way before she empties her overtaxed bladder into the toilet.");
+// var barpeeprivate=[
+//     "You can imagine her panic in the bathroom as she sees the toilet and feels it starting to come out before she even has a chance to pull aside her short shorts",
+//     "You visualize her grabbing her crotch through her short shorts the moment she sees the toilet and struggling to control it long enough to peel them off",
+//     "You can imagine her finally relaxing over the toilet, pee pouring from her crotch for nearly a full minute.",
+//     "You can imagine her in front of the toilet, too desperate to even close the door before emptying her overfilled bladder",
+//     "You can only guess at her frenzied antics in front of the toilet as her struggling pee hole is finally allowed to relax and her full bladder empties into the toilet.",
+//     "You imagine her struggles to control herself just long enough to get her clothing out of the way before she empties her overtaxed bladder into the toilet."
+// ];
 
-var barpeeprivate2=Array("You are left to imagine the her finding a stall, carefully closing the door and peeling down her short shorts to use the toilet in private.", "You are left alone with only your imagination of her releasing her pent up pee into the toilet.", "You can only speculate what she's doing in there - Is there a line?  Does she consider the sink?  The floor drain?", "You can only fantasize about her final relief on the toilet - the pee pouring from her naked crotch", "You can just imagine the relief she feels as she pees in the privacy of the toilet.", "You can barely suppress the impulse to hold on to her - to follow her to the toilet where she quickly sits and empties her bladder.");
+// var barpeeprivate2= [
+//     "You are left to imagine the her finding a stall, carefully closing the door and peeling down her short shorts to use the toilet in private.",
+//     "You are left alone with only your imagination of her releasing her pent up pee into the toilet.",
+//     "You can only speculate what she's doing in there - Is there a line?  Does she consider the sink?  The floor drain?",
+//     "You can only fantasize about her final relief on the toilet - the pee pouring from her naked crotch",
+//     "You can just imagine the relief she feels as she pees in the privacy of the toilet.",
+//     "You can barely suppress the impulse to hold on to her - to follow her to the toilet where she quickly sits and empties her bladder."
+// ];
 
 
 //
@@ -488,6 +503,27 @@ var outtahere=["Let's hit the road!", "We're outta here!",
 // Your fingers smell of her pee.
 var smellpee=["They smell of sex ... and her sweet urine.", "They smell musky, with the clean scent of fresh pee.", "They smell strongly of her urine.", "They are sticky with the scent of her sex, and her pee.", "They are coated with the scent of her pee.", "The smell reminds you of a toilet filled with golden urine, just before it's flushed."];
 
+//calls all json requests to get recurring quotes
+function setupQuotes(){
+    getjson("flirting", flirtSetup);
+    getjson("needs", needSetup);
+    getjson("yneeds", function (){
+        yneeds = json;
+        //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
+        //And this is the cleanest way to not have everything crying
+        go("yourhome");
+    });
+    getjson("youpee", yPeeSetup);
+    getjson("shepee", shePeeSetup);
+    getjson("drinking", function (){
+        drinklines = json;
+    });
+    //TODO format this json better?
+    getjson("appearance", function (){
+        appearance = json;
+    } );
+}
+
 String.prototype.format = String.prototype.f = function() {
     let s = this,
         i = arguments[0].length;
@@ -558,25 +594,6 @@ async function getjsonT(tag){
     eval(tag+"()");
 }
 
-//calls all json requests to get recurring quotes
-function setupQuotes(){
-    getjson("flirting", flirtSetup);
-    getjson("needs", needSetup);
-    getjson("yneeds", function (){
-        yneeds = json;
-        //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
-        //And this is the cleanest way to not have everything crying
-        go("yourhome");
-    });
-    getjson("youpee", yPeeSetup);
-    getjson("drinking", function (){
-        drinklines = json;
-    });
-    //TODO format this json better?
-    getjson("appearance", function (){
-        appearance = json;
-    } );
-}
 
 //TODO handle formatting differently, probably have a list of indexes that need to be replaced instead
 //This sets up all variables that this location uses.
@@ -731,9 +748,10 @@ function voccurse(curtext) {
 }
 
 function yPeeSetup(){
+    //TODO cleanup like shePeeSetup
     json["girlname"] = addGirlname(json["girlname"]);
     json["girltalk"] = addGirlTalk(json["girltalk"]);
-    json["locked"]["girlname"] = replaceWCL(json["locked"]["girlname"], "girlname");
+    json["locked"]["girlname"] = addGirlname(json["locked"]["girlname"]);
     let templist = json["thehome"][0];
     let result = [];
     templist.forEach(item => result.push(LreplaceCheck(item, json["girlname"], "girlname")));
@@ -750,6 +768,17 @@ function yPeeSetup(){
     templist.forEach(item => result.push(LreplaceCheck(item, json["girltalk"], "girltalk")));
     json["beg"][0] = result;
     ypeelines = json;
+}
+
+function shePeeSetup(){
+    peelines = json;
+    peelines["girlname"] = addGirlname(peelines["girlname"]);
+    peelines["locked"]["girltalk"] = addGirlTalk(peelines["locked"]["girltalk"]);
+    peelines["thehome"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
+    peelines["noneavailable"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
+    peelines["remaining"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
+    peelines["locked"]["cbar"] = replaceWCLC(peelines["locked"]["cbar"], peelines["locked"]["girltalk"], "girltalk");
+    peelines["locked"]["cclub"] = replaceWCLC(peelines["locked"]["cclub"], peelines["locked"]["girltalk"], "girltalk");
 }
 
 
