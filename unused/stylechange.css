@@ -1,11 +1,11 @@
 body{
-    background-color: #ffffe0;
+    background-color: #f0f6f6;
     overflow: hidden;
     height: 100%;
 }
 
 #titlebar {
-    background-color: #ffff66;
+    background-color: #b0e9f3;
     height: 30px;
     position: sticky;
     top:  0;
@@ -81,10 +81,9 @@ body{
 
 #textsp {
     overflow-y: auto;
-    max-height: calc(100% - 150px);
+    max-height: calc(100% - 115px);
     float: left;
     width: 60vw;
-    /*line-height: 2;*/
 }
 
 
@@ -97,18 +96,18 @@ body{
 
 .stats-cells {
     text-align: center;
-    background-color: #ffff90;
+    background-color: #b0e9f3;
 }
 
 .stats-cells-yellow {
     text-align: center;
-    background-color: #ffff90;
+    background-color: #b0e9f3;
     width:12.5%;
 }
 
 .stats-cells-white {
     text-align: center;
-    background-color: #ffffe0;
+    background-color: #f0f6f6;
     width:12.5%;
 }
 
@@ -116,7 +115,7 @@ body{
     position: sticky;
     vertical-align: bottom;
     bottom: 20px;
-    background-color: #ffffe0;
+    background-color: #f0f6f6;
 }
 
 #objsp {
@@ -128,4 +127,12 @@ body{
     text-align: center;
     font-weight: bold;
     padding-right: 10%;
+}
+
+#test {
+    height: 30%;
+    width: 40%;
+    background: #b0c6c6;
+    opacity: 15%;
+
 }

@@ -31,49 +31,10 @@ var feelthigh=["You feel her thigh muscles contracting and relaxing as she tries
     "You feel her thighs trembling with the effort to control her bladder.",
     "Her hot, damp thighs feel slippery and they tremble with the effort of controlling her urge to pee."];
 
-
-// her exclamations how much she drank since she peed and
-// how long she's been controlling herself.
-// var drankburst=[
-//     "without peeing once!",
-//     "and they're bursting my bladder!",
-//     "and I've really got to go!",
-//     "and my bladder's not that big!",
-//     "and I haven't gone to the bathroom yet!" , "and I'm not a camel!"
-// ];
-
-// var surpriseexcl= [
-//     "You've gotta be kidding!",
-//     "Oh come on!",
-//     "What??!?",
-//     "Whaddaya mean??!?",
-//     "No way!?  Really?",
-//     "You're joking, right?"
-// ];
-
 var okayforyou=["Okay, since you're asking so nicely.  I'll hold it a little longer." , "Well... okay. I'll control myself if it makes you happy." , "Alright - I'll hold it in for you a little bit longer.", "If you insist - I'll try to hold it a little more." , "Okay.  I'll wait a bit more if that's what you want.", "Fine.  I'll wait a just little longer if you'd like me to."];
-
-// var holdingtime=[
-//     "I've been holding it for",
-//     "I've haven't gone for",
-//     "I've had to pee for",
-//     "I've already lasted",
-//     "My bladder's been filling for",
-//     "I've been waiting for"
-// ];
 
 // her apologies for asking to go
 var wanthold=["I know you asked me to wait, but...", "I know you told me not to go, but...", "I know you wanted me to hold it, but..." , "I know you asked me not to pee, but...", "I know you wanted me to control my bladder, but..." , "I know you didn't want me to go, but..."];
-
-// // You ask her to hold it longer
-// var askhold=[
-//     "But we're having so much fun - can't you wait a little bit?",
-//     "It would be nice if you could wait just a little longer.",
-//     "Can you try to hold on just a little bit longer - I know where there's a really great bathroom.",
-//     "Would you wait just a bit?  For me?",
-//     "I bet you can hold it for a bit longer - we're having so much fun!",
-//     "Why now?  I'm sure you can wait just a bit."
-// ];
 
 // Description of her holding her pee just for you
 var sheholds=["She needs to pee badly, but she's holding it for you.",
@@ -101,30 +62,7 @@ var curseword=["Dammit!", "Jesus!", "Shit!" , "Fuckit!", "Goddamn!", "Fuckin' A!
 //
 //  Names of bar girls and escorts
 //
-var bargirlnames=["Tiffany", "Brittney", "Vanessa" , "Maya", "Angelina", "Samantha", "Jackie"];
-
-
-//
-//  Private Peeing for Solobargirl
-//
-// var barpeeprivate=[
-//     "You can imagine her panic in the bathroom as she sees the toilet and feels it starting to come out before she even has a chance to pull aside her short shorts",
-//     "You visualize her grabbing her crotch through her short shorts the moment she sees the toilet and struggling to control it long enough to peel them off",
-//     "You can imagine her finally relaxing over the toilet, pee pouring from her crotch for nearly a full minute.",
-//     "You can imagine her in front of the toilet, too desperate to even close the door before emptying her overfilled bladder",
-//     "You can only guess at her frenzied antics in front of the toilet as her struggling pee hole is finally allowed to relax and her full bladder empties into the toilet.",
-//     "You imagine her struggles to control herself just long enough to get her clothing out of the way before she empties her overtaxed bladder into the toilet."
-// ];
-
-// var barpeeprivate2= [
-//     "You are left to imagine the her finding a stall, carefully closing the door and peeling down her short shorts to use the toilet in private.",
-//     "You are left alone with only your imagination of her releasing her pent up pee into the toilet.",
-//     "You can only speculate what she's doing in there - Is there a line?  Does she consider the sink?  The floor drain?",
-//     "You can only fantasize about her final relief on the toilet - the pee pouring from her naked crotch",
-//     "You can just imagine the relief she feels as she pees in the privacy of the toilet.",
-//     "You can barely suppress the impulse to hold on to her - to follow her to the toilet where she quickly sits and empties her bladder."
-// ];
-
+var bargirlnames=["Tiffany", "Brittney", "Vanessa" , "Maya", "Angelina", "Samantha", "Carly"];
 
 //
 // Movie Plots
@@ -503,26 +441,7 @@ var outtahere=["Let's hit the road!", "We're outta here!",
 // Your fingers smell of her pee.
 var smellpee=["They smell of sex ... and her sweet urine.", "They smell musky, with the clean scent of fresh pee.", "They smell strongly of her urine.", "They are sticky with the scent of her sex, and her pee.", "They are coated with the scent of her pee.", "The smell reminds you of a toilet filled with golden urine, just before it's flushed."];
 
-//calls all json requests to get recurring quotes
-function setupQuotes(){
-    getjson("flirting", flirtSetup);
-    getjson("needs", needSetup);
-    getjson("yneeds", function (){
-        yneeds = json;
-        //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
-        //And this is the cleanest way to not have everything crying
-        go("yourhome");
-    });
-    getjson("youpee", yPeeSetup);
-    getjson("shepee", shePeeSetup);
-    getjson("drinking", function (){
-        drinklines = json;
-    });
-    //TODO format this json better?
-    getjson("appearance", function (){
-        appearance = json;
-    } );
-}
+
 
 String.prototype.format = String.prototype.f = function() {
     let s = this,
@@ -547,7 +466,6 @@ function formatAll(exprList, values){
     return result;
 }
 
-
 function addGirlname(quotes){
     let result = [];
     quotes.forEach(item => result.push(item.format([girlname])));
@@ -570,6 +488,91 @@ function addGirlGasp(quotes){
     let result = [];
     quotes.forEach(item => result.push(item.format([girlgasp])));
     return result;
+}
+
+function printIntro(curtext, index){
+    locjson.intro[index].forEach(item => curtext.push(item));
+    return curtext;
+}
+
+function printAlways(curtext) {
+    locjson.always.forEach(item => curtext.push(item));
+    return curtext;
+}
+
+function printDialogue(curtext, loc, index){
+    locjson.dialogue[loc][index].forEach(item => curtext.push(item));
+    return curtext;
+}
+
+//Only prints specified part of dialogue
+function printSDialogue(curtext, loc, index, begin, end){
+    for(let i = begin; i <= end; i++){
+        curtext.push(locjson.dialogue[loc][index][i]);
+    }
+    return curtext;
+}
+
+function printFormatDialogue(curtext, loc, index, begin, end, values){
+    for(let i = begin; i <= end; i++){
+        const temp = locjson.dialogue[loc][index][i]
+        curtext.push(formatString(temp, values));
+    }
+    return curtext;
+}
+
+function printList(curtext, list){
+    list.forEach(item => curtext.push(item));
+    return curtext;
+}
+
+function printListSelection(curtext, list, selection){
+    selection.forEach(index => curtext.push(list[index]));
+    return curtext;
+}
+
+//Prints the given selection of choices for the current location
+function printChoices(curtext, selection){
+    selection.forEach(index => curtext = callChoice(locjson.choices[index], curtext));
+    return curtext;
+}
+
+//Prints all choices
+function printAllChoices(curtext){
+    locjson.choices.forEach(item => curtext = callChoice(item, curtext) );
+    return curtext;
+}
+
+//Prints the given selection of choices for the given choices list
+function printChoicesList(curtext, selection, list){
+    selection.forEach(index => curtext = callChoice(list[index], curtext));
+    return curtext;
+}
+
+//Prints all the choices for the given choices list
+function printAllChoicesList(curtext, list){
+    list.forEach(item => curtext = callChoice(item, curtext))
+    return curtext;
+}
+
+function callChoice(choice, curtext){
+    if(choice[0] === "curloc") {
+        return c([locstack[0], choice[1]], curtext);
+    } else {
+        return c(choice, curtext);
+    }
+}
+
+function sayText(lines){
+    let result = "";
+    lines.forEach(item => result += "<p>" + item + "</p>");
+    document.getElementById('textsp').innerHTML = result;
+}
+
+function setText(lines){
+    let result = "";
+    lines.forEach(item => result += item);
+    document.getElementById('textsp').innerHTML = result;
 }
 
 const quoteID = "";
@@ -691,6 +694,27 @@ function LreplaceCheck(rpstring, list, tag){
     }
 }
 
+//calls all json requests to get recurring quotes
+function setupQuotes(){
+    getjson("flirting", flirtSetup);
+    getjson("needs", needSetup);
+    getjson("yneeds", function (){
+        yneeds = json;
+        //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
+        //And this is the cleanest way to not have everything crying
+        go("yourhome");
+    });
+    getjson("youpee", yPeeSetup);
+    getjson("shepee", shePeeSetup);
+    getjson("drinking", function (){
+        drinklines = json;
+    });
+    //TODO format this json better?
+    getjson("appearance", function (){
+        appearance = json;
+    } );
+}
+
 function flirtSetup(){
     flirtquotes = json.flirt;
     let rawresp = json.respons;
@@ -705,39 +729,14 @@ function flirtSetup(){
 }
 
 
-function handleFlirt(curtext){
-    let result = [];
-    let choice = [];
-    let low = "low";
-    let med = "med";
-    if(locstack[0] === "callher"){
-        low += "cell";
-        med += "cell";
-    }
-    result.push([flirtquotes[low][randcounter]]);
-    choice.push("flirt_l");
-    incrandom();
-    if (Math.floor(Math.random() * 7) === 0 || locstack[0] !== "callher"){
-        choice.push("flirt_h");
-        result.push([flirtquotes["high"][randcounter]]);
-    } else {
-        choice.push("flirt_m");
-        result.push([flirtquotes[med][randcounter]]);
-    }
-    const build = "Tell her {0}.";
-    for (let i = 0; i < result.length; i++){
-        curtext = c([choice[i], formatString(build, result[i])], curtext);
-    }
-    return curtext;
-}
-
 function needSetup(){
     needs = json;
     needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
     needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
     needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girltalk"], "girltalk");
     needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girlgasp"], "girlgasp");
-
+    needs["begtoilet"]["girlname"] = replaceWCLC(needs["begtoilet"]["girlname"]);
+    needs["begtoilet"]["dialogue"] = replaceWCLC(needs["begtoilet"]["dialogue"], needs["begtoilet"]["girlname"], "girlname");
 }
 
 //Girl curses
@@ -782,84 +781,30 @@ function shePeeSetup(){
 }
 
 
-function printIntro(curtext, index){
-    locjson.intro[index].forEach(item => curtext.push(item));
-    return curtext;
-}
-
-function printAlways(curtext) {
-    locjson.always.forEach(item => curtext.push(item));
-    return curtext;
-}
-
-function printDialogue(curtext, loc, index){
-    locjson.dialogue[loc][index].forEach(item => curtext.push(item));
-    return curtext;
-}
-
-//Only prints specified part of dialogue
-function printSDialogue(curtext, loc, index, begin, end){
-    for(let i = begin; i <= end; i++){
-        curtext.push(locjson.dialogue[loc][index][i]);
+function handleFlirt(curtext){
+    let result = [];
+    let choice = [];
+    let low = "low";
+    let med = "med";
+    if(locstack[0] === "callher"){
+        low += "cell";
+        med += "cell";
     }
-    return curtext;
-}
-
-function printFormatDialogue(curtext, loc, index, begin, end, values){
-    for(let i = begin; i <= end; i++){
-        const temp = locjson.dialogue[loc][index][i]
-        curtext.push(formatString(temp, values));
-    }
-    return curtext;
-}
-
-function printList(curtext, list){
-    list.forEach(item => curtext.push(item));
-    return curtext;
-}
-
-
-
-//Prints the given selection of choices for the current location
-function printChoices(curtext, selection){
-    selection.forEach(index => curtext = callChoice(locjson.choices[index], curtext));
-    return curtext;
-}
-
-//Prints all choices
-function printAllChoices(curtext){
-    locjson.choices.forEach(item => curtext = callChoice(item, curtext) );
-    return curtext;
-}
-
-//Prints the given selection of choices for the given choices list
-function printChoicesList(curtext, selection, list){
-    selection.forEach(index => curtext = callChoice(list[index], curtext));
-    return curtext;
-}
-
-//Prints all the choices for the given choices list
-function printAllChoicesList(curtext, list){
-    list.forEach(item => curtext = callChoice(item, curtext))
-    return curtext;
-}
-
-function callChoice(choice, curtext){
-    if(choice[0] === "curloc") {
-        return c([locstack[0], choice[1]], curtext);
+    result.push([flirtquotes[low][randcounter]]);
+    choice.push("flirt_l");
+    incrandom();
+    if (Math.floor(Math.random() * 7) === 0 || locstack[0] !== "callher"){
+        choice.push("flirt_h");
+        result.push([flirtquotes["high"][randcounter]]);
     } else {
-        return c(choice, curtext);
+        choice.push("flirt_m");
+        result.push([flirtquotes[med][randcounter]]);
     }
+    const build = "Tell her {0}.";
+    for (let i = 0; i < result.length; i++){
+        curtext = c([choice[i], formatString(build, result[i])], curtext);
+    }
+    return curtext;
 }
 
-function sayText(lines){
-    let result = "";
-    lines.forEach(item => result += "<p>" + item + "</p>");
-    document.getElementById('textsp').innerHTML = result;
-}
 
-function setText(lines){
-    let result = "";
-    lines.forEach(item => result += item);
-    document.getElementById('textsp').innerHTML = result;
-}

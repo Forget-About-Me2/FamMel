@@ -201,5 +201,24 @@
     "noneed": [
       "I'm a big girl now - I can handle it."
     ]
+  },
+  "begtoilet": {
+    "dialogue": [
+      "girlname0",
+      "I've absolutely got to go.  I <i>need</i> your vase again. <b>NOW!</b>",
+      "I'm gonna pee myself!  I <i>need</i> that shot glass again. <b>NOW!</b>",
+      "I just <b>can't</b> hold it - you don't have any more paper towels, do you?",
+      "I'm <i>begging</i> you - find me somewhere to pee.  <b>NOW!</b>"
+    ],
+    "girlname": [
+      "{0} looks intently into your eyes:"
+    ],
+    "choices": [
+      ["peeshot", "Offer her the shot glass."],
+      ["peetowels", "Offer her the roll of paper towels."],
+      ["peevase", "Offer her the vase."],
+      ["peeoutside", "Suggest she pee outside."],
+      ["curloc", "Stand by helplessly."]
+    ]
   }
 }

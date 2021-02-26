@@ -1151,22 +1151,39 @@ function displayholdquip(curtext) {
 
 
 // If she begs you, you end up not leaving the venue.
-function begtoilet() {
-    s(girlname + " looks intently into your eyes:");
+function begtoilet(curtext) {
+    //TODO mention having peed outside before? / autonomously choose that
+    let selection = [0];
+    // s(girlname + " looks intently into your eyes:");
     if (peedvase)
-        s("I've absolutely got to go.  I <i>need</i> your vase again. <b>NOW!</b>");
+        selection.push(1);
+        // s("I've absolutely got to go.  I <i>need</i> your vase again. <b>NOW!</b>");
     else if (peedshot)
-        s("I'm gonna pee myself!  I <i>need</i> that shot glass again. <b>NOW!</b>");
+        selection.push(2);
+        // s("I'm gonna pee myself!  I <i>need</i> that shot glass again. <b>NOW!</b>");
     else if (peedtowels)
-        s("I just <b>can't</b> hold it - you don't have any more paper towels, do you?");
+        selection.push(3);
+        // s("I just <b>can't</b> hold it - you don't have any more paper towels, do you?");
     else
-        s("I'm <i>begging</i> you - find me somewhere to pee.  <b>NOW!</b>");
-    if (shotglass > 0) c("peeshot", "Offer her the shot glass.");
-    if (ptowels > 0) c("peetowels", "Offer her the roll of paper towels.");
-    if (vase > 0) c("peevase", "Offer her the vase.");
+        selection.push(4);
+        // s("I'm <i>begging</i> you - find me somewhere to pee.  <b>NOW!</b>");
+    printListSelection(curtext, needs["begtoilet"]["dialogue"], selection);
+    selection = [];
+    if (shotglass > 0)
+        selection.push(0);
+        // c("peeshot", "Offer her the shot glass.");
+    if (ptowels > 0)
+        selection.push(1);
+        // c("peetowels", "Offer her the roll of paper towels.");
+    if (vase > 0)
+        selection.push(2);
+        // c("peevase", "Offer her the vase.");
     if (locstack[0] === "themakeout")
-        c("peeoutside", "Suggest she pee outside.");
-    c(locstack[0], "Stand by helplessly.");
+        selection.push(3);
+        // c("peeoutside", "Suggest she pee outside.");
+    selection.push(4);
+    printChoicesList(curtext, selection, needs["begtoilet"]["choices"]);
+    // c(locstack[0], "Stand by helplessly.");
 }
 
 
