@@ -1,0 +1,85 @@
+{
+  "leavehm": {
+    "outtahere": [
+      "Let's hit the road!",
+      "We're outta here!",
+      "Let's get going!",
+      "Let's get a move on!",
+      "We're on our way!",
+      "Let's make like a tree and get outta here!"
+    ],
+    "choices": [
+      ["holdit", "Ask her to hold it."],
+      ["allowpee", "Let her go."],
+      ["driveout", "Continue..."]
+    ]
+  },
+  "driveout": {
+    "intro": [
+      [
+        "girlname0"
+      ],
+      [
+        "She settles into the passenger seat and buckles in."
+      ],
+      [
+        "You start up the car and drive off together."
+      ],
+      [
+        "You go out to your car, hop in and drive off"
+      ],
+      [
+        "girlname1"
+      ],
+      [
+        "You're driving around in your car."
+      ]
+    ],
+    "always": [
+      "Do you want to:"
+    ],
+    "girlname": [
+      "You and {0} go out to your car.",
+      "You're in the car with {0}.",
+      "Go to {0}'s place"
+    ],
+    "girltalk": [
+      "{0} Maybe we could find someplace nice and private?",
+      "{0} Hey! Want to stop by my place?",
+      "{0} Want to see a movie?",
+      "{0} Want to go out dancing?",
+      "{0} Can we stop somewhere for a drink?"
+    ],
+    "dialogue": {
+      "themakeout": [
+        ["girltalk0"]
+      ],
+      "thehome": [
+        ["girltalk1"]
+      ],
+      "themovie": [
+        ["girltalk2"]
+      ],
+      "theclub": [
+        ["girltalk3"]
+      ],
+      "thebar":[
+        ["girltalk4"]
+      ]
+    },
+    "choices": [
+      ["drivearound", "Just drive around"],
+      ["thebar", "Go to the bar"],
+      ["thebar", "Go to the bar like she asked."],
+      ["theclub", "Go to the nightclub"],
+      ["theclub", "Stop by the nightclub for her"],
+      ["themovie", "Go to the theater"],
+      ["themovie", "Go to see a movie as she suggested."],
+      ["themakeout", "Go to the make-out spot"],
+      ["themakeout", "Take her up to the make-out spot"],
+      ["thehome", "girlname2"],
+      ["thehome", "Accept her invitation to go home with her."],
+      ["solobar", "Go to the bar"]
+    ]
+  }
+}

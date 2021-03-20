@@ -12,6 +12,7 @@ let needs; //This stores descriptions of her needs called from the JSON
 let yneeds; //This stores descriptions of your needs called from the JSON
 let drinklines; //This stores all lines regarding drinking from the JSON
 let appearance; // This stores the appearance quotes from the JSON
+let drive; //This stores all dialogues regarding driving around from the JSON
 
 var respfeelup=[" puts her hand on her chest: <b>You're making me hot.</b>", " squeezes her breasts between her upper arms: <b>Stop it - that's embarassing.</b>", " giggles and crosses her legs: <b>You're making me wet!</b>", " grabs your butt: <b>You're turning me on.</b>", " laughs and curtseys: <b>Stop trying to get me excited!</b>", " covers her face: <b>Don't look at me like that!</b>"];
 
@@ -434,9 +435,14 @@ var walkdesc=["You walk hand in hand past dark houses.",
 //
 // Leaving
 //
-var outtahere=["Let's hit the road!", "We're outta here!",
-    "Let's get going!", "Let's get a move on!", "We're on our way!",
-    "Let's make like a tree and get outta here!"];
+var outtahere= [
+    "Let's hit the road!",
+    "We're outta here!",
+    "Let's get going!",
+    "Let's get a move on!",
+    "We're on our way!",
+    "Let's make like a tree and get outta here!"
+];
 
 // Your fingers smell of her pee.
 var smellpee=["They smell of sex ... and her sweet urine.", "They smell musky, with the clean scent of fresh pee.", "They smell strongly of her urine.", "They are sticky with the scent of her sex, and her pee.", "They are coated with the scent of her pee.", "The smell reminds you of a toilet filled with golden urine, just before it's flushed."];
@@ -627,11 +633,33 @@ function locationMSetup(tag, subtag){
     replaceWCT("always", "money");
     replaceWCI("intro", "girltalk");
     replaceWCT("always", "girltalk");
+    replaceChoices("girlname");
     if (locjson.hasOwnProperty("dialogue")){
         for (let [key, value] of Object.entries(locjson.dialogue)){
             if(locjson.dialogue.hasOwnProperty(key)){
                 value = replaceWCLI(value, "girlname");
                 value = replaceWCLI(value, "money");
+                value = replaceWCLI(value, "girltalk");
+                locjson.dialogue[key] = value;
+            }
+        }
+    }
+}
+
+//Setup of location using a JSON that is not connected to a location
+function locationMCSetup(subtag, customloc){
+    console.log(customloc);
+    console.log(customloc[tag]);
+    locjson = JSON.parse(JSON.stringify(customloc[subtag]));
+    if (locjson.hasOwnProperty("girlname"))
+        locjson.girlname = addGirlname(locjson.girlname);
+    if (locjson.hasOwnProperty("girltalk"))
+        locjson.girltalk = addGirlTalk(locjson.girltalk)
+    replaceWCI("intro", "girlname");
+    replaceChoices("girlname");
+    if (locjson.hasOwnProperty("dialogue")){
+        for (let [key, value] of Object.entries(locjson.dialogue)){
+            if(locjson.dialogue.hasOwnProperty(key)){
                 value = replaceWCLI(value, "girltalk");
                 locjson.dialogue[key] = value;
             }
@@ -674,6 +702,19 @@ function replaceWCLC(strlist, checklist, tag){
     return result;
 }
 
+function replaceChoices(tag){
+    console.log(locjson["choices"]);
+    let result = []
+    locjson["choices"].forEach(item => result.push(replaceChoice(item, tag)));
+    locjson["choices"] = result
+}
+
+function replaceChoice(choice, tag){
+    console.log(choice);
+    let result = [choice[0]];
+    result.push(replaceCheck(choice[1], tag));
+    return result
+}
 
 function replaceCheck(rpstring, tag){
     const list = locjson[tag];
@@ -713,6 +754,9 @@ function setupQuotes(){
     getjson("appearance", function (){
         appearance = json;
     } );
+    getjson("drive", function () {
+        drive = json;
+    })
 }
 
 function flirtSetup(){

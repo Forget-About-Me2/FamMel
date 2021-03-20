@@ -534,21 +534,16 @@ function convinceher(curtext) {
     let selection = []; //Used to keep track of which options need to be printed
     if (roses > 0) {
         selection.push(0);
-        // c("briberoses", "Try to bribe her with roses.")
     }
     if (earrings > 0) {
         selection.push(1);
-        // c("bribeearrings", "Try to bribe her with earrings.")
     }
     if (owedfavor > 0) {
         selection.push(2);
-        // c("bribefavor", "Call in a favor");
     }
     selection.push(3);
     selection.push(4);
     curtext = printChoicesList(curtext, selection, needs["convinceher"]);
-    // c("bribeask", "Ask her nicely");
-    // c("indepee", "Just let her go...");
     return curtext;
 }
 

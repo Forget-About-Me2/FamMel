@@ -28,6 +28,7 @@
     <script src="scripts/bladder.js"></script>
     <script src="scripts/clothes.js"></script>
     <script src="scripts/herhome.js"></script>
+    <script src="scripts/drive.js"></script>
     <title>Melissa Explains it All</title>
 </head>
 <body>
@@ -172,6 +173,7 @@ CHANGES BY Forget_About_Me
 *Changed the way pictures are added
 *Changed with how much cocktails increase max-tummy
 *Tweaked chance of finding key to hopefully be a bit more favourable
+*Fixed bug that reset the flirt counter when trying to leave a venue while she has to pee
 */
 
     //TODO potentially clean up if statements with multiple locations
@@ -1300,182 +1302,7 @@ CHANGES BY Forget_About_Me
     }
 
 
-    //
-    //  This function is used to leave ANY location and drive off.
-    //
-    //TODO flirt flags get reset even if you stay because she asks to go pee
-    function leavehm() {
-        changevenueflag = 1;
-        flirtedflag = 0;
-        checkedherout = 0;
-        kisscounter = 0;
-        feelcounter = 0;
-        rrlockedflag = 0;
-        externalflirt = 0;
 
-        showneed();
-
-        if (gottagoflag > 0) {
-            c("holdit", "Ask her to hold it.");
-            c("allowpee", "Let her go.");
-        } else {
-            s("<b>YOU:</b> " + outtahere[randcounter]);
-            incrandom();
-            s(girltalk + "Yeah! " + outtahere[randcounter]);
-            displayneed();
-            displayyourneed();
-            c("driveout", "Continue...");
-        }
-
-    }
-
-    //TODO fix the go to the bar like she asked
-    function driveout() {
-        if (locstack[0] !== "driveout") {
-            pushloc("driveout");
-            if (withgirl) {
-                s("You and " + girlname + " go out to your car.");
-                suggestedloc = "none";
-                if (wetthecar)
-                    s(soakedseatquote);
-                else
-                    s("She settles into the passenger seat and buckles in.");
-                s("You start up the car and drive off together.");
-            } else {
-                s("You go out to your car, hop in and drive off.");
-            }
-        } else {
-            if (withgirl)
-                s("You're in the car with " + girlname + ".");
-            else
-                s("You're driving around in your car.");
-        }
-        if (withgirl) {
-            displayneed();
-            if (suggestedloc === "none") {
-                if (randomchoice(8)) {
-                    if (shyness < 30 && attraction > 50 && !beenmakeout) {
-                        s(girltalk + "Maybe we could find someplace nice and private?");
-                        suggestedloc = "themakeout";
-                    } else if (shyness < 50 && attraction > 100 && beenmakeout &&
-                        beenbar && beenclub && seenmovie) {
-                        s(girltalk + "Hey!  Wanta stop by my place?");
-                        suggestedloc = "thehome";
-                    } else if (shyness > 80 && attraction < 30 && !seenmovie) {
-                        s(girltalk + "Want to see a movie?");
-                        suggestedloc = "themovie";
-                    } else if (shyness < 60 && attraction > 30 && !beenclub) {
-                        s(girltalk + "Want to go out dancing?");
-                        suggestedloc = "theclub";
-                    } else if (bladder > bladneed && shyness < 50 && !beenbar) {
-                        s(girltalk + "Can we stop somewhere for a drink?");
-                        suggestedloc = "thebar";
-                    }
-                }
-            }
-        }
-        displayyourneed();
-        s("Do you want to:");
-        c("drivearound", "Just drive around");
-        if (withgirl) {
-            if (suggestedloc !== "thebar")
-                c("thebar", "Go to the bar");
-            else
-                c("thebar", "Go to the bar like she asked.");
-            if (suggestedloc !== "theclub")
-                c("theclub", "Go to the nightclub");
-            else
-                c("theclub", "Stop by the nightclub for her");
-            if (suggestedloc !== "themovie")
-                c("themovie", "Go to the theater");
-            else
-                c("themovie", "Go to see a movie as she suggested.");
-            if (suggestedloc !== "themakeout")
-                c("themakeout", "Go to the make-out spot");
-            else
-                c("themakeout", "Take her up to the make-out spot");
-            if (suggestedloc !== "thehome")
-                c("thehome", "Go to the " + girlname + "'s place");
-            else
-                c("thehome", "Accept her invitation to go home with her.");
-        } else {
-            c("solobar", "Go to the bar");
-        }
-
-        if (debugmode) c("timewarp", "Advance to 2AM");
-        if (debugmode && withgirl) c("ditchgirl", "Ditch the girl");
-    }
-
-    function nextstop() {
-        s("<b>YOU:</b> I'll definitely stop at the next place I see.");
-        s(girltalk + "Thanks!");
-        displayneed();
-        c(locstack[0], "Continue...");
-    }
-
-    function drivearound() {
-        if (!withgirl) {
-            s(soloview[randcounter]);
-            incrandom();
-            c(locstack[0], "Continue...");
-        } else {
-            s("You are driving around with " + girlname + " in the passenger seat.");
-            showneed();
-            displayyourneed();
-            if (bladder > bladlose) wetherself();
-            else if (yourbladder > yourbladlose) wetyourself();
-            else {
-                if (yourbladder > yourblademer)
-                    c("drivetell", "Tell her you need to go.");
-                if (gottagoflag > 0) {
-                    preventpee();
-                } else standobjs();
-                c(locstack[0], "Continue...");
-            }
-        }
-    }
-
-    function drivetell() {
-        s("You shift uncomfortably in your seat, trying to focus on the road.");
-        s("YOU: I'm bursting for a pee.");
-        s(girltalk + "Then you better stop somewhere so you can go.");
-        c("drivepee", "I can't wait.");
-        c(locstack[0], "I'll stop at the next place I see.");
-    }
-
-    function drivepee() {
-        s(girltalk + "Do you have anything you can pee in? A cup or something?");
-        if (shotglass > 0) c("ypeeshot", "Pee in the shot glass.");
-        //TODO figure out how towels would work for you
-        // if ( ptowels > 0 ) c("peetowels" , "Pee in the roll of paper towels.");
-        if (vase > 0) c("ypeevase", "Pee in the vase.");
-        c(locstack[0], "No, I got nothing!")
-    }
-
-    //TODO fix the double desperate
-    function itsclosed(locname) {
-        let theloc;
-        if (locname === "thebar") theloc = "bar";
-        if (locname === "theclub") theloc = "night club";
-        if (locname === "themovie") theloc = "movie theater";
-
-        s("You and " + girlname + " arrive at the " + theloc + ".");
-        s("It seems a bit deserted.");
-        if (bladder > blademer) {
-            s(girltalk + "<i>It had better not be closed.</i>");
-            displaygottavoc();
-        }
-        s("The " + theloc + " is definitely closed.");
-        showneed();
-        displayyourneed();
-        if (locname === "thebar" && barkey > 0)
-            c("breakbar", "Try to break in with your key.");
-        if (locname === "theclub" && clubkey > 0)
-            c("breakclub", "Try to break in with your key.");
-        if (locname === "themovie" && theaterkey > 0)
-            c("breakmovie", "Try to break in with your key.");
-        c(locstack[0], "Continue...");
-    }
 
 
     function breakclub() {
