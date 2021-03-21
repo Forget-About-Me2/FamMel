@@ -11,6 +11,7 @@ function herhome() {
 }
 
 //TODO fix this scene
+
 function pickup() {
     let curtext = [];
     if (locstack[0] !== "pickup") { // happens first time only.
@@ -52,12 +53,12 @@ function pickup() {
         } else if (askholditcounter) {
             curtext = printIntro(curtext, 8);
             askholditcounter = 0;
-            gottagoflag = 1;
             waitcounter = 0;
         }
     } else {
         curtext = printIntro(curtext, 9);
     }
+    curtext = displaygottavoc(curtext);
     curtext = displayyourneed(curtext);
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();

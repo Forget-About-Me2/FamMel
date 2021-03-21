@@ -87,12 +87,6 @@
       "{0}That's not going to be good enough...",
       "{0}See you soon, though...",
       "{0}For diamonds, I'll give it a try...",
-      "{0}You're a naughty boy, aren't you?",
-      "{0}But I'm about to wet my panties if I don't go, so you can come too - but no peeking.",
-      "{0}Are you ready?  Want me to put the phone down there so you can hear?  Oh!  It's coming!",
-      "{0}Damn.  That's soooo much better.",
-      "{0}Oooooo....  that's pretty kinky.  But I think I can hold it until I'm off the phone.",
-      "{0}Somehow, I don't think that's happening.  Bye now.",
       "{0}You're just going to have to guess... I'm not telling.",
       "{0}They're black ... and lacy.",
       "{0}What color do you want me to wear tonight?",
@@ -151,29 +145,15 @@
       "girltalk19",
       "girltalk16"
       ]],
-    "peephone": [[
-      "girltalk20",
-      "girltalk21",
-      "There's a bunch of clanking on the other end, quick footsteps, and a door closes.  You hear the toilet seat being lifted up, and the rustle of clothing.",
-      "girltalk22",
-      "The hisssssssss of a huge pee fills your receiver for nearly a minute before you hear a couple of last squirts and the wiping of toilet paper against pussy lips.",
-      "girltalk23"
-    ],
-    [
-      "girltalk24"
-    ],
-    [
-      "girltalk25"
-    ]],
     "panties":  [
       [
-        "girltalk26"
+        "girltalk20"
       ],
       [
-        "girltalk27"
+        "girltalk21"
       ],
       [
-        "girltalk28"
+        "girltalk22"
       ]
     ],
     "changepanties":[
@@ -181,7 +161,7 @@
         "{0}Okay, I'll put on my {1} panties for you."
       ],
       [
-        "girltalk29"
+        "girltalk23"
       ],
       [
         "{0}I'm peeling off my {1} panties..."
@@ -189,21 +169,21 @@
       [
         "{0}and slipping on my {1} ones."
       ],
-      ["girltalk30"]
+      ["girltalk24"]
     ],
     "predrink": [
       [
-        "girltalk31"
+        "girltalk25"
       ],
       [
-        "girltalk32",
+        "girltalk26",
         "She drinks two glasses of refreshing water."
       ],
       [
-        "girltalk33"
+        "girltalk27"
       ],
       [
-        "girltalk34"
+        "girltalk28"
       ]
     ]}
   ,
@@ -230,5 +210,18 @@
       ["changepanties(3)", "Red thong."],
       ["changepanties(4)", "No panties."]
     ]
-}
+},
+  "getcalled": {
+    "getcalled": "Your cellphone rings.",
+    "anscell": "<b>YOU:</b> Hello? Hello?",
+    "ignorecell": "You decline to take the call.",
+    "cantwait": "{0} Hey! I've been trying to wait to pee like you asked",
+    "choices": [
+      ["anscell", "Answer it."],
+      ["ignorecell", "Ignore it."],
+      ["holdit", "Ask her to hold it longer."],
+      ["peephone", "Ask her to take the phone into the bathroom with her"],
+      ["allowpee", "Let her pee."]
+    ]
+  }
 }

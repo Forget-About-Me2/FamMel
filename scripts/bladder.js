@@ -698,6 +698,25 @@ function allowpee() {
     }
 }
 
+function peephone() {
+    let curtext = [];
+    gottagoflag = 0;
+    if (attraction > 30) {
+        if (bladder > blademer && shyness < 75) {
+            curtext = printLList(curtext,peelines["peephone"], 0);
+            attraction += 10;
+            flushdrank();
+        } else {
+            curtext = printLList(curtext,peelines["peephone"], 1);
+        }
+    } else {
+        curtext = printLList(curtext,peelines["peephone"], 2);
+        bladder = 0;
+    }
+    curtext = c([locstack[0], "Continue..."], curtext);
+    sayText(curtext);
+}
+
 function holdpurse() {
     haveherpurse = 1;
     s(girltalk + "Great!");
@@ -1592,3 +1611,5 @@ function spurtedyourself() {
     s("You manage to get your control back but you still let out a little bit.");
     c(locstack[0], "Continue ...");
 }
+
+

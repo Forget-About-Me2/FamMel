@@ -100,7 +100,7 @@ function callher() {
         curtext = printChoices(curtext, [0]);
         flushdrank();
     } else if (bladder > blademer && askholditcounter && waitcounter === 0) {
-        cantwait();
+        curtext = cantwait(curtext);
     } else {
         if (shyness > 80) shyness -= 1;
         //TODO This also prints highflirts while in the original that can't happen over the phone
@@ -193,24 +193,6 @@ function acceptbribe() {
     sayText(curtext);
 }
 
-function peephone() {
-    let curtext = [];
-    gottagoflag = 0;
-    if (attraction > 30) {
-        if (bladder > blademer && shyness < 75) {
-            curtext = printDialogue(curtext, "peephone", 0);
-            attraction += 10;
-            flushdrank();
-        } else {
-            curtext = printDialogue(curtext, "peephone", 1);
-        }
-    } else {
-        curtext = printDialogue(curtext, "peephone", 2);
-        bladder = 0;
-    }
-    curtext = printChoices(curtext, [10]);
-    sayText(curtext);
-}
 
 function pantyq() {
     let curtext = [];
@@ -256,28 +238,33 @@ function predrink() {
 }
 
 function cellphone() {
-    s("Your cellphone rings.");
+    let curtext = [calledjsons["yourhome"]["getcalled"]["getcalled"]]
+    // s("Your cellphone rings.");
     waitcounter += 3;
-    c("anscell", "Answer it.");
-    c("ignorcell", "Ignore it.");
+    curtext = printChoicesList(curtext, [0,1], calledjsons["yourhome"]["getcalled"]["choices"]);
+    // c("anscell", "Answer it.");
+    // c("ignorecell", "Ignore it.");
+    sayText(curtext);
 }
 
 function anscell() {
-    s("<b>YOU:</b> Hello?  Hello?");
-    cantwait();
+    //TODO this isn't very elegant
+    let curtext = [calledjsons["yourhome"]["getcalled"]["anscell"]];
+    curtext = cantwait(curtext);
+    sayText(curtext);
 }
 
-function ignorcell() {
-    s("You decline to take the call.");
+function ignorecell() {
+    let curtext = [calledjsons["yourhome"]["getcalled"]["ignorecell"]];
     attraction -= 1;
-    c(locstack[0], "Continue...");
+    curtext = c([locstack[0], "Continue..."], curtext);
+    sayText(curtext);
 }
 
-function cantwait() {
+function cantwait(curtext) {
     waitcounter += 4;
-    s(girltalk + "Hey!  I've been trying to wait to pee like you asked.");
-    displaygottavoc();
-    c("holdit", "Ask her to hold it longer.");
-    c("peephone", "Ask her to take the phone into the bathroom with her");
-    c("allowpee", "Let her pee.");
+    curtext.push(formatString(calledjsons["yourhome"]["getcalled"]["cantwait"], [girltalk]));
+    curtext = displaygottavoc(curtext);
+    curtext = printChoicesList(curtext, [2,3,4], calledjsons["yourhome"]["getcalled"]["choices"]);
+    return curtext;
 }

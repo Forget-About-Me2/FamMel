@@ -2,7 +2,7 @@
 
 const jsonlocs = ["options", "start", "thebar", "yourhome", "herhome"]; //List of locations that have a corresponding json file
 let jsonvars = {}; //Dictiornary list of variables that might need to be inserted in the string found in the json
-let calledjsons = {}//Dictionary list of all location that have already been queried, this saves them being queried multiple times meaning less requests for the server
+let calledjsons = {}; //Dictionary list of all location that have already been queried, this saves them being queried multiple times meaning less requests for the server
 
 let flirtquotes; //This stores all possible flirts called from the JSON
 let flirtresps; //This stores all possible responses called from the JSON
@@ -537,6 +537,12 @@ function printListSelection(curtext, list, selection){
     return curtext;
 }
 
+//Of a given list of list print the list at the given index
+function printLList(curtext, list, index){
+    list[index].forEach(item => curtext.push(item));
+    return curtext;
+}
+
 //Prints the given selection of choices for the current location
 function printChoices(curtext, selection){
     selection.forEach(index => curtext = callChoice(locjson.choices[index], curtext));
@@ -697,20 +703,19 @@ function replaceWCLI(strlist, tag){
 
 //Replacing the variable wildcard of the given tag for the given list, using the given checklist
 function replaceWCLC(strlist, checklist, tag){
+    console.log(strlist);
     let result = [];
     strlist.forEach(item => result.push(LreplaceCheck(item,checklist, tag)));
     return result;
 }
 
 function replaceChoices(tag){
-    console.log(locjson["choices"]);
     let result = []
     locjson["choices"].forEach(item => result.push(replaceChoice(item, tag)));
     locjson["choices"] = result
 }
 
 function replaceChoice(choice, tag){
-    console.log(choice);
     let result = [choice[0]];
     result.push(replaceCheck(choice[1], tag));
     return result
@@ -816,10 +821,14 @@ function yPeeSetup(){
 function shePeeSetup(){
     peelines = json;
     peelines["girlname"] = addGirlname(peelines["girlname"]);
+    peelines["girltalk"]= addGirlTalk(peelines["girltalk"]);
     peelines["locked"]["girltalk"] = addGirlTalk(peelines["locked"]["girltalk"]);
     peelines["thehome"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
     peelines["noneavailable"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
     peelines["remaining"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
+    let temp = []
+    peelines["peephone"].forEach(item => temp.push(replaceWCLC(item, peelines["girltalk"], "girltalk")));
+    peelines["peephone"] = temp;
     peelines["locked"]["cbar"] = replaceWCLC(peelines["locked"]["cbar"], peelines["locked"]["girltalk"], "girltalk");
     peelines["locked"]["cclub"] = replaceWCLC(peelines["locked"]["cclub"], peelines["locked"]["girltalk"], "girltalk");
 }
