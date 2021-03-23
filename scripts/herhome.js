@@ -11,7 +11,7 @@ function herhome() {
 }
 
 //TODO fix this scene
-
+//The dialogues is fucked if you asked her to hold it
 function pickup() {
     let curtext = [];
     if (locstack[0] !== "pickup") { // happens first time only.

@@ -174,6 +174,25 @@ function displaygottavoc(curtext, index) {
     return curtext;
 }
 
+
+// Publish a note about her holding it for you.
+// Depends on whether you asked her to hold it,
+// and emergency bladder state
+function noteholding(curtext) {
+    if (bladder > blademer && askholditcounter) curtext.push(pickrandom(needs["sheholds"]));
+    return curtext;
+}
+
+//
+//  Publish a note about her looking like she has to go.
+//
+function interpbladder(curtext) {
+    if (bladder > bladlose) curtext.push(pickrandom(needs["interplose"]));
+    else if (bladder > blademer) curtext.push(pickrandom(needs["interpemer"]));
+    else if (bladder > bladneed) curtext.push(pickrandom(needs["interplose"]));
+    return curtext;
+}
+
 //TODO lose control when bursting on the way
 function indepee(curtext=[], called=false) {
     gottagoflag = 0;
@@ -193,22 +212,17 @@ function indepee(curtext=[], called=false) {
         locstack[0] === "thebedroom" ||
         locstack[0] === "thewalk" || locstack[0] === "theyard" || locstack[0] === "thebeach") {
         curtext.push(peelines["noneavailable"][0]);
-        // s(girlname + " heads for the restroom and then realizes:");
     } else
         curtext = printList(curtext, peelines["remaining"]);
-        // s(girlname + " runs toward the restroom.");
     if ((locstack[0] === "thebar" && randomchoice(rrlockedthresh) ) || ((locstack[0] === "theclub" || locstack[0] === "dodance") && randomchoice(rrlinethresh)) ){
         curtext = bathroomlocked(curtext);
     } else if (locstack[0] === "themakeout") {
         curtext.push(peelines["noneavailable"][1]);
-        // s("There is no restroom out here in the boonies.");
         displayneed();
     } else if (locstack[0] === "driveout") {
         curtext.push(peelines["noneavailable"][2]);
-        // s("There is no restroom in the car.");
         displayneed();
     } else if (locstack[0] === "thewalk" || locstack[0] === "theyard" || locstack[0] === "thebeach" || locstack[0] === "thehottub") {
-        // s("There is no restroom around.");
         curtext.push(peelines["noneavailable"][3]);
         displayneed();
         interpbladder();
@@ -216,11 +230,9 @@ function indepee(curtext=[], called=false) {
         locstack[0] === "thebedroom" ||
         locstack[0] === "fuckher6") {
         curtext.push(peelines["thehome"][1]);
-        // s("You hear a quick clatter and a gasp as she lifts the toilet lid.  She starts to pee violently, a loud hiss accompanying the splash of the urine in the bowl.  You imagine being in there with her as she relieves her bladder.");
         flushdrank();
     } else if (locstack[0] === "pickup") {
         curtext.push(peelines["thehome"][2]);
-        // s("You hear a quick clatter of the toilet lid, and then the hissing and splashing of her urine in the bowl.");
         flushdrank();
     } else if (locstack[0] === "solobar") {
         if (bladder > bladlose - 25)
@@ -304,31 +316,28 @@ function bathroomlocked(curtext) {
     //Description of her reaction, based on how badly she has to go
     if (bladder > blademer)
         curtext.push(locked["urgency"][0]);
-        // s("She quickly runs back looking shaken.");
     else if (bladder > bladneed)
         curtext.push(locked["urgency"][1]);
-        // s("Momentarily, she returns looking uncomfortable.");
     else
         curtext.push(locked["urgency"][2]);
-        // s("She returns looking unfulfilled.");
     if(locstack[0] === "thebar") {
         //She tells you the bathroom was locked, depending on how often you tried already
-        if (yrrlockedflag > 3) {
+        if (rrlockedflag > 3) {
             curtext.push(locked["cbar"][0]);
-        } else if (yrrlockedflag > 2) {
+        } else if (rrlockedflag > 2) {
             curtext.push(locked["cbar"][1]);
-        } else if (yrrlockedflag) {
+        } else if (rrlockedflag) {
             curtext.push(locked["cbar"][2]);
         } else {
             curtext.push(locked["cbar"][3]);
         }
     } else {
         //She tells you the line was too long, depending on how often she tried already
-        if (yrrlockedflag > 3) {
+        if (rrlockedflag > 3) {
             curtext.push(locked["cclub"][0]);
-        } else if (yrrlockedflag > 2) {
+        } else if (rrlockedflag > 2) {
             curtext.push(locked["cclub"][1]);
-        } else if (yrrlockedflag) {
+        } else if (rrlockedflag) {
             curtext.push(locked["cclub"][2]);
         } else {
             curtext.push(locked["cclub"][3]);
@@ -472,6 +481,7 @@ function displaywaited(curtext) {
 
     if (halftimewaited > 1)
         curtext.push(girltalk + pickrandom(needs["holdingtime"]) + timewaited + "!");
+    return curtext;
 }
 
 //
@@ -532,10 +542,10 @@ function displaydrank(curtext) {
 //
 function convinceher(curtext) {
     let selection = []; //Used to keep track of which options need to be printed
-    if (roses > 0) {
+    if (haveItem("roses")) {
         selection.push(0);
     }
-    if (earrings > 0) {
+    if (haveItem("earrings")) {
         selection.push(1);
     }
     if (owedfavor > 0) {
@@ -548,80 +558,106 @@ function convinceher(curtext) {
 }
 
 function briberoses() {
-    s("<b>YOU:</b> Pretty please!  I'll give you roses");
-    s(girltalk + "Okay.  For roses.");
+    let curtext = [];
+    curtext = printList(curtext, needs["briberoses"]);
+    // s("<b>YOU:</b> Pretty please!  I'll give you roses");
+    // s(girltalk + "Okay.  For roses.");
     askholditcounter++;
-    displayholdquip();
-    c(locstack[0], "Continue...");
+    curtext = displayholdquip(curtext);
+    curtext = printChoicesList(curtext, [0],  needs["choices"]);
+    // c(locstack[0], "Continue...");
     roses -= 1;
+    sayText(curtext);
 }
 
 function bribeearrings() {
-    s("<b>YOU:</b>  Pretty please!  I'll give you a set of diamond earrings if you can hold it!");
-    s(girltalk + "For diamonds, I'd do much more than hold it.  But okay.");
+    let curtext = [];
+    curtext = printList(curtext, needs["bribeearrings"]);
+    // s("<b>YOU:</b>  Pretty please!  I'll give you a set of diamond earrings if you can hold it!");
+    // s(girltalk + "For diamonds, I'd do much more than hold it.  But okay.");
     askholditcounter++;
-    displayholdquip();
-    c(locstack[0], "Continue...");
+    curtext = displayholdquip(curtext);
+    curtext = printChoicesList(curtext, [0],  needs["choices"]);
     earrings -= 1;
+    sayText(curtext);
 }
 
 function bribeask() {
-    s("<b>YOU:</b> Pretty please!");
+    // s("<b>YOU:</b> Pretty please!");
+    let curtext = []
+    curtext = printList(curtext, needs["bribeask"]);
     if (randomchoice(bribeaskthresh) && (
         (bladder >= bladlose && attraction > holditlosethresh) ||
         (bladder >= blademer && attraction > holditemerthresh) ||
         (bladder >= bladneed && attraction > holditneedthresh))) {
-        s(girltalk + okayforyou[randcounter]);
+        curtext.push(girltalk + pickrandom(general["okayforyou"]));
         askholditcounter++;
-        displayholdquip();
-        c(locstack[0], "Continue...");
+        curtext = displayholdquip(curtext);
+        curtext = printChoicesList(curtext, [0],  needs["choices"]);
     } else {
-        s(girltalk + "You've already asked me to hold it " + askholditcounter + " times.");
-        displaygottavoc();
-        c("indepee", "Continue...");
+        //TODO figure out how to deal with multiple variable quotes
+        curtext.push(girltalk + "You've already asked me to hold it " + askholditcounter + " times.");
+        curtext = displaygottavoc(curtext);
+        curtext = printChoicesList(curtext, [1],  needs["choices"]);
     }
+    sayText(curtext);
     bribeaskthresh -= askholditcounter * 0.1;
 }
 
 function bribefavor() {
-    s("<b>YOU:</b> Pretty please!  Remember you promised to do me a favor!");
-    s(girltalk + "Well... Okay.  But just a little bit.  I did promise you a favor.");
-    displayholdquip();
-    interpbladder();
+    let curtext = needs["bribefavor"]
+    // s("<b>YOU:</b> Pretty please!  Remember you promised to do me a favor!");
+    // s(girltalk + "Well... Okay.  But just a little bit.  I did promise you a favor.");
+    curtext = displayholdquip(curtext);
+    curtext = interpbladder(curtext);
     owedfavor -= 1;
     askholditcounter++;
-    c(locstack[0], "Continue...");
+    curtext = printChoicesList(curtext, [0],  needs["choices"]);
+    sayText(curtext);
 }
 
 //
 //  Pay her to hold it in.
 //
+//TODO maybe she haggles
 function payholdit() {
-    s("<b>YOU:</b> I'll pay you if you can hold it for a while.");
-    displayneed();
-    s(girltalk + "I don't know... how much?");
-    c("payfails", "$10.00");
-    c("payfails", "$20.00");
-    c("payokay", "$50.00");
-    c(locstack[0], "Continue...");
+    let curtext = needs["payholdit"];
+    // s("<b>YOU:</b> I'll pay you if you can hold it for a while.");
+    const temp = displayneed(curtext);
+    //TODO make this more standard
+    curtext.splice(1, 0, ...temp); //Inserts the displayholdquip into the dialouge
+    // s(girltalk + "I don't know... how much?");
+    curtext = printChoicesList(curtext, [2,3,4,0]);
+    //TODO you never pay it?
+    sayText(curtext);
+    // c("payfails", "$10.00");
+    // c("payfails", "$20.00");
+    // c("payokay", "$50.00");
+    // c(locstack[0], "Continue...");
 }
 
 function payfails() {
-    s(girltalk + "That's not going to be enough.");
-    indepee();
+    const curtext = needs["payfails"];
+    // s(girltalk + "That's not going to be enough.");
+    indepee(curtext);
 }
 
-function payokay() {
-    s(girltalk + okayforyou[randcounter]);
+function payokay(curtext) {
+    curtext.push(girltalk + pickrandom(general["okayforyou"]));
     askholditcounter++;
-    displayholdquip();
-    c(locstack[0], "Continue...");
+    curtext = displayholdquip(curtext);
+    curtext = printChoicesList(curtext, [0],  needs["choices"]);
+    sayText(curtext);
+    // c(locstack[0], "Continue...");
 }
 
 
+//TOOD check correctness
 function remindpayholdit() {
-    displayholdquip();
-    c(locstack[0], "Continue...");
+    let curtext = displayholdquip([]);
+    curtext = printChoicesList(curtext, [0],  needs["choices"]);
+    sayText(curtext);
+    // c(locstack[0], "Continue...");
 }
 
 //
@@ -642,7 +678,10 @@ function holdit() {
                 curtext = displaydrank(curtext);
             else
                 curtext = displaywaited(curtext);
+            console.log(curtext);
+            console.log(needs["holdit"]["dialogue"]);
             curtext.push(needs["holdit"]["dialogue"][0]); //She's not sure, you have to convince her
+            console.log(curtext);
             if (locstack[0] !== "gostore") curtext = displayneed(curtext);
             else curtext = displaygottavoc(curtext);
             curtext = convinceher(curtext);

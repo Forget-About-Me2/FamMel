@@ -4,6 +4,8 @@ const jsonlocs = ["options", "start", "thebar", "yourhome", "herhome"]; //List o
 let jsonvars = {}; //Dictiornary list of variables that might need to be inserted in the string found in the json
 let calledjsons = {}; //Dictionary list of all location that have already been queried, this saves them being queried multiple times meaning less requests for the server
 
+
+//TODO maybe compress this in a list or something?
 let flirtquotes; //This stores all possible flirts called from the JSON
 let flirtresps; //This stores all possible responses called from the JSON
 let ypeelines; //This stores all dialogues regarding to you going to the bathroom called from the JSON
@@ -13,6 +15,7 @@ let yneeds; //This stores descriptions of your needs called from the JSON
 let drinklines; //This stores all lines regarding drinking from the JSON
 let appearance; // This stores the appearance quotes from the JSON
 let drive; //This stores all dialogues regarding driving around from the JSON
+let general; //This stores all general quotes from JSON call
 
 var respfeelup=[" puts her hand on her chest: <b>You're making me hot.</b>", " squeezes her breasts between her upper arms: <b>Stop it - that's embarassing.</b>", " giggles and crosses her legs: <b>You're making me wet!</b>", " grabs your butt: <b>You're turning me on.</b>", " laughs and curtseys: <b>Stop trying to get me excited!</b>", " covers her face: <b>Don't look at me like that!</b>"];
 
@@ -32,18 +35,27 @@ var feelthigh=["You feel her thigh muscles contracting and relaxing as she tries
     "You feel her thighs trembling with the effort to control her bladder.",
     "Her hot, damp thighs feel slippery and they tremble with the effort of controlling her urge to pee."];
 
-var okayforyou=["Okay, since you're asking so nicely.  I'll hold it a little longer." , "Well... okay. I'll control myself if it makes you happy." , "Alright - I'll hold it in for you a little bit longer.", "If you insist - I'll try to hold it a little more." , "Okay.  I'll wait a bit more if that's what you want.", "Fine.  I'll wait a just little longer if you'd like me to."];
+// var okayforyou=[
+//     "Okay, since you're asking so nicely.  I'll hold it a little longer.",
+//     "Well... okay. I'll control myself if it makes you happy.",
+//     "Alright - I'll hold it in for you a little bit longer.",
+//     "If you insist - I'll try to hold it a little more.",
+//     "Okay.  I'll wait a bit more if that's what you want.",
+//     "Fine.  I'll wait a just little longer if you'd like me to."
+// ];
 
 // her apologies for asking to go
 var wanthold=["I know you asked me to wait, but...", "I know you told me not to go, but...", "I know you wanted me to hold it, but..." , "I know you asked me not to pee, but...", "I know you wanted me to control my bladder, but..." , "I know you didn't want me to go, but..."];
 
 // Description of her holding her pee just for you
-var sheholds=["She needs to pee badly, but she's holding it for you.",
-    "Her bladder is bursting but she's controlling it because you asked her.",
-    "She's desperate to pee, but she's holding it just a little longer at your request.",
-    "Her bladder is terribly full, but she's holding it in to please you.",
-    "She's holding her pee in just for you, and she really needs to go.",
-    "She wants very much to pee, but she's holding it in like you asked."];
+// var sheholds=[
+//     "She needs to pee badly, but she's holding it for you.",
+//     "Her bladder is bursting but she's controlling it because you asked her.",
+//     "She's desperate to pee, but she's holding it just a little longer at your request.",
+//     "Her bladder is terribly full, but she's holding it in to please you.",
+//     "She's holding her pee in just for you, and she really needs to go.",
+//     "She wants very much to pee, but she's holding it in like you asked."
+// ];
 
 //
 //  Her expressions when peeing in a strange place
@@ -244,11 +256,32 @@ var nkdpeekiss=["She presses her bare body onto yours and returns your kiss pass
 //
 //  Interpreted descriptions of how she looks like she has to pee
 //
-var interplose=["She looks like she's losing control.", "She looks like she's going to blow any second.", "She looks like she's seconds away from peeing herself.", "She looks like she can't maintain bladder control any longer.", "She looks like she's going to pee any second.", "She looks like she can't hold it a second longer."];
-
-var interpemer=["She looks like she's nearly wetting herself.", "She looks like she's about to lose bladder control.", "She looks super desperate to pee.", "She looks like she can't stand to wait very much longer to pee.", "She looks like she could lose control of her bladder any minute.", "She looks absolutely desperate for the toilet."];
-
-var interpneed=["She looks uncomfortable - like she has to pee badly.","She looks like she's trying to ignore a full bladder.", "She's acting like her bladder is uncomfortably full.", "She seems to be controlling her bladder.", "She seems distracted by the pressure in her bladder.", "She's looks like she might need to pee."];
+// var interplose=[
+//     "She looks like she's losing control.",
+//     "She looks like she's going to blow any second.",
+//     "She looks like she's seconds away from peeing herself.",
+//     "She looks like she can't maintain bladder control any longer.",
+//     "She looks like she's going to pee any second.",
+//     "She looks like she can't hold it a second longer."
+// ];
+//
+// var interpemer=[
+//     "She looks like she's nearly wetting herself.",
+//     "She looks like she's about to lose bladder control.",
+//     "She looks super desperate to pee.",
+//     "She looks like she can't stand to wait very much longer to pee.",
+//     "She looks like she could lose control of her bladder any minute.",
+//     "She looks absolutely desperate for the toilet."
+// ];
+//
+// var interpneed=[
+//     "She looks uncomfortable - like she has to pee badly.",
+//     "She looks like she's trying to ignore a full bladder.",
+//     "She's acting like her bladder is uncomfortably full.",
+//     "She seems to be controlling her bladder.",
+//     "She seems distracted by the pressure in her bladder.",
+//     "She's looks like she might need to pee."
+// ];
 
 
 //
@@ -557,6 +590,7 @@ function printAllChoices(curtext){
 
 //Prints the given selection of choices for the given choices list
 function printChoicesList(curtext, selection, list){
+    console.log(list);
     selection.forEach(index => curtext = callChoice(list[index], curtext));
     return curtext;
 }
@@ -574,6 +608,7 @@ function callChoice(choice, curtext){
         return c(choice, curtext);
     }
 }
+
 
 function sayText(lines){
     let result = "";
@@ -703,7 +738,6 @@ function replaceWCLI(strlist, tag){
 
 //Replacing the variable wildcard of the given tag for the given list, using the given checklist
 function replaceWCLC(strlist, checklist, tag){
-    console.log(strlist);
     let result = [];
     strlist.forEach(item => result.push(LreplaceCheck(item,checklist, tag)));
     return result;
@@ -761,6 +795,9 @@ function setupQuotes(){
     } );
     getjson("drive", function () {
         drive = json;
+    });
+    getjson("general", function (){
+        general = json;
     })
 }
 
@@ -780,6 +817,12 @@ function flirtSetup(){
 
 function needSetup(){
     needs = json;
+    needs["girltalk"] = addGirlTalk(needs["girltalk"]);
+    needs["briberoses"] = replaceWCLC(needs["briberoses"], needs["girltalk"],"girltalk");
+    needs["bribefavor"] = replaceWCLC(needs["bribefavor"], needs["girltalk"],"girltalk");
+    needs["payholdit"] = replaceWCLC(needs["payholdit"], needs["girltalk"],"girltalk");
+    needs["payfails"] = replaceWCLC(needs["payfails"], needs["girltalk"],"girltalk");
+    needs["bribeearrings"] = replaceWCLC(needs["bribeearrings"], needs["girltalk"],"girltalk");
     needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
     needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
     needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girltalk"], "girltalk");
@@ -826,7 +869,7 @@ function shePeeSetup(){
     peelines["thehome"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
     peelines["noneavailable"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
     peelines["remaining"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
-    let temp = []
+    let temp = [];
     peelines["peephone"].forEach(item => temp.push(replaceWCLC(item, peelines["girltalk"], "girltalk")));
     peelines["peephone"] = temp;
     peelines["locked"]["cbar"] = replaceWCLC(peelines["locked"]["cbar"], peelines["locked"]["girltalk"], "girltalk");

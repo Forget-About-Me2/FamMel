@@ -112,19 +112,16 @@
       "She's hung up on you.",
       "girltalk3"
   ],
-  "girltalk": [
-    "{0} I don't know...",
-    "{0} Ummm...  Oh.   Oh.  Uh. ohmygod.  ohmygod. ohmygod.",
-    "{0} I'm so embarassed - I'll go clean up.",
-    "{0} Not gonna happen, bub.",
-    "{0} Sorry"
-  ],
-  "choices": [
-    ["curloc", "Continue..."]
-  ],
-  "girlgasp": [
+    "girlgasp": [
     "{0} I can't hold it - it's - it's coming out!"
-  ]}
+  ],
+    "girltalk": [
+      "{0} I don't know...",
+      "{0} Ummm...  Oh.   Oh.  Uh. ohmygod.  ohmygod. ohmygod.",
+      "{0} I'm so embarassed - I'll go clean up.",
+      "{0} Not gonna happen, bub.",
+      "{0} Sorry"
+    ]}
   ,
   "askhold": [
     "<b>YOU:</b> But we're having so much fun - can't you wait a little bit?",
@@ -220,5 +217,73 @@
       ["peeoutside", "Suggest she pee outside."],
       ["curloc", "Stand by helplessly."]
     ]
-  }
+  },
+  "briberoses": [
+    "<b>YOU:</b> Pretty please!  I'll give you roses",
+    "girltalk0"
+  ],
+  "bribeask": [
+    "<b>YOU:</b> Pretty please!"
+  ],
+  "bribefavor": [
+    "<b>YOU:</b> Pretty please!  Remember you promised to do me a favor!",
+    "girltalk1"
+  ],
+  "interplose": [
+    "She looks like she's losing control.",
+    "She looks like she's going to blow any second.",
+    "She looks like she's seconds away from peeing herself.",
+    "She looks like she can't maintain bladder control any longer.",
+    "She looks like she's going to pee any second.",
+    "She looks like she can't hold it a second longer."
+  ],
+  "interpemer": [
+    "She looks like she's nearly wetting herself.",
+    "She looks like she's about to lose bladder control.",
+    "She looks super desperate to pee.",
+    "She looks like she can't stand to wait very much longer to pee.",
+    "She looks like she could lose control of her bladder any minute.",
+    "She looks absolutely desperate for the toilet."
+  ],
+  "interpneed":[
+    "She looks uncomfortable - like she has to pee badly.",
+    "She looks like she's trying to ignore a full bladder.",
+    "She's acting like her bladder is uncomfortably full.",
+    "She seems to be controlling her bladder.",
+    "She seems distracted by the pressure in her bladder.",
+    "She's looks like she might need to pee."
+  ],
+  "sheholds": [
+    "She needs to pee badly, but she's holding it for you.",
+    "Her bladder is bursting but she's controlling it because you asked her.",
+    "She's desperate to pee, but she's holding it just a little longer at your request.",
+    "Her bladder is terribly full, but she's holding it in to please you.",
+    "She's holding her pee in just for you, and she really needs to go.",
+    "She wants very much to pee, but she's holding it in like you asked."
+  ],
+  "payholdit": [
+    "<b>YOU:</b> I'll pay you if you can hold it for a while.",
+    "girltalk3"
+  ],
+  "payfails": [
+    "girltalk2"
+  ],
+  "bribeearrings": [
+    "<b>YOU:</b>  Pretty please!  I'll give you a set of diamond earrings if you can hold it!",
+    "girltalk4"
+  ],
+  "girltalk": [
+    "{0} Okay. For roses.",
+    "{0} Well... Okay.  But just a little bit.  I did promise you a favor.",
+    "{0} That's not going to be enough.",
+    "{0} I don't know... how much?",
+    "{0} For diamonds, I'd do much more than hold it.  But okay."
+  ],
+  "choices": [
+    ["curloc", "Continue..."],
+    ["indepee", "Continue..."],
+    ["payfails", "$10.00"],
+    ["payfails", "$20.00"],
+    ["payokay", "$50.00"]
+  ]
 }

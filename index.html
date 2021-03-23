@@ -175,6 +175,7 @@ CHANGES BY Forget_About_Me
 *Tweaked chance of finding key to hopefully be a bit more favourable
 *Fixed bug that reset the flirt counter when trying to leave
 *Fixed preventpee being called if she doesn't have to go during pickup
+*Fixed that you and her use the same counter for a locked bathroom
 */
 
     //TODO potentially clean up if statements with multiple locations
@@ -362,6 +363,7 @@ CHANGES BY Forget_About_Me
     let beenmakeout = 0; // Seen a movie already
     let flirtedflag = 0; // Actually a counter.  Keeps track of flirting.
     const maxflirts = 2; // Maximum flirt points per venue
+    //TODO lockedflags  should probably be renamed counters
     let rrlockedflag = 0; // Restroom was locked last time she went
     let yrrlockedflag = 0;
     let askedswim = 0; // She's asked about a swim
@@ -420,6 +422,7 @@ CHANGES BY Forget_About_Me
                          //Reset positive when you ask her.
 
     let nowpeeing = 0; // She is currently peeing
+    let ynowpeeing = 0; // You're currently peeing
     let checkedherout = 0; // Flags that you just checked her out.
 
     let walkcounter = 0; // How far have you walked
@@ -3239,23 +3242,6 @@ CHANGES BY Forget_About_Me
         }
     }
 
-    // Publish a note about her holding it for you.
-    // Depends on whether you asked her to hold it,
-    // and emergency bladder state
-    function noteholding() {
-        if (bladder > blademer && askholditcounter) s(sheholds[randcounter]);
-        incrandom();
-    }
-
-    //
-    //  Publish a note about her looking like she has to go.
-    //
-    function interpbladder() {
-        if (bladder > bladlose) s(interplose[randcounter]);
-        else if (bladder > blademer) s(interpemer[randcounter]);
-        else if (bladder > bladneed) s(interpneed[randcounter]);
-        incrandom();
-    }
 
     //TODO fix you losing control scene.
     //TODO fix boredom to be less harsh
