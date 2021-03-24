@@ -118,3 +118,18 @@ function ypredrink() {
     curtext = c([locstack[0], "Continue..."], curtext);
     sayText(curtext);
 }
+
+let btn;
+function backpack(){
+    const backpackitem = document.getElementById("backpackitems");
+    backpackitem.style.display= "flex";
+    console.log("allo");
+    btn = document.getElementById("closebackpack");
+    btn.onclick = function(){
+        backpackitem.style.display = "none";
+    }
+    window.onclick = function(event){
+        if (event.target === backpackitem)
+            backpackitem.style.display = "none";
+    }
+}

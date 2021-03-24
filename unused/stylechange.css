@@ -134,5 +134,52 @@ body{
     width: 40%;
     background: #b0c6c6;
     opacity: 15%;
-
 }
+
+#backpack {
+    position: absolute;
+    height: 5%;
+    bottom: 15%;
+    left: 5%;
+}
+
+#backpack:hover {
+    transform: scale(1.5);
+}
+
+#backpackitems{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#backpackcontent{
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+#closebackpack {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#closebackpack:hover,
+#closebackpack:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
