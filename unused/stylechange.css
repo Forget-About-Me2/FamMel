@@ -182,4 +182,36 @@ body{
     cursor: pointer;
 }
 
+.btn-group .itembtn {
+    background-color: #bcf6f6;
+    border: none;
+    color: #a21717;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.btn-group .itembtn:hover{
+    background-color: #b0e9f3;
+}
+
+.btn-clicked{
+    background-color: #b0e9f3;
+}
+
+#item-text {
+    background-color: #f0f9f9;
+    float:right;
+    width: 30%;
+    height: 40%;
+    line-height: 2;
+    text-align: center;
+}
+
+
 

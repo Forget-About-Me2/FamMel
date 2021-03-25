@@ -120,6 +120,9 @@ function ypredrink() {
 }
 
 let btn;
+let itembtns;
+let previousbtn;
+let itemtext;
 function backpack(){
     const backpackitem = document.getElementById("backpackitems");
     backpackitem.style.display= "flex";
@@ -132,4 +135,21 @@ function backpack(){
         if (event.target === backpackitem)
             backpackitem.style.display = "none";
     }
+    itembtns = document.getElementsByClassName("itembtn");
+    itembtns.onclick = selectitem;
+    itemtext= document.getElementById("item-text");
+
+}
+
+function selectitem(selecteditem){
+    console.log(selecteditem);
+    const clickedbtn = document.getElementById(selecteditem);
+    clickedbtn.style.backgroundColor = "#4bb6c3";
+    clickedbtn.style.color = "#e52222";
+    if (previousbtn)
+        previousbtn.removeAttribute("style");
+    itemtext.innerText="You chose " + selecteditem;
+    previousbtn = clickedbtn;
+
+
 }
