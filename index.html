@@ -736,48 +736,6 @@ CHANGES BY Forget_About_Me
 
 
 
-    //TODO this is called way too often
-    //  Updates the information on the stats
-    function displaystats() {
-        let textminutes = minute;
-
-        if (minute < 10) textminutes = "0" + minute;
-
-        document.getElementById("mon").innerText = "$" + money;
-        document.getElementById("att").innerText = attraction;
-        document.getElementById("shy").innerText = shyness;
-        document.getElementById("tum").innerText = tummy;
-        document.getElementById("blad").innerText = bladder;
-        document.getElementById("time").innerText = hour + ":" + textminutes + " " + meridian;
-        document.getElementById("ytum").innerText = yourtummy;
-        document.getElementById("yblad").innerText = yourbladder;
-        if (debugmode) {
-            document.getElementById("bladu").innerText = bladurge;
-            document.getElementById("bladn").innerText = bladneed;
-            document.getElementById("blade").innerText = blademer;
-            document.getElementById("bladl").innerText = bladlose;
-            document.getElementById("maxt").innerText = maxtummy;
-            document.getElementById("randc").innerText = randcounter;
-        } else if (!showstats) {
-            document.getElementById("tum").innerText = "?";
-            document.getElementById("blad").innerText = "?";
-        }
-        if (attraction !== lastattraction) {
-            document.getElementById("att").setAttribute("style", "background-color: #E0FF80");
-        } else {
-            document.getElementById("att").setAttribute("style", "background-color: #FFFFE0");
-        }
-        if (shyness !== lastshyness) {
-            document.getElementById("shy").setAttribute("style", "background-color: #E0FF80");
-        } else {
-            document.getElementById("shy").setAttribute("style", "background-color: #FFFF90");
-        }
-        if (money !== lastmoney) {
-            document.getElementById("mon").setAttribute("style", "background-color: #E0FF80");
-        } else {
-            document.getElementById("mon").setAttribute("style", "background-color: #FFFF90");
-        }
-    }
 
 
 
@@ -3896,7 +3854,7 @@ CHANGES BY Forget_About_Me
                 <td class="stats-cells"><small>Attraction</small></td>
                 <td class="stats-cells"><small>Shyness</small></td>
                 <td class="stats-cells"><small>Tummy</small></td>
-                <td class="stats-cells"><small>Bladder</small></td>
+                <td class="stats-cells"><small>Her Bladder</small></td>
                 <td class="stats-cells"><small>Time</small></td>
                 <td class="stats-cells"><small>Your Tummy</small></td>
                 <td class="stats-cells"><small>Your Bladder</small></td>
@@ -3904,13 +3862,13 @@ CHANGES BY Forget_About_Me
             <tr>
                 <!--                TODO fix this-->
                 <td>&nbsp;</td>
-                <td id="mon" class="stats-cells-yellow" style="background-color: #FFFF90">$200</td>
-                <td id="att" class="stats-cells-white" style="background-color: #ffffe0">10</td>
-                <td id="shy" class="stats-cells-yellow" style="background-color: #ffff90">90</td>
+                <td id="mon" class="stats-cells-blue">$200</td>
+                <td id="att" class="stats-cells-white">10</td>
+                <td id="shy" class="stats-cells-blue">90</td>
                 <td id="tum" class="stats-cells-white">92</td>
-                <td id="blad" class="stats-cells-yellow">308</td>
+                <td id="blad" class="stats-cells-blue">308</td>
                 <td id="time" class="stats-cells-white">7:02 PM</td>
-                <td id="ytum" class="stats-cells-yellow">190</td>
+                <td id="ytum" class="stats-cells-blue">190</td>
                 <td id="yblad" class="stats-cells-white">510</td>
             </tr>
             </tbody>

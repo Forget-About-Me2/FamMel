@@ -2,6 +2,53 @@
 
 let randcounter = 0; // text randomizer
 
+//TODO this is called way too often
+//  Updates the information on the stats
+function displaystats() {
+    let textminutes = minute;
+
+    if (minute < 10) textminutes = "0" + minute;
+
+    document.getElementById("mon").innerText = "$" + money;
+    document.getElementById("att").innerText = attraction;
+    document.getElementById("shy").innerText = shyness;
+    document.getElementById("tum").innerText = tummy;
+    document.getElementById("blad").innerText = bladder;
+    document.getElementById("time").innerText = hour + ":" + textminutes + " " + meridian;
+    document.getElementById("ytum").innerText = yourtummy;
+    document.getElementById("yblad").innerText = yourbladder;
+    if (debugmode) {
+        document.getElementById("bladu").innerText = bladurge;
+        document.getElementById("bladn").innerText = bladneed;
+        document.getElementById("blade").innerText = blademer;
+        document.getElementById("bladl").innerText = bladlose;
+        document.getElementById("maxt").innerText = maxtummy;
+        document.getElementById("randc").innerText = randcounter;
+    } else if (!showstats) {
+        document.getElementById("tum").innerText = "?";
+        document.getElementById("blad").innerText = "?";
+    }
+    if (attraction !== lastattraction) {
+        document.getElementById("att").className="stats-cells-green";
+        console.log("why?");
+    } else {
+        document.getElementById("att").className="stats-cells-white";
+    }
+    if (shyness !== lastshyness) {
+        console.log("why?");
+        document.getElementById("shy").className="stats-cells-green";
+    } else {
+        document.getElementById("shy").className="stats-cells-blue";
+    }
+    if (money !== lastmoney) {
+        document.getElementById("mon").className="stats-cells-green";
+    } else {
+        console.log("Fuck?");
+        document.getElementById("mon").className="stats-cells-blue";
+    }
+}
+
+
 // Main program loop.  Refreshes display, recalculates
 // time passage and so on.
 //    tag - name of function to go to next.

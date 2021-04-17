@@ -99,7 +99,7 @@ body{
     background-color: #b0e9f3;
 }
 
-.stats-cells-yellow {
+.stats-cells-blue {
     text-align: center;
     background-color: #b0e9f3;
     width:12.5%;
@@ -108,6 +108,12 @@ body{
 .stats-cells-white {
     text-align: center;
     background-color: #f0f6f6;
+    width:12.5%;
+}
+
+.stats-cells-green{
+    text-align: center;
+    background-color: #e8ec9c;
     width:12.5%;
 }
 

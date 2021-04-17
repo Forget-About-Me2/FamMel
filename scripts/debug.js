@@ -32,18 +32,18 @@ function magic() {
 
     document.getElementById('stats-bar').innerHTML +=
         "<tr><td>&nbsp;" +
-        "<td class='stats-cells-yellow'><small>BladUrge</small>" +
-        "<td class='stats-cells-yellow'><small>BladNeed</small>" +
-        "<td class='stats-cells-yellow'><small>BladEmer</small>" +
-        "<td class='stats-cells-yellow'><small>BladLose</small>" +
-        "<td class='stats-cells-yellow'><small>MaxTummy</small>" +
-        "<td class='stats-cells-yellow'><small>RandCounter</small>" +
+        "<td class='stats-cells-blue'><small>BladUrge</small>" +
+        "<td class='stats-cells-blue'><small>BladNeed</small>" +
+        "<td class='stats-cells-blue'><small>BladEmer</small>" +
+        "<td class='stats-cells-blue'><small>BladLose</small>" +
+        "<td class='stats-cells-blue'><small>MaxTummy</small>" +
+        "<td class='stats-cells-blue'><small>RandCounter</small>" +
         "<tr><td>&nbsp;" +
         "<td id='bladu' class='stats-cells-white'>" + bladurge + "</td>" +
-        "<td id='bladn' class='stats-cells-yellow'>" + bladneed + "</td>" +
+        "<td id='bladn' class='stats-cells-blue'>" + bladneed + "</td>" +
         "<td id='blade' class='stats-cells-white'>" + blademer + "</td>" +
         "<td id='bladl' class='stats-cells-white'>" + bladlose + "</td>" +
-        "<td id='maxt' class='stats-cells-yellow'>" + maxtummy + "</td>" +
+        "<td id='maxt' class='stats-cells-blue'>" + maxtummy + "</td>" +
         "<td id='randc' class='stats-cells-white'>" + randcounter + "</td>" +
         "</tr></table>";
 

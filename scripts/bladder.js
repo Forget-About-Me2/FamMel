@@ -1344,7 +1344,8 @@ function preventpee(curtext) {
 
 
 //TODO chance with triggering each other into wetting when desperate
-//  Here's actually where we decide if she wet or just spurted
+//TODO it's impossible to spurt more than once while it shouldn't be
+//Here's actually where we decide if she wet or just spurted
 function wetherself() {
     s(wetquote[randcounter]);
     incrandom();
