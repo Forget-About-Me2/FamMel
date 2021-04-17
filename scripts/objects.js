@@ -1,33 +1,41 @@
 objects = {
     "water" : {
+        "bpname": "Water bottle",
         "value": 0,
         "description": "{0} bottle{1} of water"
     },
     "roses" : {
+        "bpname": "Bouquet",
         "value": 0,
         "description": "{0} bouquet{1} of roses"
     },
     "earrings" : {
+        "bpname":"Earrings",
         "value": 0,
         "description": "{0} pair{1} of earrings"
     },
     "vase" : {
+        "bpname":"Vase",
         "value": 0,
         "description": "{0} vase{1}"
     },
     "shotglass": {
+        "bpname":"Shotglass",
         "value": 0,
         "description": "{0} shotglass{1}"
     },
     "ptowels": {
+        "bpname":"Paper Towels",
         "value": 0,
         "description": "{0} roll{1} of paper towels"
     },
     "panties": {
+        "bpname":"Sexy panties",
         "value": 0,
         "description": "{0} pair{1} of sexy panties"
     },
     "champagne": {
+        "bpname":"Champagne",
         "value": 0,
         "description": "{0} {2}bottle{1} of champagne",
         "options": [
@@ -36,12 +44,15 @@ objects = {
         ]
     },
     "beer":{
+        "bpname":"Beer",
         "value":0
     },
     "soda":{
+        "bpname":"Soda",
         "value":0
     },
     "cocktail":{
+        "bpname":"Cocktail",
         "value":0
     }
 }
@@ -83,8 +94,8 @@ function haveItem(item){
 // displaypos function prints the given object.
 function displaypos(itemobj) {
     let number = itemobj.value;
+    let description = ""
     if (itemobj.value > 0){
-        let description = ""
         if (comma > 0) description += ",&nbsp;"
         description += itemobj.description;
         let formatlist = [number.toString()];
@@ -103,6 +114,7 @@ function displaypos(itemobj) {
         document.getElementById('objsp').innerHTML += description;
         comma = 1;
     }
+    return description;
 }
 
 
@@ -119,21 +131,51 @@ function ypredrink() {
     sayText(curtext);
 }
 
+function createItemButtonList(){
+    const obj = Object.keys(objects);
+    let itemlist = [];
+    for (let i =0; i< obj.length; i++) {
+        const curobj = objects[obj[i]];
+        if (curobj.value !== 0) {
+            const baseString = "<button onclick=\"selectitem('";
+            let curString = baseString + obj[i];
+            curString += "')\" class=\"itembtn\" id=\"";
+            curString += obj[i];
+            curString += "\">";
+            curString += curobj.bpname;
+            curString += "</button> \n";
+            itemlist.push(curString)
+        }
+    }
+    return itemlist;
+}
+
 let btn;
 let itembtns;
 let previousbtn;
 let itemtext;
 function backpack(){
+    let itemlist = createItemButtonList();
+    let items = "";
     const backpackitem = document.getElementById("backpackitems");
-    backpackitem.style.display= "flex";
+    if (itemlist.length !== 0) {
+        console.log("huh?");
+        itemlist.forEach(item => items += item);
+        backpackitem.innerHTML = items;
+    } else {
+        console.log("Uhm");
+        backpackitem.innerHTML = "<b>Your backpack is empty :(</b>";
+    }
+    const backpackcnt = document.getElementById("backpack-cnt");
+    backpackcnt.style.display= "flex";
     console.log("allo");
     btn = document.getElementById("closebackpack");
     btn.onclick = function(){
-        backpackitem.style.display = "none";
+        backpackcnt.style.display = "none";
     }
     window.onclick = function(event){
-        if (event.target === backpackitem)
-            backpackitem.style.display = "none";
+        if (event.target === backpackcnt)
+            backpackcnt.style.display = "none";
     }
     itembtns = document.getElementsByClassName("itembtn");
     itembtns.onclick = selectitem;
