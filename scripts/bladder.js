@@ -560,12 +560,9 @@ function convinceher(curtext) {
 function briberoses() {
     let curtext = [];
     curtext = printList(curtext, needs["briberoses"]);
-    // s("<b>YOU:</b> Pretty please!  I'll give you roses");
-    // s(girltalk + "Okay.  For roses.");
     askholditcounter++;
     curtext = displayholdquip(curtext);
     curtext = printChoicesList(curtext, [0],  needs["choices"]);
-    // c(locstack[0], "Continue...");
     roses -= 1;
     sayText(curtext);
 }

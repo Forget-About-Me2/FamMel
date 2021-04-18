@@ -165,7 +165,8 @@ CHANGES BY Forget_About_Me
 *Changed end scenes for the drinking game
 *You can now keep buying drinks in a row.
 
-4.3
+========
+5.0
 
 *Moving quotes to JSON
 *Settings are now saved between sessions
@@ -176,6 +177,7 @@ CHANGES BY Forget_About_Me
 *Fixed bug that reset the flirt counter when trying to leave
 *Fixed preventpee being called if she doesn't have to go during pickup
 *Fixed that you and her use the same counter for a locked bathroom
+*Changed volume of water bottles and beer to 250ml to be slightly more realistic
 */
 
     //TODO potentially clean up if statements with multiple locations
@@ -827,13 +829,13 @@ CHANGES BY Forget_About_Me
         } else if (bladder > blademer && shyness < 90 && brokeice) {
             s(girltalk + "I've <b>really</b> got to go to the bathroom, but I'll drink it if that's what you want me to do.");
             s("She drinks the bottle of water.");
-            tummy += 100;
+            tummy += 250;
             water -= 1;
             drankwaters += 1;
         } else {
             s(girltalk + "Well, I guess it's good to stay hydrated.");
             s("She drinks the bottle of water.");
-            tummy += 100;
+            tummy += 250;
             water -= 1;
             drankwaters += 1;
         }
@@ -845,7 +847,7 @@ CHANGES BY Forget_About_Me
             s("You consider drinking the bottle of water, but your stomach is so full.");
         else {
             s("You drink the bottle of water.");
-            yourtummy += 100;
+            yourtummy += 250;
             water -= 1;
             ydrankwaters += 1;
         }
@@ -870,7 +872,7 @@ CHANGES BY Forget_About_Me
         } else if (bladder > blademer && shyness < 90 && brokeice) {
             s(girltalk + "I've <b>really</b> got to pee, but I'll drink it if that's what you want me to do.");
             s("She drinks the bottle of beer.");
-            tummy += 100;
+            tummy += 250;
             beer -= 1;
             drankbeer = 30;
             drankbeers += 1;
@@ -878,7 +880,7 @@ CHANGES BY Forget_About_Me
         } else {
             s(girltalk + "Bottoms up!");
             s("She drinks the bottle of beer.");
-            tummy += 100;
+            tummy += 250;
             beer -= 1;
             drankbeer = 30;
             attraction += 1;

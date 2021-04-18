@@ -2,58 +2,71 @@ objects = {
     "water" : {
         "bpname": "Water bottle",
         "value": 0,
-        "description": "{0} bottle{1} of water"
+        "owned": "{0} bottle{1} of water",
+        "description":"These bottles are really quite small. It only contains 250ml, you're not quite sure why you wasted money on this."
     },
     "roses" : {
         "bpname": "Bouquet",
         "value": 0,
-        "description": "{0} bouquet{1} of roses"
+        "owned": "{0} bouquet{1} of roses",
+        "description":"It's a nice bouquet, maybe you can give it to {0} to impress her."
     },
     "earrings" : {
         "bpname":"Earrings",
         "value": 0,
-        "description": "{0} pair{1} of earrings"
+        "owned": "{0} pair{1} of earrings",
+        "description":"Ooh shiny! {0} surely will love these."
     },
     "vase" : {
         "bpname":"Vase",
         "value": 0,
-        "description": "{0} vase{1}"
+        "owned": "{0} vase{1}",
+        "description": "You're not quite sure how you managed to fit this in your backpack," +
+            " but it can hold an insane amount of liquid. "
     },
     "shotglass": {
         "bpname":"Shotglass",
         "value": 0,
-        "description": "{0} shotglass{1}"
+        "owned": "{0} shotglass{1}",
+        "description":"You can't quite recall why you though tit was a good idea to bring this glass to your date. " +
+            "It can hold about 100ml, maybe it will be of use?"
     },
     "ptowels": {
         "bpname":"Paper Towels",
         "value": 0,
-        "description": "{0} roll{1} of paper towels"
+        "owned": "{0} roll{1} of paper towels",
+        "description":"One should always have paper towels handy."
     },
     "panties": {
         "bpname":"Sexy panties",
         "value": 0,
-        "description": "{0} pair{1} of sexy panties"
+        "owned": "{0} pair{1} of sexy panties",
+        "description":"Whoo, someone's a bit ambitious didn't they?"
     },
     "champagne": {
         "bpname":"Champagne",
         "value": 0,
-        "description": "{0} {2}bottle{1} of champagne",
+        "owned": "{0} {2}bottle{1} of champagne",
         "options": [
             "half-empty ",
             "empty "
-        ]
+        ],
+        "description": "Some nice champagne, maybe you can share it with {0}?"
     },
     "beer":{
         "bpname":"Beer",
-        "value":0
+        "owned":0,
+        "description":"Don't question why you have an unprotected glass of beer in your backpack. "
     },
     "soda":{
         "bpname":"Soda",
-        "value":0
+        "owned":0,
+        "description":"A nice big cup of soda is all you need to stay hydrated."
     },
     "cocktail":{
         "bpname":"Cocktail",
-        "value":0
+        "owned":0,
+        "description":"Hmmm, alcohol."
     }
 }
 
@@ -97,7 +110,7 @@ function displaypos(itemobj) {
     let description = ""
     if (itemobj.value > 0){
         if (comma > 0) description += ",&nbsp;"
-        description += itemobj.description;
+        description += itemobj.owned;
         let formatlist = [number.toString()];
         if (number > 1){
             if (description.includes("shotglass")) formatlist.push("es");
