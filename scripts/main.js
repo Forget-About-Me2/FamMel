@@ -30,12 +30,10 @@ function displaystats() {
     }
     if (attraction !== lastattraction) {
         document.getElementById("att").className="stats-cells-green";
-        console.log("why?");
     } else {
         document.getElementById("att").className="stats-cells-white";
     }
     if (shyness !== lastshyness) {
-        console.log("why?");
         document.getElementById("shy").className="stats-cells-green";
     } else {
         document.getElementById("shy").className="stats-cells-blue";
@@ -43,7 +41,6 @@ function displaystats() {
     if (money !== lastmoney) {
         document.getElementById("mon").className="stats-cells-green";
     } else {
-        console.log("Fuck?");
         document.getElementById("mon").className="stats-cells-blue";
     }
 }

@@ -2,7 +2,7 @@
 //TODO option to turn off playerbladder
 //TODO organize this better
 
-//Slightly randomizes the calculated tuminc
+// Slightly randomizes the calculated tuminc
 // so the bladder doesn't fill with a completely fixed amount each time
 function randtuminc(tempinc) {
     if (tempinc === 2)
@@ -24,7 +24,7 @@ function randtuminc(tempinc) {
 }
 
 //
-//  Reset All Pee Counters ( means she peed )
+//  Reset All Pee Counters ( this means she peed )
 //
 //TODO maybe also slightly derate bladder when desperate
 function flushdrank() {
@@ -675,10 +675,7 @@ function holdit() {
                 curtext = displaydrank(curtext);
             else
                 curtext = displaywaited(curtext);
-            console.log(curtext);
-            console.log(needs["holdit"]["dialogue"]);
             curtext.push(needs["holdit"]["dialogue"][0]); //She's not sure, you have to convince her
-            console.log(curtext);
             if (locstack[0] !== "gostore") curtext = displayneed(curtext);
             else curtext = displaygottavoc(curtext);
             curtext = convinceher(curtext);
@@ -692,14 +689,14 @@ function holdit() {
                     curtext.push(needs["holdit"]["dialogue"][2]);
                     curtext.push(needs["holdit"]["dialogue"][3]); //She's wetting herself over the phone
                     bladder = 0;
-                    askholditcounter = 0;
                     waitcounter = 0;
+                    askholditcounter = 0;
                     attraction = 0;
                 } else {
                     curtext = displayneed(curtext);
                 }
             }
-            curtext = printAllChoicesList(curtext, needs["holdit"]["choices"]);
+            curtext = callChoice(needs["choices"][0], curtext);
         }
     } else {
         if (locstack[0] === "gostore") {
@@ -708,11 +705,12 @@ function holdit() {
             //She's not holding it while on the phone
             attraction -= 5;
             bladder = 0;
+            curtext = callChoice(needs["choices"][0], curtext);
         } else {
             curtext.push(needs["holdit"]["dialogue"][6]);
             // she's not holding it for you
             attraction -= 5;
-            curtext = indepee(curtext);
+            curtext = indepee(curtext, true);
         }
     }
     sayText(curtext);
@@ -721,17 +719,25 @@ function holdit() {
 function allowpee() {
     gottagoflag = 0;
     askholditcounter = 0;
-    s("<b>YOU:</b> Well, if you have to pee that bad, I guess you can go.");
-    s(girltalk + "Thanks!  I do really have to go.  You're so sweet.");
+    let curtext = [];
+    curtext.push(needs["allowpee"][0]);
+    curtext.push(needs["allowpee"][1]);
+    // s("<b>YOU:</b> Well, if you have to pee that bad, I guess you can go.");
+    // s(girltalk + "Thanks!  I do really have to go.  You're so sweet.");
     if (locstack[0] === "solobar" || locstack[0] === "fuckher6" || locstack[0] === "thehome" || locstack[0] === "thebedroom" || locstack[0] === "darkbar"
         || locstack[0] === "pickup" || locstack[0] === "darkclub" || locstack[0] === "darkbar") {
-        c("indepee", "Continue...");
+        curtext = callChoice(needs["choices"][1], curtext);
+        // c("indepee", "Continue...");
     } else {
+        //TODO test
         s(girltalk + "Can you hold my purse for me?");
+        curtext.push(needs["allowpee"][2]);
         attraction += 7;
-        c("holdpurse", "Sure, I'll take care of it!");
-        c("indepee", "I think you'd better take it with you.");
+        curtext = printChoicesList(curtext, [1,5], needs["choices"]);
+        // c("holdpurse", "Sure, I'll take care of it!");
+        // c("indepee", "I think you'd better take it with you.");
     }
+    sayText(curtext);
 }
 
 function peephone() {
@@ -1180,6 +1186,7 @@ function ypeeoutside3c() {
 //  saying she's going to try to hold it for you.
 function displayholdquip(curtext) {
     //TODO is the noneed ever used?
+    //TODO test
     let need = "noneed" //How full her bladder is influences what she says
     if (bladder >= bladlose)
         need = "lose";
@@ -1203,6 +1210,7 @@ function displayholdquip(curtext) {
 // If she begs you, you end up not leaving the venue.
 function begtoilet(curtext) {
     //TODO mention having peed outside before? / autonomously choose that
+    //TODO test
     let selection = [0];
     // s(girlname + " looks intently into your eyes:");
     if (peedvase)
@@ -1232,7 +1240,7 @@ function begtoilet(curtext) {
         selection.push(3);
         // c("peeoutside", "Suggest she pee outside.");
     selection.push(4);
-    printChoicesList(curtext, selection, needs["begtoilet"]["choices"]);
+    return printChoicesList(curtext, selection, needs["begtoilet"]["choices"]);
     // c(locstack[0], "Stand by helplessly.");
 }
 

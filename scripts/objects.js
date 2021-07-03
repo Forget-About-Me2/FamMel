@@ -1,3 +1,4 @@
+//TODO add keys and phone
 objects = {
     "water" : {
         "bpname": "Water bottle",
@@ -22,7 +23,7 @@ objects = {
         "value": 0,
         "owned": "{0} vase{1}",
         "description": "You're not quite sure how you managed to fit this in your backpack," +
-            " but it can hold an insane amount of liquid. "
+            " but it can hold an insane amount of liquid. You wonder if it's bigger on the inside."
     },
     "shotglass": {
         "bpname":"Shotglass",
@@ -172,16 +173,13 @@ function backpack(){
     let items = "";
     const backpackitem = document.getElementById("backpackitems");
     if (itemlist.length !== 0) {
-        console.log("huh?");
         itemlist.forEach(item => items += item);
         backpackitem.innerHTML = items;
     } else {
-        console.log("Uhm");
         backpackitem.innerHTML = "<b>Your backpack is empty :(</b>";
     }
     const backpackcnt = document.getElementById("backpack-cnt");
     backpackcnt.style.display= "flex";
-    console.log("allo");
     btn = document.getElementById("closebackpack");
     btn.onclick = function(){
         backpackcnt.style.display = "none";
@@ -197,7 +195,6 @@ function backpack(){
 }
 
 function selectitem(selecteditem){
-    console.log(selecteditem);
     const clickedbtn = document.getElementById(selecteditem);
     clickedbtn.style.backgroundColor = "#4bb6c3";
     clickedbtn.style.color = "#e52222";

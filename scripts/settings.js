@@ -333,7 +333,7 @@ function setgirl(hername) {
         favoritemovie = "thelitr";
         setLocal("custom", "false");
     } else {
-        bladurge = customurge;
+        bladurge = Number(customurge);
         favoritemovie = "thelitr";
         setLocal("custom", "true");
     }

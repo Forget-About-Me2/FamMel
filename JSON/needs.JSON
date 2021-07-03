@@ -108,7 +108,7 @@
       "girltalk1",
       "girlgasp0",
       "girltalk2",
-      "girlname4",
+      "girltalk4",
       "She's hung up on you.",
       "girltalk3"
   ],
@@ -277,13 +277,21 @@
     "{0} Well... Okay.  But just a little bit.  I did promise you a favor.",
     "{0} That's not going to be enough.",
     "{0} I don't know... how much?",
-    "{0} For diamonds, I'd do much more than hold it.  But okay."
+    "{0} For diamonds, I'd do much more than hold it.  But okay.",
+    "{0} Thanks! I do really have to go. You're so sweet.",
+    "{0} Can you hold my purse for me?"
+  ],
+  "allowpee": [
+    "<b>YOU:</b> Well, if you have to pee that bad, I guess you can go.",
+    "girltalk5",
+    "girltalk6"
   ],
   "choices": [
     ["curloc", "Continue..."],
     ["indepee", "Continue..."],
     ["payfails", "$10.00"],
     ["payfails", "$20.00"],
-    ["payokay", "$50.00"]
+    ["payokay", "$50.00"],
+    ["holdpurse", "Sure, I'll take care of it!"]
   ]
 }

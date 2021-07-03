@@ -56,7 +56,7 @@ function driveout() {
             curtext = printIntro(curtext, 5);
     }
     if (withgirl) {
-        displayneed();
+        curtext = displayneed(curtext);
         if (suggestedloc === "none") {
             if (randomchoice(8)) {
                 if (shyness < 30 && attraction > 50 && !beenmakeout) {
@@ -76,7 +76,7 @@ function driveout() {
             }
         }
     }
-    displayyourneed();
+    curtext = displayyourneed(curtext);
     curtext = printAlways(curtext);
     let choices = [0];
     if (withgirl) {

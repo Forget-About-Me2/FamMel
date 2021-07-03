@@ -590,7 +590,6 @@ function printAllChoices(curtext){
 
 //Prints the given selection of choices for the given choices list
 function printChoicesList(curtext, selection, list){
-    console.log(list);
     selection.forEach(index => curtext = callChoice(list[index], curtext));
     return curtext;
 }
@@ -612,6 +611,7 @@ function callChoice(choice, curtext){
 
 function sayText(lines){
     let result = "";
+    console.log(lines);
     lines.forEach(item => result += "<p>" + item + "</p>");
     document.getElementById('textsp').innerHTML = result;
 }
@@ -689,8 +689,6 @@ function locationMSetup(tag, subtag){
 
 //Setup of location using a JSON that is not connected to a location
 function locationMCSetup(subtag, customloc){
-    console.log(customloc);
-    console.log(customloc[tag]);
     locjson = JSON.parse(JSON.stringify(customloc[subtag]));
     if (locjson.hasOwnProperty("girlname"))
         locjson.girlname = addGirlname(locjson.girlname);
@@ -823,6 +821,7 @@ function needSetup(){
     needs["payholdit"] = replaceWCLC(needs["payholdit"], needs["girltalk"],"girltalk");
     needs["payfails"] = replaceWCLC(needs["payfails"], needs["girltalk"],"girltalk");
     needs["bribeearrings"] = replaceWCLC(needs["bribeearrings"], needs["girltalk"],"girltalk");
+    needs["allowpee"] = replaceWCLC(needs["allowpee"], needs["girltalk"],"girltalk");
     needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
     needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
     needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girltalk"], "girltalk");
