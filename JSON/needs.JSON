@@ -286,12 +286,22 @@
     "girltalk5",
     "girltalk6"
   ],
+  "holdpurse": [
+    "girltalk7",
+    "She hands you her small, stylish purse and runs off to relieve herself.",
+    "You open the top and see:",
+    "Thinking they might come in handy later, you pocket {0}."
+  ],
   "choices": [
     ["curloc", "Continue..."],
     ["indepee", "Continue..."],
     ["payfails", "$10.00"],
     ["payfails", "$20.00"],
     ["payokay", "$50.00"],
-    ["holdpurse", "Sure, I'll take care of it!"]
+    ["holdpurse", "Sure, I'll take care of it!"],
+    ["lookinsidepurse", "Look inside her purse."],
+    ["indepee", "Be a gentleman"],
+    ["indepee", "Close the purse"],
+    ["lookinsidepurse", "Examine her purse again"]
   ]
 }

@@ -68,6 +68,34 @@ objects = {
         "bpname":"Cocktail",
         "owned":0,
         "description":"Hmmm, alcohol."
+    },
+    "herKeys":{
+        "bpname": "Set of Keys",
+        "owned":0,
+        "description": "{0}'s keys which you stole from her earlier, maybe you should give them back?"
+    },
+    "herPhone":{
+        "bpname":" A cellphone",
+        "owned":0,
+        "description": "{0},s phone you stole from her earlier, maybe you can crack the passcode or " +
+            "make some nice pictures?"
+    }
+}
+
+herpurse = {
+    "herKeys": {
+        "desc": "set of keys",
+        "funDesc": "her keys"
+    },
+    "herPhone": {
+        "desc": "smartphone",
+        "funDesc": "her smartphone"
+    },
+    "makeup": {
+        "desc":"compact makeup kit"
+    },
+    "comb": {
+        "desc":"comb"
     }
 }
 
@@ -131,7 +159,6 @@ function displaypos(itemobj) {
     return description;
 }
 
-
 function ypredrink() {
     let curtext = []
     if (yourtummy < ymaxtummy) {
@@ -144,6 +171,8 @@ function ypredrink() {
     curtext = c([locstack[0], "Continue..."], curtext);
     sayText(curtext);
 }
+
+
 
 function createItemButtonList(){
     const obj = Object.keys(objects);
@@ -191,8 +220,8 @@ function backpack(){
     itembtns = document.getElementsByClassName("itembtn");
     itembtns.onclick = selectitem;
     itemtext= document.getElementById("item-text");
-
 }
+
 
 function selectitem(selecteditem){
     const clickedbtn = document.getElementById(selecteditem);

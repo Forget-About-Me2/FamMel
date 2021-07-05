@@ -608,6 +608,21 @@ function callChoice(choice, curtext){
     }
 }
 
+// Cache a choice
+// choice - array of length 2 with tag on index 0 and desc on index 1
+//   tag - function to activate using choice
+//   desc - description of choice to display.
+// curtext - a list of all current lines that will be printed during the scene
+function c(choice, curtext) {
+    const html = "<li><a href=\"javascript:go('" + choice[0] + "')\">" + choice[1] + "</a>"
+    curtext.push(html);
+    //TODO decide if this is needed?
+    if (didintro) {
+        displaystats();
+    }
+    return curtext;
+}
+
 
 function sayText(lines){
     let result = "";

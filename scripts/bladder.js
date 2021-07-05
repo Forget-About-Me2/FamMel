@@ -722,12 +722,9 @@ function allowpee() {
     let curtext = [];
     curtext.push(needs["allowpee"][0]);
     curtext.push(needs["allowpee"][1]);
-    // s("<b>YOU:</b> Well, if you have to pee that bad, I guess you can go.");
-    // s(girltalk + "Thanks!  I do really have to go.  You're so sweet.");
     if (locstack[0] === "solobar" || locstack[0] === "fuckher6" || locstack[0] === "thehome" || locstack[0] === "thebedroom" || locstack[0] === "darkbar"
         || locstack[0] === "pickup" || locstack[0] === "darkclub" || locstack[0] === "darkbar") {
         curtext = callChoice(needs["choices"][1], curtext);
-        // c("indepee", "Continue...");
     } else {
         //TODO test
         s(girltalk + "Can you hold my purse for me?");
@@ -759,46 +756,81 @@ function peephone() {
     sayText(curtext);
 }
 
+//TODO test
 function holdpurse() {
     haveherpurse = 1;
-    s(girltalk + "Great!");
-    s("She hands you her small, stylish purse and runs off to relieve herself.");
-    c("lookinsidepurse", "Look inside her purse.");
-    c("indepee", "Be a gentleman");
+    let curtext = [];
+    curtext.push(needs["holdpurse"][0]);
+    curtext.push(needs["holdpurse"][1]);
+    // s(girltalk + "Great!");
+    // s("She hands you her small, stylish purse and runs off to relieve herself.");
+    curtext = printChoicesList(curtext, [6,7], needs["choices"]);
+    // c("lookinsidepurse", "Look inside her purse.");
+    // c("indepee", "Be a gentleman");
+    sayText(curtext)
 }
 
+//TODO test
 function lookinsidepurse() {
-    s("You open the top and see:");
+    let curtext = [];
+    curtext.push(needs["holdpurse"][2]);
+    // s("You open the top and see:");
     let tempstring = "A ";
-    if (!herkeys)
-        tempstring += "set of keys, a ";
-    if (!hercellphone)
-        tempstring += "small cellphone, a ";
-    tempstring += "compact makeup kit and a comb.";
-    s(tempstring);
-    if (!herkeys)
-        c("takeherkeys", "Take her keys");
-    if (!hercellphone)
-        c("takeherphone", "Take her cellphone");
-    c("indepee", "Close the purse");
+    herpurse.forEach((item, index) => {
+        if(index === 0)
+            tempstring += item["desc"];
+        else if (index === item.size - 1){
+            tempstring += "and a" + item["desc"];
+        } else {
+            tempstring += "a" + item["desc"];
+        }
+    });
+    // if (!herkeys)
+    //     tempstring += "set of keys, a ";
+    // if (!hercellphone)
+    //     tempstring += "small cellphone, a ";
+    // tempstring += "compact makeup kit and a comb.";
+    // s(tempstring);
+    curtext.push(tempstring);
+    herpurse.forEach(item => {
+        if ("funDesc" in item){
+            curtext = c(["takeHerItem(item.key)", "take "+ item.funDesc] ,curtext);
+        }
+    });
+    // if (!herkeys)
+    //     c("takeherkeys", "Take her keys");
+    // if (!hercellphone)
+    //     c("takeherphone", "Take her cellphone");
+    // c("indepee", "Close the purse");
+    curtext = printChoicesList(curtext,[8], needs["choices"]);
+    sayText(curtext);
 }
 
-function takeherkeys() {
-    herkeys++;
-    s("Thinking they might come in handy later, you pocket her keys.");
-    c("lookinsidepurse", "Examine her purse again");
-    c("indepee", "Continue...");
+//TODO test
+//You steal the given item from her purse
+function takeHerItem(item){
+    let curtext = [];
+    curtext.push(needs["holdpurse"][3].format(item.funDesc));
+    curtext = printChoicesList(curtext, [9,1]);
+    sayText(curtext);
+
 }
+//
+// function takeherkeys() {
+//     delete herpurse.keys;
+//     objects.herKeys.owned++;
+//     s("Thinking they might come in handy later, you pocket her keys.");
+//     c("lookinsidepurse", "Examine her purse again");
+//     c("indepee", "Continue...");
+// }
+//
+// function takeherphone() {
+//     hercellphone++;
+//     s("Thinking it might come in handy later, you pocket her cellphone.");
+//     c("lookinsidepurse", "Examine her purse again");
+//     c("indepee", "Continue...");
+// }
 
-function takeherphone() {
-    hercellphone++;
-    s("Thinking it might come in handy later, you pocket her cellphone.");
-    c("lookinsidepurse", "Examine her purse again");
-    c("indepee", "Continue...");
-}
-
-
-//TODO maybe option to smash it outside/ throw it out of the window in the car?
 //TODO figureout duplicate continue
 function peeshot() {
     if (attraction > 30) {
@@ -816,13 +848,11 @@ function peeshot() {
 
 
         } else {
-            //TODO this part of code is unreachable? you only get her if your bladder >= bladlose-25
             gottagoflag = 0;
             s(girltalk + "I think maybe not.  At least not yet.");
             c(locstack[0], "Continue...");
         }
     } else if (locstack[0] !== "themakeout" && locstack[0] !== "driveout") {
-        //TODO how come is she suddenly able to use the locked/occupied bathroom because she is refusing to use the shotglass?
         s(girltalk + "Somehow, I don't think that's happening.");
         s("She runs to the bathroom with your shot glass in hand.");
         s("You are left to ponder your situation.");
