@@ -62,10 +62,38 @@ var wanthold=["I know you asked me to wait, but...", "I know you told me not to 
 //  used by itscomingout()
 //
 
-var outpeelook=["No!  Don't look!","Ugh!  Don't watch me!","Wait!  Don't look at me.","Oh No!  Please don't look!","Oh No! You can't look!","Please don't stare!"];
-var outpeehide=["Please help me hide!","Please don't let anyone watch!","Can you watch out for people coming?","Can you help me hide?","Please don't let anyone look!","Don't let anybody see me!"];
-var outpeectrl=["Ungh! I can't hold it anymore!","Oh God!  I can't control it!","Urgh!  I can't stop it.","Oh! I can't wait any more!","Fuck!","Dammit!"];
-var outpeecome=["It's coming out.","I'm starting.","I'm going to start.","It's coming!","It's starting!","I'm peeing!"];
+const outpeelook=[
+    "No!  Don't look!",
+    "Ugh!  Don't watch me!",
+    "Wait!  Don't look at me.",
+    "Oh No!  Please don't look!",
+    "Oh No! You can't look!",
+    "Please don't stare!"
+];
+const outpeehide=[
+    "Please help me hide!",
+    "Please don't let anyone watch!",
+    "Can you watch out for people coming?",
+    "Can you help me hide?",
+    "Please don't let anyone look!",
+    "Don't let anybody see me!"
+];
+const outpeectrl=[
+    "Ungh! I can't hold it anymore!",
+    "Oh God!  I can't control it!",
+    "Urgh!  I can't stop it.",
+    "Oh! I can't wait any more!",
+    "Fuck!",
+    "Dammit!"
+];
+const outpeecome=[
+    "It's coming out.",
+    "I'm starting.",
+    "I'm going to start.",
+    "It's coming!",
+    "It's starting!",
+    "I'm peeing!"
+];
 
 //
 //  She curses
@@ -757,7 +785,7 @@ function replaceWCLC(strlist, checklist, tag){
 }
 
 function replaceChoices(tag){
-    let result = []
+    let result = [];
     locjson["choices"].forEach(item => result.push(replaceChoice(item, tag)));
     locjson["choices"] = result
 }
@@ -765,6 +793,18 @@ function replaceChoices(tag){
 function replaceChoice(choice, tag){
     let result = [choice[0]];
     result.push(replaceCheck(choice[1], tag));
+    return result
+}
+
+function replaceChoicesList(strList, tag, checkList ){
+    let result = [];
+    strList.forEach(item => result.push(replaceChoiceList(item, tag, checkList)));
+    return strList;
+}
+
+function replaceChoiceList(choice, tag, checkList){
+    let result = [choice[0]];
+    result.push(LreplaceCheck(choice[1], checkList, tag));
     return result
 }
 
@@ -831,18 +871,23 @@ function flirtSetup(){
 function needSetup(){
     needs = json;
     needs["girltalk"] = addGirlTalk(needs["girltalk"]);
+    needs["girlname"] = addGirlname(needs["girlname"]);
+    needs["preventpee"] = replaceChoicesList(needs["preventpee"], "girlname");
+    needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
+    needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
+    needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girltalk"], "girltalk");
+    needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girlgasp"], "girlgasp");
+    needs["begtoilet"]["girlname"] = addGirlname(needs["begtoilet"]["girlname"]);
+    needs["begtoilet"]["dialogue"] = replaceWCLC(needs["begtoilet"]["dialogue"], needs["begtoilet"]["girlname"], "girlname");
     needs["briberoses"] = replaceWCLC(needs["briberoses"], needs["girltalk"],"girltalk");
     needs["bribefavor"] = replaceWCLC(needs["bribefavor"], needs["girltalk"],"girltalk");
     needs["payholdit"] = replaceWCLC(needs["payholdit"], needs["girltalk"],"girltalk");
     needs["payfails"] = replaceWCLC(needs["payfails"], needs["girltalk"],"girltalk");
     needs["bribeearrings"] = replaceWCLC(needs["bribeearrings"], needs["girltalk"],"girltalk");
     needs["allowpee"] = replaceWCLC(needs["allowpee"], needs["girltalk"],"girltalk");
-    needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
-    needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
-    needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girltalk"], "girltalk");
-    needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girlgasp"], "girlgasp");
-    needs["begtoilet"]["girlname"] = replaceWCLC(needs["begtoilet"]["girlname"]);
-    needs["begtoilet"]["dialogue"] = replaceWCLC(needs["begtoilet"]["dialogue"], needs["begtoilet"]["girlname"], "girlname");
+    needs["holdpurse"] = replaceWCLC(needs["holdpurse"], needs["girltalk"], "girltalk");
+    needs["peeshot"] = replaceWCLC(needs["peeshot"], needs["girltalk"], "girltalk");
+    needs["peeshot"] = replaceWCLC(needs["peeshot"], needs["girlname"], "girlname");
 }
 
 //Girl curses

@@ -83,6 +83,34 @@
     "<i>You notice her nails are painted a dark shade of red.</i>",
     "<i>You stare at her toned, naked body disappearing down into the murk of the water.</i>",
     "<i>You notice the graceful curve of her arm.</i>"],
+  "outpeelook": [
+    "No!  Don't look!",
+    "Ugh!  Don't watch me!",
+    "Wait!  Don't look at me.",
+    "Oh No!  Please don't look!",
+    "Oh No! You can't look!",
+    "Please don't stare!"],
+  "outpeehide": [
+    "Please help me hide!",
+    "Please don't let anyone watch!",
+    "Can you watch out for people coming?",
+    "Can you help me hide?",
+    "Please don't let anyone look!",
+    "Don't let anybody see me!"],
+  "outpeectrl": [
+    "Ungh! I can't hold it anymore!",
+    "Oh God!  I can't control it!",
+    "Urgh!  I can't stop it.",
+    "Oh! I can't wait any more!",
+    "Fuck!",
+    "Dammit!"],
+  "outpeecome": [
+    "It's coming out.",
+    "I'm starting.",
+    "I'm going to start.",
+    "It's coming!",
+    "It's starting!",
+    "I'm peeing!"],
   "preventpee": [
     ["nopeesolodrink", "Suggest that she have another drink instead."],
     ["remindpayholdit", "girlname0"],
@@ -96,11 +124,11 @@
     ["nextstop", "Tell her you'll stop the next place you see."],
     ["allowpee", "Tell her she's better go, then."],
     ["indepee", "Ignore her request to use the toilet."]
-
   ],
   "girlname": [
     "Remind {0} you're paying her to hold it.",
-    "Tell {0} you'll pay her to hold it."
+    "Tell {0} you'll pay her to hold it.",
+    "The pee hisses out and the glass is filled in no time. {0} bends over and jams her hand between her legs, gasping in the effort to stop the flow."
   ],
   "holdit": {
     "dialogue": [
@@ -279,7 +307,13 @@
     "{0} I don't know... how much?",
     "{0} For diamonds, I'd do much more than hold it.  But okay.",
     "{0} Thanks! I do really have to go. You're so sweet.",
-    "{0} Can you hold my purse for me?"
+    "{0} Can you hold my purse for me?",
+    "{0} You're a naugthy boy, aren't you?",
+    "{0} But I'm going to wet my panties if I don't go.....",
+    "{0} God! I can't wait any longer!",
+    "{0} I think maybe not. At least not yet.",
+    "{0} Somehow, I don't think that's happening.",
+    "{0} Damn. That's not much better."
   ],
   "allowpee": [
     "<b>YOU:</b> Well, if you have to pee that bad, I guess you can go.",
@@ -292,6 +326,17 @@
     "You open the top and see:",
     "Thinking they might come in handy later, you pocket {0}."
   ],
+  "peeshot": [
+    "girltalk8",
+    "girltalk9",
+    "girltalk10",
+    "girltalk11",
+    "girltalk12",
+    "She runs to the bathroom with your shot glass in hand.",
+    "You are left to ponder your situation.",
+    "girlname2",
+    "girltalk13"
+  ],
   "choices": [
     ["curloc", "Continue..."],
     ["indepee", "Continue..."],
@@ -302,6 +347,8 @@
     ["lookinsidepurse", "Look inside her purse."],
     ["indepee", "Be a gentleman"],
     ["indepee", "Close the purse"],
-    ["lookinsidepurse", "Examine her purse again"]
+    ["lookinsidepurse", "Examine her purse again"],
+    ["peeshot2", "Continue..."],
+    ["peeshot3", "Continue..."]
   ]
 }

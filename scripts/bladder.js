@@ -833,55 +833,82 @@ function takeHerItem(item){
 
 //TODO figureout duplicate continue
 function peeshot() {
+    //TODO test
+    let curtext = [];
     if (attraction > 30) {
         if ((bladder > blademer && shyness < 60) ||
             (bladder >= bladlose - 25)) {
             gottagoflag = 0;
             if (peedshot < 1) {
-                s(girltalk + "You're a naughty boy, aren't you?");
-                s(girltalk + "But I'm going to wet my panties if I don't go.....");
+                curtext.push(needs["peeshot"][0]);
+                curtext.push(needs["peeshot"][1]);
+                // s(girltalk + "You're a naughty boy, aren't you?");
+                // s(girltalk + "But I'm going to wet my panties if I don't go.....");
             }
             peedshot = 1;
-            displayneed();
-            s(girltalk + "God! I can't wait any longer!");
-            c("peeshot2", "Continue...");
-
-
+            curtext = displayneed(curtext);
+            curtext.push(needs["peeshot"][2]);
+            // s(girltalk + "God! I can't wait any longer!");
+            // c("peeshot2", "Continue...");
+            curtext = printChoicesList(curtext, [10], needs["choices"]);
         } else {
             gottagoflag = 0;
-            s(girltalk + "I think maybe not.  At least not yet.");
-            c(locstack[0], "Continue...");
+            curtext.push(needs["peeshot"][3]);
+            // s(girltalk + "I think maybe not.  At least not yet.");
+            curtext = printChoicesList(curtext, [0], needs["choices"]);
+            // c(locstack[0], "Continue...");
         }
     } else if (locstack[0] !== "themakeout" && locstack[0] !== "driveout") {
-        s(girltalk + "Somehow, I don't think that's happening.");
-        s("She runs to the bathroom with your shot glass in hand.");
-        s("You are left to ponder your situation.");
+        curtext.push(needs["peeshot"][4]);
+        curtext.push(needs["peeshot"][5]);
+        curtext.push(needs["peeshot"][6]);
+        // s(girltalk + "Somehow, I don't think that's happening.");
+        // s("She runs to the bathroom with your shot glass in hand.");
+        // s("You are left to ponder your situation.");
         flushdrank();
         attraction -= 3;
         shotglass -= 1;
-        c(locstack[0], "Continue...");
+        curtext = printChoicesList(curtext, [0], needs["choices"]);
+        // c(locstack[0], "Continue...");
 
     } else {
-        s(girltalk + "Somehow I don't see that happening.");
-        c(locstack[0], "Continue...");
+        curtext.push(needs["peeshot"][4]);
+        // s(girltalk + "Somehow I don't see that happening.");
+        curtext = printChoicesList(curtext, [0], needs["choices"]);
+        // c(locstack[0], "Continue...");
     }
+    sayText(curtext);
 }
 
+//TODO test
 function peeshot2() {
-    if (pantycolor !== "none") s(peeshotquote);
-    else s(peeshotquotebare);
-    itscomingout();
-    c("peeshot3", "Continue...");
+    let curtext = [];
+    if (pantycolor !== "none")
+        curtext.push(appearance["peeshotquote"]);
+    else
+        curtext.push(appearance["peeshotquotebare"]);
+    // if (pantycolor !== "none") s(peeshotquote);
+    // else s(peeshotquotebare);
+    curtext = itscomingout(curtext);
+    curtext = printChoicesList(curtext, [11], needs["choices"]);
+    // c("peeshot3", "Continue...");
+    sayText(curtext);
 }
 
+//TODO test
 function peeshot3() {
-    s("The pee hisses out and the glass is filled in no time.  " + girlname + " bends over and jams her hand between her legs, gasping in the effort to stop the flow.");
-    s(girltalk + "Damn.  That's not much better.");
+    let curtext = [];
+    curtext.push(needs["peeshot"][7]);
+    curtext.push(needs["peeshot"][8]);
+    // s("The pee hisses out and the glass is filled in no time.  " + girlname + " bends over and jams her hand between her legs, gasping in the effort to stop the flow.");
+    // s(girltalk + "Damn.  That's not much better.");
     attraction += 3;
     bladder -= 100;
     waitcounter = 4;
     sawherpee = 1;
-    c(locstack[0], "Continue...");
+    curtext = printChoicesList(curtext, [0], needs["choices"]);
+    // c(locstack[0], "Continue...");
+    sayText(curtext);
 }
 
 //TODO more variety? and implement for different locations
@@ -1586,13 +1613,19 @@ function scoldher() {
 //  It's coming out and she can't stop it
 //  used to help describe various pees.
 //
-function itscomingout() {
+function itscomingout(curtext) {
+    //TODO test
     if (!sawherpee)
-        s(girltalk + outpeelook[randcounter]);
+        curtext.push(girltalk + pickrandom(needs["outpeelook"]));
+        // s(girltalk + outpeelook[randcounter]);
     else
-        s(girltalk + outpeehide[randcounter]);
-    s(girlgasp + outpeectrl[randcounter]);
-    s(girltalk + outpeecome[randcounter]);
+        curtext.push(girltalk + pickrandom(needs["outpeehide"]));
+        // s(girltalk + outpeehide[randcounter]);
+    curtext.push(girlgasp + pickrandom(needs["outpeectrl"]));
+    curtext.push(girltalk + pickrandom(needs["outpeecome"]));
+    // s(girlgasp + outpeectrl[randcounter]);
+    // s(girltalk + outpeecome[randcounter]);
+    return curtext;
 }
 
 //Here's where we decide if you wet yourself or if you just spurted.
