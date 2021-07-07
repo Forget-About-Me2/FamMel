@@ -831,12 +831,7 @@ function LreplaceCheck(rpstring, list, tag){
 function setupQuotes(){
     getjson("flirting", flirtSetup);
     getjson("needs", needSetup);
-    getjson("yneeds", function (){
-        yneeds = json;
-        //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
-        //And this is the cleanest way to not have everything crying
-        go("yourhome");
-    });
+    getjson("yneeds", yNeedSetup);
     getjson("youpee", yPeeSetup);
     getjson("shepee", shePeeSetup);
     getjson("drinking", function (){
@@ -895,6 +890,15 @@ function needSetup(){
 function voccurse(curtext) {
     curtext.push(girltalk + " " + pickrandom(curseword));
     return curtext;
+}
+
+function yNeedSetup(){
+    yneeds = json;
+    //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
+    //And this is the cleanest way to not have everything crying
+    yneeds["girlname"] = addGirlname(yneeds["girlname"]);
+    yneeds["ypeeshot"] = replaceWCLC(yneeds["ypeeshot"], yneeds["girlname"], "girlname");
+    go("yourhome");
 }
 
 function yPeeSetup(){

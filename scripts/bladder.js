@@ -218,14 +218,14 @@ function indepee(curtext=[], called=false) {
         curtext = bathroomlocked(curtext);
     } else if (locstack[0] === "themakeout") {
         curtext.push(peelines["noneavailable"][1]);
-        displayneed();
+        curtext = displayneed(curtext);
     } else if (locstack[0] === "driveout") {
         curtext.push(peelines["noneavailable"][2]);
-        displayneed();
+        curtext = displayneed(curtext);
     } else if (locstack[0] === "thewalk" || locstack[0] === "theyard" || locstack[0] === "thebeach" || locstack[0] === "thehottub") {
         curtext.push(peelines["noneavailable"][3]);
-        displayneed();
-        interpbladder();
+        curtext = displayneed(curtext);
+        curtext = interpbladder(curtext);
     } else if (locstack[0] === "thehome" ||
         locstack[0] === "thebedroom" ||
         locstack[0] === "fuckher6") {
@@ -617,6 +617,7 @@ function bribefavor() {
 //  Pay her to hold it in.
 //
 //TODO maybe she haggles
+//TODO test
 function payholdit() {
     let curtext = needs["payholdit"];
     // s("<b>YOU:</b> I'll pay you if you can hold it for a while.");
@@ -727,7 +728,7 @@ function allowpee() {
         curtext = callChoice(needs["choices"][1], curtext);
     } else {
         //TODO test
-        s(girltalk + "Can you hold my purse for me?");
+        // s(girltalk + "Can you hold my purse for me?");
         curtext.push(needs["allowpee"][2]);
         attraction += 7;
         curtext = printChoicesList(curtext, [1,5], needs["choices"]);
@@ -912,33 +913,55 @@ function peeshot3() {
 }
 
 //TODO more variety? and implement for different locations
+//TODO test
 function ypeeshot() {
-    s("YOU: I got a shot glass. Here hold this for a minute.");
+    let curtext = [];
+    curtext.push(yneeds["ypeeshot"][0]);
+    // s("YOU: I got a shot glass. Here hold this for a minute.");
     if (locstack[0] === "driveout")
-        s("You give her the shot glass so you can open your fly with the hand that is not holding the steering wheel.");
+        curtext.push(yneeds["ypeeshot"][1]);
+        // s("You give her the shot glass so you can open your fly with the hand that is not holding the steering wheel.");
     else
-        s("You give her the shot glass so that you can use both hands to open your fly.");
-    s("You quickly whip your dick out, not really caring that she can see it.");
-    c("ypeeshot2", "Continue...");
+        curtext.push(yneeds["ypeeshot"][2]);
+        // s("You give her the shot glass so that you can use both hands to open your fly.");
+    curtext.push(yneeds["ypeeshot"][3]);
+    // s("You quickly whip your dick out, not really caring that she can see it.");
+    curtext = printChoicesList(curtext, [0], yneeds["choices"]);
+    // c("ypeeshot2", "Continue...");
+    sayText(curtext);
 }
 
+//TODO test
 function ypeeshot2() {
-    s("You urgently reach your hand to her.");
-    s("YOU: Give me the glass, it's coming out!");
-    s(girlname + "quickly hands you the glass.");
-    s("You push it in place before allowing your muscles to relax.");
-    c("ypeeshot3", "Continue...");
+    let curtext = [];
+    curtext.push(yneeds["ypeeshot"][4]);
+    curtext.push(yneeds["ypeeshot"][5]);
+    curtext.push(yneeds["ypeeshot"][6]);
+    curtext.push(yneeds["ypeeshot"][7]);
+    // s("You urgently reach your hand to her.");
+    // s("YOU: Give me the glass, it's coming out!");
+    // s(girlname + "quickly hands you the glass.");
+    // s("You push it in place before allowing your muscles to relax.");
+    curtext = printChoicesList(curtext, [1], yneeds["choices"]);
+    // c("ypeeshot3", "Continue...");
+    sayText(curtext);
 }
 
+//TODO test
 function ypeeshot3() {
+    let curtext = [];
     if (locstack[0] === "driveout")
-        s("The pee hisses out and the glass is filled in no time. You groan at the effort it takes to stop the flow, you can't grasp yourself as both your hand are occupied.");
+        curtext.push(yneeds["ypeeshot"][8]);
+        // s("The pee hisses out and the glass is filled in no time. You groan at the effort it takes to stop the flow, you can't grasp yourself as both your hand are occupied.");
     else
-        s("The pee hisses out and the glass is filled in no time. You grab your dick as you force to flow to stop. It is hard but you manage with a groan.");
-    s("YOU: Damn. That's not much better.");
+        curtext.push(yneeds["ypeeshot"][9]);
+        // s("The pee hisses out and the glass is filled in no time. You grab your dick as you force to flow to stop. It is hard but you manage with a groan.");
+    curtext.push(yneeds["ypeeshot"][10]);
+    // s("YOU: Damn. That's not much better.");
     attraction += 10;
     yourbladder -= 100;
-    c(locstack[0], "Continue...");
+    curtext = printChoicesList(curtext, [2], yneeds["choices"]);
+    // c(locstack[0], "Continue...");
 }
 
 //TODO search privacy in club/bar?

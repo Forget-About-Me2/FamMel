@@ -18,5 +18,26 @@
   "empty": [
     "Your bladder feels fine.",
     "You don't feel any need to pee whatsoever"
-  ]
+  ],
+   "ypeeshot": [
+     "YOU: I got a shot glass. Here hold this for a minute.",
+     "You give her the shot glass so you can open your fly with the hand that is not holding the steering wheel.",
+     "You give her the shot glass so that you can use both hands to open your fly.",
+     "You quickly whip your dick out, not really caring that she can see it.",
+     "You urgently reach your hand to her.",
+     "YOU: Give me the glass, it's coming out!",
+     "girlname0",
+     "You push it in place before allowing your muscles to relax.",
+     "The pee hisses out and the glass is filled in no time. You groan at the effort it takes to stop the flow, you can't grasp yourself as both your hand are occupied.",
+     "The pee hisses out and the glass is filled in no time. You grab your dick as you force to flow to stop. It is hard but you manage with a groan.",
+     "YOU: Damn. That's not much better."
+   ],
+   "girlname": [
+     "{0} quickly hands you the glass."
+   ],
+   "choices": [
+     ["ypeeshot2", "Continue..."],
+     ["ypeeshot3", "Continue..."],
+     ["curloc", "Continue..."]
+   ]
 }
