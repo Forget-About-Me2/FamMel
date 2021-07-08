@@ -414,7 +414,8 @@ var quipurge=[
 //
 //  She's embarassed she couldn't hold it.
 //
-var embarquote=["I'm so embarassed.  I just couldn't hold it in.",
+var embarquote=[
+    "I'm so embarassed.  I just couldn't hold it in.",
     "I'm so sorry!  I just couldn't control it anymore.",
     "I'm so embarassed!  It just started to come out and I couldn't stop it.",
     "It's so embarassing.  I just couldn't control my bladder.",

@@ -83,6 +83,13 @@
     "<i>You notice her nails are painted a dark shade of red.</i>",
     "<i>You stare at her toned, naked body disappearing down into the murk of the water.</i>",
     "<i>You notice the graceful curve of her arm.</i>"],
+  "embarquote": [
+    "I'm so embarassed.  I just couldn't hold it in.",
+    "I'm so sorry!  I just couldn't control it anymore.",
+    "I'm so embarassed!  It just started to come out and I couldn't stop it.",
+    "It's so embarassing.  I just couldn't control my bladder.",
+    "I'm so sorry!  I couldn't hold it any longer.",
+    "I'm so embarassed!  I couldn't control myself."],
   "outpeelook": [
     "No!  Don't look!",
     "Ugh!  Don't watch me!",
@@ -128,7 +135,8 @@
   "girlname": [
     "Remind {0} you're paying her to hold it.",
     "Tell {0} you'll pay her to hold it.",
-    "The pee hisses out and the glass is filled in no time. {0} bends over and jams her hand between her legs, gasping in the effort to stop the flow."
+    "The pee hisses out and the glass is filled in no time. {0} bends over and jams her hand between her legs, gasping in the effort to stop the flow.",
+    "{0} puts herself back together, looking embarrassed."
   ],
   "holdit": {
     "dialogue": [
@@ -313,7 +321,11 @@
     "{0} God! I can't wait any longer!",
     "{0} I think maybe not. At least not yet.",
     "{0} Somehow, I don't think that's happening.",
-    "{0} Damn. That's not much better."
+    "{0} Damn. That's not much better.",
+    "{0} That's pretty kinky!",
+    "{0} But I'm about to wet my panties",
+    "{0} I just can't hold it anymore. Give it here",
+    "{0} But a vase? I can't! At least not yet"
   ],
   "allowpee": [
     "<b>YOU:</b> Well, if you have to pee that bad, I guess you can go.",
@@ -337,6 +349,18 @@
     "girlname2",
     "girltalk13"
   ],
+  "peevase": [
+    "girltalk14",
+    "girltalk15",
+    "girltalk16",
+    "She grabs the vase, wrenching it from your hands and nearly dropping it.",
+    "girltalk17",
+    "girltalk11",
+    "She runs to the bathroom with your vase in hand.",
+    "You are left to ponder your situation.",
+    "The pee hisses out for nearly a minute, the vase is filled almost to the top.",
+    "girlname3"
+  ],
   "choices": [
     ["curloc", "Continue..."],
     ["indepee", "Continue..."],
@@ -349,6 +373,8 @@
     ["indepee", "Close the purse"],
     ["lookinsidepurse", "Examine her purse again"],
     ["peeshot2", "Continue..."],
-    ["peeshot3", "Continue..."]
+    ["peeshot3", "Continue..."],
+    ["peevase2", "Continue..."],
+    ["peevase3", "Continue..."]
   ]
 }

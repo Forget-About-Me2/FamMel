@@ -966,53 +966,81 @@ function ypeeshot3() {
 
 //TODO search privacy in club/bar?
 //TODO don't take it to the bathroom with her in the car
+//TODO test
 function peevase() {
+    let curtext = [];
     if (attraction > 30) {
         if (bladder > blademer) {
             gottagoflag = 0;
             if (peedvase < 0) {
-                s(girltalk + "That's pretty kinky!");
-                s(girltalk + "But I'm about to wet my panties!");
+                curtext.push(needs["peevase"][0]);
+                curtext.push(needs["peevase"][1]);
+                // s(girltalk + "That's pretty kinky!");
+                // s(girltalk + "But I'm about to wet my panties!");
             }
-            displayneed();
+            curtext = displayneed(curtext);
             peedvase = 1;
-            s(girltalk + "I just can't hold it anymore.  Give it here.");
-            s("She grabs the vase, wrenching it from your hands and nearly dropping it.");
-            c("peevase2", "Continue...");
+            curtext.push(needs["peevase"][2]);
+            curtext.push(needs["peevase"][3]);
+            curtext.push(needs["peevase"][4]);
+            // s(girltalk + "I just can't hold it anymore.  Give it here.");
+            // s("She grabs the vase, wrenching it from your hands and nearly dropping it.");
+            // c("peevase2", "Continue...");
+            curtext = printChoicesList(curtext, [12], needs["choices"]);
         } else {
-            displaygottavoc();
+            curtext = displaygottavoc(curtext);
             gottagoflag = 0;
-            s(girltalk + "But a vase?  I can't! At least not yet.");
-            displayholdquip();
-            c(locstack[0], "Continue...");
+            curtext.push(needs["peevase"][5]);
+            // s(girltalk + "But a vase?  I can't! At least not yet.");
+            curtext = displayholdquip(curtext);
+            curtext = printChoicesList(curtext, [0], needs["choices"]);
+            // c(locstack[0], "Continue...");
         }
     } else {
-        s(girltalk + "Somehow, I don't think that's happening.");
-        s("She runs to the bathroom with your vase in hand.");
-        s("You are left to ponder your situation.");
+        curtext.push(needs["peevase"][2]);
+        curtext.push(needs["peevase"][3]);
+        curtext.push(needs["peevase"][4]);
+        // s(girltalk + "Somehow, I don't think that's happening.");
+        // s("She runs to the bathroom with your vase in hand.");
+        // s("You are left to ponder your situation.");
         flushdrank();
         attraction -= 3;
         vase -= 1;
-        c(locstack[0], "Continue...");
+        curtext = printChoicesList(curtext, [0], needs["choices"]);
+        // c(locstack[0], "Continue...");
     }
+    sayText(curtext);
 }
 
+//TODO test
 function peevase2() {
-    if (pantycolor !== "none") s(peeskirtquote);
-    else s(peeskirtquotebare);
-    itscomingout();
-    c("peevase3", "Continue...");
+    let curtext = [];
+    if (pantycolor !== "none")
+        curtext.push(appearance["peeskirtquote"]);
+    else
+        curtext.push(appearance["peeskirtquotebare"]);
+    // if (pantycolor !== "none") s(peeskirtquote);
+    // else s(peeskirtquotebare);
+    curtext = itscomingout(curtext);
+    curtext = printChoicesList(curtext, [13], needs["choices"]);
+    // c("peevase3", "Continue...");
+    sayText(curtext);
 }
 
+//TODO test
 function peevase3() {
-    s("The pee hisses out for nearly a minute vase is filled almost to the top.");
-    s(girlname + " puts herself back together, looking embarrassed.");
-    s(girltalk + embarquote[randcounter]);
-    incrandom();
+    let curtext = [];
+    curtext.push(needs["peevase"][5]);
+    curtext.push(needs["peevase"][6]);
+    // s("The pee hisses out for nearly a minute, the vase is filled almost to the top.");
+    // s(girlname + " puts herself back together, looking embarrassed.");
+    s(girltalk + pickrandom(needs["embarquote"]));
     attraction += 3;
     flushdrank();
     sawherpee = 1;
-    c(locstack[0], "Continue...");
+    curtext = printChoicesList(curtext, [0], needs["choices"]);
+    // c(locstack[0], "Continue...");
+    sayText(curtext);
 }
 
 //TODO locations that are not the car
