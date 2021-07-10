@@ -32,12 +32,26 @@
      "The pee hisses out and the glass is filled in no time. You grab your dick as you force to flow to stop. It is hard but you manage with a groan.",
      "YOU: Damn. That's not much better."
    ],
+   "peevase": [
+     "YOU: I got a vase. Here hold this for a minute.",
+     "You give her the vase so you can open your fly with the hand that is not holding the steering wheel.",
+     "You give her the vase so that you can use both hands to open your fly.",
+     "You free your dick, in full view of her.",
+     "girlname1",
+     "<b>You<:/b> I can't hold it! Quick give me the vase!",
+     "girlname2",
+     "You quickly put it between your legs before releasing your bladder."
+   ],
    "girlname": [
-     "{0} quickly hands you the glass."
+     "{0} quickly hands you the glass.",
+     "You reach out to {0}.",
+     "{0} gives you the vase."
    ],
    "choices": [
      ["ypeeshot2", "Continue..."],
      ["ypeeshot3", "Continue..."],
-     ["curloc", "Continue..."]
+     ["curloc", "Continue..."],
+     ["ypeevase2", "Continue..."],
+     ["ypeevase3", "Continue..."]
    ]
 }

@@ -1044,27 +1044,52 @@ function peevase3() {
 }
 
 //TODO locations that are not the car
+//TODO test
 function ypeevase() {
-    s("YOU: I got a vase. Here hold this for a minute.");
-    s("You give her the vase so you can open your fly with the hand that is not holding the steering wheel.");
-    s("You quickly whip your dick out, not really caring that she can see it.");
-    c("ypeevase2", "Continue...");
+    let curtext = [];
+    curtext.push(yneeds["peevase"][0]);
+    // s("YOU: I got a vase. Here hold this for a minute.");
+    if (locstack[0] === "driveout")
+        curtext.push(yneeds["peevase"][1]);
+        // s("You give her the vase so you can open your fly with the hand that is not holding the steering wheel.");
+    else
+        curtext.push(yneeds["peevase"][2]);
+    // s("You give her the vase so that you can use both hands to open your fly.");
+    // s("You quickly whip your dick out, not really caring that she can see it.");
+    curtext.push(yneeds["peevase"][3]);
+    curtext = printChoicesList(curtext, [3], yneeds["choices"]);
+    // c("ypeevase2", "Continue...");
+    sayText(curtext);
 }
 
+//TODO test
 function ypeevase2() {
-    s("You urgently reach your hand to her.");
-    s("YOU: Give me the vase, it's coming out!");
-    s(girlname + " quickly hands you the vase.");
-    s("You push it in place before allowing your muscles to relax.");
-    c("ypeevase3", "Continue...");
+    let curtext = [];
+    curtext.push(yneeds["peevase"][4]);
+    curtext.push(yneeds["peevase"][5]);
+    curtext.push(yneeds["peevase"][6]);
+    curtext.push(yneeds["peevase"][7]);
+    // s("You urgently reach your hand to her.");
+    // s("YOU: Give me the vase, it's coming out!");
+    // s(girlname + " quickly hands you the vase.");
+    // s("You push it in place before allowing your muscles to relax.");
+    curtext = printChoicesList(curtext, [4], yneeds["choices"]);
+    // c("ypeevase3", "Continue...");
+    sayText(curtext);
 }
 
+//TODO test
 function ypeevase3() {
-    s("The pee hisses out for nearly a minute and the vase is almost filled to the to the top");
-    s("YOU: Oh! That's much better.");
+    let curtext = [];
+    curtext.push(yneeds["peevase"][8]);
+    curtext.push(yneeds["peevase"][9]);
+    // s("The pee hisses out for nearly a minute and the vase is almost filled to the to the top");
+    // s("YOU: Oh! That's much better.");
     attraction += 10;
     flushyourdrank();
-    c(locstack[0], "Continue...");
+    curtext = printChoicesList(curtext, [2], yneeds["choices"]);
+    // c(locstack[0], "Continue...");
+    sayText(curtext);
 }
 
 //TODO she can't run away with the towels while in the car
