@@ -655,7 +655,6 @@ function c(choice, curtext) {
 
 function sayText(lines){
     let result = "";
-    console.log(lines);
     lines.forEach(item => result += "<p>" + item + "</p>");
     document.getElementById('textsp').innerHTML = result;
 }
@@ -868,7 +867,7 @@ function needSetup(){
     needs = json;
     needs["girltalk"] = addGirlTalk(needs["girltalk"]);
     needs["girlname"] = addGirlname(needs["girlname"]);
-    needs["preventpee"] = replaceChoicesList(needs["preventpee"], "girlname");
+    needs["preventpee"] = replaceChoicesList(needs["preventpee"], "girlname", needs["girlname"]);
     needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
     needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
     needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girltalk"], "girltalk");

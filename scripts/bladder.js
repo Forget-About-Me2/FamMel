@@ -1,6 +1,81 @@
 //This file contains all functions related to peeing
 //TODO option to turn off playerbladder
 //TODO organize this better
+//The bladders
+let yourbladder = 500;
+let yourtummy = 200;
+let yourtumavg = yourtummy;
+let holdself = 0;
+const holdpeethresh = 3; //Chance you'll still pee yourself even though you're holding your dick.
+
+let yourbladurge = 500; // Level where you feel the first urge
+let yourbladneed = yourbladurge * 2; // Level where you continuously needs to go
+let yourblademer = yourbladurge * 3; // Level where it becomes an emergency
+let yourbladlose = yourbladurge * 3 + 150; // Level where you lose control
+let yourbladcumlose = yourbladurge * 4; // Level where you lose it as you cum
+let yourbladsexlose = yourbladurge * 5; // Level where you can't control it during sex
+
+let ymaxtummy = 500; // Drink capacity of stomach
+const ymaxbeer = 1000; // Beer capacity of stomach
+
+let customurge = 250;
+let yourcustomurge = 500;
+let minurge = 187; //Bladder never decays below this
+let yminurge = 375;
+let minperc = 75; //Percentage of the minimumvalue of the bladder
+
+let bladurge = 250; // Level where she feels the first urge
+let bladneed = bladurge * 2; // Level where she continuously needs to go
+let blademer = bladurge * 3; // Level where it becomes an emergency
+let bladlose = bladurge * 3 + 150; // Level where she loses control
+let bladcumlose = bladurge * 4; // Level where she spurts as she cums
+let bladsexlose = bladurge * 5; // Level where she can't control it during sex
+
+let maxtummy = 250; // Drink capacity of stomach
+const maxbeer = 500; // Beer capacity of stomach
+
+let bladDec = 1;
+let bladDespDec = 1;
+let seal = 1;
+let beerdecCounter = 0; //How long has it been since her bladder capacity has been decayed by beer
+let ybeerdecCounter = 0; //How long has it been since your bladder capacity has been decayed by beer
+
+
+
+//Initializes the bladder values for the girl
+function initUrge(urge){
+    minurge = urge * minperc/100;
+    updateurge(urge);
+}
+
+//Initializes the bladder values for you
+function initYUrge(urge){
+    yminurge = urge * minperc/100;
+    updateyoururge(urge);
+}
+
+function updateurge(newurge) {
+    if (newurge < minurge) newurge = minurge;
+    newurge = Math.round(newurge);
+    bladurge = newurge;
+    bladneed = newurge * 2; // Level where she continuously needs to go
+    blademer = newurge * 3; // Level where it becomes an emergency
+    bladlose = newurge * 3 + 150; // Level where she loses control
+    bladcumlose = newurge * 4; // Level where she spurts as she cums
+    bladsexlose = newurge * 5; // Level where she can't control it during sex
+}
+
+
+function updateyoururge(newurge) {
+    if (newurge < yminurge) newurge = yminurge;
+    newurge = Math.round(newurge);
+    yourbladurge = newurge;
+    yourbladneed = newurge * 2;
+    yourblademer = newurge * 3;
+    yourbladlose = newurge * 3 + 150;
+    yourbladcumlose = newurge * 4;
+    yourbladsexlose = newurge * 5
+}
 
 // Slightly randomizes the calculated tuminc
 // so the bladder doesn't fill with a completely fixed amount each time
@@ -30,7 +105,15 @@ function randtuminc(tempinc) {
 function flushdrank() {
 
     //  Derate bladder capacity if she loses it...
-    if (bladder >= bladlose) updateurge(bladurge * 9 / 10);
+    if (bladDec) {
+        if (bladder >= bladlose) updateurge(bladurge * 9 / 10);
+        else if (bladder >= blademer && bladDespDec) updateurge(bladurge * 9.5 / 10);
+        //bladder decays based on breaking can only once an hour
+        else if (seal && drankbeer > 15 && beerdecCounter > 30) {
+            updateurge(bladurge * 9.5 / 10);
+            beerdecCounter = 0;
+        }
+    }
 
     bladder = 0;
     askholditcounter = 0;
@@ -48,9 +131,18 @@ function flushdrank() {
 }
 
 function flushyourdrank() {
-
+    console.log("hallo?");
     //  Derate bladder capacity if you loses it...
-    if (yourbladder >= yourbladlose) updateyoururge(yourbladurge * 9 / 10);
+    if (bladDec) {
+        console.log("fuck?");
+        if (yourbladder >= yourbladlose) updateyoururge(yourbladurge * 9 / 10);
+        else if (yourbladder >= yourblademer && bladDespDec) updateyoururge(yourbladurge * 9.5 / 10);
+        //bladder decays based on breaking can only once an hour
+        else if (seal && ydrankbeer > 15 && ybeerdecCounter > 30) {
+            updateyoururge(yourbladurge * 9.5 / 10);
+            ybeerdecCounter = 0;
+        }
+    }
 
     yourbladder = 0;
     ydrankwaters = 0;
@@ -270,7 +362,6 @@ function youpee() {
     let peed = 0;
     if (locstack[0] === "yourhome") {
         curtext = printList(curtext, ypeelines["yourhome"]);
-        flushyourdrank();
         peed = 1
     } else if (locstack[0] === "thehome" ||
         locstack[0] === "thebedroom" || locstack[0] === "pickup" || locstack[0] === "fuckher6") {
@@ -278,7 +369,6 @@ function youpee() {
             curtext = printList(curtext, ypeelines["thehome"][0]);
         }
         curtext = printList(curtext, ypeelines["thehome"][1]);
-        flushyourdrank();
         peed = 1
     } else {
         curtext = printList(curtext, ypeelines["remaining"]);
@@ -286,21 +376,18 @@ function youpee() {
 
     if ((locstack[0] === "thebar" && randomchoice(rrlockedthresh) ) || ((locstack[0] === "theclub" || locstack[0] === "dodance") && randomchoice(rrlinethresh)) ) {
         curtext = youbathroomlocked(curtext);
-    }
-
-    else if (locstack[0] === "darkbar" || locstack[0] === "darkmovie" || locstack[0] === "darkclub") {
+    } else if (locstack[0] === "darkbar" || locstack[0] === "darkmovie" || locstack[0] === "darkclub") {
         //TODO potentially cycle between quotes
         if (yourbladder > yourbladlose - 25)
-            curtext = printList(ypeelines["youpeeprivate"][0], curtext);
+            curtext.push(ypeelines["youpeeprivate"][0]);
         else
-            curtext = printList(ypeelines["youpeeprivate2"][0], curtext);
+            curtext.push(ypeelines["youpeeprivate2"][0]);
         flushyourdrank();
     } else {
-        if (yourbladder > yourbladlose - 25)
-            curtext = printList(ypeelines["youpeeprivate"][randcounter], curtext);
+        if (yourbladder > yourbladlose - 25 && !peed)
+            curtext.push(pickrandom(ypeelines["youpeeprivate"]));
         else if (!peed)
-            curtext = printList(ypeelines["youpeeprivate2"][randcounter], curtext);
-        incrandom();
+            curtext.push(pickrandom(ypeelines["youpeeprivate2"]));
         flushyourdrank();
     }
     if (yourbladder >= yourbladlose - 25 && locstack[0] !== "thehottub") curtext = youbegtoilet(curtext);
@@ -961,6 +1048,7 @@ function ypeeshot3() {
     attraction += 10;
     yourbladder -= 100;
     curtext = printChoicesList(curtext, [2], yneeds["choices"]);
+    sayText(curtext);
     // c(locstack[0], "Continue...");
 }
 

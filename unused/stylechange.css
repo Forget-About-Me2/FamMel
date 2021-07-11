@@ -219,5 +219,10 @@ body{
     text-align: center;
 }
 
+#perDecErr {
+    display: none;
+    color: #fa0202;
+}
+
 
 

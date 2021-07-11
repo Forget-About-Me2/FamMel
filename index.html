@@ -216,26 +216,8 @@ CHANGES BY Forget_About_Me
     let bladder = 300;
     let shyness = 90;
 
-
     let tumavg = tummy; // Average blood water level
     const tumdecay = 6; // Number of calculation cycles to average bladder filling
-    //Your stats Parameters
-    let yourbladder = 500;
-    let yourtummy = 200;
-    let yourtumavg = yourtummy;
-    let holdself = 0;
-    const holdpeethresh = 3; //Chance you'll still pee yourself even though you're holding your dick.
-
-
-    let yourbladurge = 500; // Level where you feel the first urge
-    let yourbladneed = yourbladurge * 2; // Level where you continuously needs to go
-    let yourblademer = yourbladurge * 3; // Level where it becomes an emergency
-    let yourbladlose = yourbladurge * 3 + 150; // Level where you lose control
-    let yourbladcumlose = yourbladurge * 4; // Level where you lose it as you cum
-    let yourbladsexlose = yourbladurge * 5; // Level where you can't control it during sex
-
-    let ymaxtummy = 500; // Drink capacity of stomach
-    const ymaxbeer = 1000; // Beer capacity of stomach
 
     let lastmoney = money;
     let lastattraction = attraction;
@@ -273,40 +255,6 @@ CHANGES BY Forget_About_Me
     const imagedesc = '"Picture of girl"';
     let imagename = imageprev;  // Actual picture.  Goes to default after 1 turn.
     let comma = 0; // used in formatting posessions.
-    //The bladders
-    let customurge = 250;
-    let yourcustomurge = 500;
-
-    let bladurge = 250; // Level where she feels the first urge
-    let bladneed = bladurge * 2; // Level where she continuously needs to go
-    let blademer = bladurge * 3; // Level where it becomes an emergency
-    let bladlose = bladurge * 3 + 150; // Level where she loses control
-    let bladcumlose = bladurge * 4; // Level where she spurts as she cums
-    let bladsexlose = bladurge * 5; // Level where she can't control it during sex
-
-
-    let maxtummy = 250; // Drink capacity of stomach
-    const maxbeer = 500; // Beer capacity of stomach
-
-
-    function updateurge(newurge) {
-        bladurge = newurge;
-        bladneed = newurge * 2; // Level where she continuously needs to go
-        blademer = newurge * 3; // Level where it becomes an emergency
-        bladlose = newurge * 3 + 150; // Level where she loses control
-        bladcumlose = newurge * 4; // Level where she spurts as she cums
-        bladsexlose = newurge * 5; // Level where she can't control it during sex
-    }
-
-
-    function updateyoururge(newurge) {
-        yourbladurge = newurge;
-        yourbladneed = newurge * 2;
-        yourblademer = newurge * 3;
-        yourbladlose = newurge * 3 + 150;
-        yourbladcumlose = newurge * 4;
-        yourbladsexlose = newurge * 5
-    }
 
     //Counter Parameters
     const maxkiss = 7; // maximum number of kisses that have effect.

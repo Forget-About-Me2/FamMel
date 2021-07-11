@@ -1,26 +1,26 @@
 //TOOD proper integration
 
 function setup(){
-    if(typeof(Storage) !== "undefined"){
-        if(localStorage.girlname){
+    if(typeof(Storage) !== "undefined") {
+        if (localStorage.girlname) {
             girlname = localStorage.girlname;
-            if (localStorage.custom === "true"){
+            if (localStorage.custom === "true") {
                 customgirlname = girlname;
-                if(localStorage.basegirl){
+                if (localStorage.basegirl) {
                     basegirl = localStorage.basegirl;
                 }
-                if(localStorage.customurge){
+                if (localStorage.customurge) {
                     customurge = localStorage.customurge;
                 }
             }
             setbasegirl(basegirl);
             setgirl(girlname)
         }
-        if(localStorage.heroutfit){
+        if (localStorage.heroutfit) {
             heroutfit = localStorage.heroutfit;
         }
-        if(localStorage.images){
-            switch(localStorage.images){
+        if (localStorage.images) {
+            switch (localStorage.images) {
                 case "off":
                     enableimages = 0;
                     enableascii = 0;
@@ -35,29 +35,45 @@ function setup(){
                     break;
             }
         }
-        if(localStorage.imgs){
+        if (localStorage.imgs) {
             importimgs();
         }
-        if(localStorage.showstats){
-            if (localStorage.showstats === "false"){
+        if (localStorage.showstats) {
+            if (localStorage.showstats === "false") {
                 showstats = 0;
             }
         }
-        if(localStorage.multiplemoves){
-            if(localStorage.multiplemoves === "false"){
+        if (localStorage.multiplemoves) {
+            if (localStorage.multiplemoves === "false") {
                 multiplemoves = 0;
             }
         }
-        if(localStorage.rstmoves){
-            rstmoves = 1;
+        if (localStorage.rstmoves) {
+            if (localStorage.rstmoves === "true")
+                rstmoves = 1;
+        }
+        if (localStorage.bladDec) {
+            if (localStorage.bladDec === "false")
+                bladDec = 0;
+        }
+        if (localStorage.bladDespDec) {
+            if (localStorage.bladDespDec === "false")
+                bladDespDec = 0;
+        }
+        if (localStorage.seal){
+            if (localStorage.seal === "false")
+                seal = 0;
         }
         if(localStorage.yourcustomurge){
             yourcustomurge = localStorage.yourcustomurge;
-            updateyoururge(yourcustomurge);
+            initYUrge(yourcustomurge);
         }
         if(localStorage.money){
             money = localStorage.money;
         }
+        if (localStorage.minPerc)
+            minperc = localStorage.minPerc;
+
     }
 }
 
@@ -76,7 +92,7 @@ function setLocal(varName, value){
 function options() {
     //When this function is called the var json will be set to the json used for options
 
-    let vars = new Array(29).fill([""]); //This array is used to format the html with values
+    let vars = new Array(40).fill([""]); //This array is used to format the html with values
     let checked = []; //This is a list to keep track of which options are checked
 
     let cusgirl=[customgirlname];
@@ -107,9 +123,21 @@ function options() {
     if (rstmoves) checked.push(23);
     else checked.push(24);
 
-    checked.forEach(i => vars[i] = ["checked"]);
+
     vars[26] = [yourcustomurge];
-    vars[27] = [money]
+    vars[27] = [money];
+    vars[28] = [minperc];
+
+    if (bladDec) checked.push(31);
+    else checked.push(32);
+
+    if (bladDespDec) checked.push(34);
+    else checked.push(35);
+
+    if (seal) checked.push(37);
+    else checked.push(38);
+
+    checked.forEach(i => vars[i] = ["checked"]);
     let curtext = formatAll(json.html, vars);
     curtext = c(["gamestart()", "Continue..."], curtext);
     setText(curtext);
@@ -119,7 +147,6 @@ function options() {
 
     setgirl(girlname);
 }
-
 
 
 function customgirl() {
@@ -169,7 +196,7 @@ function setImagesShow(value){
 function setStatsShow(choice){
     showstats = choice;
     if (showstats){
-        setLocal("shosstats", "true");
+        setLocal("showstats", "true");
     } else {
         setLocal("showstats", "false");
     }
@@ -208,12 +235,48 @@ function setcustbladurge() {
 function setyourcustbladurge() {
     yourcustomurge = parseInt(document.getElementById('yourbladder').value);
     setLocal("yourcustomurge", yourcustomurge);
-    updateyoururge(yourcustomurge);
+    initYUrge(yourcustomurge);
 }
 
 function setyourmoney() {
     money = parseInt(document.getElementById('yourmoney').value);
     setLocal("money", money);
+}
+
+function setBladPer(){
+    const value = parseFloat(document.getElementById("bladPer").value);
+    //Show an error if the value is not between 0 and 100
+    if (value < 0 || value > 100)
+        document.getElementById("perDecErr").style.display = "inline";
+    else {
+        document.getElementById("perDecErr").style.display = "none";
+        minperc = value;
+        setLocal("minPerc", minperc);
+    }
+}
+
+function setBladDecay(choice){
+    bladDec = choice;
+    if (choice)
+        setLocal("bladDec", "true");
+    else
+        setLocal("bladDec", "false");
+}
+
+function setBladDespDecay(choice){
+    bladDespDec = choice;
+    if (choice)
+        setLocal("bladDespDec", "true");
+    else
+        setLocal("bladDespDec", "false");
+}
+
+function setSealDec(choice){
+    seal = choice;
+    if (choice)
+        setLocal("seal", "true");
+    else
+        setLocal("seal", "false");
 }
 
 function hidescreen() {
@@ -232,8 +295,9 @@ function setbasegirl(hername) {
     basegirl = hername;
     setLocal("basegirl", basegirl);
     const htmlcall = document.getElementById('girlstats');
+    let urge;
     if (basegirl === "Jennifer") {
-        updateurge(300);
+        urge = 300;
         if(htmlcall){
             htmlcall.innerHTML = customgirlname +
                 " is a statuesque blonde.";
@@ -243,7 +307,7 @@ function setbasegirl(hername) {
     }
 
     if (basegirl === "Laura") {
-        updateurge(250);
+        urge =250;
         if(htmlcall) {
             htmlcall.innerHTML = customgirlname +
                 " is a cute girl-next-door type.";
@@ -253,7 +317,7 @@ function setbasegirl(hername) {
     }
 
     if (basegirl === "Karen") {
-        updateurge(200);
+        urge = 200;
         if(htmlcall) {
             htmlcall.innerHTML = customgirlname +
                 " is a petite and slim Asian girl.";
@@ -263,7 +327,7 @@ function setbasegirl(hername) {
     }
 
     if (basegirl === "Melissa") {
-        updateurge(350);
+        urge = 350;
         if(htmlcall) {
             htmlcall.innerHTML = customgirlname +
                 " is an innocent red headed college girl.";
@@ -271,6 +335,7 @@ function setbasegirl(hername) {
         stareather = stareather_melissa;
         favoritemovie = "thelitr";
     }
+    initUrge(urge);
 }
 
 function updategirldesc() {
@@ -337,7 +402,7 @@ function setgirl(hername) {
         favoritemovie = "thelitr";
         setLocal("custom", "true");
     }
-    updateurge(bladurge);
+    initUrge(bladurge);
     if (basegirl === "Laura") stareather = stareather_laura;
     else if (basegirl === "Karen") stareather = stareather_karen;
     else if (basegirl === "Melissa") stareather = stareather_melissa;

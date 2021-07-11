@@ -95,6 +95,10 @@ function go(tag) {
         if (waitcounter > 0) {
             waitcounter -= 1;
         }
+        if (seal) {
+            beerdecCounter++;
+            ybeerdecCounter++;
+        }
 
         thetime += timespeed;
         minute += timespeed;
