@@ -1,4 +1,21 @@
 const restaurantclosingtime = 4 * 60; // 11:00PM
+let bill = 0; // current bill at the restaurant.
+let rrcleaningflag = 0; // Restroom was being cleaned last time she went
+
+// What wine was chosen at the restaurant
+	let rioja = 0;
+    let merlot = 0;
+	let burgundy = 0;
+	let chardonnay = 0;
+	let riesling = 0;
+	let pinot = 0;
+	// What food was chosen at the restaurant
+	let pizza = 0;
+	let spaghetti = 0;
+	let ravioli = 0;
+	let lasagne = 0;
+	let tortelloni = 0;
+	let steak = 0;
 
 function driveout() {
         if (locstack[0] !== "driveout") {
@@ -629,3 +646,137 @@ function driveout() {
 		c("leavehm", "Leave the Italian Restaurant.");
 		
 	}
+
+  function leavehm() {
+        changevenueflag = 1;
+        flirtedflag = 0;
+        checkedherout = 0;
+        kisscounter = 0;
+        feelcounter = 0;
+        rrlockedflag = 0;
+		rrcleaningflag = 0;
+        externalflirt = 0;
+
+        showneed();
+
+        if (gottagoflag > 0) {
+            c("holdit", "Ask her to hold it.");
+            c("allowpee", "Let her go.");
+        } else {
+            s("<b>You:</b> " + outtahere[randcounter]);
+            incrandom();
+			displayneed();
+            s(girltalk + "Yeah! " + outtahere[randcounter]);
+            c("driveout", "Continue...");
+        }
+
+    }
+    
+     function indepee() {
+        gottagoflag = 0;
+        if (haveherpurse) {
+            haveherpurse = 0;
+        } else if (locstack[0] === "thehome" ||
+            locstack[0] === "thebedroom" ||
+            locstack[0] === "pickup" ||
+            locstack[0] === "fuckher6") {
+            s(girlname + " heads for the bathroom, leaving the door slightly ajar.");
+        } else if (locstack[0] === "themakeout" ||
+            locstack[0] === "thehottub" ||
+            locstack[0] === "driveout" ||
+            locstack[0] === "thehome" ||
+            locstack[0] === "thebedroom" ||
+            locstack[0] === "thewalk" || locstack[0] === "theyard" || locstack[0] === "thebeach") {
+            s(girlname + " wants to go to the toilet but then realizes:");
+        } else s(girlname + " runs toward the toilet.");
+
+        if (locstack[0] === "thebar" && randomchoice(rrlockedthresh)) {
+            bathroomlocked();
+            if (rrlockedflag > 3) {
+                s(girltalk + "It's <b><i>still</i></b> fucking locked!");
+            } else if (rrlockedflag > 2) {
+                s(girltalk + "It's <b><i>still</i></b> locked!  What's taking her so long?");
+            } else if (rrlockedflag) {
+                s(girltalk + "It's still locked!");
+            } else {
+                s(girltalk + "It was locked!");
+            }
+            rrlockedflag++;
+            displayneed();
+		} else if (locstack[0] === "therestaurant" || locstack[0] === "havedinner" || locstack[0] === "havedinner2" || locstack[0] === "havedinner3" || locstack[0] === "havedinner4" || locstack[0] === "havedinner5" || locstack[0] === "havedinner6" || locstack[0] === "havedinner7" || locstack[0] === "havedinner8" || locstack[0] === "havedinner9" || locstack[0] === "havedinner10" && randomchoice(rrcleaningthresh)) {
+            bathroomlocked();
+            if (rrcleaningflag > 3) {
+                s(girltalk + "It's <b><i>still</i></b> fucking closed for cleaning!");
+            } else if (rrcleaningflag > 2) {
+                s(girltalk + "I can't beleive it! How long can it take to clean it?");
+            } else if (rrcleaningflag) {
+                s(girltalk + "They are still cleaning it!");
+            } else {
+                s(girltalk + "It was closed for cleaning!");
+            }
+            rrlcleaningflag++;
+            displayneed();	
+        } else if (locstack[0] === "theclub" && randomchoice(rrlinethresh)) {
+            bathroomlocked();
+            if (rrlockedflag) {
+                s(girltalk + "The line's not getting any smaller.");
+            } else {
+                s(girltalk + "There was a huge line.");
+            }
+            rrlockedflag++;
+            displayneed();
+        } else if (locstack[0] === "dodance" && randomchoice(rrlinethresh)) {
+            bathroomlocked();
+            if (rrlockedflag > 3) {
+                s(girltalk + "The line's still really fucking long.");
+            } else if (rrlockedflag > 2) {
+                s(girltalk + "I think the line's getting longer...");
+            } else if (rrlockedflag) {
+                s(girltalk + "The line's still really really long.");
+            } else {
+                s(girltalk + "There was a huge line.");
+            }
+            rrlockedflag++;
+            displayneed();
+        } else if (locstack[0] === "themakeout") {
+            s("There are no toilets out here in the boonies.");
+            displayneed();
+        } else if (locstack[0] === "driveout") {
+            s("There are no toilets around and there is surely nowhere to pee in the car.");
+            displayneed();			
+        } else if (locstack[0] === "thewalk" || locstack[0] === "theyard" || locstack[0] === "thebeach" || locstack[0] === "thehottub") {
+            s("There are no toilets around.");
+            displayneed();
+            interpbladder();
+        } else if (locstack[0] === "thehome" ||
+            locstack[0] === "thebedroom" ||
+            locstack[0] === "fuckher6") {
+            s("You hear a quick clatter and a gasp as she lifts the toilet lid.  She starts to pee violently, a loud hiss accompanying the splash of the urine in the bowl.  You imagine being in there with her as she relieves her bladder.");
+            flushdrank();
+        } else if (locstack[0] === "pickup") {
+            s("You hear a quick clatter of the toilet lid, and then the hissing and splashing of her urine in the bowl.");
+            flushdrank();
+        } else if (locstack[0] === "solobar") {
+            if (bladder > bladlose - 60)
+                s(barpeeprivate[randcounter]);
+            else
+                s(barpeeprivate2[randcounter]);
+            incrandom();
+            //TODO check validity of these attraction
+            attraction -= 2;
+            flushdrank();
+        } else {
+            if (bladder > bladlose - 60)
+                s(peeprivate[randcounter]);
+            else
+                s(peeprivate2[randcounter]);
+            incrandom();
+            //TODO check validity of these attraction
+            attraction -= 2;
+            flushdrank();
+        }
+        if (bladder >= bladlose - 60 && locstack[0] !== "thehottub") begtoilet();
+        else {
+            c(locstack[0], "Continue...");
+        }
+    }
