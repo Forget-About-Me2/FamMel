@@ -1,0 +1,631 @@
+const restaurantclosingtime = 4 * 60; // 11:00PM
+
+function driveout() {
+        if (locstack[0] !== "driveout") {
+            pushloc("driveout");
+                s("You and " + girlname + " go out to your car.");
+                suggestedloc = "none";
+                if (wetthecar)
+                    s(soakedseatquote);
+                else
+                s("She settles into the passenger seat and buckles in.");
+                s("You start up the car and drive off together.");
+            
+        } if (locstack[0] == "driveout") {
+                s("You're in the car with " + girlname + ".");
+        }
+            displayneed();
+            if (suggestedloc === "none") {
+                if (randomchoice(8)) {
+                    if (shyness < 30 && attraction > 50 && !beenmakeout) {
+                        s(girltalk + "Maybe we could find someplace nice and private?");
+                        suggestedloc = "themakeout";
+                    } else if (shyness < 50 && attraction > 100 && beenmakeout &&
+                        beenbar && beenclub && seenmovie && beenrestaurant) {
+                        s(girltalk + "Hey!  Want to stop by my place?");
+                        suggestedloc = "thehome";
+                    } else if (shyness > 80 && attraction < 30 && !seenmovie) {
+                        s(girltalk + "Want to see a movie?");
+                        suggestedloc = "themovie";
+                    } else if (shyness < 60 && attraction > 30 && !beenclub) {
+                        s(girltalk + "Want to go out dancing?");
+                        suggestedloc = "theclub";
+                    } else if (bladder > bladneed && shyness < 50 && !beenbar) {
+                        s(girltalk + "Can we stop somewhere for a drink?");
+                        suggestedloc = "thebar";
+					} else if (bladder >= bladneed && shyness > 50 && !beenrestaurant) {
+                        s(girltalk + "Maybe we could stop somewhere for dinner?");
+                        suggestedloc = "therestaurant";
+                    }
+                }
+            }
+                s("Do you want to:");
+                c("drivearound", "Just drive around");
+		
+            if (suggestedloc !== "therestaurant")
+                c("therestaurant", "Go to the restaurant");
+            else
+                c("therestaurant", "Go to the restaurant like she asked");	
+            if (suggestedloc !== "thebar")
+                c("thebar", "Go to the bar");
+            else
+                c("thebar", "Go to the bar like she asked"); 
+            if (suggestedloc !== "theclub")
+                c("theclub", "Go to the nightclub");
+            else
+                c("theclub", "Stop by the nightclub for her"); 
+            if (suggestedloc !== "themovie")
+                c("themovie", "Go to the theater");
+            else
+                c("themovie", "Go to see a movie as she suggested"); 
+            if (suggestedloc !== "themakeout")
+                c("themakeout", "Go to the make-out spot");
+            else
+                c("themakeout", "Take her up to the make-out spot like she wanted to"); 
+            if (suggestedloc !== "thehome")
+                c("thehome", "Go to the " + girlname + "'s place");
+            else
+                c("thehome", "Accept her invitation to go home with her"); 
+        
+		    if (debugmode) c("timewarp", "Advance to 2AM");
+		}
+    
+    function therestaurant() {
+        if (beenrestaurant && locstack[0] === "driveout" && thetime < restaurantclosingtime) {
+            s(girlname + " giggles: But we've already been to the restaurant, silly!");
+            c(locstack[0], "Continue...");
+        } else {
+            if ((thetime < restaurantclosingtime) || locstack[0] === "therestaurant") {
+                if (locstack[0] !== "therestaurant" && locstack[0] !== "havedinner") {
+                    s("You and " + girlname + " enter the restaurant. Don Macarone is written on the signboard.");
+                    pushloc("therestaurant");
+                } else {
+                    s("You are with " + girlname + " in the Italian Restaurant.");
+                    if (randomchoice(3)) noteholding();
+                    else if (randomchoice(5)) interpbladder();
+                }
+
+                beenrestaurant = 1;
+                showneed();
+                if (bladder > bladlose) wetherself();
+                else {
+                    if (gottagoflag > 0) {
+                        preventpee();
+                    } else {
+                        c("dinner", "Have a dinner.");
+                        standobjs();
+                    }
+                    c("leavehm", "Leave the Italian Restaurant.");
+                }
+            } else itsclosed("therestaurant");
+        }
+    }
+	
+	function dinner() {
+        pushloc("havedinner");
+        showneed(); 
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+        else if (tummy < maxtummy) {
+            s("You sit down at the table, and the waiter brings the menus. You don't want starters, but "+ girlname +" asks for an orange juice as a thirst quencher.");
+            s("You look at "+ girlname +" as she chugs up a glass of juice.");
+			tummy += 300;
+			bill += 3;
+			c("dinner2", "Continue...");
+		} else if (tummy >= maxtummy) { 
+            s("You sit down at the table, and the waiter brings the menus.");
+			c("dinner2", "Continue..."); }
+        
+    }
+
+    function dinner2() {
+	    pushloc("havedinner2");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+		   s("While you're considering the Italian food, you choose a bottle of wine. Which will it be?");  
+           c("dinnerrioja","A bottle of Spanish Rioja ($12)"); 
+           c("dinnermerlot","A bottle of Chilean Merlot ($12)"); 
+           c("dinnerburgundy","A bottle of French Burgundy, the best on the menu ($20)");
+           c("dinnerchardonnay","A bottle of Australian Chardonnay ($15)");  
+           c("dinnerriesling","A bottle of Austrian Riesling ($12)"); 
+           c("dinnerpinot","A bottle of Italian Pinot Grigio ($10)"); } 
+		
+    }    
+	
+	function dinnerrioja() {
+	    pushloc("havedinner3");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+	       s("You bought a bottle of Rioja");
+		   rioja = 1;
+		   bill += 12;
+	       s("" + girlname + " chooses the Tortelloni (at $9). What would you like?");
+		   bill += 9;
+           s("You ask for a jug of water while you peruse the menu."); 
+		   s("The waiter brings the water and "+ girlname +" pours some for both of you and has a sip while you decide what to eat. What will it be?"); 
+           tummy += 100;		   
+           c("dinnerpizza","A spicy pepperoni pizza ($8)"); 
+           c("dinnerspagbol","Spaghetti bolognese ($8)"); 
+           c("dinnerravioli","Ravioli - you're trying to save money ($7)");
+           c("dinnerlasagne","Vegetable lasagne ($8)");   
+           c("dinnertort","Tortelloni, the same as "+ girlname +" ($9)");
+           c("dinnersteak","You don't really like Italian food. You order a steak ($14)"); }
+		 
+	}	 
+	
+	function dinnermerlot() {
+	    pushloc("havedinner3");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+	       s("You bought a bottle of Merlot");
+		   merlot = 1;
+		   bill += 12;
+	       s("" + girlname + " chooses the Tortelloni (at $9). What would you like?");
+		   bill += 9;
+           s("You ask for a jug of water while you peruse the menu."); 
+		   s("The waiter brings the water and "+ girlname +" pours some for both of you and has a sip while you decide what to eat. What will it be?");
+           tummy += 100;		   
+           c("dinnerpizza","A spicy pepperoni pizza ($8)"); 
+           c("dinnerspagbol","Spaghetti bolognese ($8)"); 
+           c("dinnerravioli","Ravioli - you're trying to save money ($7)");
+           c("dinnerlasagne","Vegetable lasagne ($8)");   
+           c("dinnertort","Tortelloni, the same as "+ girlname +" ($9)");
+           c("dinnersteak","You don't really like Italian food. You order a steak ($14)"); }
+		 
+	}	 
+	
+	function dinnerburgundy() {
+	    pushloc("havedinner3");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+	       s("You bought a bottle of Burgundy");
+		   burgundy = 1;
+		   bill += 20;
+	       s("" + girlname + " chooses the Tortelloni (at $9). What would you like?");
+		   bill += 9;
+           s("You ask for a jug of water while you peruse the menu."); 
+		   s("The waiter brings the water and "+ girlname +" pours some for both of you and has a sip while you decide what to eat. What will it be?"); 
+           tummy += 100;		   
+           c("dinnerpizza","A spicy pepperoni pizza ($8)"); 
+           c("dinnerspagbol","Spaghetti bolognese ($8)"); 
+           c("dinnerravioli","Ravioli - you're trying to save money ($7)");
+           c("dinnerlasagne","Vegetable lasagne ($8)");   
+           c("dinnertort","Tortelloni, the same as "+ girlname +" ($9)");
+           c("dinnersteak","You don't really like Italian food. You order a steak ($14)"); }
+		 
+	}	 
+	
+	function dinnerchardonnay() {
+	    pushloc("havedinner3");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+	       s("You bought a bottle of Chardonnay");
+		   chardonnay = 1;
+		   bill += 15;
+	       s("" + girlname + " chooses the Tortelloni (at $9). What would you like?");
+		   bill += 9;
+           s("You ask for a jug of water while you peruse the menu."); 
+		   s("The waiter brings the water and "+ girlname +" pours some for both of you and has a sip while you decide what to eat. What will it be?"); 
+           tummy += 100;		   
+           c("dinnerpizza","A spicy pepperoni pizza ($8)"); 
+           c("dinnerspagbol","Spaghetti bolognese ($8)"); 
+           c("dinnerravioli","Ravioli - you're trying to save money ($7)");
+           c("dinnerlasagne","Vegetable lasagne ($8)");   
+           c("dinnertort","Tortelloni, the same as "+ girlname +" ($9)");
+           c("dinnersteak","You don't really like Italian food. You order a steak ($14)"); }
+		 
+	}	 
+	
+	function dinnerriesling() {
+	    pushloc("havedinner3");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+	       s("You bought a bottle of Riesling");
+		   riesling = 1;
+		   bill += 12;
+	       s("" + girlname + " chooses the Tortelloni (at $9). What would you like?");
+		   bill += 9;
+           s("You ask for a jug of water while you peruse the menu."); 
+		   s("The waiter brings the water and "+ girlname +" pours some for both of you and has a sip while you decide what to eat. What will it be?"); 
+           tummy += 100;		   
+           c("dinnerpizza","A spicy pepperoni pizza ($8)"); 
+           c("dinnerspagbol","Spaghetti bolognese ($8)"); 
+           c("dinnerravioli","Ravioli - you're trying to save money ($7)");
+           c("dinnerlasagne","Vegetable lasagne ($8)");   
+           c("dinnertort","Tortelloni, the same as "+ girlname +" ($9)");
+           c("dinnersteak","You don't really like Italian food. You order a steak ($14)"); }
+		 
+	}	
+	
+	function dinnerpinot() {
+	    pushloc("havedinner3");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+	       s("You bought a bottle of Pinot");
+		   pinot = 1;
+		   bill += 10;
+	       s("" + girlname + " chooses the Tortelloni (at $9). What would you like?");
+		   bill += 9;
+           s("You ask for a jug of water while you peruse the menu."); 
+		   s("The waiter brings the water and "+ girlname +" pours some for both of you and has a sip while you decide what to eat. What will it be?"); 
+           tummy += 100;		   
+           c("dinnerpizza","A spicy pepperoni pizza ($8)"); 
+           c("dinnerspagbol","Spaghetti bolognese ($8)"); 
+           c("dinnerravioli","Ravioli - you're trying to save money ($7)");
+           c("dinnerlasagne","Vegetable lasagne ($8)");   
+           c("dinnertort","Tortelloni, the same as "+ girlname +" ($9)");
+           c("dinnersteak","You don't really like Italian food. You order a steak ($14)"); }
+		 
+	}	 
+	
+	function dinnerpizza() {
+	    pushloc("havedinner4");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+		   s("You ordered a pizza.");
+		   pizza = 1;
+		   bill += 8;
+	       c("eatmeal", "Continue..."); }
+		
+	}	
+	
+	function dinnerspaghetti() {
+	    pushloc("havedinner4");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+		   s("You ordered a spaghetti.");
+		   spaghetti = 1;
+		   bill += 8;
+	       c("eatmeal", "Continue..."); }
+		
+	}	
+	
+	function dinnerravioli() {
+	    pushloc("havedinner4");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+		   s("You ordered a ravioli.");
+		   ravioli = 1;
+		   bill += 7;
+	       c("eatmeal", "Continue..."); }
+		
+	}	
+	
+	function dinnerlasagne() {
+	    pushloc("havedinner4");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+		   s("You ordered a lasagne.");
+		   lasagne = 1;
+		   bill += 8;
+	       c("eatmeal", "Continue..."); }
+		
+	}	
+	
+	function dinnertort() {
+	    pushloc("havedinner4");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+		   s("You ordered a tortelloni.");
+		   tortelloni = 1;
+		   bill += 9;
+	       c("eatmeal", "Continue..."); }
+		
+	}
+	
+	function dinnersteak() {
+	    pushloc("havedinner4");
+		showneed();
+		if (bladder > bladlose) wetherself();
+		else if (gottagoflag > 0) preventpee();
+		else {		
+		   s("You ordered a steak.");
+		   steak = 1;
+		   bill += 14;
+	       c("eatmeal", "Continue..."); }
+		
+	}
+	
+	function eatmeal() {
+	    pushloc("havedinner5");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+           s("The waiter brings the wine and you pour a nice large glass for yourself and a nice large glass for her."); 
+		   s(girltalk + "Cheers!");
+		   s("<b>You:</b> Cheers!"); 
+           tummy += 150; 
+		   drankbeer += 15;
+           s("You both take a good drink of the wine. You chat about this, and you chat about that. Then the food arrives.");
+           s(girltalk + "This looks nice. I love pasta.");
+		   attraction += 2;
+           c("eatmeal2","You chat about your meal"); }
+		  
+    }
+	
+		function eatmeal2() {
+	    pushloc("havedinner5");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+          if (ravioli == 1) {
+		  s("You are both eating your food, which is very good, though you normally find ravioli a bit boring. You have a sip of wine and she has a sip, and she drinks some more water.");
+		  tummy += 150;
+		  drankbeer += 15;
+          s(girltalk + "Do you like the ravioli?"); 
+          s("<b>You:</b> It's very good");
+          s(girltalk + "The simplest meals are sometimes the best, I think. But I thought you'd have gone for the steak.");  
+		  attraction -= 2; 
+          s(girltalk + "You: Not today.");
+          c("eatmeal3","You carry on chatting");  }
+		  
+		  if (pizza == 1) {
+		  s("You are both eating your food, which is very good. You have a sip of wine and she has a sip, and she drinks some more water.");
+		  tummy += 150;
+		  drankbeer += 15;
+          s("Your pizza is great. Lots of spicy pepperoni, and peppers, and other things. The only trouble is, there is so much of it you will be eating long after Diane has finished.");  
+		  attraction -= 2; 
+          s("<b>You:</b> Do you remember the first time we met?");
+          s(girltalk + "I can't really forget it, can I! Fancy us both missing the last bus home. I was really glad you were there - I'm not sure I had enough on me for the taxi fare home.");
+          s("<b>You:</b> How did you come to miss the bus?");
+          s(+ girlname + "blushes and grins at you."); 
+		  shyness += 5;
+          s(girltalk + "You know perfectly well why I missed the bus. It was so embarrassing!");
+		  s("Of course, you know exactly why she missed the bus, because you saw her. She was absolutely desperate for a toilet and had to flee the bus stop looking for somewhere to pee."); 
+		  s("You watched her urgently peeing behind a minibus. It was a close call - she was moments away from wetting her panties.  And by the time she returned to the bus-stop the bus had already gone.");
+          c("eatmeal3","You carry on chatting");  }
+		  
+		  if (lasagne == 1) {
+		  s("You are both eating your food. You have a sip of wine and she has a sip, and she drinks some more water.");
+		  tummy += 150;
+		  drankbeer += 15;
+          s("Your vegetable lasagne is probably very good. But you were so confused, and distracted by " + girlname + "'s presence across the table, that you actually ordered it under a misapprehension. You thought there would be meat in it."); 
+          s(girltalk+ "I didn't know you were a vegetarian?");
+          s("She is looking at you with wide open eyes.");
+          s("<b>You:</b> Well, er, not totally. But I do think it is wrong to eat meat all the time. I like meat, but then I think of the poor animals...");
+          s(girltalk+ "That's exactly how I feel! She is smiling at you, all dewy eyed. Maybe it wasn't such a bad choice after all.");
+		  attraction += 10;
+          c("eatmeal3","You carry on chatting");  }
+		  
+		  if (spaghetti == 1) {
+		  s("You are both eating your food, which is very good, though you normally find ravioli a bit boring. You have a sip of wine and she has a sip, and she drinks some more water.");
+		  tummy += 150;
+		  drankbeer += 15;
+          s("Your spaghetti bolognese is probably very good. But it was hardly a sensible thing to order. Have you never sat opposite somebody eating spaghetti?"); 
+		  attraction -= 5;
+          s("<b>You:</b> Is the tortelloni good?");
+          s(girltalk + "Yes. Is your spaghetti? It certainly looks colourful.");
+          s("She suppresses a giggle as a blob of bolognese drops onto your shirt.");
+          s("<b>You:</b> Oops!.");
+          c("eatmeal3","You concentrate on your eating");  }
+		  
+		  if (tortelloni == 1) {
+		  s("You are both eating your food, which is very good, though you normally find ravioli a bit boring. You have a sip of wine and she has a sip, and she drinks some more water.");
+		  tummy += 150;
+		  drankbeer += 15;
+          s("Your Tortelloni is nice. A really tasty choice. You enjoy every mouthful.");  
+          s("<b>You:</b> Do you like it?");
+          s(girltalk + "Yes. Isn't it good. But do you always eat the same as your dinner date? I think it's nice when you try out different things");
+          s("<b>You:</b> But it's what I wanted.");
+          s(girltalk + "Of course."); 
+		  attraction -= 2;
+          c("eatmeal3","You carry on eating");  }
+		  
+		  if (steak == 1) {
+		  s("You are both eating your food, which is very good, though you normally find ravioli a bit boring. You have a sip of wine and she has a sip, and she drinks some more water.");
+		  tummy += 150;
+		  drankbeer += 15;
+          s("<b>You:</b> What's your tortelloni like?");
+          s(girltalk + "Quite nice. And your steak?");
+          s("<b>You:</b> Good. I always enjoy a steak");
+          s(girltalk +" Mind you, I think I was thirsty rather than hungry."); 
+		  s("She drinks some more wine.");
+		  tummy + 100;
+		  drankbeer += 20;
+          c("eatmeal3","You carry on chatting");  }
+		  }  
+        
+	}	
+	
+    function eatmeal3() {
+	     pushloc("havedinner6");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {
+		 s("As you finish your meals " + girlname + " orders a couple of tiramisus (at $5) for dessert.");
+		 bill += 10;
+		 s("You decide it would be a good idea to order a couple coffees along with it.");
+		 s("Which one would you like?");
+		 c("filtercoffee","Just an ordinary filter coffee. ($1 each.)");
+         c("cappuccino","A Cappuccino. ($2 each.)"); 
+         c("espresso","An Espresso. ($1.50 each.)"); 
+         c("eatmeal4","While a coffee would be nice, you're trying to save the money.");		 
+		 }
+	
+	}
+	
+	function filtercoffee() {
+	     pushloc("havedinner7");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {
+		 s("You ordered two cups of ordinary filter coffee.");
+		 bill += 2;
+		 s("The coffees arrive, and you drink those along with eating tiramisu.");
+		 tummy += 200;
+		 drankbeer += 30;
+		 drankcoffees += 1;
+         c("eatmeal4","Continue...");  
+		 }
+	}	 
+		 
+	function espresso() {
+	     pushloc("havedinner7");
+		showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {
+		 s("You ordered two cups of Espresso.");
+		 bill += 3;
+		 s(girltalk + "I always thought an Espresso is the perfect way to end an Italian meal.");
+		 s("The coffees arrive, and you drink those along with eating tiramisu.");
+		 attraction += 3;
+		 tummy += 200;
+		 drankbeer += 50;
+		 drankcoffees += 1;
+         c("eatmeal4","Continue...");  
+		 }
+	
+	}
+	
+		function cappucino() {
+		 pushloc("havedinner7");
+		pushloc("havedinner");
+	    showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {
+		 s("You ordered two cups of Cappucino.");
+		 bill += 3;
+		 s(girltalk + "I don't know how you can drink a Cappuccino after a meal. In Italy they'd shoot you for that.. I'll just have an Espresso instead.");
+		 s("The coffees arrive, and you drink those along with eating tiramisu.");
+		 attraction -= 3;
+		 tummy += 200;
+		 drankbeer += 50;
+		 drankcoffees += 1;
+         c("eatmeal4","Continue...");  
+		 }
+	
+	}
+	
+	function eatmeal4() {
+	     pushloc("havedinner8");
+		pushloc("havedinner");
+	    showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+         s("<b>You:</b> Shall we just finish the wine. There's only a bit left.");
+         
+		 if (pinot == 1) {
+         s(girltalk + "No, it's not very nice is it.");
+         c("paybill","Time to pay the bill and move on."); 
+ 
+		 } else if (riesling == 1) {
+         s(girltalk + "This wine is lovely. Do you mind if I finish the bottle?"); 
+		 s("You watch "+ girlname + " pouring herself a glass of wine and finishing it quickly.");
+		 tummy += 150; 
+		 drankbeer += 15;
+         c("paybill","Time to pay the bill and move on."); 
+		 
+		 } else {
+         s(girltalk + "Well, it would be a shame to waste it."); 
+		 s("You pour out the rest, about a third of a glass each."); 
+		 tummy += 50; 
+		 drankbeer += 5;
+         c("paybill","Time to pay the bill and move on."); }  
+        }
+		
+}	
+	
+	function paybill() {
+	    pushloc("havedinner9");
+	    showneed();
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		else {		
+	     s("You call the waiter and he brings you the bill.");
+		 s("Your bill has accounted to a total of $"+ bill +".");
+		 s("You can cover it fully if you're a gentleman. Alternatively, you can ask her to split the bill, so that each of you covers the half.");
+		 s("If you're running out of money, asking her to pay might be an option. However, she won't be terribly happy about that.");
+		 s("So what's it gonna be?");
+		 c("billfull", "Pay the bill in full.");
+         c("billsplit","Split the bill.");
+		 c("billher","Ask her to pay the bill."); }
+	    
+    }		 
+	
+	function billfull() {
+         pushloc("havedinner10");
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		if (money >= bill) {
+		s("You decided it would be nice to cover the bill in full.");
+		money = (money - bill)
+		s(girltalk + "Such a gentleman!");
+		attraction += 20;
+		c("leavehm", "Leave the Italian Restaurant.");
+		
+		} else if (money >= (bill / 2)) {
+		s("You don't have enough money to cover the bill in full.");
+		s("Splitting the bill, however, is still an option.");
+		money = (money - (bill / 2));
+		c("leavehm", "Leave the Italian Restaurant.");
+		
+		} else if (money < (bill / 2)) {
+		s("You don't have enough money to split the bill, let alone cover it in full.");
+		s("You make up some excuse about losing your wallet and ask her to pay for you.");
+		s("You can't help but notice " + girlname + " is annoyed with you yet she pays nonetheless.");
+		attraction -= 20;
+		c("leavehm", "Leave the Italian Restaurant.");
+		}
+		
+	}
+	
+    function billsplit() {
+         pushloc("havedinner10");
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		if (money >= (bill / 2)) {
+		s("You decide to split the bill and pay your half of it, while "+ girlname +" pays another.");
+		money = (money - (bill / 2));
+		c("leavehm", "Leave the Italian Restaurant.");
+		
+		} else if (money < (bill / 2)) {
+		s("You don't have enough money to split the bill.");
+		s("You make up some excuse about losing your wallet and ask her to pay for you.");
+		s("You can't help but notice " + girlname + " is annoyed with you yet she pays nonetheless.");
+		attraction -= 20;
+		c("leavehm", "Leave the Italian Restaurant.");
+		}
+		
+	}
+	
+	    function billher() {
+		 pushloc("havedinner10");
+		if (bladder > bladlose) wetherself();
+        else if (gottagoflag > 0) preventpee();
+		s("You make up some excuse about losing your wallet and ask her to pay for you.");
+		s("You can't help but notice " + girlname + " is annoyed with you yet she pays nonetheless.");
+		attraction -= 20;
+		c("leavehm", "Leave the Italian Restaurant.");
+		
+	}
