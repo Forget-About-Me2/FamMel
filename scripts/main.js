@@ -17,14 +17,7 @@ function displaystats() {
     document.getElementById("time").innerText = hour + ":" + textminutes + " " + meridian;
     document.getElementById("ytum").innerText = yourtummy;
     document.getElementById("yblad").innerText = yourbladder;
-    if (debugmode) {
-        document.getElementById("bladu").innerText = bladurge;
-        document.getElementById("bladn").innerText = bladneed;
-        document.getElementById("blade").innerText = blademer;
-        document.getElementById("bladl").innerText = bladlose;
-        document.getElementById("maxt").innerText = maxtummy;
-        document.getElementById("randc").innerText = randcounter;
-    } else if (!showstats) {
+    if (!showstats) {
         document.getElementById("tum").innerText = "?";
         document.getElementById("blad").innerText = "?";
     }
@@ -192,7 +185,6 @@ function pickrandom(list) {
 //as it's called in there and this is the cleanest solution I can think of
 function gamestart(){
     setupQuotes();
-    if (debugmode) magic();
 }
 
 

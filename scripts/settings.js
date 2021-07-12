@@ -141,10 +141,6 @@ function options() {
     let curtext = formatAll(json.html, vars);
     curtext = c(["gamestart()", "Continue..."], curtext);
     setText(curtext);
-
-//TODO debug mode
-    if (debugmode) debgclick = "checked"; else ndebclick = "checked";
-
     setgirl(girlname);
 }
 

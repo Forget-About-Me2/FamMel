@@ -189,7 +189,6 @@ CHANGES BY Forget_About_Me
     let enablehide = 0; // 1 = Hide screen
 
     const enabledebug = 1; // 1 = Allow selection of debug mode
-    let debugmode = 0; // 1 = we are in debug mode
     let showstats = 1; // 1 = Show her bladder state, etc.
     // Girl Selection Parameters
     let withgirl = 1; // 0 = you have escaped your date
@@ -2222,9 +2221,6 @@ CHANGES BY Forget_About_Me
             if (!xpanties && xskirt) c("topanties", "Take off her panties");
             if (arousal >= 140 && xpanties && xskirt) c("fucknow", "Fuck her <b>NOW</b>.");
             else if (arousal > 120 && xpanties && xskirt) c("fucknow", "Fuck her");
-
-            if (debugmode) c("fucknow", "Skip to fucking ( debug )");
-
             c("gameover", "Say goodnight.");
         }
     }
