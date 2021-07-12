@@ -7,7 +7,7 @@ let imgs = {
 
 //sets imgs to the local stored version
 function importimgs(){
-    imgString = localStorage["imgs"];
+    const imgString = localStorage["imgs"];
     imgs = JSON.parse(imgString);
 }
 
@@ -39,7 +39,7 @@ function displaypix(picname) {
 //TODO show picture of first thing that's called
 function explainimgs() {
     setjpgimgs();
-    setText(json.picsetup);
+    setText(settings.picsetup);
     picsetup();
 }
 
@@ -95,9 +95,8 @@ function updateLink(){
     const e = document.getElementById("girlname");
     const name = e.options[e.selectedIndex].value;
     const imgtype = $("input[name=imgtype]:checked").val();
-    const temp = document.getElementById('update');
     const url = document.getElementById('imgurl').value;
-    document.getElementById("thepic").innerHTML = "<img src=" + url + "' alt='Picture of girl' class= 'pic'>";
+    document.getElementById("thepic").innerHTML = "<img src='" + url + "' alt='Picture of girl' class= 'pic'>";
     picStore(name, imgtype, url);
 }
 

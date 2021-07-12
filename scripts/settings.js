@@ -1,6 +1,10 @@
-//TOOD proper integration
+//TODD proper integration
+let settings; //The json for the settings.
 
 function setup(){
+    getjson("options", function (){
+        settings=json;
+    })
     if(typeof(Storage) !== "undefined") {
         if (localStorage.girlname) {
             girlname = localStorage.girlname;
@@ -74,6 +78,20 @@ function setup(){
         if (localStorage.minPerc)
             minperc = localStorage.minPerc;
 
+        if (localStorage.playerBladder) {
+            if (localStorage.playerBladder === "false") {
+                playerbladder = 0;
+                getjson("statsBars", function () {
+                    statsBars = json;
+                });
+            }
+        }
+
+        if (localStorage.playerGame) {
+            if (localStorage.playerGame === "true")
+                playerGame = 1;
+        }
+
     }
 }
 
@@ -92,7 +110,7 @@ function setLocal(varName, value){
 function options() {
     //When this function is called the var json will be set to the json used for options
 
-    let vars = new Array(40).fill([""]); //This array is used to format the html with values
+    let vars = new Array(28).fill([""]); //This array is used to format the html with values
     let checked = []; //This is a list to keep track of which options are checked
 
     let cusgirl=[customgirlname];
@@ -123,24 +141,14 @@ function options() {
     if (rstmoves) checked.push(23);
     else checked.push(24);
 
-
-    vars[26] = [yourcustomurge];
-    vars[27] = [money];
-    vars[28] = [minperc];
-
-    if (bladDec) checked.push(31);
-    else checked.push(32);
-
-    if (bladDespDec) checked.push(34);
-    else checked.push(35);
-
-    if (seal) checked.push(37);
-    else checked.push(38);
+    vars[25] = [money];
 
     checked.forEach(i => vars[i] = ["checked"]);
-    let curtext = formatAll(json.html, vars);
+    let curtext = formatAll(settings.html, vars);
     curtext = c(["gamestart()", "Continue..."], curtext);
     setText(curtext);
+    const bladderOpt = document.getElementById('bladOpt');
+    bladderOpt.onclick = bladOpt;
     setgirl(girlname);
 }
 
@@ -154,13 +162,45 @@ function customgirl() {
     vars[9] = [customgirlname];
     vars[10] = [customurge];
 
-    setText(formatAll(json.cusgirl, vars));
+    setText(formatAll(settings.cusgirl, vars));
     setbasegirl(basegirl);
 }
 
 function exitcustomgirl() {
     setgirl(customgirlname);
     options();
+}
+
+function bladOpt() {
+    //There is a chance in this menu playerBladder is turned off, if this happens statsBars needs to be known later on
+    //So query it, if this hasn't happened before.
+    if (!statsBars)
+        getjson("statsBars", function () {
+            statsBars = json;
+        });
+    let vars = new Array(23).fill("");
+    const checked = [];
+    vars[3] = [yourcustomurge];
+    vars[4] = [minperc];
+
+    if (bladDec) checked.push(7);
+    else checked.push(8);
+
+    if (bladDespDec) checked.push(10);
+    else checked.push(11);
+
+    if (seal) checked.push(13);
+    else checked.push(14);
+
+    if (playerbladder) checked.push(16);
+    else checked.push(17);
+
+    if (playerGame) checked.push(19);
+    else checked.push(20);
+
+    checked.forEach(i => vars[i] = ["checked"]);
+    let curtext = formatAll(settings.bladder, vars);
+    setText(curtext);
 }
 
 function setheroutfit(outfitname) {
@@ -273,6 +313,22 @@ function setSealDec(choice){
         setLocal("seal", "true");
     else
         setLocal("seal", "false");
+}
+
+function setPlayBlad(choice){
+    playerbladder = choice;
+    if (choice)
+        setLocal("playerBladder", "true");
+    else
+        setLocal("playerBladder", "false");
+}
+
+function setPlayGame(choice){
+    playerGame = choice;
+    if (choice)
+        setLocal("playerGame", "true");
+    else
+        setLocal("playerGame", "false");
 }
 
 function hidescreen() {

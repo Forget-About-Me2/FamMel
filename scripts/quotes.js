@@ -646,9 +646,9 @@ function c(choice, curtext) {
     const html = "<li><a href=\"javascript:go('" + choice[0] + "')\">" + choice[1] + "</a>"
     curtext.push(html);
     //TODO decide if this is needed?
-    if (didintro) {
-        displaystats();
-    }
+    // if (didintro) {
+    //     displaystats();
+    // }
     return curtext;
 }
 

@@ -102,19 +102,24 @@ body{
 .stats-cells-blue {
     text-align: center;
     background-color: #b0e9f3;
-    width:12.5%;
 }
 
 .stats-cells-white {
     text-align: center;
     background-color: #f0f6f6;
-    width:12.5%;
 }
 
 .stats-cells-green{
     text-align: center;
     background-color: #e8ec9c;
+}
+
+.cell-width {
     width:12.5%;
+}
+
+.cell-width-noPlay {
+    width: 16.67%;
 }
 
 #statsp {

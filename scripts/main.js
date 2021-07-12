@@ -1,6 +1,9 @@
 //Functions and variables that don't belong to anything specific
 
 let randcounter = 0; // text randomizer
+let playerbladder = 1; //Whether playerBladder has been enabled.
+let playerGame = 0; //Whether the playerBladder is enabled in the drinking game
+let statsBars; //JSON of the status bars depending on which setting has been chosen
 
 //TODO this is called way too often
 //  Updates the information on the stats
@@ -15,8 +18,10 @@ function displaystats() {
     document.getElementById("tum").innerText = tummy;
     document.getElementById("blad").innerText = bladder;
     document.getElementById("time").innerText = hour + ":" + textminutes + " " + meridian;
-    document.getElementById("ytum").innerText = yourtummy;
-    document.getElementById("yblad").innerText = yourbladder;
+    if(playerbladder) {
+        document.getElementById("ytum").innerText = yourtummy;
+        document.getElementById("yblad").innerText = yourbladder;
+    }
     if (!showstats) {
         document.getElementById("tum").innerText = "?";
         document.getElementById("blad").innerText = "?";
@@ -68,19 +73,21 @@ function go(tag) {
         //  If she's not with you, then she can go pee
         if (!withgirl && bladder > blademer) bladder = 0;
 
-        yourtumavg = Math.round((yourtumavg * (tumdecay - 1) + yourtummy) / tumdecay);
-        let yourtuminc = Math.round(yourtumavg / 10);
-        if (ydrankbeer === 0 && yourtuminc > 12) yourtuminc = 12;
-        if (ydrankbeer > 0 && yourtuminc > 18) yourtuminc = 18;
-        if (yourtuminc < 1) yourtuminc = 2;
-        yourtuminc = randtuminc(yourtuminc);
-        yourtummy -= yourtuminc;
-        if (yourtummy < 0) yourtummy = 0;
-        yourbladder += yourtuminc;
+        if (playerbladder || (locstack[0]==="drinkinggame" && playerGame)) {
+            yourtumavg = Math.round((yourtumavg * (tumdecay - 1) + yourtummy) / tumdecay);
+            let yourtuminc = Math.round(yourtumavg / 10);
+            if (ydrankbeer === 0 && yourtuminc > 12) yourtuminc = 12;
+            if (ydrankbeer > 0 && yourtuminc > 18) yourtuminc = 18;
+            if (yourtuminc < 1) yourtuminc = 2;
+            yourtuminc = randtuminc(yourtuminc);
+            yourtummy -= yourtuminc;
+            if (yourtummy < 0) yourtummy = 0;
+            yourbladder += yourtuminc;
 
-        if (ydrankbeer > 0) ydrankbeer -= 1;
-        if (drankbeer > 0) {
-            drankbeer -= 1;
+            if (ydrankbeer > 0) ydrankbeer -= 1;
+            if (drankbeer > 0) {
+                drankbeer -= 1;
+            }
         }
         if (flirtcounter > 0) {
             flirtcounter -= 1;
@@ -184,6 +191,14 @@ function pickrandom(list) {
 //Main reason we have a seperate function is because we need have to wait for yneeds to be assigned for the first scene
 //as it's called in there and this is the cleanest solution I can think of
 function gamestart(){
+    if (!playerbladder) {
+        const stats = document.getElementById("stats-bar");
+        let result = "";
+        statsBars["noplayer"].forEach(item => result += item);
+        stats.innerHTML = result;
+        yourbladder = 0;
+    }
+    displaystats();
     setupQuotes();
 }
 
