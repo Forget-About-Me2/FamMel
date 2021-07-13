@@ -314,6 +314,7 @@
     "{0} For diamonds, I'd do much more than hold it.  But okay.",
     "{0} Thanks! I do really have to go. You're so sweet.",
     "{0} Can you hold my purse for me?",
+    "{0} Great!",
     "{0} You're a naugthy boy, aren't you?",
     "{0} But I'm going to wet my panties if I don't go.....",
     "{0} God! I can't wait any longer!",
@@ -323,7 +324,9 @@
     "{0} That's pretty kinky!",
     "{0} But I'm about to wet my panties",
     "{0} I just can't hold it anymore. Give it here",
-    "{0} But a vase? I can't! At least not yet"
+    "{0} But a vase? I can't! At least not yet",
+    "{0} That's kind of gross!",
+    "{0} But in just a roll of towels? No way! At least not yet."
   ],
   "allowpee": [
     "<b>YOU:</b> Well, if you have to pee that bad, I guess you can go.",
@@ -359,6 +362,18 @@
     "The pee hisses out for nearly a minute, the vase is filled almost to the top.",
     "girlname3"
   ],
+  "peetowels": [
+    "girltalk18",
+    "girltalk14",
+    "girltalk15",
+    "She takes the roll of paper towels in both hands and freezes for a moment, thinking.",
+    "girltalk19",
+    "girltalk11",
+    "She runs off with your roll of paper towels in hand.",
+    "You are left to ponder your situation.",
+    "The pee hisses out and is mostly absorbed by the paper towels, just a small trickle running down her left leg.",
+    "She carefully sets to sopping wet roll of towels in a corner."
+  ],
   "choices": [
     ["curloc", "Continue..."],
     ["indepee", "Continue..."],
@@ -373,6 +388,8 @@
     ["peeshot2", "Continue..."],
     ["peeshot3", "Continue..."],
     ["peevase2", "Continue..."],
-    ["peevase3", "Continue..."]
+    ["peevase3", "Continue..."],
+    ["peetowels2", "Continue..."],
+    ["peetowels3", "Continue..."]
   ]
 }

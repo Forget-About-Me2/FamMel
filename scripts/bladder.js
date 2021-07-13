@@ -40,7 +40,38 @@ let seal = 1;
 let beerdecCounter = 0; //How long has it been since her bladder capacity has been decayed by beer
 let ybeerdecCounter = 0; //How long has it been since your bladder capacity has been decayed by beer
 
+//  So she doesn't seem unfamiliar with the concept after the first time.
+let peedtowels = 0; // has she peed in your paper towels
+let peedvase = 0; // has she peed in your vase
+let peedshot = 0; // has she peed in the shot glass
+let peedoutside = 0; // has she peed outside
 
+//  The following are used by her to complain about how long she's
+// been waiting and how much she's drunk.
+let lastpeetime = 0;  // When did she last go?
+let timeheld = 0; // for stats
+let drankbeers = 0;
+let drankcocktails = 0;
+let dranksodas = 0;
+let drankwaters = 0;
+
+let drankbeer = 0; // has she drunk beer?  Changes capacities and rates.
+
+//same but for you
+let ylastpeetime = 0;  // When did you last go?
+let ytimeheld = 0; // for stats
+
+let ydrankcocktails = 0;
+let ydranksodas = 0;
+let ydrankwaters = 0;
+let ydrankbeers;
+
+let ydrankbeer = 0;
+
+// Flags for drinking game.
+let notdesperate = 0; //neither you or her are desperate after drinking game.
+let notydesperate = 0; //You aren't desperate but she is after drinking game.
+let nothdesperate = 0; //She isn't desperate but you are after drinking game
 
 //Initializes the bladder values for the girl
 function initUrge(urge){
@@ -108,7 +139,7 @@ function flushdrank() {
     if (bladDec) {
         if (bladder >= bladlose) updateurge(bladurge * 9 / 10);
         else if (bladder >= blademer && bladDespDec) updateurge(bladurge * 9.5 / 10);
-        //bladder decays based on breaking can only once an hour
+        //bladder decays based on breaking the seal can only happen once an hour
         else if (seal && drankbeer > 15 && beerdecCounter > 30) {
             updateurge(bladurge * 9.5 / 10);
             beerdecCounter = 0;
@@ -131,10 +162,8 @@ function flushdrank() {
 }
 
 function flushyourdrank() {
-    console.log("hallo?");
     //  Derate bladder capacity if you loses it...
     if (bladDec) {
-        console.log("fuck?");
         if (yourbladder >= yourbladlose) updateyoururge(yourbladurge * 9 / 10);
         else if (yourbladder >= yourblademer && bladDespDec) updateyoururge(yourbladurge * 9.5 / 10);
         //bladder decays based on breaking can only once an hour
@@ -154,7 +183,6 @@ function flushyourdrank() {
     ynowpeeing = 1;
 }
 
-// Showneed
 // Showneed calculates how she's going to indicate
 // her current level of need ( if at all ) based on her situation
 function showneed(curtext) {
@@ -649,8 +677,6 @@ function briberoses() {
 function bribeearrings() {
     let curtext = [];
     curtext = printList(curtext, needs["bribeearrings"]);
-    // s("<b>YOU:</b>  Pretty please!  I'll give you a set of diamond earrings if you can hold it!");
-    // s(girltalk + "For diamonds, I'd do much more than hold it.  But okay.");
     askholditcounter++;
     curtext = displayholdquip(curtext);
     curtext = printChoicesList(curtext, [0],  needs["choices"]);
@@ -659,7 +685,6 @@ function bribeearrings() {
 }
 
 function bribeask() {
-    // s("<b>YOU:</b> Pretty please!");
     let curtext = []
     curtext = printList(curtext, needs["bribeask"]);
     if (randomchoice(bribeaskthresh) && (
@@ -1068,9 +1093,10 @@ function peevase3() {
     let curtext = [];
     curtext.push(needs["peevase"][5]);
     curtext.push(needs["peevase"][6]);
+    curtext.push(girltalk + pickrandom(needs["embarquote"]));
     // s("The pee hisses out for nearly a minute, the vase is filled almost to the top.");
     // s(girlname + " puts herself back together, looking embarrassed.");
-    s(girltalk + pickrandom(needs["embarquote"]));
+    // s(girltalk + pickrandom(needs["embarquote"]));
     attraction += 3;
     flushdrank();
     sawherpee = 1;
@@ -1130,58 +1156,83 @@ function ypeevase3() {
 
 //TODO she can't run away with the towels while in the car
 //TODO check for having peed towels/vase or shot
+//TODO test
 function peetowels() {
+    let curtext = [];
     if (attraction > 30) {
         if (bladder > blademer) {
             gottagoflag = 0;
             if (peedtowels < 0) {
-                s(girltalk + "That's kind of gross!");
-                s(girltalk + "But I'm about to wet my panties!");
+                curtext.push(needs["peetowels"][0]);
+                curtext.push(needs["peetowels"][1]);
+                // s(girltalk + "That's kind of gross!");
+                // s(girltalk + "But I'm about to wet my panties!");
             }
             displayneed();
             peedtowels = 1;
             wetherpanties = 1;
-            s(girltalk + "I just can't hold it anymore.  Give it here.");
-            s("She takes the roll of paper towels in both hands and freezes for a moment, thinking.");
-            c("peetowels2", "Continue...");
+            curtext.push(needs["peetowels"][2]);
+            curtext.push(needs["peetowels"][3]);
+            // s(girltalk + "I just can't hold it anymore.  Give it here.");
+            // s("She takes the roll of paper towels in both hands and freezes for a moment, thinking.");
+            curtext = printChoicesList(curtext, [14], needs["choices"]);
+            // c("peetowels2", "Continue...");
         } else {
-            //TODO unrreachable because you onl get here when your bladder is beyond emer
-            displaygottavoc();
+            //TODO unrreachable because you only get here when your bladder is beyond emer?
+            curtext = displaygottavoc(curtext);
             gottagoflag = 0;
-            s(girltalk + "But in just a roll of towels?  No way! At least not yet.");
-            displayholdquip();
-            c(locstack[0], "Continue...");
+            curtext.push(needs["peetowels"][4]);
+            // s(girltalk + "But in just a roll of towels?  No way! At least not yet.");
+            curtext = displayholdquip(curtext);
+            curtext = printChoicesList(curtext, [0], needs["choices"]);
+            // c(locstack[0], "Continue...");
         }
     } else {
-        s(girltalk + "Somehow, I don't think that's happening.");
-        s("She runs off with your roll of paper towels in hand.");
-        s("You are left to ponder your situation.");
+        curtext.push(needs["peetowels"][5]);
+        curtext.push(needs["peetowels"][6]);
+        curtext.push(needs["peetowels"][7]);
+        // s(girltalk + "Somehow, I don't think that's happening.");
+        // s("She runs off with your roll of paper towels in hand.");
+        // s("You are left to ponder your situation.");
         flushdrank();
         attraction -= 3;
         if (attraction < 0) attraction = 0;
         ptowels -= 1;
-        c(locstack[0], "Continue...");
+        curtext = printChoicesList(curtext, [0], needs["choices"]);
+        // c(locstack[0], "Continue...");
     }
-
+    sayText(curtext);
 }
 
 function peetowels2() {
-    if (pantycolor !== "none") s(girlname + peetowelquote);
-    else s(girlname + peetowelquotebare);
-    itscomingout();
-    c("peetowels3", "Continue...");
+    let curtext = [];
+    if (pantycolor !== "none")
+        curtext.push(appearance["peetowelquote"]);
+    else
+        curtext.push(appearance["peetowelquotebare"]);
+    // if (pantycolor !== "none") s(girlname + peetowelquote);
+    // else s(girlname + peetowelquotebare);
+    curtext = itscomingout(curtext);
+    curtext = printChoicesList(curtext, [15], needs["choices"]);
+    // c("peetowels3", "Continue...");
+    sayText(curtext);
 }
 
 function peetowels3() {
-    s("The pee hisses out and is mostly absorbed by the paper towels, just a small trickle running down her left leg.");
-    s("She carefully sets to sopping wet roll of towels in a corner.");
-    s(girltalk + embarquote[randcounter]);
-    incrandom();
+    let curtext = [];
+    curtext.push(needs["peetowels"][8]);
+    curtext.push(needs["peetowels"][9]);
+    curtext.push(girltalk + pickrandom(needs["embarquote"]));
+    // s("The pee hisses out and is mostly absorbed by the paper towels, just a small trickle running down her left leg.");
+    // s("She carefully sets to sopping wet roll of towels in a corner.");
+    // s(girltalk + embarquote[randcounter]);
     attraction += 3;
     flushdrank();
     ptowels -= 1;
     sawherpee = 1;
-    c(locstack[0], "Continue...");
+    curtext = printChoicesList(curtext, [0], needs["choices"]);
+    // c(locstack[0], "Continue...");
+    sayText(curtext);
 }
 
 function peeintub() {
