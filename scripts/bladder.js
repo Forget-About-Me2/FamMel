@@ -939,7 +939,6 @@ function peeoutside() {
         if (attraction < 0) attraction = 0;
         c(locstack[0], "Continue...");
     }
-
 }
 
 // In the car
@@ -998,9 +997,6 @@ function peeoutside3c() {
     sawherpee = 1;
     c(locstack[0], "Continue...");
 }
-
-
-
 
 //  DisplayHoldQuip function prints a quasi-random quip from "+girlname+"
 //  saying she's going to try to hold it for you.

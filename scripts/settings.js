@@ -154,7 +154,7 @@ function options() {
 
 
 function customgirl() {
-    let vars = new Array(13).fill("");
+    let vars = new Array(14).fill("");
     if (basegirl === "Jennifer") vars[4] = ["checked"];
     else if (basegirl === "Jennifer") vars[5] = ["checked"];
     else if (basegirl === "Laura") vars[6] = ["checked"];
