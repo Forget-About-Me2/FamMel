@@ -172,6 +172,125 @@ function ypredrink() {
     sayText(curtext);
 }
 
+function briberoses() {
+    let curtext = [];
+    curtext = printList(curtext, needs["briberoses"]);
+    askholditcounter++;
+    curtext = displayholdquip(curtext);
+    curtext = printChoicesList(curtext, [0],  needs["choices"]);
+    roses -= 1;
+    sayText(curtext);
+}
+
+function bribeearrings() {
+    let curtext = [];
+    curtext = printList(curtext, needs["bribeearrings"]);
+    askholditcounter++;
+    curtext = displayholdquip(curtext);
+    curtext = printChoicesList(curtext, [0],  needs["choices"]);
+    earrings -= 1;
+    sayText(curtext);
+}
+
+//TODO test
+function holdpurse() {
+    haveherpurse = 1;
+    let curtext = [];
+    curtext.push(needs["holdpurse"][0]);
+    curtext.push(needs["holdpurse"][1]);
+    // s(girltalk + "Great!");
+    // s("She hands you her small, stylish purse and runs off to relieve herself.");
+    curtext = printChoicesList(curtext, [6,7], needs["choices"]);
+    // c("lookinsidepurse", "Look inside her purse.");
+    // c("indepee", "Be a gentleman");
+    sayText(curtext)
+}
+
+//TODO test
+function lookinsidepurse() {
+    let curtext = [];
+    curtext.push(needs["holdpurse"][2]);
+    // s("You open the top and see:");
+    let tempstring = "A ";
+    herpurse.forEach((item, index) => {
+        if(index === 0)
+            tempstring += item["desc"];
+        else if (index === item.size - 1){
+            tempstring += "and a" + item["desc"];
+        } else {
+            tempstring += "a" + item["desc"];
+        }
+    });
+    // if (!herkeys)
+    //     tempstring += "set of keys, a ";
+    // if (!hercellphone)
+    //     tempstring += "small cellphone, a ";
+    // tempstring += "compact makeup kit and a comb.";
+    // s(tempstring);
+    curtext.push(tempstring);
+    herpurse.forEach(item => {
+        if ("funDesc" in item){
+            curtext = c(["takeHerItem(item.key)", "take "+ item.funDesc] ,curtext);
+        }
+    });
+    // if (!herkeys)
+    //     c("takeherkeys", "Take her keys");
+    // if (!hercellphone)
+    //     c("takeherphone", "Take her cellphone");
+    // c("indepee", "Close the purse");
+    curtext = printChoicesList(curtext,[8], needs["choices"]);
+    sayText(curtext);
+}
+
+//TODO test
+//You steal the given item from her purse
+function takeHerItem(item){
+    let curtext = [];
+    curtext.push(needs["holdpurse"][3].format(item.funDesc));
+    curtext = printChoicesList(curtext, [9,1]);
+    sayText(curtext);
+
+}
+//
+// function takeherkeys() {
+//     delete herpurse.keys;
+//     objects.herKeys.owned++;
+//     s("Thinking they might come in handy later, you pocket her keys.");
+//     c("lookinsidepurse", "Examine her purse again");
+//     c("indepee", "Continue...");
+// }
+//
+// function takeherphone() {
+//     hercellphone++;
+//     s("Thinking it might come in handy later, you pocket her cellphone.");
+//     c("lookinsidepurse", "Examine her purse again");
+//     c("indepee", "Continue...");
+// }
+
+function givedrypanties() {
+    s(girltalk + "Where did you get those?");
+    s("She slips into the clean panties with a smile.");
+    panties -= 1;
+    pantycolor = "sexy";
+    if (wetlegs < 1) attraction += 5;
+    if (wetlegs > 0) {
+        s("Her still dripping pussy dampens the crotch of the new panties.");
+    }
+    wetlegs = 0;
+    c(locstack[0], "Continue ... ");
+}
+
+function giveptowels() {
+    s(girltalk + "Thanks!");
+    s("She wipes the pee from her legs and pussy.");
+    attraction += 5;
+    ptowels -= 1;
+    wetlegs = 0;
+    if (panties > 0)
+        c("givedrypanties", "Offer her a clean pair of panties");
+    c(locstack[0], "Continue ... ");
+}
+
 
 
 function createItemButtonList(){
