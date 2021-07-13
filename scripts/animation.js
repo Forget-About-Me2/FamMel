@@ -70,11 +70,11 @@ function anim8() {
             pixfname = "pixlose";
         }
     }
-    if (enableascii && withgirl && !enablehide) {
+    if (enableascii && !enablehide) {
         document.getElementById('thepic').innerHTML = "<table style='text-align:right'><tr><td style='width:100px'><pre>" + asciiart[directartno] + "</pre></table>";
         artno++;
         if (artno > maxart) artno = 0;
-    } else if (!enableimages || enablehide || !withgirl) {
+    } else if (!enableimages || enablehide) {
         document.getElementById('thepic').innerHTML = "<table style='text-align:right'><tr><td style='width:100px'><pre>&nbsp;</pre></table>";
     } else {
         displaypix(pixfname);

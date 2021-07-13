@@ -36,78 +36,63 @@ function driveout() {
     let curtext = [];
     if (locstack[0] !== "driveout") {
         pushloc("driveout");
-        if (withgirl) {
-            locationMCSetup("driveout", drive);
-            curtext = printIntro(curtext, 0);
-            suggestedloc = "none";
-            if (wetthecar)
-                curtext.push(appearance["clothes"][heroutfit]["soakedseatquote"]);
-                // s(soakedseatquote);
-            else
-                curtext = printIntro(curtext, 1);
-            curtext = printIntro(curtext, 2);
-        } else {
-            curtext = printIntro(curtext, 3);
-        }
-    } else {
-        if (withgirl)
-            curtext = printIntro(curtext, 4);
+        locationMCSetup("driveout", drive);
+        curtext = printIntro(curtext, 0);
+        suggestedloc = "none";
+        if (wetthecar)
+            curtext.push(appearance["clothes"][heroutfit]["soakedseatquote"]);
+            // s(soakedseatquote);
         else
-            curtext = printIntro(curtext, 5);
+            curtext = printIntro(curtext, 1);
+        curtext = printIntro(curtext, 2);
+    } else {
+         curtext = printIntro(curtext, 4);
     }
-    if (withgirl) {
-        curtext = displayneed(curtext);
-        if (suggestedloc === "none") {
-            if (randomchoice(8)) {
-                if (shyness < 30 && attraction > 50 && !beenmakeout) {
-                    suggestedloc = "themakeout";
-                } else if (shyness < 50 && attraction > 100 && beenmakeout &&
-                    beenbar && beenclub && seenmovie) {
-                    suggestedloc = "thehome";
-                } else if (shyness > 80 && attraction < 30 && !seenmovie) {
-                    suggestedloc = "themovie";
-                } else if (shyness < 60 && attraction > 30 && !beenclub) {
-                    suggestedloc = "theclub";
-                } else if (bladder > bladneed && shyness < 50 && !beenbar) {
-                    suggestedloc = "thebar";
-                }
-                if (suggestedloc !== "none")
-                    curtext = printDialogue(curtext, suggestedloc,0);
+    curtext = displayneed(curtext);
+    //TODO can probably combine the printing things in the if statement
+    if (suggestedloc === "none") {
+        if (randomchoice(8)) {
+            if (shyness < 30 && attraction > 50 && !beenmakeout) {
+                suggestedloc = "themakeout";
+            } else if (shyness < 50 && attraction > 100 && beenmakeout &&
+                beenbar && beenclub && seenmovie) {
+                suggestedloc = "thehome";
+            } else if (shyness > 80 && attraction < 30 && !seenmovie) {
+                suggestedloc = "themovie";
+            } else if (shyness < 60 && attraction > 30 && !beenclub) {
+                suggestedloc = "theclub";
+            } else if (bladder > bladneed && shyness < 50 && !beenbar) {
+                suggestedloc = "thebar";
             }
+            if (suggestedloc !== "none")
+                curtext = printDialogue(curtext, suggestedloc,0);
         }
     }
     curtext = displayyourneed(curtext);
     curtext = printAlways(curtext);
     let choices = [0];
-    if (withgirl) {
-        if (suggestedloc !== "thebar")
-            choices.push(1);
-        else
-            choices.push(2);
-        if (suggestedloc !== "theclub")
-            choices.push(3);
-        else
-            choices.push(4);
-        if (suggestedloc !== "themovie")
-            choices.push(5);
-        else
-            choices.push(6);
-        if (suggestedloc !== "themakeout")
-            choices.push(7);
-        else
-            choices.push(8);
-        if (suggestedloc !== "thehome")
-            choices.push(9);
-        else
-            choices.push(10);
-    } else
-        choices.push(11);
+    if (suggestedloc !== "thebar")
+        choices.push(1);
+    else
+        choices.push(2);
+    if (suggestedloc !== "theclub")
+        choices.push(3);
+    else
+        choices.push(4);
+    if (suggestedloc !== "themovie")
+        choices.push(5);
+    else
+        choices.push(6);
+    if (suggestedloc !== "themakeout")
+        choices.push(7);
+    else
+        choices.push(8);
+    if (suggestedloc !== "thehome")
+        choices.push(9);
+    else
+        choices.push(10);
     curtext = printChoices(curtext, choices);
     sayText(curtext);
-
-    //TODO determine whether debug should stay
-    // if (debugmode) c("timewarp", "Advance to 2AM");
-    // if (debugmode && withgirl) c("ditchgirl", "Ditch the girl");
 }
 
 function nextstop() {
@@ -118,24 +103,18 @@ function nextstop() {
 }
 
 function drivearound() {
-    if (!withgirl) {
-        s(soloview[randcounter]);
-        incrandom();
+    s("You are driving around with " + girlname + " in the passenger seat.");
+    showneed();
+    displayyourneed();
+    if (bladder > bladlose) wetherself();
+    else if (yourbladder > yourbladlose) wetyourself();
+    else {
+        if (yourbladder > yourblademer)
+            c("drivetell", "Tell her you need to go.");
+        if (gottagoflag > 0) {
+            preventpee();
+        } else standobjs();
         c(locstack[0], "Continue...");
-    } else {
-        s("You are driving around with " + girlname + " in the passenger seat.");
-        showneed();
-        displayyourneed();
-        if (bladder > bladlose) wetherself();
-        else if (yourbladder > yourbladlose) wetyourself();
-        else {
-            if (yourbladder > yourblademer)
-                c("drivetell", "Tell her you need to go.");
-            if (gottagoflag > 0) {
-                preventpee();
-            } else standobjs();
-            c(locstack[0], "Continue...");
-        }
     }
 }
 

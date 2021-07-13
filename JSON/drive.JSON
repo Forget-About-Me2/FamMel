@@ -78,8 +78,7 @@
       ["themakeout", "Go to the make-out spot"],
       ["themakeout", "Take her up to the make-out spot"],
       ["thehome", "girlname2"],
-      ["thehome", "Accept her invitation to go home with her."],
-      ["solobar", "Go to the bar"]
+      ["thehome", "Accept her invitation to go home with her."]
     ]
   }
 }

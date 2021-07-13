@@ -191,7 +191,6 @@ CHANGES BY Forget_About_Me
 
     let showstats = 1; // 1 = Show her bladder state, etc.
     // Girl Selection Parameters
-    let withgirl = 1; // 0 = you have escaped your date
     let photolevel = 0; // 0 = clothed, 1 = costumed, 2 = to be naked, 3 = naked.
 
     let girlname = "Laura";
@@ -1070,22 +1069,10 @@ CHANGES BY Forget_About_Me
         c(locstack[0], "Nevermind...");
     }
 
-
-
     function comforther() {
         s("You walk to her and hold her as she cries.");
         s("<b>YOU:</b> I'm so sorry.  You're really a beautiful, sexy girl.");
         s("She stops crying and seems a little happier.");
-        c(locstack[0], "Continue ... ");
-    }
-
-    function callherataxi() {
-        s("You phone for a taxi, which quickly arrives.");
-        s("She gets in and they drive away, leaving you alone....");
-        withgirl = 0; // 0 = you have escaped your date
-        flushdrank(); // Zero out anybody you meet's bladder.
-        while (locstack[0] !== "driveout") poploc();
-        s("So you make your way back to the car.");
         c(locstack[0], "Continue ... ");
     }
 
@@ -3025,89 +3012,6 @@ CHANGES BY Forget_About_Me
         pushloc("thebar");
         thebar();
     }
-
-    function solobar() {
-        if (locstack[0] !== "solobar") {
-            pushloc("solobar");
-            flushdrank();
-            setgirl(bargirlnames[randcounter]);
-            incrandom();
-            bladder = bladlose / 2;
-            askholditcounter = 0;
-            shyness = 20;
-            attraction = 100;
-            s("You drive around and find ... a different sort of bar.");
-            s("Pushing open the door, you are greeted by a short shorted, tight topped, braless, thong wearing young woman who sits down next to you and says:");
-            s(girltalk + " Hi!  I'm " + girlname + ".  Buy me a drink?");
-            displayneed();
-        } else {
-            s("You are in a shady Bar with a scantily clad companion " + girlname + " .");
-            withgirl = 1;
-            showneed();
-        }
-        displayyourneed();
-        if (bladder > bladlose) wetherself();
-        else if (yourbladder > yourbladlose) wetyourself();
-        else if (gottagoflag) {
-            preventpee();
-        } else {
-            c("solotalk", "Make conversation with " + girlname);
-            c("solodrink", "Buy " + girlname + " a drink");
-        }
-        c("sololeave", "Leave the bar.");
-    }
-
-    function sololeave() {
-        withgirl = 0;
-        goback();
-    }
-
-    function solodrink() {
-        if (money >= 8) {
-            s("You buy a bargirl drink for $8.00.");
-            money -= 8;
-            s(girlname + " smiles, thanks you, and downs the drink.");
-            tummy += 100;
-        } else s("You don't have enough money!");
-        c(locstack[0], "Continue...");
-    }
-
-    function nopeesolodrink() {
-        if (money >= 8) {
-            if (bladder < blademer) {
-                s("You buy a bargirl drink for $8.00.");
-                money -= 8;
-                tummy += 100;
-                s(girlname + " looks a little worried and starts to say something, but she stops, smiles, and sips the drink.");
-                showneed();
-                c(locstack[0], "Continue...");
-            } else {
-                s(girltalk + " Sorry, but I <b><i>Really</i></b> have to go now.");
-                displayneed();
-                c("indepee", "Continue...");
-            }
-        } else {
-            s("You don't have enough money!");
-            c("indepee", "Continue...");
-        }
-    }
-
-    function solotalk() {
-        s("You try to make conversation with your companion.");
-        if (bladder < blademer)
-            s("She seems interested in your ability to buy her another weak drink.");
-        else
-            s("She seems to be concentrating on not wetting herself.");
-        if (bladder < blademer) {
-            s(bargirlhotness[randcounter]);
-            incrandom();
-        } else {
-            s(bargirlemerhotness[randcounter]);
-            incrandom();
-        }
-        c(locstack[0], "Continue...");
-    }
-
 
     function darkbar() {
         if (locstack[0] !== "darkbar") {

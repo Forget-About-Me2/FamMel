@@ -71,7 +71,7 @@ function go(tag) {
         bladder += tuminc;
 
         //  If she's not with you, then she can go pee
-        if (!withgirl && bladder > blademer) bladder = 0;
+        if (bladder > blademer) bladder = 0;
 
         if (playerbladder || (locstack[0]==="drinkinggame" && playerGame)) {
             yourtumavg = Math.round((yourtumavg * (tumdecay - 1) + yourtummy) / tumdecay);

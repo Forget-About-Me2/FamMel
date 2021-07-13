@@ -29,7 +29,7 @@ let picset = 0;
 //TODO figure out why need is called before urge
 function displaypix(picname) {
     imgssrc = imgs[basegirl][picname];
-    if (enableimages && withgirl && imgssrc !== imageprev && !enablehide && !picset) {
+    if (enableimages && imgssrc !== imageprev && !enablehide && !picset) {
         document.getElementById('thepic').innerHTML = "<img src=" + imgssrc + " alt=" + imagedesc + " class='pic'>";
     }
     imageprev = imgssrc;

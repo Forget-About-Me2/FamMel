@@ -326,14 +326,6 @@ function indepee(curtext=[], called=false) {
     } else if (locstack[0] === "pickup") {
         curtext.push(peelines["thehome"][2]);
         flushdrank();
-    } else if (locstack[0] === "solobar") {
-        if (bladder > bladlose - 25)
-            curtext.push(pickrandom(peelines["barpeeprivate"]));
-        else
-            curtext.push(pickrandom(peelines["barpeeprivate2"]));
-        //TODO check validity of these attraction
-        attraction -= 2;
-        flushdrank();
     } else {
         if (bladder > bladlose - 25)
             curtext.push(pickrandom(appearance[heroutfit]["peeprivate"]));
@@ -486,7 +478,7 @@ function displayneed(curtext) {
     showedneed = 1;
     if (locstack[0] === "themakeout" || locstack[0] === "driveout" ||
         locstack[0] === "drivearound" || locstack[0] === "domovie" ||
-        locstack[0] === "thebed" || fuckingnow > 0 || locstack[0] === "solobar"){
+        locstack[0] === "thebed" || fuckingnow > 0){
         if (bladder >= bladlose){
             curtext.push(needs["sitneedlose"][randcounter]);
         } else if (bladder > blademer) {
@@ -688,6 +680,7 @@ function bribeask() {
     bribeaskthresh -= askholditcounter * 0.1;
 }
 
+//TODO test
 function bribefavor() {
     let curtext = needs["bribefavor"]
     // s("<b>YOU:</b> Pretty please!  Remember you promised to do me a favor!");
@@ -698,51 +691,6 @@ function bribefavor() {
     askholditcounter++;
     curtext = printChoicesList(curtext, [0],  needs["choices"]);
     sayText(curtext);
-}
-
-//
-//  Pay her to hold it in.
-//
-//TODO maybe she haggles
-//TODO test
-function payholdit() {
-    let curtext = needs["payholdit"];
-    // s("<b>YOU:</b> I'll pay you if you can hold it for a while.");
-    const temp = displayneed(curtext);
-    //TODO make this more standard
-    curtext.splice(1, 0, ...temp); //Inserts the displayholdquip into the dialouge
-    // s(girltalk + "I don't know... how much?");
-    curtext = printChoicesList(curtext, [2,3,4,0]);
-    //TODO you never pay it?
-    sayText(curtext);
-    // c("payfails", "$10.00");
-    // c("payfails", "$20.00");
-    // c("payokay", "$50.00");
-    // c(locstack[0], "Continue...");
-}
-
-function payfails() {
-    const curtext = needs["payfails"];
-    // s(girltalk + "That's not going to be enough.");
-    indepee(curtext);
-}
-
-function payokay(curtext) {
-    curtext.push(girltalk + pickrandom(general["okayforyou"]));
-    askholditcounter++;
-    curtext = displayholdquip(curtext);
-    curtext = printChoicesList(curtext, [0],  needs["choices"]);
-    sayText(curtext);
-    // c(locstack[0], "Continue...");
-}
-
-
-//TOOD check correctness
-function remindpayholdit() {
-    let curtext = displayholdquip([]);
-    curtext = printChoicesList(curtext, [0],  needs["choices"]);
-    sayText(curtext);
-    // c(locstack[0], "Continue...");
 }
 
 //
@@ -810,7 +758,7 @@ function allowpee() {
     let curtext = [];
     curtext.push(needs["allowpee"][0]);
     curtext.push(needs["allowpee"][1]);
-    if (locstack[0] === "solobar" || locstack[0] === "fuckher6" || locstack[0] === "thehome" || locstack[0] === "thebedroom" || locstack[0] === "darkbar"
+    if (locstack[0] === "fuckher6" || locstack[0] === "thehome" || locstack[0] === "thebedroom" || locstack[0] === "darkbar"
         || locstack[0] === "pickup" || locstack[0] === "darkclub" || locstack[0] === "darkbar") {
         curtext = callChoice(needs["choices"][1], curtext);
     } else {
@@ -1186,7 +1134,7 @@ function peetowels() {
     if (attraction > 30) {
         if (bladder > blademer) {
             gottagoflag = 0;
-            if (peedvase < 0) {
+            if (peedtowels < 0) {
                 s(girltalk + "That's kind of gross!");
                 s(girltalk + "But I'm about to wet my panties!");
             }
@@ -1533,37 +1481,26 @@ function preventpee(curtext) {
     // have answered her request to pee.  So the flag
     // will be cleared.
 
-    let choices = [] // This keeps track of the options you can choose from so they can be printed at the end
+    let choices = [1, 9] // This keeps track of the options you can choose from so they can be printed at the end
 
     if (bladder < bladlose - 50)
         gottagoflag = 0;
 
-    if (locstack[0] === "solobar") {
-        choices.push(0); //Suggest she has a drink
-        if (askholditcounter)
-            choices.push(1); //Remind that you are paying her
-        else
-            choices.push(2); //Pay her
-    } else
-        choices.push(3); //Hold it
-
     if (locstack[0] === "dodance")
-        choices.push(4); //Pee together
+        choices.push(2); //Pee together
     if (locstack[0] === "darkbar" || locstack[0] === "darkmovie" || locstack[0] === "darkclub")
-        choices.push(5); //Watch
+        choices.push(3); //Watch
     if (locstack[0] === "darkmovie")
-        choices.push(6); //No restroom
+        choices.push(4); //No restroom
     if (locstack[0] === "darkbar")
-        choices.push(7); //pdrinkinggame
+        choices.push(5); //pdrinkinggame
     if (locstack[0] === "darkclub")
-        choices.push(8); //pphotegame
+        choices.push(6); //pphotegame
     if (locstack[0] === "driveout") {
-        choices.push(9); //nextstop
-    } else if (locstack[0] !== "solobar") {
-        choices.push(10); //allowpee
+        choices.push(7); //nextstop
+    } else {
+        choices.push(8); //allowpee
     }
-    if (locstack[0] !== "solobar")
-        choices.push(11); //indepee
 
     return printChoicesList(curtext, choices, needs["preventpee"]);
 }
@@ -1598,10 +1535,7 @@ function wetherself2() {
     wetherpanties = 1;
     s(girltalk + embarquote[randcounter]);
     incrandom();
-    if (locstack[0] === "solobar")
-        c("wetherself3bg", "Continue ...");
-    else
-        c("wetherself3", "Continue ...");
+    c("wetherself3", "Continue ...");
 
 }
 
@@ -1676,14 +1610,6 @@ function wetherself3t() {
     attraction -= 20;
     c(locstack[0], "Continue ...");
 }
-
-//TODO this should probably be changed
-// Bar Girl wets herself
-function wetherself3bg() {
-    s(girltalk + "I'm <u>so</u> sorry ... I just couldn't hold it.");
-    c(locstack[0], "Continue ...");
-}
-
 
 function spurtedherself() {
     bladder -= 50;
@@ -1764,12 +1690,12 @@ function giveptowels() {
     c(locstack[0], "Continue ... ");
 }
 
+//TODO make this more pleasurable/more BDSM like scolding?
 function scoldher() {
     s("<b>YOU:</b> You're such a baby, wetting yourself like that!");
     s("She pouts and turns away from you.");
     s("Her face turns bright red and she begins to cry.");
     attraction -= 20;
-    c("comforther", "Apologize and comfort her");
     c("callherataxi", "Call her a cab");
 }
 
@@ -1818,11 +1744,7 @@ function wetyourself2() {
     s("You are helpless as your bladder uncontrollably empties itself.");
     s("Surely she can hear the hissing.");
     flushyourdrank();
-    if (locstack[0] === "solobar")
-        c("wetyourself3bg", "Continue ...");
-    else {
-        c(locstack[0], "Continue ...");
-    }
+    c(locstack[0], "Continue ...");
 }
 
 //You're in the make out spot
@@ -1867,12 +1789,6 @@ function wetyourself3t() {
     s("YOU: I'm <u>so</u> sorry... I just couldn't hold it.");
     s("The faint scent of your urine rises from the water.");
     s("YOU: I peed in the tub.");
-    c(locstack[0], "Continue ...");
-}
-
-//TODO determine if this is neccesarry for you
-function wetyourself3bg() {
-    s("YOU: I'm <u>so</u> sorry... I just couldn't hold it.");
     c(locstack[0], "Continue ...");
 }
 
