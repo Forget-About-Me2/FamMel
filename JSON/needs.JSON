@@ -134,7 +134,8 @@
     "Remind {0} you're paying her to hold it.",
     "Tell {0} you'll pay her to hold it.",
     "The pee hisses out and the glass is filled in no time. {0} bends over and jams her hand between her legs, gasping in the effort to stop the flow.",
-    "{0} puts herself back together, looking embarrassed."
+    "{0} puts herself back together, looking embarrassed.",
+    "The stream slows and finishes, and {0} lets out a sigh of relief."
   ],
   "holdit": {
     "dialogue": [
@@ -326,7 +327,13 @@
     "{0} I just can't hold it anymore. Give it here",
     "{0} But a vase? I can't! At least not yet",
     "{0} That's kind of gross!",
-    "{0} But in just a roll of towels? No way! At least not yet."
+    "{0} But in just a roll of towels? No way! At least not yet.",
+    "{0} Sure you're okay with it?",
+    "{0} I'll just wait, thank you very much.",
+    "{0} That feels <i>so</i> much better."
+  ],
+  "girlgasp": [
+    "{0} Ungh!  I can't hold it."
   ],
   "allowpee": [
     "<b>YOU:</b> Well, if you have to pee that bad, I guess you can go.",
@@ -374,6 +381,14 @@
     "The pee hisses out and is mostly absorbed by the paper towels, just a small trickle running down her left leg.",
     "She carefully sets to sopping wet roll of towels in a corner."
   ],
+  "peeintub": [
+    "girltalk20",
+    "girltalk21",
+    "girlgasp0",
+    "You nonchalantly move closer and slip your hand under her butt.  The strong stream of pee flows out between your fingers for nearly a minute, and you can detect the barest scent of urine rising from the hot water.  It feels strangely cool in the warm water of the tub.",
+    "girlname4",
+    "girltalk22"
+  ],
   "choices": [
     ["curloc", "Continue..."],
     ["indepee", "Continue..."],
@@ -390,6 +405,7 @@
     ["peevase2", "Continue..."],
     ["peevase3", "Continue..."],
     ["peetowels2", "Continue..."],
-    ["peetowels3", "Continue..."]
+    ["peetowels3", "Continue..."],
+    ["peeintub2", "Continue..."]
   ]
 }

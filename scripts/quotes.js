@@ -867,6 +867,7 @@ function needSetup(){
     needs = json;
     needs["girltalk"] = addGirlTalk(needs["girltalk"]);
     needs["girlname"] = addGirlname(needs["girlname"]);
+    needs["girlgasp"] = addGirlGasp(needs["girlgasp"]);
     needs["preventpee"] = replaceChoicesList(needs["preventpee"], "girlname", needs["girlname"]);
     needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
     needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
@@ -883,6 +884,11 @@ function needSetup(){
     needs["holdpurse"] = replaceWCLC(needs["holdpurse"], needs["girltalk"], "girltalk");
     needs["peeshot"] = replaceWCLC(needs["peeshot"], needs["girltalk"], "girltalk");
     needs["peeshot"] = replaceWCLC(needs["peeshot"], needs["girlname"], "girlname");
+    needs["peevase"] = replaceWCLC(needs["peevase"], needs["girltalk"], "girltalk");
+    needs["peevase"] = replaceWCLC(needs["peevase"], needs["girlname"], "girlname");
+    needs["peetowels"] = replaceWCLC(needs["peetowels"], needs["girltalk"], "girltalk");
+    needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girltalk"], "girltalk");
+    needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girlgasp"], "girlgasp");
 }
 
 //Girl curses

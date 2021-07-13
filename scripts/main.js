@@ -5,6 +5,11 @@ let playerbladder = 1; //Whether playerBladder has been enabled.
 let playerGame = 0; //Whether the playerBladder is enabled in the drinking game
 let statsBars; //JSON of the status bars depending on which setting has been chosen
 
+function range(start, end) {
+    if(start === end) return [start];
+    return [start, ...range(start + 1, end)];
+}
+
 //TODO this is called way too often
 //  Updates the information on the stats
 function displaystats() {
