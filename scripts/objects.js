@@ -29,7 +29,7 @@ objects = {
         "bpname":"Shotglass",
         "value": 0,
         "owned": "{0} shotglass{1}",
-        "description":"You can't quite recall why you though tit was a good idea to bring this glass to your date. " +
+        "description":"You can't quite recall why you thought it was a good idea to bring this glass to your date. " +
             "It can hold about 100ml, maybe it will be of use?"
     },
     "ptowels": {
@@ -42,7 +42,7 @@ objects = {
         "bpname":"Sexy panties",
         "value": 0,
         "owned": "{0} pair{1} of sexy panties",
-        "description":"Whoo, someone's a bit ambitious didn't they?"
+        "description":"Whoo, someone's a bit ambitious, aren't they?"
     },
     "champagne": {
         "bpname":"Champagne",
@@ -56,28 +56,31 @@ objects = {
     },
     "beer":{
         "bpname":"Beer",
-        "owned":0,
-        "description":"Don't question why you have an unprotected glass of beer in your backpack. "
+        "value":0,
+        "owned": "{0} bottle{1} of beer",
+        "description":"Beer is the route to every woman's heart. Or at least to the toilet."
     },
     "soda":{
         "bpname":"Soda",
-        "owned":0,
+        "owned": "{0} cup{1} of soda",
+        "value":0,
         "description":"A nice big cup of soda is all you need to stay hydrated."
     },
     "cocktail":{
         "bpname":"Cocktail",
-        "owned":0,
+        "owned": "{0} cocktail glass{1}",
+        "value":0,
         "description":"Hmmm, alcohol."
     },
     "herKeys":{
         "bpname": "Set of Keys",
-        "owned":0,
-        "description": "{0}'s keys which you stole from her earlier, maybe you should give them back?"
+        "value":0,
+        "description": "{0}'s keys which you stole earlier, maybe you should give them back?"
     },
     "herPhone":{
         "bpname":" A cellphone",
-        "owned":0,
-        "description": "{0},s phone you stole from her earlier, maybe you can crack the passcode or " +
+        "value":0,
+        "description": "{0}'s phone you stole earlier, maybe you can crack the passcode or " +
             "make some nice pictures?"
     }
 }
@@ -158,6 +161,8 @@ function displaypos(itemobj) {
     }
     return description;
 }
+
+
 
 function ypredrink() {
     let curtext = []
@@ -336,20 +341,43 @@ function backpack(){
         if (event.target === backpackcnt)
             backpackcnt.style.display = "none";
     }
-    itembtns = document.getElementsByClassName("itembtn");
-    itembtns.onclick = selectitem;
+    // itembtns = document.getElementsByClassName("itembtn");
+    // itembtns.onclick = selectitem;
     itemtext= document.getElementById("item-text");
 }
 
-
+//When an item is selected in the backpack print the info and related functions
 function selectitem(selecteditem){
     const clickedbtn = document.getElementById(selecteditem);
+    const clickedObj = objects[selecteditem];
     clickedbtn.style.backgroundColor = "#4bb6c3";
     clickedbtn.style.color = "#e52222";
     if (previousbtn)
         previousbtn.removeAttribute("style");
-    itemtext.innerText="You chose " + selecteditem;
+    let tobeprinted = "<p class='title'>"+ clickedObj.bpname +"</p>";
+    if(clickedObj.owned)
+        tobeprinted += "<b><i>You have " + getOwned(clickedObj) + "</i></b><br><br>";
+    tobeprinted += clickedObj.description.format([girlname]);
+    itemtext.innerHTML= tobeprinted;
     previousbtn = clickedbtn;
+}
 
-
+//Returns text saying how much you own of an item.
+function getOwned(selected) {
+    let number = selected.value;
+    let description = ""
+    description += selected.owned;
+    let formatlist = [number.toString()];
+    if (number > 1){
+        if (description.includes("glass")) formatlist.push("es");
+        else formatlist.push("s");
+    } else formatlist.push("");
+    if (selected.hasOwnProperty("options")){
+        if (champagnecounter > 0){
+            if (champagnecounter < 6) formatlist.push(selected.options[0]);
+            else formatlist.push(selected.options[1]);
+        } else if (champagnecounter === 0) formatlist.push("");
+    }
+    description = description.format(formatlist);
+    return description;
 }
