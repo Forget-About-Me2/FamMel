@@ -155,6 +155,15 @@ function youbathroomlocked(curtext) {
     return curtext;
 }
 
+//TODO make this more fancy
+function youbegtoilet(curtext) {
+    curtext.push(ypeelines["beg"][0]);
+    if (shotglass > 0) curtext = callChoice(ypeelines["beg"][1][0], curtext);
+    if (vase > 0) curtext = callChoice(ypeelines["beg"][1][1], curtext);
+    curtext = callChoice(ypeelines["beg"][1][2], curtext);
+    return curtext;
+}
+
 function displayyourneed(curtext) {
     if (yourbladder >= yourbladlose && !holdself) {
         curtext.push(pickrandom(yneeds["burst"]));

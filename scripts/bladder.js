@@ -115,8 +115,6 @@ function flushdrank() {
     bribeaskthresh = 8;
 }
 
-
-
 // Showneed calculates how she's going to indicate
 // her current level of need ( if at all ) based on her situation
 function showneed(curtext) {
@@ -228,7 +226,6 @@ function displaygottavoc(curtext, index) {
     return curtext;
 }
 
-
 // Publish a note about her holding it for you.
 // Depends on whether you asked her to hold it,
 // and emergency bladder state
@@ -308,8 +305,6 @@ function indepee(curtext=[], called=false) {
         sayText(curtext);
 }
 
-
-
 //TODO your and her bathroomlocked can probably be intertwened, only difference is start and the locked variable
 function bathroomlocked(curtext) {
     const locked = peelines["locked"]
@@ -343,11 +338,9 @@ function bathroomlocked(curtext) {
             curtext.push(locked["cclub"][3]);
         }
     }
-
     rrlockedflag++; //Increase how often she tried
     curtext = displayneed(curtext);
     return curtext;
-
 }
 
 //  Displayneed function prints a relatively random
@@ -391,13 +384,247 @@ function displayneed(curtext) {
     return curtext;
 }
 
-//TODO make this more fancy
-function youbegtoilet(curtext) {
-    curtext.push(ypeelines["beg"][0]);
-    if (shotglass > 0) curtext = callChoice(ypeelines["beg"][1][0], curtext);
-    if (vase > 0) curtext = callChoice(ypeelines["beg"][1][1], curtext);
-    curtext = callChoice(ypeelines["beg"][1][2], curtext);
+//TODO add extra options like pee outside
+//TODO make responses more realisitc
+//TODO don't take her purse in certian situations
+//TODO test
+function askpee() {
+    let curtext = [needs["askpee"][0]];
+    // s("<b>YOU:</b> Do you need to pee?");
+    if (shyness > 60) curtext.push(needs["askpee"][1]);
+    else curtext.push(needs["askpee"][2]);
+    // if (shyness > 60) s(girlname + " blushes.");
+    // else s(girltalk + "...");
+
+    if (bladder > bladneed && bladder < blademer)
+        curtext.push(needs["askpee"][3]);
+        // s("She seems to be considering the matter...");
+
+    if (((shyness < 50 && bladder > bladneed) ||
+        bladder > blademer) &&
+        (locstack[0] !== "drinkinggame" && !externalflirt)) {
+        curtext = displaygottavoc(curtext);
+        curtext = interpbladder(curtext);
+        curtext = showneed(curtext);
+        curtext = printChoicesList(curtext, [22], needs["choices"]);
+        // c("pstory", "Ask her if she's ever wet herself.");
+        curtext = preventpee(curtext);
+    } else {
+        curtext.push(girltalk + pickrandom(needs["deny"]));
+        // s(girltalk + denyquotes[randcounter]);
+        curtext = displayneed(curtext);
+        curtext = interpbladder(curtext);
+        curtext = printChoicesList(curtext, [0], needs["choices"]);
+        // c(locstack[0], "Continue...");
+    }
+    sayText(curtext);
+}
+
+//TODO make her less demanding
+function preventpee(curtext) {
+
+    // If she's not in obviously dire straits, your
+    // admonitions, whatever they are, will effectly
+    // have answered her request to pee.  So the flag
+    // will be cleared.
+
+    let choices = [1, 9] // This keeps track of the options you can choose from so they can be printed at the end
+
+    if (bladder < bladlose - 50)
+        gottagoflag = 0;
+
+    if (locstack[0] === "dodance")
+        choices.push(2); //Pee together
+    if (locstack[0] === "darkbar" || locstack[0] === "darkmovie" || locstack[0] === "darkclub")
+        choices.push(3); //Watch
+    if (locstack[0] === "darkmovie")
+        choices.push(4); //No restroom
+    if (locstack[0] === "darkbar")
+        choices.push(5); //pdrinkinggame
+    if (locstack[0] === "darkclub")
+        choices.push(6); //pphotegame
+    if (locstack[0] === "driveout") {
+        choices.push(7); //nextstop
+    } else {
+        choices.push(8); //allowpee
+    }
+
+    return printChoicesList(curtext, choices, needs["preventpee"]);
+}
+
+//
+//  Ask her to hold it in.
+//
+//TODO fix it that if you are at her place after you asked her and she doesn't have to go you always fail
+function holdit() {
+    let curtext = [];
+    curtext.push(pickrandom(needs["askhold"]));
+    gottagoflag = 0;
+    waitcounter = 6;
+    if ((bladder >= bladlose && attraction > holditlosethresh) ||
+        (bladder >= blademer && attraction > holditemerthresh) ||
+        (bladder >= bladneed && attraction > holditneedthresh)) {
+        if (bladder >= blademer) {
+            curtext.push(girltalk + pickrandom(needs["surpriseexcl"])); //TODO this shouldn't be allowed
+            if (randomchoice(5))
+                curtext = displaydrank(curtext);
+            else
+                curtext = displaywaited(curtext);
+            curtext.push(needs["holdit"]["dialogue"][0]); //She's not sure, you have to convince her
+            if (locstack[0] !== "gostore") curtext = displayneed(curtext);
+            else curtext = displaygottavoc(curtext);
+            curtext = convinceher(curtext);
+        } else {
+            curtext = displayholdquip(curtext);
+            askholditcounter++;
+            if (bladder >= bladlose) {
+                if (locstack[0] === "gostore") {
+                    //TODO maybe put in one thing to print all lines
+                    curtext.push(needs["holdit"]["dialogue"][1]);
+                    curtext.push(needs["holdit"]["dialogue"][2]);
+                    curtext.push(needs["holdit"]["dialogue"][3]); //She's wetting herself over the phone
+                    bladder = 0;
+                    waitcounter = 0;
+                    askholditcounter = 0;
+                    attraction = 0;
+                } else {
+                    curtext = displayneed(curtext);
+                }
+            }
+            curtext = callChoice(needs["choices"][0], curtext);
+        }
+    } else {
+        if (locstack[0] === "gostore") {
+            curtext.push(needs["holdit"]["dialogue"][4]);
+            curtext.push(needs["holdit"]["dialogue"][5]);
+            //She's not holding it while on the phone
+            attraction -= 5;
+            bladder = 0;
+            curtext = callChoice(needs["choices"][0], curtext);
+        } else {
+            curtext.push(needs["holdit"]["dialogue"][6]);
+            // she's not holding it for you
+            attraction -= 5;
+            curtext = indepee(curtext, true);
+        }
+    }
+    sayText(curtext);
+}
+//  DisplayHoldQuip function prints a quasi-random quip from "+girlname+"
+//  saying she's going to try to hold it for you.
+function displayholdquip(curtext) {
+    //TODO is the noneed ever used?
+    //TODO test
+    let need = "noneed" //How full her bladder is influences what she says
+    if (bladder >= bladlose)
+        need = "lose";
+    // s(girltalk + quiplose[randcounter]);
+    else if (bladder >= blademer)
+        need = "emer"
+    // s(girltalk + quipemer[randcounter]);
+    else if (bladder >= bladneed)
+        need = "need"
+    // s(girltalk + quipneed[randcounter]);
+    else if (bladder >= bladurge)
+        need = "urge";
+    // s(girltalk + quipurge[randcounter]);
+    curtext.push(girltalk + pickrandom(needs["holdquip"][need]));
     return curtext;
+}
+
+//TODO test
+function askcanhold() {
+    let curtext = needs["askcanhold"];
+    // s("<b>YOU:</b> How are you doing?  Can you still hold it?");
+    let needType = "holdokay";
+    if (bladder >= bladlose) needType = "holdlose";
+    else if (bladder >= blademer) needType = "holdemer";
+    else if (bladder >= bladneed) needType = "holdneed";
+    else if (bladder >= bladurge) needType = "holdurge";
+    curtext.push(girltalk + pickrandom(needs[needType]));
+    // if (bladder >= bladlose) s(girltalk + holdlosequotes[randcounter]);
+    // else if (bladder >= blademer) s(girltalk + holdemerquotes[randcounter]);
+    // else if (bladder >= bladneed) s(girltalk + holdneedquotes[randcounter]);
+    // else if (bladder >= bladurge) s(girltalk + holdurgequotes[randcounter]);
+    // else s(girltalk + holdokayquotes[randcounter]);
+    curtext = interpbladder(curtext);
+    curtext = printChoicesList(curtext, [0], needs["choices"]);
+    // c(locstack[0], "Continue...");
+    sayText(curtext);
+}
+
+let toldstories = range(0, needs["peestory"].length);
+let lastStory;
+//TODO test
+function pstory() {
+    let curtext = [needs["pstory"][0]];
+    // s("<b>You ask her:</b> have you ever waited too long?");
+    curtext = displayneed(curtext);
+    // If all stories have been visited reset the list,
+    // filter out the last one to prevent the same story being told twice in a row
+    if (toldstories.length === 0)
+        toldstories.remove(toldstories.indexOf(lastStory));
+    lastStory = pickrandom(toldstories);
+    toldstories.remove(toldstories.indexOf(lastStory));
+    curtext.push(needs["peestory"][lastStory]);
+    // s(girltalk + peestory[pstorycounter]);
+    // oldpstorycounter = pstorycounter;
+    // pstorycounter++;
+    // if (pstorycounter > maxpstory) pstorycounter = 0;
+    curtext = printChoicesList(curtext, [0, 23], needs["choices"]);
+    // c("pstory2", "Ask her what happened.");
+    // c(locstack[0], "Continue...");
+    sayText(curtext);
+}
+
+//TODO test
+function pstory2() {
+    let curtext = printListSelection([], needs["pstory"], [1,2])
+    // s("<b>You ask her:</b> so... did you make it?");
+    // s(girlname + " blushes and looks down at her feet.");
+    // s(girltalk + peestory2[oldpstorycounter]);
+    curtext.push(needs["peestory2"][lastStory]);
+    curtext = displayneed(curtext);
+    curtext = printChoicesList(curtext, [0], needs["choices"]);
+    // c(locstack[0], "Continue...");
+    sayText(curtext);
+}
+
+// If she begs you, you end up not leaving the venue.
+function begtoilet(curtext) {
+    //TODO mention having peed outside before? / autonomously choose that
+    //TODO test
+    let selection = [0];
+    // s(girlname + " looks intently into your eyes:");
+    if (peedvase)
+        selection.push(1);
+    // s("I've absolutely got to go.  I <i>need</i> your vase again. <b>NOW!</b>");
+    else if (peedshot)
+        selection.push(2);
+    // s("I'm gonna pee myself!  I <i>need</i> that shot glass again. <b>NOW!</b>");
+    else if (peedtowels)
+        selection.push(3);
+    // s("I just <b>can't</b> hold it - you don't have any more paper towels, do you?");
+    else
+        selection.push(4);
+    // s("I'm <i>begging</i> you - find me somewhere to pee.  <b>NOW!</b>");
+    printListSelection(curtext, needs["begtoilet"]["dialogue"], selection);
+    selection = [];
+    if (shotglass > 0)
+        selection.push(0);
+    // c("peeshot", "Offer her the shot glass.");
+    if (ptowels > 0)
+        selection.push(1);
+    // c("peetowels", "Offer her the roll of paper towels.");
+    if (vase > 0)
+        selection.push(2);
+    // c("peevase", "Offer her the vase.");
+    if (locstack[0] === "themakeout")
+        selection.push(3);
+    // c("peeoutside", "Suggest she pee outside.");
+    selection.push(4);
+    return printChoicesList(curtext, selection, needs["begtoilet"]["choices"]);
+    // c(locstack[0], "Stand by helplessly.");
 }
 
 //
@@ -528,66 +755,7 @@ function bribefavor() {
     curtext = interpbladder(curtext);
     owedfavor -= 1;
     askholditcounter++;
-    curtext = printChoicesList(curtext, [0],  needs["choices"]);
-    sayText(curtext);
-}
-
-//
-//  Ask her to hold it in.
-//
-//TODO fix it that if you are at her place after you asked her and she doesn't have to go you always fail
-function holdit() {
-    let curtext = [];
-    curtext.push(pickrandom(needs["askhold"]));
-    gottagoflag = 0;
-    waitcounter = 6;
-    if ((bladder >= bladlose && attraction > holditlosethresh) ||
-        (bladder >= blademer && attraction > holditemerthresh) ||
-        (bladder >= bladneed && attraction > holditneedthresh)) {
-        if (bladder >= blademer) {
-            curtext.push(girltalk + pickrandom(needs["surpriseexcl"])); //TODO this shouldn't be allowed
-            if (randomchoice(5))
-                curtext = displaydrank(curtext);
-            else
-                curtext = displaywaited(curtext);
-            curtext.push(needs["holdit"]["dialogue"][0]); //She's not sure, you have to convince her
-            if (locstack[0] !== "gostore") curtext = displayneed(curtext);
-            else curtext = displaygottavoc(curtext);
-            curtext = convinceher(curtext);
-        } else {
-            curtext = displayholdquip(curtext);
-            askholditcounter++;
-            if (bladder >= bladlose) {
-                if (locstack[0] === "gostore") {
-                    //TODO maybe put in one thing to print all lines
-                    curtext.push(needs["holdit"]["dialogue"][1]);
-                    curtext.push(needs["holdit"]["dialogue"][2]);
-                    curtext.push(needs["holdit"]["dialogue"][3]); //She's wetting herself over the phone
-                    bladder = 0;
-                    waitcounter = 0;
-                    askholditcounter = 0;
-                    attraction = 0;
-                } else {
-                    curtext = displayneed(curtext);
-                }
-            }
-            curtext = callChoice(needs["choices"][0], curtext);
-        }
-    } else {
-        if (locstack[0] === "gostore") {
-            curtext.push(needs["holdit"]["dialogue"][4]);
-            curtext.push(needs["holdit"]["dialogue"][5]);
-            //She's not holding it while on the phone
-            attraction -= 5;
-            bladder = 0;
-            curtext = callChoice(needs["choices"][0], curtext);
-        } else {
-            curtext.push(needs["holdit"]["dialogue"][6]);
-            // she's not holding it for you
-            attraction -= 5;
-            curtext = indepee(curtext, true);
-        }
-    }
+    curtext = printChoicesList(curtext, [0], needs["choices"]);
     sayText(curtext);
 }
 
@@ -911,244 +1079,131 @@ function peeintub2() {
 //TODO do something if you peed outside already(mention to follow your lead)
 //TODO she pees outside if she's not bursting
 //TODO fix the duplicate code
+//TODO test
 function peeoutside() {
+    let curtext = [];
     if (attraction > 30) {
         if (bladder > blademer) {
             if (peedoutside)
-                s(girltalk + "I'm so embarrassed to have to pee outside again.");
+                curtext.push(needs["peeoutside"][0]);
+                // s(girltalk + "I'm so embarrassed to have to pee outside again.");
             else
-                s(girltalk + "That's pretty daring.  I've never gone outside before.");
-            s(girltalk + "But I'm about to wet my panties if I don't go somewhere!");
-            s(girltalk + "I can't hold it!  What am I gonna do???");
-            displayneed();
-            if (locstack[0] === "themakeout") c("peeoutside2", "Continue...");
-            else c("peeoutside2b", "Continue...");
-
+                curtext.push(needs["peeoutside"][1]);
+                // s(girltalk + "That's pretty daring.  I've never gone outside before.");
+            curtext = printListSelection(curtext, needs["peeoutside"], [2,3]);
+            // s(girltalk + "But I'm about to wet my panties if I don't go somewhere!");
+            // s(girltalk + "I can't hold it!  What am I gonna do???");
+            curtext = displayneed(curtext);
+            let choices = [];
+            if (locstack[0] === "themakeout") choices.push(17);
+            else choices.push(18);
+            // if (locstack[0] === "themakeout") c("peeoutside2", "Continue...");
+            // else c("peeoutside2b", "Continue...");
+            curtext = printChoicesList(curtext, choices, needs["choices"]);
         } else {
-            displaygottavoc();
-            s(girltalk + "But I can't just go outside!");
-            s(girltalk + "At least not yet.");
-            displayholdquip();
+            curtext = displaygottavoc(curtext);
+            curtext = printListSelection(curtext, needs["peeoutside"], [4,5]);
+            // s(girltalk + "But I can't just go outside!");
+            // s(girltalk + "At least not yet.");
+            curtext = displayholdquip(curtext);
             gottagoflag = 0;
-            c(locstack[0], "Continue...");
+            curtext = printChoicesList(curtext, [0], needs["choices"]);
+            // c(locstack[0], "Continue...");
         }
     } else {
         //TODO this code is almost impossible to reach? since you need at least 40 attraction to get outside
-        s(girltalk + "Pee outside?  No way am I exposing my privates to the whole world!");
+        curtext.push(needs["peeoutisde"][6]);
+        // s(girltalk + "Pee outside?  No way am I exposing my privates to the whole world!");
         attraction -= 3;
         if (attraction < 0) attraction = 0;
-        c(locstack[0], "Continue...");
+        curtext = printChoicesList(curtext, [0], needs["choices"]);
+        // c(locstack[0], "Continue...");
     }
+    sayText(curtext);
 }
 
 // In the car
+//TODO test
 function peeoutside2() {
-    if (pantycolor !== "none") s(peeoutsidequote);
-    else s(peeoutsidequotebare);
-    s(girltalk + "Are you sure it's safe?");
-    c("peeoutside3", "Continue...");
+    let curtext = [];
+    if (pantycolor !== "none") curtext.push(appearance["peeoutsidequote"]);
+    else curtext.push(appearance["peeoutsidequotebare"]);
+    // if (pantycolor !== "none") s(peeoutsidequote);
+    // else s(peeoutsidequotebare);
+    curtext.push(needs["peeoutside"][7]);
+    // s(girltalk + "Are you sure it's safe?");
+    curtext = printChoicesList(curtext, [19], needs["choices"]);
+    // c("peeoutside3", "Continue...");
+    sayText(curtext);
 }
 
 // Not in the car
+//TODO test
 function peeoutside2b() {
-    if (pantycolor !== "none") s(peeoutsidebquote);
-    else s(peeoutsidebquotebare);
+    let curtext = [];
+    if (pantycolor !== "none") curtext.push(appearance["peeoutsidebquote"]);
+    else curtext.push(appearance["peeoutsidebquotebare"]);
+    // if (pantycolor !== "none") s(peeoutsidebquote);
+    // else s(peeoutsidebquotebare);
     s(girltalk + "Are you sure it's safe?");
-    if (locstack[0] === "thebeach") c("peeoutside3c", "Continue...");
-    else c("peeoutside3b", "Continue...");
+    curtext.push(needs["peeoutside"][7]);
+    let choices = [];
+    if (locstack[0] === "thebeach") choices.push(20);
+    else choices.push(21);
+    // if (locstack[0] === "thebeach") c("peeoutside3c", "Continue...");
+    // else c("peeoutside3b", "Continue...");
+    curtext = printChoicesList(curtext, choices, needs["choices"]);
+    sayText(curtext);
 }
 
 // She was in the car
+//TODO test
 function peeoutside3() {
-    itscomingout();
-    s("You try to be nonchalant as you stare, and she doesn't seem to notice.  The pee hisses out from between her smooth thighs for nearly a minute, and runs in a stream under the car.  You can smell her scent as steam rises from the hot river.");
-    //TODO attraction goes down?
-    attraction -= 3;
+    let curtext = itscomingout([]);
+    curtext = printListSelection(curtext, needs["peeoutside"], range(8,10));
+    // s("You try to be nonchalant as you stare, and she doesn't seem to notice.  The pee hisses out from between her smooth thighs for nearly a minute, and runs in a stream under the car.  You can smell her scent as steam rises from the hot river.");
+    attraction += 3;
     flushdrank();
     peedoutside = 1;
     sawherpee = 1;
-    c(locstack[0], "Continue...");
+    curtext = printChoicesList(curtext, [0], needs["choices"]);
+    // c(locstack[0], "Continue...");
+    sayText(curtext);
 }
 
 //  Again, she's not in the car
+//TODO test
 function peeoutside3b() {
-    s(girltalk + "Oh!  Don't look!  It's coming!");
-    s("You nonchalantly move closer and watch as the pee hisses out from between her delicate pussy lips for nearly a minute, and runs in a stream along the ground.  You can smell her scent as steam rises from the hot river and she sighs in relief.");
-    s(girltalk + "That's so much better.");
-    s("She seems aroused as she gets back up.");
-    //TODO attraction goes down?
-    attraction -= 3;
+    let curtext = itscomingout([]);
+    curtext = printListSelection(curtext, needs["peeoutside"], range(11,13));
+    // s("You nonchalantly move closer and watch as the pee hisses out from between her delicate pussy lips for nearly a minute, and runs in a stream along the ground.  You can smell her scent as steam rises from the hot river and she sighs in relief.");
+    // s(girltalk + "That's so much better.");
+    // s("She seems aroused as she gets back up.");
+    attraction += 3;
     flushdrank();
     peedoutside = 1;
     sawherpee = 1;
-    c(locstack[0], "Continue...");
+    curtext = printChoicesList(curtext, [0], needs["choices"]);
+    // c(locstack[0], "Continue...");
+    sayText(curtext);
 }
 
 //  Pee on the beach
+//TODO test
 function peeoutside3c() {
-    itscomingout();
-    s("You nonchalantly move closer and watch as the pee hisses out from between her delicate pussy lips for nearly a minute, soaking quickly into the sand and turning it dark.  You can smell her scent and hear the hiss of the urine hitting the sand and she sighs orgasimcally.");
-    s(girltalk + "That's <b>so</b> much better.  I was dying!");
-    s("She seems aroused as she gets back up.");
-    //TODO attraction goes down?
-    attraction -= 3;
+    let curtext = itscomingout([]);
+    curtext = printListSelection(curtext, needs["peeoutside"], range(14,16));
+    // s("You nonchalantly move closer and watch as the pee hisses out from between her delicate pussy lips for nearly a minute, soaking quickly into the sand and turning it dark.  You can smell her scent and hear the hiss of the urine hitting the sand and she sighs orgasimcally.");
+    // s(girltalk + "That's <b>so</b> much better.  I was dying!");
+    // s("She seems aroused as she gets back up.");
+    attraction += 3;
     flushdrank();
     peedoutside = 1;
     sawherpee = 1;
-    c(locstack[0], "Continue...");
+    curtext = printChoicesList(curtext, [0], needs["choices"]);
+    // c(locstack[0], "Continue...");
+    sayText(curtext);
 }
-
-//  DisplayHoldQuip function prints a quasi-random quip from "+girlname+"
-//  saying she's going to try to hold it for you.
-function displayholdquip(curtext) {
-    //TODO is the noneed ever used?
-    //TODO test
-    let need = "noneed" //How full her bladder is influences what she says
-    if (bladder >= bladlose)
-        need = "lose";
-        // s(girltalk + quiplose[randcounter]);
-    else if (bladder >= blademer)
-        need = "emer"
-        // s(girltalk + quipemer[randcounter]);
-    else if (bladder >= bladneed)
-        need = "need"
-        // s(girltalk + quipneed[randcounter]);
-    else if (bladder >= bladurge)
-        need = "urge";
-        // s(girltalk + quipurge[randcounter]);
-    curtext.push(girltalk + pickrandom(needs["holdquip"][need]));
-    return curtext;
-}
-
-// If she begs you, you end up not leaving the venue.
-function begtoilet(curtext) {
-    //TODO mention having peed outside before? / autonomously choose that
-    //TODO test
-    let selection = [0];
-    // s(girlname + " looks intently into your eyes:");
-    if (peedvase)
-        selection.push(1);
-        // s("I've absolutely got to go.  I <i>need</i> your vase again. <b>NOW!</b>");
-    else if (peedshot)
-        selection.push(2);
-        // s("I'm gonna pee myself!  I <i>need</i> that shot glass again. <b>NOW!</b>");
-    else if (peedtowels)
-        selection.push(3);
-        // s("I just <b>can't</b> hold it - you don't have any more paper towels, do you?");
-    else
-        selection.push(4);
-        // s("I'm <i>begging</i> you - find me somewhere to pee.  <b>NOW!</b>");
-    printListSelection(curtext, needs["begtoilet"]["dialogue"], selection);
-    selection = [];
-    if (shotglass > 0)
-        selection.push(0);
-        // c("peeshot", "Offer her the shot glass.");
-    if (ptowels > 0)
-        selection.push(1);
-        // c("peetowels", "Offer her the roll of paper towels.");
-    if (vase > 0)
-        selection.push(2);
-        // c("peevase", "Offer her the vase.");
-    if (locstack[0] === "themakeout")
-        selection.push(3);
-        // c("peeoutside", "Suggest she pee outside.");
-    selection.push(4);
-    return printChoicesList(curtext, selection, needs["begtoilet"]["choices"]);
-    // c(locstack[0], "Stand by helplessly.");
-}
-
-
-//TODO add extra options like pee outside
-//TODO make responses more realisitc
-//TODO don't take her purse in certian situations
-function askpee() {
-    s("<b>YOU:</b> Do you need to pee?");
-
-    if (shyness > 60) s(girlname + " blushes.");
-    else s(girltalk + "...");
-
-    if (bladder > bladneed && bladder < blademer)
-        s("She seems to be considering the matter...");
-
-    if (((shyness < 50 && bladder > bladneed) ||
-        bladder > blademer) &&
-        (locstack[0] !== "drinkinggame" && !externalflirt)) {
-        displaygottavoc();
-        interpbladder();
-        showneed();
-        c("pstory", "Ask her if she's ever wet herself.");
-        preventpee();
-    } else {
-        s(girltalk + denyquotes[randcounter]);
-        displayneed();
-        interpbladder();
-        c(locstack[0], "Continue...");
-    }
-}
-
-function askcanhold() {
-    s("<b>YOU:</b> How are you doing?  Can you still hold it?");
-    if (bladder >= bladlose) s(girltalk + holdlosequotes[randcounter]);
-    else if (bladder >= blademer) s(girltalk + holdemerquotes[randcounter]);
-    else if (bladder >= bladneed) s(girltalk + holdneedquotes[randcounter]);
-    else if (bladder >= bladurge) s(girltalk + holdurgequotes[randcounter]);
-    else s(girltalk + holdokayquotes[randcounter]);
-    incrandom();
-    interpbladder();
-    c(locstack[0], "Continue...");
-}
-
-function pstory() {
-    s("<b>You ask her:</b> have you ever waited too long?");
-    displayneed();
-    s(girltalk + peestory[pstorycounter]);
-    oldpstorycounter = pstorycounter;
-    pstorycounter++;
-    if (pstorycounter > maxpstory) pstorycounter = 0;
-    c("pstory2", "Ask her what happened.");
-    c(locstack[0], "Continue...");
-}
-
-function pstory2() {
-    s("<b>You ask her:</b> so... did you make it?");
-    s(girlname + " blushes and looks down at her feet.");
-    s(girltalk + peestory2[oldpstorycounter]);
-    displayneed();
-    c(locstack[0], "Continue...");
-}
-
-//TODO make her less demanding
-function preventpee(curtext) {
-
-    // If she's not in obviously dire straits, your
-    // admonitions, whatever they are, will effectly
-    // have answered her request to pee.  So the flag
-    // will be cleared.
-
-    let choices = [1, 9] // This keeps track of the options you can choose from so they can be printed at the end
-
-    if (bladder < bladlose - 50)
-        gottagoflag = 0;
-
-    if (locstack[0] === "dodance")
-        choices.push(2); //Pee together
-    if (locstack[0] === "darkbar" || locstack[0] === "darkmovie" || locstack[0] === "darkclub")
-        choices.push(3); //Watch
-    if (locstack[0] === "darkmovie")
-        choices.push(4); //No restroom
-    if (locstack[0] === "darkbar")
-        choices.push(5); //pdrinkinggame
-    if (locstack[0] === "darkclub")
-        choices.push(6); //pphotegame
-    if (locstack[0] === "driveout") {
-        choices.push(7); //nextstop
-    } else {
-        choices.push(8); //allowpee
-    }
-
-    return printChoicesList(curtext, choices, needs["preventpee"]);
-}
-
 
 //TODO chance with triggering each other into wetting when desperate
 //TODO it's impossible to spurt more than once while it shouldn't be

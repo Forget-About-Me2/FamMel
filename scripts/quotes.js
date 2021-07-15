@@ -334,82 +334,88 @@ var needquotes=["I've gotta pee pretty badly.","I need to visit the little girls
 
 var urgequotes=["I'm going to want to go and pee soon.","I think my bladder is getting full.","I might have to stop at the restoom before too long.","I guess I'll need to freshen up next.","I'd better go powder my nose soon.","I'd like to stop by the restroom in the next little bit."];
 
-var denyquotes=["I'm fine, thanks for asking.", "No, thanks.  I'm okay.", "Nope - not at all.", "I'm alright.  It's nice of you to ask.", "I'm great, thanks.", "I'm okay, thanks for asking."];
-
+// var denyquotes=[
+//     "I'm fine, thanks for asking.",
+//     "No, thanks.  I'm okay.",
+//     "Nope - not at all.",
+//     "I'm alright.  It's nice of you to ask.",
+//     "I'm great, thanks.",
+//     "I'm okay, thanks for asking."];
 //
-//  from the holding game,
-//  she doesn't know how much longer she can hold it
+// //
+// //  from the holding game or when asking how she is doing,
+// //  she doesn't know how much longer she can hold it
+// //
+// var holdlosequotes=["I can't hold it anymore!",
+//     "I can't control it any longer!",
+//     "I can't wait any more!",
+//     "I'm losing control!",
+//     "I can't stop it!",
+//     "It's coming out!"];
+// var holdemerquotes=["I don't think I can hold it much longer.",
+//     "I don't know if I can control it much longer.",
+//     "I don't think I can last much longer.",
+//     "I don't know if I can control it much longer.",
+//     "I can't control my bladder much longer.",
+//     "I'm not going to be able to hold it too much longer."];
+// var holdneedquotes=["I think I can hold it a little longer.",
+//     "I can control it for just a little longer.",
+//     "I'll be okay for a little bit.",
+//     "I think I can wait just a little while.",
+//     "I think I'll be okay for a little bit.",
+//     "I'm not sure, but I can probably last a little longer."];
+// var holdurgequotes=["I have to go, but I can hold it.",
+//     "I can control myself for a while",
+//     "I can wait.",
+//     "It's not an emergency.  I can hold it.",
+//     "I'll be fine for a while.",
+//     "I'll be okay for a bit."];
+// var holdokayquotes=["I don't even feel the slightest need to go.",
+//     "I don't have to pee at all.",
+//     "My bladder's not even a little bit full.",
+//     "I don't need to pee yet.",
+//     "I'm prefectly fine.",
+//     "I don't need to go at all."];
 //
-var holdlosequotes=["I can't hold it anymore!",
-    "I can't control it any longer!",
-    "I can't wait any more!",
-    "I'm losing control!",
-    "I can't stop it!",
-    "It's coming out!"];
-var holdemerquotes=["I don't think I can hold it much longer.",
-    "I don't know if I can control it much longer.",
-    "I don't think I can last much longer.",
-    "I don't know if I can control it much longer.",
-    "I can't control my bladder much longer.",
-    "I'm not going to be able to hold it too much longer."];
-var holdneedquotes=["I think I can hold it a little longer.",
-    "I can control it for just a little longer.",
-    "I'll be okay for a little bit.",
-    "I think I can wait just a little while.",
-    "I think I'll be okay for a little bit.",
-    "I'm not sure, but I can probably last a little longer."];
-var holdurgequotes=["I have to go, but I can hold it.",
-    "I can control myself for a while",
-    "I can wait.",
-    "It's not an emergency.  I can hold it.",
-    "I'll be fine for a while.",
-    "I'll be okay for a bit."];
-var holdokayquotes=["I don't even feel the slightest need to go.",
-    "I don't have to pee at all.",
-    "My bladder's not even a little bit full.",
-    "I don't need to pee yet.",
-    "I'm prefectly fine.",
-    "I don't need to go at all."];
-
+// //
+// //  She responds to your request to hold it positively.
+// //  for displayholdquip()
+// //
 //
-//  She responds to your request to hold it positively.
-//  for displayholdquip()
+// var quiplose=[
+//     "I've never in my life had to go so bad, but I'll try to hold it for you.",
+//     "I <i>can't</i> wait - but I'm trying as hard as I can.",
+//     "I'm trying to control it.  I'm trying to control...",
+//     "I can feel it coming out, but I'm holding as hard as I can.",
+//     "God! Don't pee!  Don't pee! Don't pee!",
+//     "It's pulsing! Gotta hold!  Gotta hold!"
+// ];
 //
-
-var quiplose=[
-    "I've never in my life had to go so bad, but I'll try to hold it for you.",
-    "I <i>can't</i> wait - but I'm trying as hard as I can.",
-    "I'm trying to control it.  I'm trying to control...",
-    "I can feel it coming out, but I'm holding as hard as I can.",
-    "God! Don't pee!  Don't pee! Don't pee!",
-    "It's pulsing! Gotta hold!  Gotta hold!"
-];
-
-var quipemer=[
-    "I'm desperate here, but I'll try to hold on.",
-    "I'll try to wait, but I <b><i>really</i></b> need to go.",
-    "I don't know how much longer I can wait, but I'm trying.",
-    "I don't think I can hold it much longer, but I'm trying.",
-    "I don't think I've had to go this bad in a long time, but I'm gonna hold it.",
-    "I'll try to control my bladder for you."
-];
-
-var quipneed=[
-    "I've gotta go soon, but I'll wait.",
-    "I can wait a little bit ... I guess.",
-    "I'm awfully full, but I can hold it.",
-    "I don't want to explode my bladder, but I'll wait.",
-    "I can hold it... I think.",
-    "I need to go, but I've held it longer than this before."];
-
-var quipurge=[
-    "I don't have to go very bad yet.  I can wait.",
-    "I don't really need to pee that bad yet.",
-    "I'm fine.  I can hold it.",
-    "I've held it longer lots of times.",
-    "I don't need the little girls room yet - I can wait.",
-    "No problem.  I'll hold it."
-];
+// var quipemer=[
+//     "I'm desperate here, but I'll try to hold on.",
+//     "I'll try to wait, but I <b><i>really</i></b> need to go.",
+//     "I don't know how much longer I can wait, but I'm trying.",
+//     "I don't think I can hold it much longer, but I'm trying.",
+//     "I don't think I've had to go this bad in a long time, but I'm gonna hold it.",
+//     "I'll try to control my bladder for you."
+// ];
+//
+// var quipneed=[
+//     "I've gotta go soon, but I'll wait.",
+//     "I can wait a little bit ... I guess.",
+//     "I'm awfully full, but I can hold it.",
+//     "I don't want to explode my bladder, but I'll wait.",
+//     "I can hold it... I think.",
+//     "I need to go, but I've held it longer than this before."];
+//
+// var quipurge=[
+//     "I don't have to go very bad yet.  I can wait.",
+//     "I don't really need to pee that bad yet.",
+//     "I'm fine.  I can hold it.",
+//     "I've held it longer lots of times.",
+//     "I don't need the little girls room yet - I can wait.",
+//     "No problem.  I'll hold it."
+// ];
 
 //
 //  She's embarassed she couldn't hold it.
@@ -464,25 +470,25 @@ var sayhero=["You are my <b>hero</b>!","I thank you, my bladder thanks you, now 
 //
 //  She's reminded of the other time she desperately had to pee
 //
-var peestory=["I used to never want to go to the restroom at school, and I'd hold it until I got home, which usually worked okay.  But one day, I was late for the bus and I didn't have a chance to pee in the morning after I got up.  I was <u>so</u> desperate all day.",
-    "Once my toilet broke and I had to call the plumbers and they took <i>forever</i> to come.  I was nearly wetting myself when they did finally show up, but I didn't want to say anything.",
-    "One time I got stuck in traffic on the way home from work.  I <u>really</u> had to pee, but there was nowhere to pull off.",
-    "You know, I once bet my brother I could hold my pee longer than him.",
-    "I really hate those porta-potties they have at fairs.  I remember one time I went to the county fair and I really had to pee, but I didn't want to leave.  I kept wandering around looking for a real restroom, getting more and more desperate.",
-    "In college we used to play a game where they duct taped beers to your hands, and you had to finish the beers before you could go to the bathroom.",
-    "One summer, I was working as a receptionist at an airline office, and everybody else in the office would go out for lunch, leaving me to deal with everything.  I wasn't allowed to leave my desk during lunch hour.  This was usually fine, but I had too much coffee one morning, and I was in big trouble.  I had to pee so bad!",
-    "In school I got a date with this really great guy, and I was so nervous that I'd do something to mess it up, I kept drinking water at dinner in the pauses in the conversation.  By the end of dinner, I really had to pee, but I was too shy to say anything and I didn't want to make us late for the movie.",
-    "I went on a boating trip with some friends on spring break.  We all dressed up in our bikinis, drank a bunch of beer, and teased the guys on the river.  Nobody told us the boat didn't have a restroom.  We all had to pee <i>so</i> badly, but we were trying to act all cool about it."];
-
-var peestory2=["I almost made it.  I was walking back home and I just couldn't hold it anymore - I always thought I could just try a little harder and hold it in, but it just started coming out.  There was nothing I could do.  I soaked my panties right outside my front door.",
-    "I tried so hard to hold it without them noticing.  But after a while, I just couldn't control myself - I ended up going out into the backyard away from the plumbers and peeing in a cup.",
-    "I saw all these people pulling off to the side of the road and peeing on the ground behind their cars.  I was about to do the same thing, but then the traffic jam eased up and I made it home.  I might have leaked a little bit into my panties, though.  It was <i>so</i> hard to from the car to the bathroom without peeing myself.",
-    "I won.  He finally gave up and pulled out his dick and let go - but then I couldn't get my panties down before I started peeing.  I ended up wetting myself right in front of him - with my panties only halfway down.",
-    "I ended up almost wetting myself - I just <u>had</u> to go.  It got so bad I couldn't walk and hold myself at the same time, so I finally went in one of the portapotties.  It was sooo gross.",
-    "It was <b>so</b> embarassing.  I finished the beers, but I peed myself right in front of everybody while they were taking the duct tape off.  Never played that game again.",
-    "I kept waiting and waiting for the rest of the crew to come back from lunch, but they were late that day.  And I started thinking I could use the trash can or something, but then when I made it to 1pm and they hadn't come back yet, I started worrying that if I did have to use the trashcan, they'd come back and find me peeing.  But it got so bad I simply had to try it.  I went over to bring the trash can behind my desk, and then everybody came back from lunch.  I nearly lost it completely ... definitely spurted in my panties.",
-    "We went to see the movie, and I just couldn't sit still.  I didn't know what to do.  I felt it almost coming out, but I was trapped in the row of seats.  Luckily, it was dark, so I hiked up the back of my dress and let it out slowly into the cushion.  It was so embarassing, but nobody ever found out.",
-    "Well - finally my friend couldn't hold it anymore, and jumped in the water to pee.  We all ended up peeing in our bikinis in the river."];
+// var peestory=["I used to never want to go to the restroom at school, and I'd hold it until I got home, which usually worked okay.  But one day, I was late for the bus and I didn't have a chance to pee in the morning after I got up.  I was <u>so</u> desperate all day.",
+//     "Once my toilet broke and I had to call the plumbers and they took <i>forever</i> to come.  I was nearly wetting myself when they did finally show up, but I didn't want to say anything.",
+//     "One time I got stuck in traffic on the way home from work.  I <u>really</u> had to pee, but there was nowhere to pull off.",
+//     "You know, I once bet my brother I could hold my pee longer than him.",
+//     "I really hate those porta-potties they have at fairs.  I remember one time I went to the county fair and I really had to pee, but I didn't want to leave.  I kept wandering around looking for a real restroom, getting more and more desperate.",
+//     "In college we used to play a game where they duct taped beers to your hands, and you had to finish the beers before you could go to the bathroom.",
+//     "One summer, I was working as a receptionist at an airline office, and everybody else in the office would go out for lunch, leaving me to deal with everything.  I wasn't allowed to leave my desk during lunch hour.  This was usually fine, but I had too much coffee one morning, and I was in big trouble.  I had to pee so bad!",
+//     "In school I got a date with this really great guy, and I was so nervous that I'd do something to mess it up, I kept drinking water at dinner in the pauses in the conversation.  By the end of dinner, I really had to pee, but I was too shy to say anything and I didn't want to make us late for the movie.",
+//     "I went on a boating trip with some friends on spring break.  We all dressed up in our bikinis, drank a bunch of beer, and teased the guys on the river.  Nobody told us the boat didn't have a restroom.  We all had to pee <i>so</i> badly, but we were trying to act all cool about it."];
+//
+// var peestory2=["I almost made it.  I was walking back home and I just couldn't hold it anymore - I always thought I could just try a little harder and hold it in, but it just started coming out.  There was nothing I could do.  I soaked my panties right outside my front door.",
+//     "I tried so hard to hold it without them noticing.  But after a while, I just couldn't control myself - I ended up going out into the backyard away from the plumbers and peeing in a cup.",
+//     "I saw all these people pulling off to the side of the road and peeing on the ground behind their cars.  I was about to do the same thing, but then the traffic jam eased up and I made it home.  I might have leaked a little bit into my panties, though.  It was <i>so</i> hard to from the car to the bathroom without peeing myself.",
+//     "I won.  He finally gave up and pulled out his dick and let go - but then I couldn't get my panties down before I started peeing.  I ended up wetting myself right in front of him - with my panties only halfway down.",
+//     "I ended up almost wetting myself - I just <u>had</u> to go.  It got so bad I couldn't walk and hold myself at the same time, so I finally went in one of the portapotties.  It was sooo gross.",
+//     "It was <b>so</b> embarassing.  I finished the beers, but I peed myself right in front of everybody while they were taking the duct tape off.  Never played that game again.",
+//     "I kept waiting and waiting for the rest of the crew to come back from lunch, but they were late that day.  And I started thinking I could use the trash can or something, but then when I made it to 1pm and they hadn't come back yet, I started worrying that if I did have to use the trashcan, they'd come back and find me peeing.  But it got so bad I simply had to try it.  I went over to bring the trash can behind my desk, and then everybody came back from lunch.  I nearly lost it completely ... definitely spurted in my panties.",
+//     "We went to see the movie, and I just couldn't sit still.  I didn't know what to do.  I felt it almost coming out, but I was trapped in the row of seats.  Luckily, it was dark, so I hiked up the back of my dress and let it out slowly into the cushion.  It was so embarassing, but nobody ever found out.",
+//     "Well - finally my friend couldn't hold it anymore, and jumped in the water to pee.  We all ended up peeing in our bikinis in the river."];
 
 //
 // Walk descriptions

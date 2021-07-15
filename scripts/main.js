@@ -190,8 +190,6 @@ function pickrandom(list) {
     return list[number];
 }
 
-
-
 //This setups the game when you click start
 //Main reason we have a seperate function is because we need have to wait for yneeds to be assigned for the first scene
 //as it's called in there and this is the cleanest solution I can think of

@@ -118,6 +118,82 @@
     "It's coming!",
     "It's starting!",
     "I'm peeing!"],
+  "deny": [
+    "I'm fine, thanks for asking.",
+    "No, thanks.  I'm okay.",
+    "Nope - not at all.",
+    "I'm alright.  It's nice of you to ask.",
+    "I'm great, thanks.",
+    "I'm okay, thanks for asking."
+  ],
+  "holdlose": [
+    "I can't hold it anymore!",
+    "I can't control it any longer!",
+    "I can't wait any more!",
+    "I'm losing control!",
+    "I can't stop it!",
+    "It's coming out!"
+  ],
+  "holdemer": [
+    "I don't think I can hold it much longer.",
+    "I don't know if I can control it much longer.",
+    "I don't think I can last much longer.",
+    "I don't know if I can control it much longer.",
+    "I can't control my bladder much longer.",
+    "I'm not going to be able to hold it too much longer."
+  ],
+  "holdneed": [
+    "I think I can hold it a little longer.",
+    "I can control it for just a little longer.",
+    "I'll be okay for a little bit.",
+    "I think I can wait just a little while.",
+    "I think I'll be okay for a little bit.",
+    "I'm not sure, but I can probably last a little longer."
+  ],
+  "holdurge": [
+    "I have to go, but I can hold it.",
+    "I can control myself for a while",
+    "I can wait.",
+    "It's not an emergency.  I can hold it.",
+    "I'll be fine for a while.",
+    "I'll be okay for a bit."
+  ],
+  "holdokay": [
+    "I don't even feel the slightest need to go.",
+    "I don't have to pee at all.",
+    "My bladder's not even a little bit full.",
+    "I don't need to pee yet.",
+    "I'm prefectly fine.",
+    "I don't need to go at all."
+  ],
+  "peestory": [
+    "I used to never want to go to the restroom at school, and I'd hold it until I got home, which usually worked okay.  But one day, I was late for the bus and I didn't have a chance to pee in the morning after I got up.  I was <u>so</u> desperate all day.",
+    "Once my toilet broke and I had to call the plumbers and they took <i>forever</i> to come.  I was nearly wetting myself when they did finally show up, but I didn't want to say anything.",
+    "One time I got stuck in traffic on the way home from work.  I <u>really</u> had to pee, but there was nowhere to pull off.",
+    "You know, I once bet my brother I could hold my pee longer than him.",
+    "I really hate those porta-potties they have at fairs.  I remember one time I went to the county fair and I really had to pee, but I didn't want to leave.  I kept wandering around looking for a real restroom, getting more and more desperate.",
+    "In college we used to play a game where they duct taped beers to your hands, and you had to finish the beers before you could go to the bathroom.",
+    "One summer, I was working as a receptionist at an airline office, and everybody else in the office would go out for lunch, leaving me to deal with everything.  I wasn't allowed to leave my desk during lunch hour.  This was usually fine, but I had too much coffee one morning, and I was in big trouble.  I had to pee so bad!",
+    "In school I got a date with this really great guy, and I was so nervous that I'd do something to mess it up, I kept drinking water at dinner in the pauses in the conversation.  By the end of dinner, I really had to pee, but I was too shy to say anything and I didn't want to make us late for the movie.",
+    "I went on a boating trip with some friends on spring break.  We all dressed up in our bikinis, drank a bunch of beer, and teased the guys on the river.  Nobody told us the boat didn't have a restroom.  We all had to pee <i>so</i> badly, but we were trying to act all cool about it."
+  ],
+  "peestory2": [
+    "I almost made it.  I was walking back home and I just couldn't hold it anymore - I always thought I could just try a little harder and hold it in, but it just started coming out.  There was nothing I could do.  I soaked my panties right outside my front door.",
+    "I tried so hard to hold it without them noticing.  But after a while, I just couldn't control myself - I ended up going out into the backyard away from the plumbers and peeing in a cup.",
+    "I saw all these people pulling off to the side of the road and peeing on the ground behind their cars.  I was about to do the same thing, but then the traffic jam eased up and I made it home.  I might have leaked a little bit into my panties, though.  It was <i>so</i> hard to from the car to the bathroom without peeing myself.",
+    "I won.  He finally gave up and pulled out his dick and let go - but then I couldn't get my panties down before I started peeing.  I ended up wetting myself right in front of him - with my panties only halfway down.",
+    "I ended up almost wetting myself - I just <u>had</u> to go.  It got so bad I couldn't walk and hold myself at the same time, so I finally went in one of the portapotties.  It was sooo gross.",
+    "It was <b>so</b> embarassing.  I finished the beers, but I peed myself right in front of everybody while they were taking the duct tape off.  Never played that game again.",
+    "I kept waiting and waiting for the rest of the crew to come back from lunch, but they were late that day.  And I started thinking I could use the trash can or something, but then when I made it to 1pm and they hadn't come back yet, I started worrying that if I did have to use the trashcan, they'd come back and find me peeing.  But it got so bad I simply had to try it.  I went over to bring the trash can behind my desk, and then everybody came back from lunch.  I nearly lost it completely ... definitely spurted in my panties.",
+    "We went to see the movie, and I just couldn't sit still.  I didn't know what to do.  I felt it almost coming out, but I was trapped in the row of seats.  Luckily, it was dark, so I hiked up the back of my dress and let it out slowly into the cushion.  It was so embarassing, but nobody ever found out.",
+    "Well - finally my friend couldn't hold it anymore, and jumped in the water to pee.  We all ended up peeing in our bikinis in the river."
+  ],
+  "askpee": [
+    "<b>YOU:</b> Do you need to pee?",
+    "girlname5",
+    "girltalk33",
+    "She seems to be considering the matter..."
+  ],
   "preventpee": [
     ["nopeesolodrink", "Suggest that she have another drink instead."],
     ["holdit", "Ask her to hold it in."],
@@ -130,12 +206,22 @@
     ["allowpee", "Tell her she's better go, then."],
     ["indepee", "Ignore her request to use the toilet."]
   ],
+  "askcanhold": [
+    "<b>YOU:</b> How are you doing?  Can you still hold it?"
+  ],
+  "pstory": [
+    "<b>You:</b> have you ever waited too long?",
+    "<b>You:</b> so... did you make it?",
+    "girlname6"
+  ],
   "girlname": [
     "Remind {0} you're paying her to hold it.",
     "Tell {0} you'll pay her to hold it.",
     "The pee hisses out and the glass is filled in no time. {0} bends over and jams her hand between her legs, gasping in the effort to stop the flow.",
     "{0} puts herself back together, looking embarrassed.",
-    "The stream slows and finishes, and {0} lets out a sigh of relief."
+    "The stream slows and finishes, and {0} lets out a sigh of relief.",
+    "{0} blushes.",
+    "{0} blushes and looks down at her feet."
   ],
   "holdit": {
     "dialogue": [
@@ -330,7 +416,18 @@
     "{0} But in just a roll of towels? No way! At least not yet.",
     "{0} Sure you're okay with it?",
     "{0} I'll just wait, thank you very much.",
-    "{0} That feels <i>so</i> much better."
+    "{0} That feels <i>so</i> much better.",
+    "{0} I'm so embarrassed to have to pee outside again.",
+    "{0} That's pretty daring. I've never gone outside before.",
+    "{0} I can't hold it! What am I gonna do???",
+    "{0} But I can't just go outside!",
+    "{0} At least not yet.",
+    "{0} Pee outside? No way am I exposing my privates to the whole world!",
+    "{0} Are you sure it's safe?",
+    "{0} Oh! that is so much better. I thought I was going to lose it there for a second.",
+    "{0} That's so much better.",
+    "{0} That's <b>so</b> much better. I was dying!",
+    "{0} ..."
   ],
   "girlgasp": [
     "{0} Ungh!  I can't hold it."
@@ -389,6 +486,25 @@
     "girlname4",
     "girltalk22"
   ],
+  "peeoutside": [
+    "girltalk23",
+    "girltalk24",
+    "girltalk9",
+    "girltalk25",
+    "girltalk26",
+    "girltalk27",
+    "girltalk28",
+    "girltalk29",
+    "You try to be nonchalant as you stare, and she doesn't seem to notice.  The pee hisses out from between her smooth thighs for nearly a minute, and runs in a stream under the car.  You can smell her scent as steam rises from the hot river.",
+    "girltalk30",
+    "She smiles at you as she gets back up and climbs back into the car.",
+    "You nonchalantly move closer and watch as the pee hisses out from between her delicate pussy lips for nearly a minute, and runs in a stream along the ground.  You can smell her scent as steam rises from the hot river and she sighs in relief.",
+    "girltalk31",
+    "She seems aroused as she gets back up.",
+    "You nonchalantly move closer and watch as the pee hisses out from between her delicate pussy lips for nearly a minute, soaking quickly into the sand and turning it dark.  You can smell her scent and hear the hiss of the urine hitting the sand and she sighs orgasimcally.",
+    "girltalk32",
+    "She seems aroused as she gets back up."
+  ],
   "choices": [
     ["curloc", "Continue..."],
     ["indepee", "Continue..."],
@@ -406,6 +522,13 @@
     ["peevase3", "Continue..."],
     ["peetowels2", "Continue..."],
     ["peetowels3", "Continue..."],
-    ["peeintub2", "Continue..."]
+    ["peeintub2", "Continue..."],
+    ["peeoutside2", "Continue..."],
+    ["peeoutside2b", "Continue..."],
+    ["peeoutisde3", "Continue..."],
+    ["peeoutside3c", "Continue..."],
+    ["peeoutside3b", "Continue..."],
+    ["pstory", "Ask her if she's ever wet herself."],
+    ["pstory2", "Ask her what happened."]
   ]
 }
