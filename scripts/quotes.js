@@ -28,12 +28,12 @@ var feelyoutub=["sneaks her hand under the water and squeezes your butt.", "reac
 //
 //  Feel up her thighs description when she has to go badly
 //
-var feelthigh=["You feel her thigh muscles contracting and relaxing as she tries to hold back her pee.",
-    "You feel her tensing and relaxing her thighs as she fights the urge to urinate.",
-    "You feel goosebumps suddenly form on her sweaty skin as a spasm sends shivers up her leg.",
-    "You feel her exhausted sphincters spasming under your fingers.",
-    "You feel her thighs trembling with the effort to control her bladder.",
-    "Her hot, damp thighs feel slippery and they tremble with the effort of controlling her urge to pee."];
+// var feelthigh=["You feel her thigh muscles contracting and relaxing as she tries to hold back her pee.",
+//     "You feel her tensing and relaxing her thighs as she fights the urge to urinate.",
+//     "You feel goosebumps suddenly form on her sweaty skin as a spasm sends shivers up her leg.",
+//     "You feel her exhausted sphincters spasming under your fingers.",
+//     "You feel her thighs trembling with the effort to control her bladder.",
+//     "Her hot, damp thighs feel slippery and they tremble with the effort of controlling her urge to pee."];
 
 // var okayforyou=[
 //     "Okay, since you're asking so nicely.  I'll hold it a little longer.",
@@ -441,23 +441,23 @@ var ywetquote=["Suddenly, you are overwhelmed by your bladder, you groan and the
 //
 //  She denies she wet her panties ... sort of
 //
-const spurtdenyquote = ["Of course not!  I'm not a 3 year old.",
-    "I think I'm still dry.",
-    "No, I don't think so.",
-    "Not really.",
-    "I'm all dry.",
-    "Nope.  Still in control."];
+// const spurtdenyquote = ["Of course not!  I'm not a 3 year old.",
+//     "I think I'm still dry.",
+//     "No, I don't think so.",
+//     "Not really.",
+//     "I'm all dry.",
+//     "Nope.  Still in control."];
 
 
 //
 //  She seems embarassed ( she spurted in her panties )
 //
-var spurtquote=["She seems a little embarassed.",
-    "She seems quieter than usual.",
-    "She doesn't seem to be able to look you in the eyes.",
-    "She reaches towards her butt.",
-    "She seems nervous.",
-    "She looks like she's embarassed about something."];
+// var spurtquote=["She seems a little embarassed.",
+//     "She seems quieter than usual.",
+//     "She doesn't seem to be able to look you in the eyes.",
+//     "She reaches towards her butt.",
+//     "She seems nervous.",
+//     "She looks like she's embarrassed about something."];
 
 
 //
@@ -513,9 +513,14 @@ var outtahere= [
 ];
 
 // Your fingers smell of her pee.
-var smellpee=["They smell of sex ... and her sweet urine.", "They smell musky, with the clean scent of fresh pee.", "They smell strongly of her urine.", "They are sticky with the scent of her sex, and her pee.", "They are coated with the scent of her pee.", "The smell reminds you of a toilet filled with golden urine, just before it's flushed."];
-
-
+var smellpee=[
+    "They smell of sex ... and her sweet urine.",
+    "They smell musky, with the clean scent of fresh pee.",
+    "They smell strongly of her urine.",
+    "They are sticky with the scent of her sex, and her pee.",
+    "They are coated with the scent of her pee.",
+    "The smell reminds you of a toilet filled with golden urine, just before it's flushed."
+];
 
 String.prototype.format = String.prototype.f = function() {
     let s = this,
@@ -874,7 +879,10 @@ function needSetup(){
     needs["girltalk"] = addGirlTalk(needs["girltalk"]);
     needs["girlname"] = addGirlname(needs["girlname"]);
     needs["girlgasp"] = addGirlGasp(needs["girlgasp"]);
+    needs["askpee"] = replaceWCLC(needs["askpee"], "girlname", needs["girlname"]);
+    needs["askpee"] = replaceWCLC(needs["askpee"], "girltalk", needs["girltalk"]);
     needs["preventpee"] = replaceChoicesList(needs["preventpee"], "girlname", needs["girlname"]);
+    needs["pstory"] = replaceWCLC(needs["pstory"], "girlname", needs["girlname"]);
     needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
     needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
     needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girltalk"], "girltalk");
@@ -895,6 +903,7 @@ function needSetup(){
     needs["peetowels"] = replaceWCLC(needs["peetowels"], needs["girltalk"], "girltalk");
     needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girltalk"], "girltalk");
     needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girlgasp"], "girlgasp");
+    needs["wetquote"] = addGirlname(needs["girlname"]);
 }
 
 //Girl curses

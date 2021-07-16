@@ -1208,170 +1208,234 @@ function peeoutside3c() {
 //TODO chance with triggering each other into wetting when desperate
 //TODO it's impossible to spurt more than once while it shouldn't be
 //Here's actually where we decide if she wet or just spurted
+//TODO test
 function wetherself() {
-    s(wetquote[randcounter]);
-    incrandom();
+    let curtext = [pickrandom(needs["wetquote"])];
+    // s(wetquote[randcounter]);
+    // incrandom();
     if (randomchoice(spurtthresh) && locstack[0] !== "thehottub" && !shespurted) {
-        spurtedherself();
+        curtext = spurtedherself(curtext);
     } else {
         spurtthresh = 5;
+        let choices = [];
         if (locstack[0] === "driveout")
-            c("wetherself2c", "Continue ...");
+            choices.push(24);
+            // c("wetherself2c", "Continue ...");
         else if (locstack[0] === "themakeout")
-            c("wetherself2m", "Continue ...");
+            choices.push(25);
+            // c("wetherself2m", "Continue ...");
         else if (locstack[0] === "thehottub")
-            c("wetherself2t", "Continue ...");
+            choices.push(26);
+            // c("wetherself2t", "Continue ...");
         else
-            c("wetherself2", "Continue ...");
+            choices.push(27);
+            // c("wetherself2", "Continue ...");
+        curtext = printChoicesList(curtext, choices, needs["choices"]);
     }
+    sayText(curtext);
 }
 
-function wetherself2() {
-
-    s("You hear the loud hissing as her bladder uncontrollably empties itself.");
+//TODO test
+function wetherself2(curtext) {
+    if (!curtext)
+        curtext = [];
+    curtext.push(needs["wetherself"][0]);
+    // s("You hear the loud hissing as her bladder uncontrollably empties itself.");
     flushdrank();
     wetlegs = 1;
     wetherpanties = 1;
-    s(girltalk + embarquote[randcounter]);
-    incrandom();
-    c("wetherself3", "Continue ...");
-
+    curtext.push(girltalk + pickrandom(needs["embarquote"]));
+    // s(girltalk + embarquote[randcounter]);
+    // incrandom();
+    curtext = printChoicesList(curtext, [31], needs["choices"]);
+    // c("wetherself3", "Continue ...");
+    sayText(curtext);
 }
 
 // She's in the makeout spot
+//TODO test
 function wetherself2m() {
-    s(girlname + " suddenly and frantically looks around.  She fumbles with her seat belt, then the wrenches open the door and jumps out of the car.");
-    wetherself2();
+    let curtext = [needs["wetherself"][1]];
+    // s(girlname + " suddenly and frantically looks around.  She fumbles with her seat belt, then the wrenches open the door and jumps out of the car.");
+    wetherself2(curtext);
 }
 
 // She's in the hottub
+//TODO test
 function wetherself2t() {
-    s(girlname + " suddenly stiffens and whispers: Oh no!");
+    let curtext = printListSelection([],  needs["wetherself"], range(2,4));
+    // s(girlname + " suddenly stiffens and whispers: Oh no!");
     flushdrank();
-    s("She sighs and slumps back in the tub, lost in her own little world for a minute or so.");
-    s("There's complete silence aside from her heavy breathing and some crickets in the distance.");
-    c("wetherself3t", "Continue ...");
+    // s("She sighs and slumps back in the tub, lost in her own little world for a minute or so.");
+    // s("There's complete silence aside from her heavy breathing and some crickets in the distance.");
+    curtext = printChoicesList(curtext, [33], needs["choices"]);
+    // c("wetherself3t", "Continue ...");
+    sayText(curtext);
 }
 
 // She's in the car
+//TODO test
 function wetherself2c() {
-    s(girlname + " suddenly and frantically looks around, pulling open the glove box and feeling under her chair.");
-    s(girltalk + " Oh No!  Your seat!");
-    s("She arches her back, lifting her ass off the chair and straining against her seatbelt.");
-    s("You hear the loud hissing as her bladder uncontrollably empties itself.");
+    let curtext = printListSelection([],  needs["wetherself"], range(5,8));
+    // s(girlname + " suddenly and frantically looks around, pulling open the glove box and feeling under her chair.");
+    // s(girltalk + " Oh No!  Your seat!");
+    // s("She arches her back, lifting her ass off the chair and straining against her seatbelt.");
+    // s("You hear the loud hissing as her bladder uncontrollably empties itself.");
     flushdrank();
     wetlegs = 1;
     wetherpanties = 1;
     wetthecar = 1;
-    c("wetherself3c", "Continue ...");
+    curtext = printChoicesList(curtext, [34], needs["choices"]);
+    // c("wetherself3c", "Continue ...");
+    sayText(curtext);
 }
 
+//TODO test
 function wetherself3c() {
-    s(girltalk + "I'm <u>so</u> sorry about your car...");
-    s("She settles unhappily into the squishy wet seat.");
+    let curtext = printListSelection([],  needs["wetherself"], [9,10]);
+    // s(girltalk + "I'm <u>so</u> sorry about your car...");
+    // s("She settles unhappily into the squishy wet seat.");
     shyness += 20;
     if (shyness > 100) shyness = 100;
-    attraction -= 20;
-    c(locstack[0], "Continue ...");
+    curtext = printChoicesList(curtext, [0], needs["choices"]);
+    // c(locstack[0], "Continue ...");
+    sayText(curtext);
 }
 
+//TODO test
 function wetherself3() {
+    let curtext = [];
     if (pantycolor !== "none" && shyness < 70) {
-        s(wetherselfquote);
+        curtext.push(appearance["wetherselfquote"]);
+        // s(wetherselfquote);
         if (attraction > 40) {
-            s(girlname + " hands you the wet panties, soaked with her fragrant urine.");
-            s(girltalk + "Is there someplace you can put these?");
+            curtext = printListSelection(curtext, needs["wetherself"], [11,12]);
+            // s(girlname + " hands you the wet panties, soaked with her fragrant urine.");
+            // s(girltalk + "Is there someplace you can put these?");
             wetpanties += 1;
         }
         pantycolor = "none";
     } else if (pantycolor === "none")
-        s(girltalk + "Good thing I wasn't wearing panties, I guess.");
-    s(dryquote[randcounter]);
-    incrandom();
-    if (ptowels > 0)
-        c("giveptowels", "Offer her paper towels");
-    if (panties > 0)
-        c("givedrypanties", "Offer her a clean pair of panties");
-    shyness += 15;
-    if (shyness > 100) shyness = 100;
-    //TODO maybe not during hold contest
-    c("scoldher", "Scold her for wetting herself");
-    c(locstack[0], "Continue ...");
+        curtext.push(needs["wetherself"][13]);
+        // s(girltalk + "Good thing I wasn't wearing panties, I guess.");
+    curtext.push(pickrandom(appearance["dryquote"]));
+    // s(dryquote[randcounter]);
+    // incrandom();
+    if (locstack[0] !== "drinkinggame") {
+        shyness += 15;
+        if (shyness > 100) shyness = 100;
+    }
+    curtext = printChoicesList(curtext, [35, 0], needs["choices"]);
+    // c("scoldher", "Scold her for wetting herself");
+    // c(locstack[0], "Continue ...");
+    sayText(curtext);
 }
 
 // In the tub
+//TODO test
 function wetherself3t() {
-    s(girltalk + "I'm <u>so</u> sorry ... I just couldn't hold it.");
-    s("The faint scent of her urine rises from the water.");
-    s(girltalk + "I peed in the tub.");
-    shyness += 20;
+    let curtext = printListSelection(curtext, needs["wetherself"] ,range(14, 16));
+    // s(girltalk + "I'm <u>so</u> sorry ... I just couldn't hold it.");
+    // s("The faint scent of her urine rises from the water.");
+    // s(girltalk + "I peed in the tub.");
+    shyness += 10;
     if (shyness > 100) shyness = 100;
-    attraction -= 20;
-    c(locstack[0], "Continue ...");
+    curtext = printChoicesList(curtext, [0], needs["choices"]);
+    // c(locstack[0], "Continue ...");
+    sayText(curtext);
 }
 
-function spurtedherself() {
+//TODO test
+function spurtedherself(curtext) {
     bladder -= 50;
     spurtthresh -= 0.1 * spurtthresh;
     shespurted = 1;
-    s(spurtquote[randcounter]);
-    incrandom();
-    displayneed();
-    c("askspurted", "Ask her if she peed herself.");
-    c(locstack[0], "Continue ...");
+    curtext.push(pickrandom(needs["spurtquote"]));
+    // s(spurtquote[randcounter]);
+    // incrandom();
+    curtext = displayneed(curtext);
+    curtext = printChoicesList(curtext, [0, 28], needs["choices"]);
+    return curtext;
+    // c("askspurted", "Ask her if she peed herself.");
+    // c(locstack[0], "Continue ...");
 }
 
+//TODO test
 function askspurted() {
-    s("<b>YOU:</b> Did you just pee yourself?");
-    s(spurtquote[randcounter]);
-    incrandom();
-    s(girltalk + spurtdenyquote[randcounter]);
-    incrandom();
-    displayneed();
+    let curtext = [needs["askspurted"][0]];
+    // s("<b>YOU:</b> Did you just pee yourself?");
+    curtext.push(pickrandom(needs["spurtquote"]));
+    // s(spurtquote[randcounter]);
+    // incrandom();
+    curtext.push(pickrandom(needs["spurtdenyquote"]));
+    // s(girltalk + spurtdenyquote[randcounter]);
+    // incrandom();
+    curtext = displayneed(curtext);
+    let choices = [0];
     if (locstack[0] !== "thehottub")
-        c("checkspurted", "Check if she's wet.");
-    c(locstack[0], "Continue ...");
+        choices.push(29);
+    // c(locstack[0], "Continue ...");
+    curtext = printChoicesList(curtext, choices, needs["choices"]);
+    sayText(curtext);
 }
 
+//TODO test
 function checkspurted() {
-    s("<b>YOU:</b> I'm not sure I believe you.");
-
+    let curtext = [needs["askspurted"][1]];
+    // s("<b>YOU:</b> I'm not sure I believe you.");
+    let choices = [];
     if (attraction < 75) {
-        s("You run your hand up her leg, but she pushes you away:");
-        s(girltalk + "Hey! Keep your hands to yourself!");
-        displayneed();
+        curtext = printListSelection(curtext, needs["askspurted"], [2,3]);
+        // s("You run your hand up her leg, but she pushes you away:");
+        // s(girltalk + "Hey! Keep your hands to yourself!");
+        curtext = displayneed(curtext);
         attraction -= 10;
         shyness += 10;
     } else {
         if (pantycolor === "none") {
-            s("You run your hand up her thigh until you feel the lips of her bare pussy.");
-            s("There are drops of some liquid up there.");
+            curtext = printListSelection(curtext, needs["askspurted"], [4,5]);
+            // s("You run your hand up her thigh until you feel the lips of her bare pussy.");
+            // s("There are drops of some liquid up there.");
         } else {
-            s("You run your hand up her thigh until you feel the thin fabric of her panties.");
-            s("They aren't sopping wet, but the gusset has a definite wet spot.");
+            curtext = printListSelection(curtext, needs["askspurted"], [6,7]);
+            // s("You run your hand up her thigh until you feel the thin fabric of her panties.");
+            // s("They aren't sopping wet, but the gusset has a definite wet spot.");
         }
         if (bladder > blademer)
-            s(feelthigh[randcounter]);
-        incrandom();
-        c("smellspurted", "Smell your fingers.");
+            curtext.push(pickrandom(needs["feelthigh"]));
+            // s(feelthigh[randcounter]);
+        choices.push(30);
+        // c("smellspurted", "Smell your fingers.");
     }
-    c(locstack[0], "Continue ...");
+    choices.push(0);
+    // c(locstack[0], "Continue ...");
+    curtext = printChoicesList(curtext, choices, needs["choices"]);
+    sayText(curtext);
 }
 
+//TODO test
 function smellspurted() {
-    s("You sniff your damp fingers.");
-    s(smellpee[randcounter]);
-    incrandom();
-    c(locstack[0], "Continue ...");
+    let curtext = [needs["askspurted"][8]];
+    // s("You sniff your damp fingers.");
+    curtext.push(pickrandom(needs["smellpee"]));
+    // s(smellpee[randcounter]);
+    // incrandom();
+    curtext = printChoicesList(curtext, [0], needs["choices"]);
+    // c(locstack[0], "Continue ...");
+    sayText(curtext);
 }
 
 //TODO make this more pleasurable/more BDSM like scolding?
+//TODO test
 function scoldher() {
-    s("<b>YOU:</b> You're such a baby, wetting yourself like that!");
-    s("She pouts and turns away from you.");
-    s("Her face turns bright red and she begins to cry.");
+    let curtext = needs["scoldher"];
+    // s("<b>YOU:</b> You're such a baby, wetting yourself like that!");
+    // s("She pouts and turns away from you.");
+    // s("Her face turns bright red and she begins to cry.");
     attraction -= 20;
-    c("callherataxi", "Call her a cab");
+    curtext = printChoicesList(curtext, [31], needs["choices"]);
+    // c("comforther", "Apologize and comfort her");
+    sayText(curtext);
 }
 
 //

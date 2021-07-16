@@ -221,7 +221,11 @@
     "{0} puts herself back together, looking embarrassed.",
     "The stream slows and finishes, and {0} lets out a sigh of relief.",
     "{0} blushes.",
-    "{0} blushes and looks down at her feet."
+    "{0} blushes and looks down at her feet.",
+    "{0} suddenly and frantically looks around.  She fumbles with her seat belt, then the wrenches open the door and jumps out of the car.",
+    "{0} suddenly stiffens and whispers: Oh no!",
+    "{0} suddenly and frantically looks around, pulling open the glove box and feeling under her chair.",
+    "{0} hands you the wet panties, soaked with her fragrant urine."
   ],
   "holdit": {
     "dialogue": [
@@ -427,7 +431,14 @@
     "{0} Oh! that is so much better. I thought I was going to lose it there for a second.",
     "{0} That's so much better.",
     "{0} That's <b>so</b> much better. I was dying!",
-    "{0} ..."
+    "{0} ...",
+    "{0} Hey! Keep your hands to yourself!",
+    "{0} Oh No!  Your seat!",
+    "{0} I'm <u>so</u> sorry about your car...",
+    "{0} Is there someplace you can put these?",
+    "{0} Good thing I wasn't wearing panties, I guess.",
+    "{0} I'm <u>so</u> sorry ... I just couldn't hold it.",
+    "{0} I peed in the tub."
   ],
   "girlgasp": [
     "{0} Ungh!  I can't hold it."
@@ -505,6 +516,81 @@
     "girltalk32",
     "She seems aroused as she gets back up."
   ],
+  "wetquote" : [
+    "Suddenly, {0} squeals and then gasps!",
+    "Suddenly, {0} freezes in place and her face turns bright red.",
+    "{0} gasps and grabs at her pussy.",
+    "{0} squeals and doubles over.",
+    "{0} suddenly gasps and her face turns red.",
+    "{0} suddenly shudders and her face turns red."
+  ],
+  "wetherself": [
+    "You hear the loud hissing as her bladder uncontrollably empties itself.",
+    "girlname7",
+    "girlname8",
+    "She sighs and slumps back in the tub, lost in her own little world for a minute or so.",
+    "There's complete silence aside from her heavy breathing and some crickets in the distance.",
+    "girlname9",
+    "girltalk35",
+    "She arches her back, lifting her ass off the chair and straining against her seatbelt.",
+    "You hear the loud hissing as her bladder uncontrollably empties itself.",
+    "girltalk36",
+    "She settles unhappily into the squishy wet seat.",
+    "girlname10",
+    "girltalk37",
+    "girltalk38",
+    "girltalk39",
+    "The faint scent of her urine rises from the water.",
+    "girltalk40"
+  ],
+  "spurtquote": [
+    "She seems a little embarassed.",
+    "She seems quieter than usual.",
+    "She doesn't seem to be able to look you in the eyes.",
+    "She reaches towards her butt.",
+    "She seems nervous.",
+    "She looks like she's embarrassed about something."
+  ],
+  "askspurted": [
+    "<b>YOU:</b> Did you just pee yourself?",
+    "<b>YOU:</b> I'm not sure I believe you.",
+    "You run your hand up her leg, but she pushes you away:",
+    "girltalk34",
+    "You run your hand up her thigh until you feel the lips of her bare pussy.",
+    "There are drops of some liquid up there.",
+    "You run your hand up her thigh until you feel the thin fabric of her panties.",
+    "They aren't sopping wet, but the gusset has a definite wet spot.",
+    "You sniff your damp fingers."
+  ],
+  "spurtdenyquote": [
+    "Of course not!  I'm not a 3 year old.",
+    "I think I'm still dry.",
+    "No, I don't think so.",
+    "Not really.",
+    "I'm all dry.",
+    "Nope.  Still in control."
+  ],
+  "feelthigh": [
+    "You feel her thigh muscles contracting and relaxing as she tries to hold back her pee.",
+    "You feel her tensing and relaxing her thighs as she fights the urge to urinate.",
+    "You feel goosebumps suddenly form on her sweaty skin as a spasm sends shivers up her leg.",
+    "You feel her exhausted sphincters spasming under your fingers.",
+    "You feel her thighs trembling with the effort to control her bladder.",
+    "Her hot, damp thighs feel slippery and they tremble with the effort of controlling her urge to pee."
+  ],
+  "smellpee": [
+    "They smell of sex ... and her sweet urine.",
+    "They smell musky, with the clean scent of fresh pee.",
+    "They smell strongly of her urine.",
+    "They are sticky with the scent of her sex, and her pee.",
+    "They are coated with the scent of her pee.",
+    "The smell reminds you of a toilet filled with golden urine, just before it's flushed."
+  ],
+  "scoldher": [
+    "<b>YOU:</b> You're such a baby, wetting yourself like that!",
+    "She pouts and turns away from you.",
+    "Her face turns bright red and she begins to cry."
+  ],
   "choices": [
     ["curloc", "Continue..."],
     ["indepee", "Continue..."],
@@ -529,6 +615,18 @@
     ["peeoutside3c", "Continue..."],
     ["peeoutside3b", "Continue..."],
     ["pstory", "Ask her if she's ever wet herself."],
-    ["pstory2", "Ask her what happened."]
+    ["pstory2", "Ask her what happened."],
+    ["wetherself2c", "Continue ..."],
+    ["wetherself2m", "Continue ..."],
+    ["wetherself2t", "Continue ..."],
+    ["wetherself2", "Continue ..."],
+    ["askspurted", "Ask her if she peed herself."],
+    ["checkspurted", "Check if she's wet."],
+    ["smellspurted", "Smell your fingers."],
+    ["comforther", "Apologize and comfort her"],
+    ["wetherself3", "Continue ..."],
+    ["wetherself3t", "Continue ..."],
+    ["wetherself3c", "Continue ..."],
+    ["scoldher", "Scold her for wetting herself"]
   ]
 }
