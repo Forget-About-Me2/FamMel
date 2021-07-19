@@ -655,6 +655,7 @@ function displaywaited(curtext) {
 //
 //  She says how much she's drank since she last peed.
 //
+//TODO change for new objects
 function displaydrank(curtext) {
 
     let sentence = " ";

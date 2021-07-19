@@ -4,6 +4,17 @@ objects = {
         "bpname": "Water bottle",
         "value": 0,
         "owned": "{0} bottle{1} of water",
+        "volume": 250,
+        "shedrank": 0,
+        "ydrank": 0,
+        "functions": [
+            ['drinknow(&quot;water&quot;)', "give her a drink of water"]
+        ],
+        "togfunctions": [
+            ['drinktogether(&quot;water&quot;)', "Offer to drink some water together."]],
+        "yfunctions":[
+            ['ydrinknow(&quot;water&quot;)', "drink some water."]
+        ],
         "description":"These bottles are really quite small. It only contains 250ml, you're not quite sure why you wasted money on this."
     },
     "roses" : {
@@ -74,6 +85,7 @@ objects = {
     },
     "herKeys":{
         "bpname": "Set of Keys",
+        "locations": ["herhome"],
         "value":0,
         "description": "{0}'s keys which you stole earlier, maybe you should give them back?"
     },
@@ -101,6 +113,18 @@ herpurse = {
         "desc":"comb"
     }
 }
+
+//List of locations where there is never an opportunity to use an item
+const noItemLoc = ["start2", "beachsex", "tubsex", "pnorestroom", "thebed"]
+
+//List of locations where just the playerrelated options work
+const playOnly = ["gostore", "callher"]
+
+//Locations where drinkitems can be used
+//This isn't used but it's a handy list, might be useful for later
+const drinkLoc = ["pickup", "driveout", "driveout", "domovie",
+    "thebar", "theclub", "themakeout", "thewalk", "thebeach", "theyard",
+    "thehottub", "darkmovie", "photogame", "drinkinggame", "thehome"]
 
 //TODO add a mention need option
 //TODO integrate champagne from thehouse
@@ -358,6 +382,16 @@ function selectitem(selecteditem){
     if(clickedObj.owned)
         tobeprinted += "<b><i>You have " + getOwned(clickedObj) + "</i></b><br><br>";
     tobeprinted += clickedObj.description.format([girlname]);
+    if (!noItemLoc.includes(locstack[0])){
+        if (!(clickedObj.hasOwnProperty("locations") && clickedObj.locations.includes(locstack[0]))){
+            printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
+            if (playerbladder && clickedObj.hasOwnProperty("yfunctions")){
+                printAllChoicesList([], clickedObj.yfunctions).forEach(item => tobeprinted += item);
+                if (clickedObj.hasOwnProperty("togfunctions"))
+                    printAllChoicesList([], clickedObj.togfunctions).forEach(item => tobeprinted += item);
+            }
+        }
+    }
     itemtext.innerHTML= tobeprinted;
     previousbtn = clickedbtn;
 }
@@ -380,4 +414,32 @@ function getOwned(selected) {
     }
     description = description.format(formatlist);
     return description;
+}
+
+//TODO combine the if statements from dink/beer/cocktail/soda
+function drinknow(item) {
+    const backpackcnt = document.getElementById("backpack-cnt");
+    backpackcnt.style.display = "none";
+    let curtext = [];
+    if (tummy > maxtummy && (item !== "beer"|| tummy > maxbeer)) {
+        curtext.push(girltalk + "I just don't feel thirsty right now.");
+    } else if (attraction < 10 && bladder > bladneed) {
+        curtext.push(girltalk + "I just don't feel thirsty right now.");
+    } else if (attraction < 20 && bladder > blademer) {
+        curtext.push(girltalk + "I just don't feel thirsty right now.");
+    } else if (bladder > blademer && shyness < 90 && brokeice) {
+        curtext.push(girltalk + "I've <b>really</b> got to go to the bathroom, but I'll drink it if that's what you want me to do.");
+        curtext.push("She drinks the " + objects[item].bpname);
+        tummy += objects[item].volume;
+        objects[item].value -= 1;
+        objects[item].shedrank += 1;
+    } else {
+        curtext.push(girltalk + "Well, I guess it's good to stay hydrated.");
+        curtext.push("She drinks the" + objects[item].bpname);
+        tummy += objects[item].volume;
+        objects[item].value -= 1;
+        objects[item].shedrank += 1;
+    }
+    curtext = c([locstack[0], "Continue..."], curtext);
+    sayText(curtext);
 }

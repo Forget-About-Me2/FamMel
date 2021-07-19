@@ -636,6 +636,7 @@ function printChoicesList(curtext, selection, list){
 
 //Prints all the choices for the given choices list
 function printAllChoicesList(curtext, list){
+    console.log(list);
     list.forEach(item => curtext = callChoice(item, curtext))
     return curtext;
 }
@@ -655,6 +656,7 @@ function callChoice(choice, curtext){
 // curtext - a list of all current lines that will be printed during the scene
 function c(choice, curtext) {
     const html = "<li><a href=\"javascript:go('" + choice[0] + "')\">" + choice[1] + "</a>"
+    console.log(html);
     curtext.push(html);
     //TODO decide if this is needed?
     // if (didintro) {
