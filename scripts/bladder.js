@@ -287,9 +287,9 @@ function indepee(curtext=[], called=false) {
         flushdrank();
     } else {
         if (bladder > bladlose - 25)
-            curtext.push(pickrandom(appearance[heroutfit]["peeprivate"]));
+            curtext.push(pickrandom(appearance["clothes"][heroutfit]["peeprivate"]));
         else
-            curtext.push(pickrandom(appearance[heroutfit]["peeprivate2"]));
+            curtext.push(pickrandom(appearance["clothes"][heroutfit]["peeprivate2"]));
         //TODO check validity of these attraction
         attraction -= 2;
         flushdrank();
@@ -553,7 +553,7 @@ function askcanhold() {
     sayText(curtext);
 }
 
-let toldstories = range(0, needs["peestory"].length);
+let toldstories;
 let lastStory;
 //TODO test
 function pstory() {
@@ -562,8 +562,10 @@ function pstory() {
     curtext = displayneed(curtext);
     // If all stories have been visited reset the list,
     // filter out the last one to prevent the same story being told twice in a row
-    if (toldstories.length === 0)
+    if (toldstories.length === 0) {
+        toldstories = range(0, needs["peestory"].length);
         toldstories.remove(toldstories.indexOf(lastStory));
+    }
     lastStory = pickrandom(toldstories);
     toldstories.remove(toldstories.indexOf(lastStory));
     curtext.push(needs["peestory"][lastStory]);
@@ -854,9 +856,9 @@ function peeshot() {
 function peeshot2() {
     let curtext = [];
     if (pantycolor !== "none")
-        curtext.push(appearance["peeshotquote"]);
+        curtext.push(appearance["clothes"][heroutfit]["peeshotquote"]);
     else
-        curtext.push(appearance["peeshotquotebare"]);
+        curtext.push(appearance["clothes"][heroutfit]["peeshotquotebare"]);
     // if (pantycolor !== "none") s(peeshotquote);
     // else s(peeshotquotebare);
     curtext = itscomingout(curtext);
@@ -934,9 +936,9 @@ function peevase() {
 function peevase2() {
     let curtext = [];
     if (pantycolor !== "none")
-        curtext.push(appearance["peeskirtquote"]);
+        curtext.push(appearance["clothes"][heroutfit]["peevasequote"]);
     else
-        curtext.push(appearance["peeskirtquotebare"]);
+        curtext.push(appearance["clothes"][heroutfit]["peevasequotebare"]);
     // if (pantycolor !== "none") s(peeskirtquote);
     // else s(peeskirtquotebare);
     curtext = itscomingout(curtext);
@@ -976,7 +978,7 @@ function peetowels() {
                 // s(girltalk + "That's kind of gross!");
                 // s(girltalk + "But I'm about to wet my panties!");
             }
-            displayneed();
+            curtext = displayneed(curtext);
             peedtowels = 1;
             wetherpanties = 1;
             curtext.push(needs["peetowels"][2]);
@@ -1016,9 +1018,9 @@ function peetowels() {
 function peetowels2() {
     let curtext = [];
     if (pantycolor !== "none")
-        curtext.push(appearance["peetowelquote"]);
+        curtext.push(appearance["clothes"][heroutfit]["peetowelquote"]);
     else
-        curtext.push(appearance["peetowelquotebare"]);
+        curtext.push(appearance["clothes"][heroutfit]["peetowelquotebare"]);
     // if (pantycolor !== "none") s(girlname + peetowelquote);
     // else s(girlname + peetowelquotebare);
     curtext = itscomingout(curtext);
@@ -1042,6 +1044,108 @@ function peetowels3() {
     sawherpee = 1;
     curtext = printChoicesList(curtext, [0], needs["choices"]);
     // c(locstack[0], "Continue...");
+    sayText(curtext);
+}
+
+//Ask her to pee in a given item from your backpack
+function peein(item){
+    //Closes the backpack since a function has been chosen
+    const backpackcnt = document.getElementById("backpack-cnt");
+    backpackcnt.style.display = "none";
+    const list = needs[item];
+    let curtext = [];
+    if (attraction > 30) {
+        gottagoflag = 0;
+        if (bladder < bladneed) {
+            if (attraction < 130)
+                curtext = printList(curtext, list[0]);
+            else {
+                curtext = printList(curtext, list[1]);
+                curtext = callChoice(["peein2(&quot;" +item+ "&quot;)", "Continue..."], curtext);
+            }
+        }else if (bladder < blademer) {
+            if (attraction < 100) {
+                curtext = displaygottavoc(curtext);
+                curtext = printList(curtext, list[2]);
+                curtext = displayholdquip(curtext);
+                curtext = callChoice(["curloc", "Continue..."], curtext);
+            } else {
+                curtext = displayneed(curtext);
+                curtext = printList(curtext, list[3]);
+                curtext = callChoice(["peein2(&quot;" +item+ "&quot;)", "Continue..."], curtext);
+            }
+        } else {
+            if (attraction < 70 && !objects[item].peed){
+                curtext = printList(list[4]);
+            }
+            curtext = displayneed(curtext);
+            curtext = printList(curtext, list[5]);
+            curtext = callChoice(["peein2(&quot;" +item+ "&quot;)", "Continue..."], curtext);
+        }
+    } else {
+        curtext = printList(curtext, list[6]);
+        attraction -= 3;
+        if (attraction < 0) attraction = 0;
+        if (locstack[0] === "driveout"){
+            curtext.push("She throws it out of the window.");
+            curtext.push("You sigh, not sure how to fix this.");
+            objects[item].value--;
+        } else if (bladder > bladneed){
+            curtext.push("She grabs your "+ objects[item].bpname + " and runs to the bathroom");
+            curtext.push("Leaving you to ponder your current situation.");
+            flushdrank();
+            objects[item].value--;
+        }
+        curtext = callChoice(["curloc", "Continue..."], curtext);
+    }
+    sayText(curtext);
+}
+
+function peein2(item){
+    let curtext = [];
+    if (pantycolor !== "none")
+        curtext.push(appearance["clothes"][heroutfit][objects[item].quote].format([pantycolor]));
+    else
+        curtext.push(appearance["clothes"][heroutfit][objects[item].quote + "bare"]);
+    if (bladder > blademer)
+        curtext = itscomingout(curtext);
+    else if (bladder > bladurge)
+        curtext.push(girltalk + pickrandom(needs["outpeecome"]));
+    curtext = callChoice(["peein3(&quot;" + item + "&quot;)", "Continue..."], curtext);
+    sayText(curtext);
+}
+
+function peein3(item){
+    const list = needs[item];
+    let curtext = [];
+    if (bladder < bladurge) {
+        curtext.push(girltalk + "I'm sorry. I really don't have to go.");
+        curtext.push(girltalk + "I just can't. Maybe later.");
+        shyness += 1;
+    } else {
+
+        if (objects[item].hasOwnProperty("volume")){
+            if (objects[item].volume < bladder){
+                if (bladder > blademer)
+                    curtext = printList(curtext, list[7]);
+                else
+                    curtext = printList(curtext, list[8]);
+                bladder -= objects[item].volume;
+                waitcounter = 4;
+            } else {
+                curtext = printList(curtext, list[9]);
+                flushdrank();
+            }
+        } else if (bladder > blademer)
+            curtext = printList(curtext, list[7]);
+        else {
+            curtext = printList(curtext, list[9]);
+            flushdrank();
+        }
+        sawherpee = 1;
+        attraction += 4;
+    }
+    curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
 }
 
@@ -1127,8 +1231,8 @@ function peeoutside() {
 //TODO test
 function peeoutside2() {
     let curtext = [];
-    if (pantycolor !== "none") curtext.push(appearance["peeoutsidequote"]);
-    else curtext.push(appearance["peeoutsidequotebare"]);
+    if (pantycolor !== "none") curtext.push(appearance["clothes"][heroutfit]["peeoutsidequote"]);
+    else curtext.push(appearance["clothes"][heroutfit]["peeoutsidequotebare"]);
     // if (pantycolor !== "none") s(peeoutsidequote);
     // else s(peeoutsidequotebare);
     curtext.push(needs["peeoutside"][7]);
@@ -1142,8 +1246,8 @@ function peeoutside2() {
 //TODO test
 function peeoutside2b() {
     let curtext = [];
-    if (pantycolor !== "none") curtext.push(appearance["peeoutsidebquote"]);
-    else curtext.push(appearance["peeoutsidebquotebare"]);
+    if (pantycolor !== "none") curtext.push(appearance["clothes"][heroutfit]["peeoutsidebquote"]);
+    else curtext.push(appearance["clothes"][heroutfit]["peeoutsidebquotebare"]);
     // if (pantycolor !== "none") s(peeoutsidebquote);
     // else s(peeoutsidebquotebare);
     s(girltalk + "Are you sure it's safe?");
@@ -1307,7 +1411,7 @@ function wetherself3c() {
 function wetherself3() {
     let curtext = [];
     if (pantycolor !== "none" && shyness < 70) {
-        curtext.push(appearance["wetherselfquote"]);
+        curtext.push(appearance["clothes"][heroutfit]["wetherselfquote"]);
         // s(wetherselfquote);
         if (attraction > 40) {
             curtext = printListSelection(curtext, needs["wetherself"], [11,12]);
@@ -1319,7 +1423,7 @@ function wetherself3() {
     } else if (pantycolor === "none")
         curtext.push(needs["wetherself"][13]);
         // s(girltalk + "Good thing I wasn't wearing panties, I guess.");
-    curtext.push(pickrandom(appearance["dryquote"]));
+    curtext.push(pickrandom(appearance["clothes"][heroutfit]["dryquote"]));
     // s(dryquote[randcounter]);
     // incrandom();
     if (locstack[0] !== "drinkinggame") {

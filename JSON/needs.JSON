@@ -438,7 +438,19 @@
     "{0} Is there someplace you can put these?",
     "{0} Good thing I wasn't wearing panties, I guess.",
     "{0} I'm <u>so</u> sorry ... I just couldn't hold it.",
-    "{0} I peed in the tub."
+    "{0} I peed in the tub.",
+    "{0} Why would I do that!? I don't have to go!",
+    "{0} Ooh kinky, you really want me to do that?",
+    "{0} Well, I don't exactly have to go, but if it would make you happy I can try.",
+    "{0} I don't know about that. Maybe later.",
+    "{0} Oh! You're getting off on this aren't you?",
+    "{0} Well good thing you're cute and I do have to go.",
+    "{0} Oh, you filthy boy!",
+    "{0} I need to go really bad though",
+    "{0} I'm absolutely bursting. Give it here!",
+    "{0} You think this is funny?! There is absolutely no way in hell I'm going to piss into that!",
+    "{0} Ugh! that did almost nothing!",
+    "{0} There, was that what you wanted?"
   ],
   "girlgasp": [
     "{0} Ungh!  I can't hold it."
@@ -488,6 +500,41 @@
     "You are left to ponder your situation.",
     "The pee hisses out and is mostly absorbed by the paper towels, just a small trickle running down her left leg.",
     "She carefully sets to sopping wet roll of towels in a corner."
+  ],
+  "champ-glass": [
+    ["girltalk41"],
+    ["girltalk42",
+     "girltalk43",
+      "She accepts the champagne glass from you."
+    ],
+    ["She shifts uncomfortably",
+     "girltalk44"],
+    ["girltalk45",
+     "You shrug slightly. She glances down, probably noticing your erection, which you couldn't suppress at the idea of her pissing into the glass.",
+     "girltalk46",
+     "She smiles seductively at you as she moves a bit closer, slowly grabbing the glass"],
+    [ "girltalk47",
+      "girltalk48"
+    ],
+    [ "girltalk49",
+     "She rips the glass out of your hand, so hard you almost fear it will break."],
+    [ "She raises an eyebrow",
+      "girltalk50"
+    ],
+    [ "The urine hisses out of her pussy. Quickly filling the glass. She groans, muscles shaking as she obviously tries to stem the flow.",
+      "girltalk51"
+    ],
+    [ "She sighs slightly as a small controlled stream leaves her.",
+      "As the glass fills she tenses her muscles slightly to stop the flow.",
+      "She smiles slightly at you as she fixes her clothes. Making your heart beat quicker",
+      "girltalk52",
+      "<b>YOU:</b> Oh yes! That was so hot"],
+    ["She sighs slightly as a small controlled stream leaves her.",
+      "The stream stops, you can see that the glass is not fully filled. She mustn't have been very full",
+      "Arousal clouds your vision as you realise she did that, just for you.",
+      "She smiles slightly at you as she fixes her clothes. Making your heart beat even quicker",
+      "girltalk52",
+      "<b>YOU:</b> Oh yes! That was so hot"]
   ],
   "peeintub": [
     "girltalk20",

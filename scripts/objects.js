@@ -15,7 +15,8 @@ objects = {
         "yfunctions":[
             ['ydrinknow(&quot;water&quot;)', "drink some water."]
         ],
-        "description":"These bottles are really quite small. It only contains 250ml, you're not quite sure why you wasted money on this."
+        "drinkquote": "Well, I guess it's good to stay hydrated.",
+        "description":"This bottle is really quite small. It only contains 250ml, you're not quite sure why you wasted money on this."
     },
     "roses" : {
         "bpname": "Bouquet",
@@ -46,6 +47,7 @@ objects = {
     "ptowels": {
         "bpname":"Paper Towels",
         "value": 0,
+        "peed" : 0,
         "owned": "{0} roll{1} of paper towels",
         "description":"One should always have paper towels handy."
     },
@@ -64,6 +66,21 @@ objects = {
             "empty "
         ],
         "description": "Some nice champagne, maybe you can share it with {0}?"
+    },
+    "champ-glass":{
+        "bpname":"Champagne glass",
+        "value": 0,
+        "volume": 180,
+        "peed": 0,
+        "functions": [
+            ["peein(&quot;champ-glass&quot;)", "Suggests she pees into the champagne glass."]
+        ],
+        "yfunctions":[
+            ["ypeein(&quot;champ-glass&quot;)", "Pee in the champagne glass."]
+        ],
+        "quote": "peechampquote",
+        "owned": "{0} champagne glass{1}",
+        "description": "A standard champagne glass, can hold 180ml. Maybe use it to share some champagne with {0}"
     },
     "beer":{
         "bpname":"Beer",
@@ -118,11 +135,11 @@ herpurse = {
 const noItemLoc = ["start2", "beachsex", "tubsex", "pnorestroom", "thebed"]
 
 //List of locations where just the playerrelated options work
-const playOnly = ["gostore", "callher"]
+const playOnly = ["yourhome", "gostore", "callher"]
 
 //Locations where drinkitems can be used
 //This isn't used but it's a handy list, might be useful for later
-const drinkLoc = ["pickup", "driveout", "driveout", "domovie",
+const drinkLoc = ["pickup", "driveout", "domovie",
     "thebar", "theclub", "themakeout", "thewalk", "thebeach", "theyard",
     "thehottub", "darkmovie", "photogame", "drinkinggame", "thehome"]
 
@@ -368,6 +385,7 @@ function backpack(){
     // itembtns = document.getElementsByClassName("itembtn");
     // itembtns.onclick = selectitem;
     itemtext= document.getElementById("item-text");
+    itemtext.innerHTML = "";
 }
 
 //When an item is selected in the backpack print the info and related functions
@@ -382,12 +400,14 @@ function selectitem(selecteditem){
     if(clickedObj.owned)
         tobeprinted += "<b><i>You have " + getOwned(clickedObj) + "</i></b><br><br>";
     tobeprinted += clickedObj.description.format([girlname]);
-    if (!noItemLoc.includes(locstack[0])){
+    if (!noItemLoc.includes(locstack[0]) && locstack.length !== 0){
         if (!(clickedObj.hasOwnProperty("locations") && clickedObj.locations.includes(locstack[0]))){
-            printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
+            //If the girl isn't with you, you can't ask her to use a certain item
+            if (!playOnly.includes(locstack[0]))
+                printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
             if (playerbladder && clickedObj.hasOwnProperty("yfunctions")){
                 printAllChoicesList([], clickedObj.yfunctions).forEach(item => tobeprinted += item);
-                if (clickedObj.hasOwnProperty("togfunctions"))
+                if (clickedObj.hasOwnProperty("togfunctions") && !playOnly.includes(locstack[0]))
                     printAllChoicesList([], clickedObj.togfunctions).forEach(item => tobeprinted += item);
             }
         }
@@ -418,6 +438,7 @@ function getOwned(selected) {
 
 //TODO combine the if statements from dink/beer/cocktail/soda
 function drinknow(item) {
+    //Closes the backpack since a function has been chosen
     const backpackcnt = document.getElementById("backpack-cnt");
     backpackcnt.style.display = "none";
     let curtext = [];
@@ -435,7 +456,7 @@ function drinknow(item) {
         objects[item].shedrank += 1;
     } else {
         curtext.push(girltalk + "Well, I guess it's good to stay hydrated.");
-        curtext.push("She drinks the" + objects[item].bpname);
+        curtext.push("She drinks the " + objects[item].bpname);
         tummy += objects[item].volume;
         objects[item].value -= 1;
         objects[item].shedrank += 1;

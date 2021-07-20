@@ -797,6 +797,12 @@ function replaceWCLC(strlist, checklist, tag){
     return result;
 }
 
+function replaceWCLCI(strlist, checklist, tag){
+    let result = [];
+    strlist.forEach(item => result.push(replaceWCLC(item, checklist, tag)));
+    return result
+}
+
 function replaceChoices(tag){
     let result = [];
     locjson["choices"].forEach(item => result.push(replaceChoice(item, tag)));
@@ -903,9 +909,11 @@ function needSetup(){
     needs["peevase"] = replaceWCLC(needs["peevase"], needs["girltalk"], "girltalk");
     needs["peevase"] = replaceWCLC(needs["peevase"], needs["girlname"], "girlname");
     needs["peetowels"] = replaceWCLC(needs["peetowels"], needs["girltalk"], "girltalk");
+    needs["champ-glass"] = replaceWCLCI(needs["champ-glass"], needs["girltalk"], "girltalk");
     needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girltalk"], "girltalk");
     needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girlgasp"], "girlgasp");
     needs["wetquote"] = addGirlname(needs["girlname"]);
+    toldstories = range(0, needs["peestory"].length);
 }
 
 //Girl curses
