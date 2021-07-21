@@ -638,6 +638,13 @@
     "She pouts and turns away from you.",
     "Her face turns bright red and she begins to cry."
   ],
+  "drinkquote": [
+    "{0} I've <b>really</b> got to go to the bathroom, but I'll drink it if that's what you want me to do.",
+    "{0} I've <b>really</b> got to pee, but I'll drink it if that's what you want me to do.",
+    "{0} I've <b>really</b> got to go powder my nose, but I'll drink it if that's what you want me to do.",
+    "{0} My bladder's bursting, but I'll drink it for you."
+
+  ],
   "choices": [
     ["curloc", "Continue..."],
     ["indepee", "Continue..."],

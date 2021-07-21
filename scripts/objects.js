@@ -72,6 +72,8 @@ objects = {
         "value": 0,
         "volume": 180,
         "peed": 0,
+        "drankbeer":30,
+        "attraction": 15,
         "functions": [
             ["peein(&quot;champ-glass&quot;)", "Suggests she pees into the champagne glass."]
         ],
@@ -86,18 +88,62 @@ objects = {
         "bpname":"Beer",
         "value":0,
         "owned": "{0} bottle{1} of beer",
+        "volume": 250,
+        "shedrank": 0,
+        "ydrank": 0,
+        "drankbeer":30,
+        "shyness": 5,
+        "functions": [
+            ['drinknow(&quot;beer&quot;)', "Offer her a beer"]
+        ],
+        "togfunctions": [
+            ['drinktogether(&quot;beer&quot;)', "Offer to drink beer together."]],
+        "yfunctions":[
+            ['ydrinknow(&quot;beer&quot;)', "drink a beer."]
+        ],
+        "drinkquote": "Bottoms up!.",
         "description":"Beer is the route to every woman's heart. Or at least to the toilet."
     },
     "soda":{
         "bpname":"Soda",
         "owned": "{0} cup{1} of soda",
         "value":0,
+        "volume": 500,
+        "shedrank": 0,
+        "ydrank": 0,
+        "functions": [
+            ['drinknow(&quot;soda&quot;)', "Give her a soda"]
+        ],
+        "togfunctions": [
+            ['drinktogether(&quot;soda&quot;)', "Drink a soda with her."]],
+        "yfunctions":[
+            ['ydrinknow(&quot;soda&quot;)', "drink a soda."]
+        ],
+        "cdrinkquote": [
+            "She chugs the cup of soda.  All 500ml.",
+            "{0} That was refreshing!"
+        ],
         "description":"A nice big cup of soda is all you need to stay hydrated."
     },
     "cocktail":{
         "bpname":"Cocktail",
         "owned": "{0} cocktail glass{1}",
         "value":0,
+        "volume": 150,
+        "shedrank": 0,
+        "ydrank": 0,
+        "drankbeer":50,
+        "shyness": 10,
+        "tuminc": 100,
+        "functions": [
+            ['drinknow(&quot;cocktail&quot;)', "Give her a cocktail."]
+        ],
+        "togfunctions": [
+            ['drinktogether(&quot;cocktail&quot;)', "Drink a cocktail with her."]],
+        "yfunctions":[
+            ['ydrinknow(&quot;cocktail&quot;)', "drink a cocktail."]
+        ],
+        "drinkquote": "cheers.",
         "description":"Hmmm, alcohol."
     },
     "herKeys":{
@@ -147,22 +193,22 @@ const drinkLoc = ["pickup", "driveout", "domovie",
 //TODO integrate champagne from thehouse
 // standobjs function allows one to use the normal objects.
 function standobjs(curtext) {
-    if (haveItem("roses") > 0)
-        curtext = c(["giveroses", "Give her a boquet of roses."], curtext);
-    if (locstack[0] !== "dodance") {
-        if (haveItem("water") && locstack[0] !== "thebar")
-           curtext = c(["drinkchosen", "Do something with the water."], curtext);
-
-        if (haveItem("beer") && locstack[0] !== "driveout") {
-            curtext = c(["beerchosen", "Do something with the beer."], curtext);
-        }
-        if (haveItem("soda")) {
-            curtext = c(["sodachosen", "Do something with the soda"], curtext);
-        }
-        if (haveItem("cocktail") && locstack[0] !== "driveout") {
-            curtext = c(["cocktailchosen", "Do something with the cocktail"], curtext);
-        }
-    }
+    // if (haveItem("roses") > 0)
+    //     curtext = c(["giveroses", "Give her a boquet of roses."], curtext);
+    // if (locstack[0] !== "dodance") {
+    //     if (haveItem("water") && locstack[0] !== "thebar")
+    //        curtext = c(["drinkchosen", "Do something with the water."], curtext);
+    //
+    //     if (haveItem("beer") && locstack[0] !== "driveout") {
+    //         curtext = c(["beerchosen", "Do something with the beer."], curtext);
+    //     }
+    //     if (haveItem("soda")) {
+    //         curtext = c(["sodachosen", "Do something with the soda"], curtext);
+    //     }
+    //     if (haveItem("cocktail") && locstack[0] !== "driveout") {
+    //         curtext = c(["cocktailchosen", "Do something with the cocktail"], curtext);
+    //     }
+    // }
     if (randomchoice(5) && gottagoflag < 1 && showedneed > 0 && !askholditcounter)
         curtext = c(["askpee", "Ask her if she has to pee."], curtext);
     else if (flirtedflag < maxflirts && noflirtflag < 1) {
@@ -202,8 +248,6 @@ function displaypos(itemobj) {
     }
     return description;
 }
-
-
 
 function ypredrink() {
     let curtext = []
@@ -400,14 +444,14 @@ function selectitem(selecteditem){
     if(clickedObj.owned)
         tobeprinted += "<b><i>You have " + getOwned(clickedObj) + "</i></b><br><br>";
     tobeprinted += clickedObj.description.format([girlname]);
-    if (!noItemLoc.includes(locstack[0]) && locstack.length !== 0){
+    if (!noItemLoc.includes(locstack[0]) && locstack.length !== 0 && clickedObj.hasOwnProperty("functions")){
         if (!(clickedObj.hasOwnProperty("locations") && clickedObj.locations.includes(locstack[0]))){
             //If the girl isn't with you, you can't ask her to use a certain item
             if (!playOnly.includes(locstack[0]))
                 printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
             if (playerbladder && clickedObj.hasOwnProperty("yfunctions")){
                 printAllChoicesList([], clickedObj.yfunctions).forEach(item => tobeprinted += item);
-                if (clickedObj.hasOwnProperty("togfunctions") && !playOnly.includes(locstack[0]))
+                if (clickedObj.hasOwnProperty("togfunctions") && !playOnly.includes(locstack[0]) && clickedObj.value > 1)
                     printAllChoicesList([], clickedObj.togfunctions).forEach(item => tobeprinted += item);
             }
         }
@@ -442,25 +486,43 @@ function drinknow(item) {
     const backpackcnt = document.getElementById("backpack-cnt");
     backpackcnt.style.display = "none";
     let curtext = [];
-    if (tummy > maxtummy && (item !== "beer"|| tummy > maxbeer)) {
+    if (((tummy > maxtummy && (item !== "beer"|| tummy > maxbeer)) && item !== "cocktail")||
+        (attraction < 10 && bladder > bladneed) ||
+        (attraction < 20 && bladder > blademer)) {
         curtext.push(girltalk + "I just don't feel thirsty right now.");
-    } else if (attraction < 10 && bladder > bladneed) {
-        curtext.push(girltalk + "I just don't feel thirsty right now.");
-    } else if (attraction < 20 && bladder > blademer) {
-        curtext.push(girltalk + "I just don't feel thirsty right now.");
-    } else if (bladder > blademer && shyness < 90 && brokeice) {
-        curtext.push(girltalk + "I've <b>really</b> got to go to the bathroom, but I'll drink it if that's what you want me to do.");
-        curtext.push("She drinks the " + objects[item].bpname);
-        tummy += objects[item].volume;
-        objects[item].value -= 1;
-        objects[item].shedrank += 1;
     } else {
-        curtext.push(girltalk + "Well, I guess it's good to stay hydrated.");
-        curtext.push("She drinks the " + objects[item].bpname);
-        tummy += objects[item].volume;
-        objects[item].value -= 1;
-        objects[item].shedrank += 1;
+        let drink = objects[item];
+        if (bladder > blademer && shyness < 90 && brokeice) {
+            curtext.push(pickrandom(needs["drinkquote"]));
+            curtext.push("She drinks the " + (drink.bpname.toLowerCase()) + ".");
+        } else {
+            if (drink.hasOwnProperty("cdrinkquote")) {
+                curtext = printList(curtext, addGirlTalk(drink.cdrinkquote));
+            } else {
+                curtext.push(girltalk + drink.drinkquote);
+                curtext.push("She drinks the " + drink.bpname.toLowerCase() + ".");
+            }
+        }
+        tummy += drink.volume;
+        drink.value -= 1;
+        drink.shedrank += 1;
+        if (drink.hasOwnProperty("drankbeer")){
+            drankbeer += drink.drankbeer;
+        }
+        if (drink.hasOwnProperty("attraction")){
+            attraction += drink.attraction;
+        }
+        if (drink.hasOwnProperty("shyness")){
+            shyness -= drink.shyness;
+        }
+        if (drink.hasOwnProperty("tuminc")){
+            if (maxtummy < 1000) maxtummy += drink.tuminc;
+        }
     }
     curtext = c([locstack[0], "Continue..."], curtext);
     sayText(curtext);
+}
+
+function ydrinknow(item){
+
 }

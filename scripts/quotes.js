@@ -636,7 +636,6 @@ function printChoicesList(curtext, selection, list){
 
 //Prints all the choices for the given choices list
 function printAllChoicesList(curtext, list){
-    console.log(list);
     list.forEach(item => curtext = callChoice(item, curtext))
     return curtext;
 }
@@ -656,7 +655,6 @@ function callChoice(choice, curtext){
 // curtext - a list of all current lines that will be printed during the scene
 function c(choice, curtext) {
     const html = "<li><a href=\"javascript:go('" + choice[0] + "')\">" + choice[1] + "</a>"
-    console.log(html);
     curtext.push(html);
     //TODO decide if this is needed?
     // if (didintro) {
@@ -912,7 +910,8 @@ function needSetup(){
     needs["champ-glass"] = replaceWCLCI(needs["champ-glass"], needs["girltalk"], "girltalk");
     needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girltalk"], "girltalk");
     needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girlgasp"], "girlgasp");
-    needs["wetquote"] = addGirlname(needs["girlname"]);
+    needs["wetquote"] = addGirlname(needs["wetquote"]);
+    needs["drinkquote"] = addGirlname(needs["drinkquote"]);
     toldstories = range(0, needs["peestory"].length);
 }
 
