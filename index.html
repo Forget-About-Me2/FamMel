@@ -721,41 +721,6 @@ CHANGES BY Forget_About_Me
         c(locstack[0], "Continue...");
     }
 
-    function ydrinknow() {
-        if (yourtummy > maxtummy)
-            s("You consider drinking the bottle of water, but your stomach is so full.");
-        else {
-            s("You drink the bottle of water.");
-            yourtummy += 250;
-            water -= 1;
-            ydrankwaters += 1;
-        }
-        c(locstack[0], "Continue...");
-    }
-
-    function drinkchosen() {
-        s("What do you do with the water?");
-        c("drinknow", "Give her a drink of water");
-        c("ydrinknow", "Drink some water.");
-        c(locstack[0], "Nevermind...");
-    }
-
-    //TODO make it sound better, also add option to drink beer together
-    //TODO extra description for in the car(ask her to open it)
-    function ybeernow() {
-        if (yourtummy > ymaxbeer && yourtummy > ymaxtummy)
-            s("You consider drinking a beer, but you have drunk way too much already.");
-        else {
-            s("YOU: Bottoms up!");
-            s("You drink the bottle of beer.");
-            yourtummy += 100;
-            beer -= 1;
-            ydrankbeer = 30;
-            ydrankbeers += 1;
-        }
-        c(locstack[0], "Continue...");
-    }
-
     function beertogether() {
         if (yourtummy > ymaxbeer && yourtummy > ymaxtummy)
             s("You consider drinking a beer with " + girlname + ", but you have drunk way too much already.");
@@ -796,19 +761,6 @@ CHANGES BY Forget_About_Me
         if (beer > 1)
             c("beertogether", "Offer to drink beer together.");
         c(locstack[0], "Nevermind...");
-    }
-
-    function ysodanow() {
-        if (yourtummy > ymaxtummy) {
-            s("You consider drinking the cup of soda, but you don't think you can manage");
-        } else {
-            s("You chug the cup of soda.  All 500ml.");
-            s("YOU: That was refreshing!");
-            yourtummy += 500;
-            soda -= 1;
-            ydranksodas += 1;
-        }
-        c(locstack[0], "Continue...");
     }
 
     function sodatogether() {
@@ -883,16 +835,6 @@ CHANGES BY Forget_About_Me
             tummy += 50;
             yourtummy += 50;
         }
-        c(locstack[0], "Continue...");
-    }
-
-    function ycocktailnow() {
-        s("You smile at her as you hold up your cocktail.");
-        s("You drink the cocktail.");
-        yourtummy += 10;
-        cocktail -= 1;
-        if (ymaxtummy < 1000) ymaxtummy += 100;
-        ydrankcocktails += 1;
         c(locstack[0], "Continue...");
     }
 

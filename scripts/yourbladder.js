@@ -13,7 +13,7 @@ let yourbladcumlose = yourbladurge * 4; // Level where you lose it as you cum
 let yourbladsexlose = yourbladurge * 5; // Level where you can't control it during sex
 
 let ymaxtummy = 500; // Drink capacity of stomach
-const ymaxbeer = 1000; // Beer capacity of stomach
+let ymaxbeer = 1000; // Beer capacity of stomach
 
 let yourcustomurge = 500;
 let yminurge = 375; //Bladder never decays below this

@@ -8,14 +8,13 @@ objects = {
         "shedrank": 0,
         "ydrank": 0,
         "functions": [
-            ['drinknow(&quot;water&quot;)', "give her a drink of water"]
+            ['drinknow(&quot;water&quot;)', "Give her a drink of water"]
         ],
-        "togfunctions": [
-            ['drinktogether(&quot;water&quot;)', "Offer to drink some water together."]],
         "yfunctions":[
-            ['ydrinknow(&quot;water&quot;)', "drink some water."]
+            ['ydrinknow(&quot;water&quot;)', "Drink some water."]
         ],
         "drinkquote": "Well, I guess it's good to stay hydrated.",
+        "ydrinkquote": "<b>YOU:</b> It's good to stay hydrated.",
         "description":"This bottle is really quite small. It only contains 250ml, you're not quite sure why you wasted money on this."
     },
     "roses" : {
@@ -99,7 +98,7 @@ objects = {
         "togfunctions": [
             ['drinktogether(&quot;beer&quot;)', "Offer to drink beer together."]],
         "yfunctions":[
-            ['ydrinknow(&quot;beer&quot;)', "drink a beer."]
+            ['ydrinknow(&quot;beer&quot;)', "Drink a beer."]
         ],
         "drinkquote": "Bottoms up!.",
         "description":"Beer is the route to every woman's heart. Or at least to the toilet."
@@ -117,10 +116,19 @@ objects = {
         "togfunctions": [
             ['drinktogether(&quot;soda&quot;)', "Drink a soda with her."]],
         "yfunctions":[
-            ['ydrinknow(&quot;soda&quot;)', "drink a soda."]
+            ['ydrinknow(&quot;soda&quot;)', "Drink a soda."]
         ],
+        //TODO deal with the difference in pronounce more efficiently
         "cdrinkquote": [
             "She chugs the cup of soda.  All 500ml.",
+            "{0} That was refreshing!"
+        ],
+        "cydrinkquote":[
+            "You chug the cup of soda.  All 500ml.",
+            "<b>YOU:</b> That was refreshing!"
+        ],
+        "ctdrinkquote":[
+            "You both chug your cup of soda. All 500ml.",
             "{0} That was refreshing!"
         ],
         "description":"A nice big cup of soda is all you need to stay hydrated."
@@ -141,9 +149,9 @@ objects = {
         "togfunctions": [
             ['drinktogether(&quot;cocktail&quot;)', "Drink a cocktail with her."]],
         "yfunctions":[
-            ['ydrinknow(&quot;cocktail&quot;)', "drink a cocktail."]
+            ['ydrinknow(&quot;cocktail&quot;)', "Drink a cocktail."]
         ],
-        "drinkquote": "cheers.",
+        "drinkquote": "Cheers.",
         "description":"Hmmm, alcohol."
     },
     "herKeys":{
@@ -237,7 +245,6 @@ function displaypos(itemobj) {
         } else formatlist.push("");
         if (itemobj.hasOwnProperty("options")){
             if (champagnecounter > 0){
-
                 if (champagnecounter < 6) formatlist.push(itemobj.options[0]);
                 else formatlist.push(itemobj.options[1]);
             } else if (champagnecounter === 0) formatlist.push("");
@@ -516,7 +523,10 @@ function drinknow(item) {
             shyness -= drink.shyness;
         }
         if (drink.hasOwnProperty("tuminc")){
-            if (maxtummy < 1000) maxtummy += drink.tuminc;
+            if (maxtummy < 1000) {
+                maxtummy += drink.tuminc;
+                maxbeer += drink.tuminc;
+            }
         }
     }
     curtext = c([locstack[0], "Continue..."], curtext);
@@ -524,5 +534,88 @@ function drinknow(item) {
 }
 
 function ydrinknow(item){
+    //Closes the backpack since a function has been chosen
+    const backpackcnt = document.getElementById("backpack-cnt");
+    backpackcnt.style.display = "none";
+    let drink = objects[item];
+    let curtext = [];
+    if (item !== "cocktail" && (yourtummy > ymaxtummy && yourtummy > ymaxbeer)){
+        curtext.push("You consider drinking the " + drink.bpname.toLowerCase() + ", but you have drunk way too much already.");
+    } else {
+        if (drink.hasOwnProperty("cydrinkquote")) {
+            curtext = printList(curtext, drink.cydrinkquote);
+        } else {
+            if (drink.hasOwnProperty("ydrinkquote"))
+                curtext.push(drink.ydrinkquote);
+            else
+                curtext.push("<b>YOU: </b>" + drink.drinkquote);
+            curtext.push("You drink the " + drink.bpname.toLowerCase() + ".");
+        }
+        yourtummy += drink.volume;
+        drink.value -= 1;
+        drink.ydrank += 1;
+        if (drink.hasOwnProperty("drankbeer")){
+            ydrankbeer += drink.drankbeer;
+        }
+        if (drink.hasOwnProperty("tuminc")){
+            if (ymaxtummy < 1000) {
+                ymaxtummy += drink.tuminc;
+                ymaxbeer += drink.tuminc;
+            }
+        }
+    }
+    curtext = c([locstack[0], "Continue..."], curtext);
+    sayText(curtext);
+}
 
+function drinktogether(item){
+    //Closes the backpack since a function has been chosen
+    const backpackcnt = document.getElementById("backpack-cnt");
+    backpackcnt.style.display = "none";
+    let curtext = [];
+    if (((tummy > maxtummy && (item !== "beer"|| tummy > maxbeer)) && item !== "cocktail")||
+        (attraction < 10 && bladder > bladneed) ||
+        (attraction < 20 && bladder > blademer)) {
+        curtext.push(girltalk + "I just don't feel thirsty right now.");
+    } else {
+        let drink = objects[item];
+        if (bladder > blademer && shyness < 90 && brokeice) {
+            curtext.push(pickrandom(needs["drinkquote"]));
+            curtext.push("You both drink your " + (drink.bpname.toLowerCase()) + ".");
+        } else {
+            if (drink.hasOwnProperty("ctdrinkquote")) {
+                curtext = printList(curtext, addGirlTalk(drink.ctdrinkquote));
+            } else {
+                curtext.push(girltalk + drink.drinkquote);
+                curtext.push("After a toast you both drink your " + drink.bpname.toLowerCase() + ".");
+            }
+        }
+        tummy += drink.volume;
+        yourtummy += drink.volume;
+        drink.value -= 2;
+        drink.shedrank += 1;
+        drink.ydrank += 1;
+        if (drink.hasOwnProperty("drankbeer")){
+            drankbeer += drink.drankbeer;
+            ydrankbeer += drink.drankbeer;
+        }
+        if (drink.hasOwnProperty("attraction")){
+            attraction += drink.attraction;
+        }
+        if (drink.hasOwnProperty("shyness")){
+            shyness -= drink.shyness;
+        }
+        if (drink.hasOwnProperty("tuminc")){
+            if (maxtummy < 1000) {
+                maxtummy += drink.tuminc;
+                maxbeer += drink.tuminc;
+            }
+            if (ymaxtummy < 1000) {
+                ymaxtummy += drink.tuminc;
+                ymaxbeer += drink.tuminc;
+            }
+        }
+    }
+    curtext = c([locstack[0], "Continue..."], curtext);
+    sayText(curtext);
 }

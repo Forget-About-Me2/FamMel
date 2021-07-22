@@ -15,7 +15,7 @@ let bladcumlose = bladurge * 4; // Level where she spurts as she cums
 let bladsexlose = bladurge * 5; // Level where she can't control it during sex
 
 let maxtummy = 250; // Drink capacity of stomach
-const maxbeer = 500; // Beer capacity of stomach
+let maxbeer = 500; // Beer capacity of stomach
 
 let bladDec = 1;
 let bladDespDec = 1;
