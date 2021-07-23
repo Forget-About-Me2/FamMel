@@ -32,6 +32,14 @@ objects = {
     "vase" : {
         "bpname":"Vase",
         "value": 0,
+        "peed": 0,
+        "functions": [
+            ["peein(&quot;vase&quot;)", "Suggests she pees into the vase."]
+        ],
+        "yfunctions":[
+            ["ypeein(&quot;vase&quot;)", "Pee into the vase."]
+        ],
+        "quote": "peevasequote",
         "owned": "{0} vase{1}",
         "description": "You're not quite sure how you managed to fit this in your backpack," +
             " but it can hold an insane amount of liquid. You wonder if it's bigger on the inside."
@@ -39,6 +47,13 @@ objects = {
     "shotglass": {
         "bpname":"Shotglass",
         "value": 0,
+        "peed": 0,
+        "functions": [
+            ["peein(&quot;shotglass&quot;)", "Suggests she pees into the champagne glass."]
+        ],
+        "yfunctions":[
+            ["ypeein(&quot;shotglass&quot;)", "Pee in the champagne glass."]
+        ],
         "owned": "{0} shotglass{1}",
         "description":"You can't quite recall why you thought it was a good idea to bring this glass to your date. " +
             "It can hold about 100ml, maybe it will be of use?"

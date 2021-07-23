@@ -1057,15 +1057,16 @@ function peein(item){
     if (attraction > 30) {
         gottagoflag = 0;
         if (bladder < bladneed) {
-            if (attraction < 130)
+            if (attraction < 130) {
                 curtext = printList(curtext, list[0]);
-            else {
+                curtext = callChoice(["curloc", "Continue..."], curtext);
+            } else {
                 curtext = printList(curtext, list[1]);
                 curtext = callChoice(["peein2(&quot;" +item+ "&quot;)", "Continue..."], curtext);
             }
         }else if (bladder < blademer) {
             if (attraction < 100) {
-                curtext = displaygottavoc(curtext);
+                // curtext = displaygottavoc(curtext);
                 curtext = printList(curtext, list[2]);
                 curtext = displayholdquip(curtext);
                 curtext = callChoice(["curloc", "Continue..."], curtext);
@@ -1091,7 +1092,7 @@ function peein(item){
             curtext.push("You sigh, not sure how to fix this.");
             objects[item].value--;
         } else if (bladder > bladneed){
-            curtext.push("She grabs your "+ objects[item].bpname + " and runs to the bathroom");
+            curtext.push("She grabs your "+ objects[item].bpname.toLowerCase() + " and runs to the bathroom");
             curtext.push("Leaving you to ponder your current situation.");
             flushdrank();
             objects[item].value--;
@@ -1123,27 +1124,29 @@ function peein3(item){
         curtext.push(girltalk + "I just can't. Maybe later.");
         shyness += 1;
     } else {
-
-        if (objects[item].hasOwnProperty("volume")){
-            if (objects[item].volume < bladder){
+        const container = objects[item];
+        if (container[item].hasOwnProperty("volume")){
+            if (container[item].volume < bladder){
                 if (bladder > blademer)
                     curtext = printList(curtext, list[7]);
                 else
-                    curtext = printList(curtext, list[8]);
-                bladder -= objects[item].volume;
+                    curtext = printList(curtext, list[9]);
+                bladder -= container[item].volume;
                 waitcounter = 4;
             } else {
-                curtext = printList(curtext, list[9]);
+                curtext = printList(curtext, list[8]);
                 flushdrank();
             }
-        } else if (bladder > blademer)
-            curtext = printList(curtext, list[7]);
-        else {
-            curtext = printList(curtext, list[9]);
+        } else{
+            if (bladder > blademer)
+                curtext = printList(curtext, list[7]);
+            else
+                curtext = printList(curtext, list[8]);
             flushdrank();
         }
         sawherpee = 1;
         attraction += 4;
+        container.peed = 1;
     }
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);

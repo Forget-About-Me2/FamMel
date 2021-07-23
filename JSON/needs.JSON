@@ -450,7 +450,10 @@
     "{0} I'm absolutely bursting. Give it here!",
     "{0} You think this is funny?! There is absolutely no way in hell I'm going to piss into that!",
     "{0} Ugh! that did almost nothing!",
-    "{0} There, was that what you wanted?"
+    "{0} There, was that what you wanted?",
+    "{0} Oh, you think this is hot don't ya? You bad bad boy.",
+    "{0} Okay. For you. I do have to go after all.",
+    "{0} Now that was interesting. We should do that again later."
   ],
   "girlgasp": [
     "{0} Ungh!  I can't hold it."
@@ -477,17 +480,34 @@
     "girlname2",
     "girltalk13"
   ],
-  "peevase": [
-    "girltalk14",
-    "girltalk15",
-    "girltalk16",
-    "She grabs the vase, wrenching it from your hands and nearly dropping it.",
-    "girltalk17",
-    "girltalk11",
-    "She runs to the bathroom with your vase in hand.",
-    "You are left to ponder your situation.",
-    "The pee hisses out for nearly a minute, the vase is filled almost to the top.",
-    "girlname3"
+  "vase": [
+    ["girltalk41"],
+    ["girltalk42",
+     "girltalk43",
+     "She accepts the vase from you."],
+    ["She frowns at the vase.",
+     "girltalk17"
+     ],
+    ["girltalk53",
+     "<b>YOU: </b> I think you're very hot, and I would really like it if you did this for me.",
+     "You reach up slowly to stroke her face.",
+     "<b>YOU: </b> please?",
+     "girltalk54"
+    ],
+    ["girltalk14",
+    "girltalk15"],
+    ["girltalk16",
+    "She grabs the vase, wrenching it from your hands and nearly dropping it."],
+    ["girltalk12"],
+    ["The pee hisses out for nearly a minute, the vase is filled almost to the top.",
+    "girlname3"],
+    ["You see a stream of pee coming from her pussy.",
+     "It isn't very strong, it is obvious she wasn't all that full.",
+     "She did it just to please you!",
+     "She smirks as she makes herself decent again. Causing you to twitch in your pants.",
+     "girltalk55",
+      "<b>YOU:</b> Oh, I'm sure that can be arranged."
+     ]
   ],
   "peetowels": [
     "girltalk18",
@@ -524,17 +544,18 @@
     [ "The urine hisses out of her pussy. Quickly filling the glass. She groans, muscles shaking as she obviously tries to stem the flow.",
       "girltalk51"
     ],
-    [ "She sighs slightly as a small controlled stream leaves her.",
-      "As the glass fills she tenses her muscles slightly to stop the flow.",
-      "She smiles slightly at you as she fixes her clothes. Making your heart beat quicker",
-      "girltalk52",
-      "<b>YOU:</b> Oh yes! That was so hot"],
     ["She sighs slightly as a small controlled stream leaves her.",
       "The stream stops, you can see that the glass is not fully filled. She mustn't have been very full",
       "Arousal clouds your vision as you realise she did that, just for you.",
       "She smiles slightly at you as she fixes her clothes. Making your heart beat even quicker",
       "girltalk52",
+      "<b>YOU:</b> Oh yes! That was so hot."],
+    [ "She sighs slightly as a small controlled stream leaves her.",
+      "As the glass fills she tenses her muscles slightly to stop the flow.",
+      "She smiles slightly at you as she fixes her clothes. Making your heart beat quicker",
+      "girltalk52",
       "<b>YOU:</b> Oh yes! That was so hot"]
+
   ],
   "peeintub": [
     "girltalk20",
