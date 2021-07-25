@@ -47,13 +47,15 @@ objects = {
     "shotglass": {
         "bpname":"Shotglass",
         "value": 0,
+        "volume": 100,
         "peed": 0,
         "functions": [
-            ["peein(&quot;shotglass&quot;)", "Suggests she pees into the champagne glass."]
+            ["peein(&quot;shotglass&quot;)", "Suggests she pees into the shot glass."]
         ],
         "yfunctions":[
-            ["ypeein(&quot;shotglass&quot;)", "Pee in the champagne glass."]
+            ["ypeein(&quot;shotglass&quot;)", "Pee into the shot glass."]
         ],
+        "quote": "peeshotquote",
         "owned": "{0} shotglass{1}",
         "description":"You can't quite recall why you thought it was a good idea to bring this glass to your date. " +
             "It can hold about 100ml, maybe it will be of use?"
@@ -62,6 +64,13 @@ objects = {
         "bpname":"Paper Towels",
         "value": 0,
         "peed" : 0,
+        "itemAttr": 50,
+        "functions": [
+            ["peein(&quot;ptowels&quot;)", "Suggests she pees into the paper towels."]
+        ],
+        "yfunctions":[
+            ["ypeein(&quot;ptowels&quot;)", "Pee into the paper towels."]
+        ],
         "owned": "{0} roll{1} of paper towels",
         "description":"One should always have paper towels handy."
     },

@@ -1054,29 +1054,37 @@ function peein(item){
     backpackcnt.style.display = "none";
     const list = needs[item];
     let curtext = [];
-    if (attraction > 30) {
+    let itemAttr = 30;
+    if (list.hasOwnProperty("attrThresh"))
+        itemAttr = list.attrThresh;
+    if (attraction > itemAttr) {
         gottagoflag = 0;
         if (bladder < bladneed) {
             if (attraction < 130) {
+                //She doesn't have to go and therefore refuses
                 curtext = printList(curtext, list[0]);
                 curtext = callChoice(["curloc", "Continue..."], curtext);
             } else {
+                //Only if you maxed attraction, she'll try to pee even if she doesn't have to go.
                 curtext = printList(curtext, list[1]);
                 curtext = callChoice(["peein2(&quot;" +item+ "&quot;)", "Continue..."], curtext);
             }
         }else if (bladder < blademer) {
             if (attraction < 100) {
-                // curtext = displaygottavoc(curtext);
+                //She's not quite willing to try it but not against the idea.
                 curtext = printList(curtext, list[2]);
                 curtext = displayholdquip(curtext);
                 curtext = callChoice(["curloc", "Continue..."], curtext);
             } else {
+                //She likes you enough to try it.
                 curtext = displayneed(curtext);
                 curtext = printList(curtext, list[3]);
                 curtext = callChoice(["peein2(&quot;" +item+ "&quot;)", "Continue..."], curtext);
             }
         } else {
+            //She's desperate so uses it.
             if (attraction < 70 && !objects[item].peed){
+                //An exclamation about the idea of it
                 curtext = printList(list[4]);
             }
             curtext = displayneed(curtext);
@@ -1084,14 +1092,17 @@ function peein(item){
             curtext = callChoice(["peein2(&quot;" +item+ "&quot;)", "Continue..."], curtext);
         }
     } else {
+        //She outrightly refuses the idea.
         curtext = printList(curtext, list[6]);
         attraction -= 3;
         if (attraction < 0) attraction = 0;
         if (locstack[0] === "driveout"){
+            //When in the car she'll throw the item out of the window.
             curtext.push("She throws it out of the window.");
             curtext.push("You sigh, not sure how to fix this.");
             objects[item].value--;
         } else if (bladder > bladneed){
+            //If she actually has to go she'll go to the bathroom and take the item with her
             curtext.push("She grabs your "+ objects[item].bpname.toLowerCase() + " and runs to the bathroom");
             curtext.push("Leaving you to ponder your current situation.");
             flushdrank();
@@ -1104,10 +1115,12 @@ function peein(item){
 
 function peein2(item){
     let curtext = [];
+    //print quote depending on the panties she wears.
     if (pantycolor !== "none")
         curtext.push(appearance["clothes"][heroutfit][objects[item].quote].format([pantycolor]));
     else
         curtext.push(appearance["clothes"][heroutfit][objects[item].quote + "bare"]);
+    //prints certain quotes about it coming out if she is actually able to pee
     if (bladder > blademer)
         curtext = itscomingout(curtext);
     else if (bladder > bladurge)
@@ -1119,28 +1132,34 @@ function peein2(item){
 function peein3(item){
     const list = needs[item];
     let curtext = [];
+    //If her bladder is virtually empty she can't go even if she tries.
     if (bladder < bladurge) {
         curtext.push(girltalk + "I'm sorry. I really don't have to go.");
         curtext.push(girltalk + "I just can't. Maybe later.");
         shyness += 1;
     } else {
         const container = objects[item];
-        if (container[item].hasOwnProperty("volume")){
-            if (container[item].volume < bladder){
+        if (container.hasOwnProperty("volume")){
+            if (container.volume < bladder){
                 if (bladder > blademer)
+                    //She's desperate and it shows
                     curtext = printList(curtext, list[7]);
                 else
+                    //Not desperate but the item is too small to hold it all
                     curtext = printList(curtext, list[9]);
-                bladder -= container[item].volume;
+                bladder -= container.volume;
                 waitcounter = 4;
             } else {
+                //The item can hold her full bladder content
                 curtext = printList(curtext, list[8]);
                 flushdrank();
             }
         } else{
             if (bladder > blademer)
+                //She's desperate and it shows
                 curtext = printList(curtext, list[7]);
             else
+                //She's doing it for you
                 curtext = printList(curtext, list[8]);
             flushdrank();
         }

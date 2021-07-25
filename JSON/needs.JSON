@@ -406,7 +406,7 @@
     "{0} Thanks! I do really have to go. You're so sweet.",
     "{0} Can you hold my purse for me?",
     "{0} Great!",
-    "{0} You're a naugthy boy, aren't you?",
+    "{0} You're a naughty boy, aren't you?",
     "{0} But I'm going to wet my panties if I don't go.....",
     "{0} God! I can't wait any longer!",
     "{0} I think maybe not. At least not yet.",
@@ -453,7 +453,11 @@
     "{0} There, was that what you wanted?",
     "{0} Oh, you think this is hot don't ya? You bad bad boy.",
     "{0} Okay. For you. I do have to go after all.",
-    "{0} Now that was interesting. We should do that again later."
+    "{0} Now that was interesting. We should do that again later.",
+    "{0} I literally just went, why would I do that?",
+    "{0} I just went, but if you really want me to I can give it a try.",
+    "{0} Ooh, that's kinky! You really want me to do that.",
+    "{0} Well then, beautiful. I do have to go after all."
   ],
   "girlgasp": [
     "{0} Ungh!  I can't hold it."
@@ -469,16 +473,31 @@
     "You open the top and see:",
     "Thinking they might come in handy later, you pocket {0}."
   ],
-  "peeshot": [
-    "girltalk8",
-    "girltalk9",
-    "girltalk10",
-    "girltalk11",
-    "girltalk12",
-    "She runs to the bathroom with your shot glass in hand.",
-    "You are left to ponder your situation.",
-    "girlname2",
-    "girltalk13"
+  "shotglass": [
+    [ "She raises an eyebrow",
+      "girltalk56"],
+    ["girltalk57"],
+    ["girltalk11"],
+    ["girltalk58",
+     "You nod enthusiastically.",
+     "girltalk59"],
+    ["girltalk8",
+     "girltalk9"],
+    ["girltalk10"],
+    ["girltalk12"],
+    ["girlname2",
+    "girltalk13"],
+    ["She sighs slightly as a small controlled stream leaves her.",
+      "The stream stops, you can see that the glass is not fully filled. She mustn't have been very full",
+      "Arousal clouds your vision as you realise she did that, just for you.",
+      "She smiles slightly at you as she fixes her clothes. Making your heart beat even quicker",
+      "girltalk52",
+      "<b>YOU:</b> Oh yes! That was so hot."],
+    [ "She sighs slightly as a small controlled stream leaves her.",
+      "As the glass fills she tenses her muscles slightly to stop the flow.",
+      "She smiles slightly at you as she fixes her clothes. Making your heart beat quicker",
+      "girltalk52",
+      "<b>YOU:</b> Oh yes! That was so hot"]
   ],
   "vase": [
     ["girltalk41"],
@@ -509,7 +528,7 @@
       "<b>YOU:</b> Oh, I'm sure that can be arranged."
      ]
   ],
-  "peetowels": [
+  "ptowels": [
     "girltalk18",
     "girltalk14",
     "girltalk15",
