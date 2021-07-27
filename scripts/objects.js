@@ -71,6 +71,7 @@ objects = {
         "yfunctions":[
             ["ypeein(&quot;ptowels&quot;)", "Pee into the paper towels."]
         ],
+        "quote": "peetowelquote",
         "owned": "{0} roll{1} of paper towels",
         "description":"One should always have paper towels handy."
     },

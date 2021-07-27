@@ -721,86 +721,6 @@ CHANGES BY Forget_About_Me
         c(locstack[0], "Continue...");
     }
 
-    function beertogether() {
-        if (yourtummy > ymaxbeer && yourtummy > ymaxtummy)
-            s("You consider drinking a beer with " + girlname + ", but you have drunk way too much already.");
-        else if (tummy > maxbeer && tummy > maxtummy) {
-            s(girltalk + "I just don't feel thirsty right now.");
-        } else if (attraction < 10 && bladder > bladneed) {
-            s(girltalk + "I just don't feel thirsty right now.");
-        } else if (attraction < 20 && bladder > blademer) {
-            s(girltalk + "I just don't feel thirsty right now.");
-        } else if (bladder > blademer && shyness < 90 && brokeice) {
-            s(girltalk + "I've <b>really</b> got to pee, but I'll drink with you if that's what you want me to do.");
-            s("After a quick toast, you both drink your bottle of beer.");
-            tummy += 100;
-            drankbeer = 30;
-            yourtummy += 100;
-            ydrankbeer = 30;
-            drankbeers += 1;
-            beer -= 2;
-            if (shyness > 50) shyness -= 5;
-        } else {
-            s(girltalk + "Bottoms up!");
-            s("After a quick toast, you both drink your bottle of beer.");
-            tummy += 100;
-            drankbeer = 30;
-            yourtummy += 100;
-            ydrankbeer = 30;
-            drankbeers += 1;
-            beer -= 2;
-            if (shyness > 50) shyness -= 5;
-        }
-        c(locstack[0], "Continue...");
-    }
-
-    function beerchosen() {
-        s("What do you want to do with the beer?");
-        c("beernow", "Offer her a beer.");
-        c("ybeernow", "Drink a beer.");
-        if (beer > 1)
-            c("beertogether", "Offer to drink beer together.");
-        c(locstack[0], "Nevermind...");
-    }
-
-    function sodatogether() {
-        if (yourtummy > ymaxtummy)
-            s("You consider drinking a cup of soda with " + girlname + ", but you don't think you can manage");
-        else if (tummy > maxtummy) {
-            s(girltalk + "I just don't feel thirsty right now.");
-        } else if (attraction < 10 && bladder > bladneed) {
-            s(girltalk + "I just don't feel thirsty right now.");
-        } else if (attraction < 20 && bladder > blademer) {
-            s(girltalk + "I just don't feel thirsty right now.");
-        } else if (bladder > blademer && shyness < 90 && brokeice) {
-            s(girltalk + "I've <b>really</b> got to go powder my nose, but I'll drink it if that's what you want me to do.");
-            s("You both drink your cup of soda. All 500ml.");
-            tummy += 500;
-            soda -= 2;
-            dranksodas += 1;
-            yourtummy += 500;
-            ydranksodas += 1;
-        } else {
-            s("You both chug your cup of soda.  All 500ml.");
-            s(girltalk + "That was refreshing!");
-            tummy += 500;
-            soda -= 2;
-            dranksodas += 1;
-            yourtummy += 500;
-            ydranksodas += 1;
-        }
-        c(locstack[0], "Continue...");
-    }
-
-    function sodachosen() {
-        s("What do you do with the soda?");
-        c("sodanow", "Give her a soda");
-        c("ysodanow", "Drink a soda.");
-        if (soda > 1)
-            c("sodatogether", "Drink a soda with her");
-        c(locstack[0], "Nevermind...");
-    }
-
     function champagnenow() {
         if (champagnecounter > 5) {
             s("Sadly, the bottle of champagne is empty.");
@@ -836,46 +756,6 @@ CHANGES BY Forget_About_Me
             yourtummy += 50;
         }
         c(locstack[0], "Continue...");
-    }
-
-    function cocktailtogether() {
-        if (attraction < 10 && bladder > bladneed) {
-            s(girltalk + "I just don't feel like drinking right now.");
-        } else if (attraction < 20 && bladder > blademer) {
-            s(girltalk + "I just don't feel like drinking right now.");
-        } else if (bladder > blademer && brokeice) {
-            s(girltalk + "I've <b>really</b> got to go to the bathroom, but I'll drink it if that's what you want me to do.");
-            s("After a toast you both drink your the cocktail.");
-            tummy += 10;
-            cocktail -= 2;
-            drankcocktails += 1;
-            yourtummy += 10;
-            if (maxtummy < 1000) maxtummy += 100;
-            if (ymaxtummy < 1000) ymaxtummy += 100;
-            ydrankcocktails += 1;
-            if (shyness > 50) shyness -= 10;
-        } else {
-            s(girltalk + "Cheers!");
-            s("After a toast you both drink your the cocktail.");
-            tummy += 10;
-            cocktail -= 2;
-            yourtummy += 10;
-            if (maxtummy < 1000) maxtummy += 100;
-            drankcocktails += 1;
-            if (ymaxtummy < 1000) ymaxtummy += 100;
-            ydrankcocktails += 1;
-            if (shyness > 50) shyness -= 10;
-        }
-        c(locstack[0], "Continue...");
-    }
-
-    function cocktailchosen() {
-        s("What do you do with the cocktail?");
-        c("cocktailnow", "Give her a cocktail.");
-        c("ycocktailnow", "Drink a cocktail.");
-        if (cocktail > 1)
-            c("cocktailtogether", "Drink a cocktail with her");
-        c(locstack[0], "Nevermind...");
     }
 
     function comforther() {

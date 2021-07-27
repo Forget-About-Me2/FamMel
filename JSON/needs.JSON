@@ -457,7 +457,11 @@
     "{0} I literally just went, why would I do that?",
     "{0} I just went, but if you really want me to I can give it a try.",
     "{0} Ooh, that's kinky! You really want me to do that.",
-    "{0} Well then, beautiful. I do have to go after all."
+    "{0} Well then, beautiful. I do have to go after all.",
+    "{0} Nah, I don't have to go. Maybe later.",
+    "{0} It's a bit weird and I don't have to go, but if you want to see that, I can give it a shot.",
+    "{0} Oh, you like this don't you.",
+    "{0} Well, I do have to go and it'd be interesting to try."
   ],
   "girlgasp": [
     "{0} Ungh!  I can't hold it."
@@ -529,16 +533,28 @@
      ]
   ],
   "ptowels": [
-    "girltalk18",
-    "girltalk14",
-    "girltalk15",
-    "She takes the roll of paper towels in both hands and freezes for a moment, thinking.",
-    "girltalk19",
-    "girltalk11",
-    "She runs off with your roll of paper towels in hand.",
-    "You are left to ponder your situation.",
-    "The pee hisses out and is mostly absorbed by the paper towels, just a small trickle running down her left leg.",
-    "She carefully sets to sopping wet roll of towels in a corner."
+    ["She shakes her head",
+     "girltalk60"
+    ],
+    ["girltalk61",
+     "She takes the towels from you"],
+    ["girltalk19"],
+    ["girltalk62",
+     "You nod mutely, unable to tear your gaze away from her legs.",
+     "girltalk63",
+     "She moves closely, and as she grabs the towels she whispers in your ear.",
+     "\"You're gonna be blown away, sexy.\""
+    ],
+    ["girltalk18",
+     "girltalk15"],
+    ["girltalk16",
+    "She takes the roll of paper towels in both hands and freezes for a moment, thinking."],
+    ["girltalk12"],
+    ["The pee hisses out and is mostly absorbed by the paper towels, just a small trickle running down her left leg.",
+    "She carefully sets to sopping wet roll of towels in a corner."],
+    ["You can just about hear the pee hissing out, everything is absorbed by the paper towels",
+    "They are a bit wet, and could probably hold a bit more",
+    "She carefully sets the wet roll of towels in a corner."]
   ],
   "champ-glass": [
     ["girltalk41"],
