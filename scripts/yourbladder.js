@@ -281,6 +281,86 @@ function ypeevase3() {
     sayText(curtext);
 }
 
+function ypeein(item){
+    //Closes the backpack since a function has been chosen
+    const backpackcnt = document.getElementById("backpack-cnt");
+    backpackcnt.style.display = "none";
+    const list = yneeds[item];
+    console.log(list);
+    let curtext = [];
+    let yneedtype = 0;
+    if (yourbladder>yourblademer)
+        yneedtype = 2;
+    else if (yourbladder>yourbladneed)
+        yneedtype = 1;
+    console.log(yneedtype);
+    //Prints a quote about how full you are and what you are planning to do.
+    curtext.push(list[0][yneedtype]);
+    //If she doesn't like you enough she'll act embarrassed and prevent you from doing this.
+    if (yneedtype === 0 && attraction > 100 ||
+        yneedtype === 1 && attraction > 70 ||
+        yneedtype === 2 && attraction > 30){
+        if (yneedtype === 2) {
+            // if your desperate print a quote about giving her the item so you can focus on your trousers
+            if (locstack[0] === "driveout")
+                //The quote is slightly different when you're driving
+                curtext = printList(curtext, list[1]);
+            else
+                curtext = printList(curtext, list[2]);
+
+        }
+        //Prints a description of undoing your pants, depending on how bad you have to go.
+        curtext = printList(curtext, list[3][yneedtype]);
+        curtext = callChoice(["ypeein2(&quot;" +item+ "&quot;," + yneedtype + ")", "Continue..."], curtext);
+    } else {
+        curtext.push("\"Are you out of your mind!?\" She hisses urgently. \"You can't do that! What if someone sees?!\"");
+        curtext.push("You sigh, but put away the " + objects[item].bpname.toLowerCase() + ".");
+        curtext = callChoice(["curloc", "Continue..."], curtext);
+        attraction -= 10;
+    }
+    sayText(curtext);
+}
+
+function ypeein2(item, yneedtype){
+    let curtext = [];
+    if (yneedtype === 2)
+        curtext = printList([], yneeds[item][4]);
+    else
+        curtext = printList(curtext, yneeds[item][5]);
+    curtext = callChoice(["ypeein3(&quot;" +item+ "&quot;," + yneedtype + ")", "Continue..."], curtext);
+    sayText(curtext);
+}
+
+function ypeein3(item, yneedtype){
+    let curtext = [];
+    if (yourbladder < yourbladurge){
+        curtext.push("You try your best, but you just can't manage to push anything out.");
+        curtext.push("With a sigh, you zip your trousers back up.");
+        curtext.push("<b>You:</b> It's not happening, I'll try again later when my bladder is a bit fuller.");
+    } else {
+        const container = objects[item];
+        const list = yneeds[item];
+        if (container.hasOwnProperty("volume")){
+            if (container.volume < yourbladder){
+                curtext.push(list[6][yneedtype][0]);
+                if (yourbladder > yourblademer)
+                    curtext.push("YOU: Damn. That's not much better.");
+                yourbladder -= container.volume;
+            } else {
+                //The item can hold your full bladder contents
+                curtext.push(list[6][yneedtype][0]);
+                flushyourdrank();
+            }
+        } else{
+            curtext = printList(curtext, list[6][yneedtype]);
+            flushyourdrank();
+        }
+        attraction += 10;
+    }
+    curtext = callChoice(["curloc", "Continue..."], curtext);
+    sayText(curtext);
+}
+
 //TODO better scene
 function ypeeintub() {
     s("You relax your muscles while acting as if nothing happens.");

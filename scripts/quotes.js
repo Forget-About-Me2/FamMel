@@ -928,7 +928,7 @@ function yNeedSetup(){
     //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
     //And this is the cleanest way to not have everything crying
     yneeds["girlname"] = addGirlname(yneeds["girlname"]);
-    yneeds["ypeeshot"] = replaceWCLC(yneeds["ypeeshot"], yneeds["girlname"], "girlname");
+    yneeds["shotglass"] = replaceWCLCI(yneeds["shotglass"], yneeds["girlname"], "girlname");
     go("yourhome");
 }
 

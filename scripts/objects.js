@@ -68,9 +68,10 @@ objects = {
         "functions": [
             ["peein(&quot;ptowels&quot;)", "Suggests she pees into the paper towels."]
         ],
-        "yfunctions":[
-            ["ypeein(&quot;ptowels&quot;)", "Pee into the paper towels."]
-        ],
+        //TODO figure out how a scene where you pee into the towels works (yk male)
+        // "yfunctions":[
+        //     ["ypeein(&quot;ptowels&quot;)", "Pee into the paper towels."]
+        // ],
         "quote": "peetowelquote",
         "owned": "{0} roll{1} of paper towels",
         "description":"One should always have paper towels handy."

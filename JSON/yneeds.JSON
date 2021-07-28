@@ -19,18 +19,39 @@
     "Your bladder feels fine.",
     "You don't feel any need to pee whatsoever"
   ],
-   "ypeeshot": [
-     "YOU: I got a shot glass. Here hold this for a minute.",
-     "You give her the shot glass so you can open your fly with the hand that is not holding the steering wheel.",
-     "You give her the shot glass so that you can use both hands to open your fly.",
-     "You quickly whip your dick out, not really caring that she can see it.",
-     "You urgently reach your hand to her.",
-     "YOU: Give me the glass, it's coming out!",
-     "girlname0",
-     "You push it in place before allowing your muscles to relax.",
-     "The pee hisses out and the glass is filled in no time. You groan at the effort it takes to stop the flow, you can't grasp yourself as both your hand are occupied.",
-     "The pee hisses out and the glass is filled in no time. You grab your dick as you force to flow to stop. It is hard but you manage with a groan.",
-     "YOU: Damn. That's not much better."
+   "shotglass": [
+     ["<b>You:</b> I got a shot glass, would you like me to pee into this?",
+     "<b>You:</b> I need to pee, I got this shot glass I can pee into this.",
+     "<b>You:</b> Pff, I'm bursting for a piss. I gotta go in this shot glass."],
+     [ "<b>YOU:</b> Here! Please hold this for a minute.",
+       "You shove the glass in her hands so you can open your fly with the hand that is not holding the steering wheel."
+       ],
+     ["You grab yourself through your trousers, trying to hold it back.",
+       "<b>YOU:</b> Here! Please hold this for a minute.",
+       "You shove the shot glass into her hands so you can use both hands to open your fly"
+     ],
+     [[
+       "You slowly unzip your trousers, putting up quite a show",
+       "Pulling your dick out, you give yourself a few strokes. "
+     ],
+     [ "When you're sure she's watching, you unzip your jeans.",
+      "Sighing slightly you pull yourself free from your pants."],
+       ["You quickly whip your dick out, not really caring that she can see it."]
+     ],
+     [
+       "You urgently reach your hand to her.",
+       "<b>You:</b> Give me the glass, it's coming out!",
+       "girlname0",
+       "You push it in place before allowing your muscles to relax."
+     ],
+     ["You calmly position your dick in place before relaxing your muscles"],
+     [
+       ["A small stream of pee hisses out, you sigh slightly as the glass fills before cutting off your stream",
+        "A small stream of pee hisses out, your bladder empties before the glass is full."],
+       ["A decent stream shoots from your cock into the glass. You grab yourself slightly to stop the flow as the glass fills",
+        "A decent stream shoots from your cock into the glass, yet you fail to fill the whole glass."],
+       ["The pee hisses out and the glass is filled in no time. You groan at the effort it takes to stop the flow, you can't grasp yourself as both your hand are occupied.",
+        "The pee hisses out and the glass is filled in no time. You grab your dick as you force to flow to stop. It is hard but you manage with a groan."]]
    ],
    "peevase": [
      "YOU: I got a vase. Here hold this for a minute.",
