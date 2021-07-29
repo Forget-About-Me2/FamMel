@@ -179,108 +179,6 @@ function displayyourneed(curtext) {
     return curtext
 }
 
-//TODO more variety? and implement for different locations
-//TODO test
-function ypeeshot() {
-    let curtext = [];
-    curtext.push(yneeds["ypeeshot"][0]);
-    // s("YOU: I got a shot glass. Here hold this for a minute.");
-    if (locstack[0] === "driveout")
-        curtext.push(yneeds["ypeeshot"][1]);
-    // s("You give her the shot glass so you can open your fly with the hand that is not holding the steering wheel.");
-    else
-        curtext.push(yneeds["ypeeshot"][2]);
-    // s("You give her the shot glass so that you can use both hands to open your fly.");
-    curtext.push(yneeds["ypeeshot"][3]);
-    // s("You quickly whip your dick out, not really caring that she can see it.");
-    curtext = printChoicesList(curtext, [0], yneeds["choices"]);
-    // c("ypeeshot2", "Continue...");
-    sayText(curtext);
-}
-
-//TODO test
-function ypeeshot2() {
-    let curtext = [];
-    curtext.push(yneeds["ypeeshot"][4]);
-    curtext.push(yneeds["ypeeshot"][5]);
-    curtext.push(yneeds["ypeeshot"][6]);
-    curtext.push(yneeds["ypeeshot"][7]);
-    // s("You urgently reach your hand to her.");
-    // s("YOU: Give me the glass, it's coming out!");
-    // s(girlname + "quickly hands you the glass.");
-    // s("You push it in place before allowing your muscles to relax.");
-    curtext = printChoicesList(curtext, [1], yneeds["choices"]);
-    // c("ypeeshot3", "Continue...");
-    sayText(curtext);
-}
-
-//TODO test
-function ypeeshot3() {
-    let curtext = [];
-    if (locstack[0] === "driveout")
-        curtext.push(yneeds["ypeeshot"][8]);
-    // s("The pee hisses out and the glass is filled in no time. You groan at the effort it takes to stop the flow, you can't grasp yourself as both your hand are occupied.");
-    else
-        curtext.push(yneeds["ypeeshot"][9]);
-    // s("The pee hisses out and the glass is filled in no time. You grab your dick as you force to flow to stop. It is hard but you manage with a groan.");
-    curtext.push(yneeds["ypeeshot"][10]);
-    // s("YOU: Damn. That's not much better.");
-    attraction += 10;
-    yourbladder -= 100;
-    curtext = printChoicesList(curtext, [2], yneeds["choices"]);
-    sayText(curtext);
-    // c(locstack[0], "Continue...");
-}
-
-//TODO locations that are not the car
-//TODO test
-function ypeevase() {
-    let curtext = [];
-    curtext.push(yneeds["peevase"][0]);
-    // s("YOU: I got a vase. Here hold this for a minute.");
-    if (locstack[0] === "driveout")
-        curtext.push(yneeds["peevase"][1]);
-    // s("You give her the vase so you can open your fly with the hand that is not holding the steering wheel.");
-    else
-        curtext.push(yneeds["peevase"][2]);
-    // s("You give her the vase so that you can use both hands to open your fly.");
-    // s("You quickly whip your dick out, not really caring that she can see it.");
-    curtext.push(yneeds["peevase"][3]);
-    curtext = printChoicesList(curtext, [3], yneeds["choices"]);
-    // c("ypeevase2", "Continue...");
-    sayText(curtext);
-}
-
-//TODO test
-function ypeevase2() {
-    let curtext = [];
-    curtext.push(yneeds["peevase"][4]);
-    curtext.push(yneeds["peevase"][5]);
-    curtext.push(yneeds["peevase"][6]);
-    curtext.push(yneeds["peevase"][7]);
-    // s("You urgently reach your hand to her.");
-    // s("YOU: Give me the vase, it's coming out!");
-    // s(girlname + " quickly hands you the vase.");
-    // s("You push it in place before allowing your muscles to relax.");
-    curtext = printChoicesList(curtext, [4], yneeds["choices"]);
-    // c("ypeevase3", "Continue...");
-    sayText(curtext);
-}
-
-//TODO test
-function ypeevase3() {
-    let curtext = [];
-    curtext.push(yneeds["peevase"][8]);
-    curtext.push(yneeds["peevase"][9]);
-    // s("The pee hisses out for nearly a minute and the vase is almost filled to the to the top");
-    // s("YOU: Oh! That's much better.");
-    attraction += 10;
-    flushyourdrank();
-    curtext = printChoicesList(curtext, [2], yneeds["choices"]);
-    // c(locstack[0], "Continue...");
-    sayText(curtext);
-}
-
 function ypeein(item){
     //Closes the backpack since a function has been chosen
     const backpackcnt = document.getElementById("backpack-cnt");
@@ -316,7 +214,8 @@ function ypeein(item){
         curtext.push("\"Are you out of your mind!?\" She hisses urgently. \"You can't do that! What if someone sees?!\"");
         curtext.push("You sigh, but put away the " + objects[item].bpname.toLowerCase() + ".");
         curtext = callChoice(["curloc", "Continue..."], curtext);
-        attraction -= 10;
+        console.log(Math.round(10 / (yneedtype + 1)));
+        attraction -= Math.round(10 / (yneedtype + 1));
     }
     sayText(curtext);
 }
@@ -342,20 +241,24 @@ function ypeein3(item, yneedtype){
         const list = yneeds[item];
         if (container.hasOwnProperty("volume")){
             if (container.volume < yourbladder){
-                curtext.push(list[6][yneedtype][0]);
+                if (yneedtype === 2)
+                    curtext.push(list[6][yneedtype][1]);
+                else
+                    curtext.push(list[6][yneedtype][0]);
                 if (yourbladder > yourblademer)
                     curtext.push("YOU: Damn. That's not much better.");
                 yourbladder -= container.volume;
             } else {
                 //The item can hold your full bladder contents
-                curtext.push(list[6][yneedtype][0]);
+                curtext.push(list[6][yneedtype][1]);
                 flushyourdrank();
             }
         } else{
             curtext = printList(curtext, list[6][yneedtype]);
             flushyourdrank();
         }
-        attraction += 10;
+        console.log(Math.round(10 / (yneedtype + 1)));
+        attraction += Math.round(10 / (yneedtype + 1));
     }
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);

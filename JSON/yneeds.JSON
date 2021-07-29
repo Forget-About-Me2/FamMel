@@ -53,15 +53,38 @@
        ["The pee hisses out and the glass is filled in no time. You groan at the effort it takes to stop the flow, you can't grasp yourself as both your hand are occupied.",
         "The pee hisses out and the glass is filled in no time. You grab your dick as you force to flow to stop. It is hard but you manage with a groan."]]
    ],
-   "peevase": [
-     "YOU: I got a vase. Here hold this for a minute.",
-     "You give her the vase so you can open your fly with the hand that is not holding the steering wheel.",
-     "You give her the vase so that you can use both hands to open your fly.",
-     "You free your dick, in full view of her.",
-     "girlname1",
-     "<b>You<:/b> I can't hold it! Quick give me the vase!",
-     "girlname2",
-     "You quickly put it between your legs before releasing your bladder."
+   "vase": [
+     ["<b>You:</b> I got a vase, wouldn't it be sexy if I peed into this?",
+       "<b>You:</b> I need to pee. Thankfully I got this vase, I can pee into this.",
+       "<b>You:</b> Pff, I'm bursting for a piss. I can't hold it, I gotta go in this vase."],
+     [ "<b>You:</b> Here! Please hold this for a minute.",
+       "You almost throw the vase in her lap so you can open your fly with the hand that is not holding the steering wheel."
+     ],
+     ["You grab yourself through your trousers, trying to contain the pulsing.",
+       "<b>You:</b> Here! Please hold this for a minute.",
+       "You almost throw the vase at her so you can use both hands to open your fly"
+     ],
+     [[
+       "You slowly unzip your trousers, making it entertaining for her if she wanted to watch.",
+       "Pulling your dick out, you give yourself a few strokes. "
+     ],
+       [ "When you're sure she's watching, you unzip your jeans.",
+         "Sighing slightly you pull your cock free from your pants."],
+       ["You quickly whip your dick out, not really caring that she can see it."]
+     ],
+     [
+       "girlname1",
+       "<b>You:</b> I can't hold it! Quick give me the vase!",
+       "girlname2",
+       "You quickly put it between your legs before releasing your bladder."
+     ],
+     ["You calmly position your dick in place before relaxing your muscles"],
+     [
+       ["A small stream of pee hisses out, it stops quickly as you didn't really have to go."],
+       ["A decent stream shoots from your cock, hitting the glass of the vase, you sigh slightly enjoying the relief."],
+       ["The pee hisses out for nearly a minute and the vase is almost filled to the to the top",
+         "<b>You:</b> Oh! That's much better."
+       ]]
    ],
    "girlname": [
      "{0} quickly hands you the glass.",

@@ -929,6 +929,7 @@ function yNeedSetup(){
     //And this is the cleanest way to not have everything crying
     yneeds["girlname"] = addGirlname(yneeds["girlname"]);
     yneeds["shotglass"] = replaceWCLCI(yneeds["shotglass"], yneeds["girlname"], "girlname");
+    yneeds["vase"] = replaceWCLCI(yneeds["vase"], yneeds["girlname"], "girlname");
     go("yourhome");
 }
 
