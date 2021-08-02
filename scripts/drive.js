@@ -30,11 +30,13 @@ function leavehm() {
 
 }
 
+let suggestedLocation
 
 //TODO fix the go to the bar like she asked
 function driveout() {
     let curtext = [];
     if (locstack[0] !== "driveout") {
+        setupLocations();
         pushloc("driveout");
         locationMCSetup("driveout", drive);
         curtext = printIntro(curtext, 0);
@@ -52,46 +54,36 @@ function driveout() {
     //TODO can probably combine the printing things in the if statement
     if (suggestedloc === "none") {
         if (randomchoice(8)) {
-            if (shyness < 30 && attraction > 50 && !beenmakeout) {
-                suggestedloc = "themakeout";
-            } else if (shyness < 50 && attraction > 100 && beenmakeout &&
-                beenbar && beenclub && seenmovie) {
-                suggestedloc = "thehome";
-            } else if (shyness > 80 && attraction < 30 && !seenmovie) {
-                suggestedloc = "themovie";
-            } else if (shyness < 60 && attraction > 30 && !beenclub) {
-                suggestedloc = "theclub";
-            } else if (bladder > bladneed && shyness < 50 && !beenbar) {
-                suggestedloc = "thebar";
-            }
+            updateSuggestedLocation();
             if (suggestedloc !== "none")
                 curtext = printDialogue(curtext, suggestedloc,0);
         }
     }
     curtext = displayyourneed(curtext);
     curtext = printAlways(curtext);
-    let choices = [0];
-    if (suggestedloc !== "thebar")
-        choices.push(1);
-    else
-        choices.push(2);
-    if (suggestedloc !== "theclub")
-        choices.push(3);
-    else
-        choices.push(4);
-    if (suggestedloc !== "themovie")
-        choices.push(5);
-    else
-        choices.push(6);
-    if (suggestedloc !== "themakeout")
-        choices.push(7);
-    else
-        choices.push(8);
-    if (suggestedloc !== "thehome")
-        choices.push(9);
-    else
-        choices.push(10);
-    curtext = printChoices(curtext, choices);
+    curtext = printLocationMenu(curtext);
+    // let choices = [0];
+    // if (suggestedloc !== "thebar")
+    //     choices.push(1);
+    // else
+    //     choices.push(2);
+    // if (suggestedloc !== "theclub")
+    //     choices.push(3);
+    // else
+    //     choices.push(4);
+    // if (suggestedloc !== "themovie")
+    //     choices.push(5);
+    // else
+    //     choices.push(6);
+    // if (suggestedloc !== "themakeout")
+    //     choices.push(7);
+    // else
+    //     choices.push(8);
+    // if (suggestedloc !== "thehome")
+    //     choices.push(9);
+    // else
+    //     choices.push(10);
+    // curtext = printChoices(curtext, choices);
     sayText(curtext);
 }
 

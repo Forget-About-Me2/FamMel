@@ -1,22 +1,46 @@
-// noinspection ES6UnusedImports
-// because the functions are used through eval code inspection thinks the imports aren't used.
-// This problem might get revolved later when locations is fleshed out more, but probably not.
-
-import {driveAroundSetup, driveAround} from "./locations/driveAround.js";
-import {theBarSetup, theBar} from "./locations/theBar.js";
-
 //Object containing all locations and information connected to that location
 //Initialised with all locations to be iterated over later.
-export let locations = {
+let locations = {
     "driveAround": {},
     "theBar" :{}
 };
 
+let locSetup = 0; //flag that locations have already been set-up
+
+//Initialises all locations if this hasn't happened yet
 function setupLocations(){
-    Object.keys(locations).forEach(loc => {
-        locations[loc] = eval(loc + "Setup()");
-    });
-    console.log(locations);
+    if (!locSetup) {
+        Object.keys(locations).forEach(loc => {
+            locations[loc] = eval(loc + "Setup(locations)");
+        });
+        locSetup = 1;
+    }
 }
 
-setupLocations();
+//Determines whether the wants to visit a location.
+function updateSuggestedLocation(){
+    if (shyness < 30 && attraction > 50 && !beenmakeout) {
+        suggestedloc = "themakeout";
+    } else if (shyness < 50 && attraction > 100 && beenmakeout &&
+        beenbar && beenclub && seenmovie) {
+        suggestedloc = "thehome";
+    } else if (shyness > 80 && attraction < 30 && !seenmovie) {
+        suggestedloc = "themovie";
+    } else if (shyness < 60 && attraction > 30 && !beenclub) {
+        suggestedloc = "theclub";
+    } else if (bladder > bladneed && shyness < 50 && !beenbar) {
+        suggestedloc = "thebar";
+    }
+}
+
+// Prints all locations that can be visited
+function printLocationMenu(curtext){
+    Object.keys(locations).forEach(loc => {
+        if (suggestedloc === loc.toLowerCase())
+            curtext = c(locations[loc].wantVisit, curtext);
+        else
+            curtext = c(locations[loc].visit, curtext);
+    });
+    return curtext;
+}
+

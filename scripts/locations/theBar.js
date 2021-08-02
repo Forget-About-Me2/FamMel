@@ -1,13 +1,12 @@
-export
-
 function theBarSetup(){
     return {
-        "visit": ["theBar", "Just drive around"],
+        "visit": ["theBar", "Go to the bar"],
+        "wantVisit": ["thebar", "Go to the bar like she asked."],
         "group": 1,
         "visited": 0,
     }
 }
 
-export function theBar(){
+function theBar(){
 
 }
