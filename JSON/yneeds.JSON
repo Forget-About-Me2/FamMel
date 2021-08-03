@@ -19,6 +19,14 @@
     "Your bladder feels fine.",
     "You don't feel any need to pee whatsoever"
   ],
+   "wetquote": [
+     "Suddenly, you are overwhelmed by your bladder, you groan and then gasp!",
+     "Suddenly, you are overwhelmed by your overfilled bladder, you freeze in place and you can feel your face turning red",
+     "You feel your pee coming out, you gasp and grab your dick.",
+     "You lose control of your muscles, you groan and double over.",
+     "Suddenly. You lose control of your bladder, you gasp and you can feel your face turning red.",
+     "Suddenly the control on your sphincter slips, you shudder and you can feel your face turning red."
+   ],
    "shotglass": [
      ["<b>You:</b> I got a shot glass, would you like me to pee into this?",
      "<b>You:</b> I need to pee, I got this shot glass I can pee into this.",
@@ -120,6 +128,29 @@
        ["The pee hisses out and the glass is filled in no time. You groan at the effort it takes to stop the flow, you can't grasp yourself as both your hand are occupied.",
          "The pee hisses out and the glass is filled in no time. You grab your dick as you force to flow to stop. It is hard but you manage with a groan."]]
    ],
+   "wetyourself": [
+     ["You are helpless as your bladder uncontrollably empties itself.",
+      "Surely she can hear the hissing."
+     ],
+     ["You frantically look around, wanting to safe your car seat. You fumble with the seat belt, then wrench the door open and jump out of the car."
+     ],
+     [ "You stiffen and let out a shaky breath.",
+       "You sigh and slump back in the tub, letting the relieve course through you.",
+       "When you are finally empty you open your eyes to meet hers"
+     ],
+     [ "There is nothing you can do, your hands tighten on the steering wheel.",
+       "<b>You:</b> Dammit!",
+       "You are helpless as your bladder uncontrollably empties itself.",
+       "Surely she can hear the hissing."
+     ],
+     ["<b>You:</b> I'm sorry about that. I really couldn't wait.",
+       "You uncomfortably shift in the squishy wet seat."],
+     ["<b>You:</b> I'm <u>so</u> sorry... I just couldn't hold it.",
+      "The faint scent of your urine rises from the water.",
+      "<b>You:</b> I peed in the tub."
+      ]
+   ],
+   "spurtquote": "You manage to get your control back but you still let out a little bit.",
    "girlname": [
      "{0} quickly hands you the glass.",
      "You reach out to {0}.",

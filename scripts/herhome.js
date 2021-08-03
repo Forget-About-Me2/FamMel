@@ -60,6 +60,8 @@ function pickup() {
     }
     curtext = displaygottavoc(curtext);
     curtext = displayyourneed(curtext);
+    sayText(curtext);
+    curtext = [];
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
@@ -72,5 +74,6 @@ function pickup() {
         }
         curtext = c(["leavehm", "Say let's get going."], curtext);
     }
-    sayText(curtext);
+    addSayText(curtext);
+
 }

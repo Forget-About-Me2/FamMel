@@ -184,14 +184,12 @@ function ypeein(item){
     const backpackcnt = document.getElementById("backpack-cnt");
     backpackcnt.style.display = "none";
     const list = yneeds[item];
-    console.log(list);
     let curtext = [];
     let yneedtype = 0;
     if (yourbladder>yourblademer)
         yneedtype = 2;
     else if (yourbladder>yourbladneed)
         yneedtype = 1;
-    console.log(yneedtype);
     //Prints a quote about how full you are and what you are planning to do.
     curtext.push(list[0][yneedtype]);
     //If she doesn't like you enough she'll act embarrassed and prevent you from doing this.
@@ -214,7 +212,6 @@ function ypeein(item){
         curtext.push("\"Are you out of your mind!?\" She hisses urgently. \"You can't do that! What if someone sees?!\"");
         curtext.push("You sigh, but put away the " + objects[item].bpname.toLowerCase() + ".");
         curtext = callChoice(["curloc", "Continue..."], curtext);
-        console.log(Math.round(10 / (yneedtype + 1)));
         attraction -= Math.round(10 / (yneedtype + 1));
     }
     sayText(curtext);
@@ -257,7 +254,6 @@ function ypeein3(item, yneedtype){
             curtext = printList(curtext, list[6][yneedtype]);
             flushyourdrank();
         }
-        console.log(Math.round(10 / (yneedtype + 1)));
         attraction += Math.round(10 / (yneedtype + 1));
     }
     curtext = callChoice(["curloc", "Continue..."], curtext);
@@ -322,76 +318,94 @@ function ypeeoutside3c() {
 //TODO more original quotes (most are now stolen from her)
 //TODO fix timings
 function wetyourself() {
-    s(ywetquote[randcounter]);
-    incrandom();
+    let curtext = [pickrandom(yneeds["wetquote"])];
+    sayText(curtext);
     if (randomchoice(yspurtthresh) && locstack[0] !== "thehottub") {
         spurtedyourself();
     } else {
         yspurtthresh = 3;
         if (locstack[0] === "driveout")
-            c("wetyourself2c", "Continue ...");
+            cListener([wetyourself2c, "Continue ..."], "wetyourself");
         else if (locstack[0] === "themakeout")
-            c("wetyourself2m", "Continue ...");
+            cListener([wetyourself2m, "Continue ..."], "wetyourself");
         else if (locstack[0] === "thehottub")
-            c("wetyourself2t", "Continue ...");
+            cListener([wetyourself2t, "Continue ..."],"wetyourself");
         else
-            c("wetyourself2", "Continue ...");
+            cListener([wetyourself2, "Continue ..."], "wetyourself");
     }
 }
 
 //TODO register you wet your pants
-function wetyourself2() {
-    s("You are helpless as your bladder uncontrollably empties itself.");
-    s("Surely she can hear the hissing.");
+function wetyourself2(curtext) {
+    if (!curtext)
+        curtext = [];
+    curtext = printList(curtext, yneeds["wetyourself"][0]);
+    // s("You are helpless as your bladder uncontrollably empties itself.");
+    // s("Surely she can hear the hissing.");
     flushyourdrank();
-    c(locstack[0], "Continue ...");
+    curtext = callChoice(["curloc", "Continue ..."], curtext);
+    sayText(curtext);
 }
 
 //You're in the make out spot
+//TODO test
 function wetyourself2m() {
-    s("You frantically look around, wanting to safe your car seat. You fumble with the seat belt, then wrench the door open and jump out of the car.");
-    wetyourself2();
+    let curtext = yneeds["wetyourself"][1];
+    // s("You frantically look around, wanting to safe your car seat. You fumble with the seat belt, then wrench the door open and jump out of the car.");
+    wetyourself2(curtext);
 }
 
 //You're in the hottub
+//TODO test
 function wetyourself2t() {
-    s("You stiffen and let out a shaky breath.");
+    let curtext = yneeds["wetyourself"][2];
+    sayText(curtext);
     flushyourdrank();
-    s("You sigh and slump back in the tub, letting the relieve course through you.");
-    s("When you are finally empty you open your eyes to meet hers");
-    c("wetyourself3t", "Continue ...");
+    // s("You stiffen and let out a shaky breath.");
+    // s("You sigh and slump back in the tub, letting the relieve course through you.");
+    // s("When you are finally empty you open your eyes to meet hers");
+    cListener([wetyourself3t, "Continue ..."], "wetyourself");
 }
 
 //You're in the car
 //TODO register you wet the car
 function wetyourself2c() {
-    s("There is nothing you can do, your hands tighten on the steering wheel.");
-    s("YOU: Dammit!");
-    s("You are helpless as your bladder uncontrollably empties itself.");
-    s("Surely she can hear the hissing.");
+    let curtext = yneeds["wetyourself"][3];
+    sayText(curtext);
+    // s("There is nothing you can do, your hands tighten on the steering wheel.");
+    // s("YOU: Dammit!");
+    // s("You are helpless as your bladder uncontrollably empties itself.");
+    // s("Surely she can hear the hissing.");
     flushyourdrank();
-    c("wetyourself3c", "Continue ...");
+    cListener([wetyourself3c, "Continue ..."], "wetyourself");
 }
 
 function wetyourself3c() {
-    s("YOU: I'm sorry about that. I really couldn't wait.");
-    s("You uncomfortably shift in the squishy wet seat.");
-    c(locstack[0], "Continue ...");
+    let curtext = yneeds["wetyourself"][4];
+    // s("YOU: I'm sorry about that. I really couldn't wait.");
+    // s("You uncomfortably shift in the squishy wet seat.");
+    curtext = callChoice(["curloc", "Continue ..."], curtext);
+    sayText(curtext);
 }
 
 
 //In the tub
+//TODO test
 function wetyourself3t() {
-    s("YOU: I'm <u>so</u> sorry... I just couldn't hold it.");
+    let curtext = yneeds["wetyourself"][5];
+/*    s("YOU: I'm <u>so</u> sorry... I just couldn't hold it.");
     s("The faint scent of your urine rises from the water.");
-    s("YOU: I peed in the tub.");
-    c(locstack[0], "Continue ...");
+    s("YOU: I peed in the tub.");*/
+    curtext = callChoice(["curloc", "Continue ..."], curtext);
+    sayText(curtext);
 }
 
 //TODO more text options and her reponse
 function spurtedyourself() {
     yourbladder -= 50;
     yspurtthresh -= 0.1 * yspurtthresh;
-    s("You manage to get your control back but you still let out a little bit.");
-    c(locstack[0], "Continue ...");
+    let curtext = [yneeds["spurtquote"]];
+    // s("You manage to get your control back but you still let out a little bit.");
+    curtext = callChoice(["curloc", "Continue ..."], curtext);
+    sayText(curtext);
 }

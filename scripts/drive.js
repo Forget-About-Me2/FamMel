@@ -61,7 +61,6 @@ function driveout() {
     }
     curtext = displayyourneed(curtext);
     curtext = printAlways(curtext);
-    curtext = printLocationMenu(curtext);
     // let choices = [0];
     // if (suggestedloc !== "thebar")
     //     choices.push(1);
@@ -85,6 +84,7 @@ function driveout() {
     //     choices.push(10);
     // curtext = printChoices(curtext, choices);
     sayText(curtext);
+    printLocationMenu();
 }
 
 function nextstop() {

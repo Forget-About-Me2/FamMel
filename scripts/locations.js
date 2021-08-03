@@ -34,13 +34,17 @@ function updateSuggestedLocation(){
 }
 
 // Prints all locations that can be visited
-function printLocationMenu(curtext){
+function printLocationMenu(){
     Object.keys(locations).forEach(loc => {
         if (suggestedloc === loc.toLowerCase())
-            curtext = c(locations[loc].wantVisit, curtext);
+            cListener(locations[loc].wantVisit, loc);
         else
-            curtext = c(locations[loc].visit, curtext);
+            cListener(locations[loc].visit, loc);
     });
-    return curtext;
+    Object.keys(locations).forEach(loc => {
+        addListeners(locations[loc].visit, loc)
+    })
 }
+
+
 

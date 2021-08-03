@@ -443,7 +443,7 @@ function preventpee(curtext) {
         choices.push(5); //pdrinkinggame
     if (locstack[0] === "darkclub")
         choices.push(6); //pphotegame
-    if (locstack[0] === "driveout") {
+    if (locstack[0] === "driveout" && !gasStation) {
         choices.push(7); //nextstop
     } else {
         choices.push(8); //allowpee

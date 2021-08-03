@@ -436,7 +436,8 @@ var ywetquote=["Suddenly, you are overwhelmed by your bladder, you groan and the
     "You feel your pee coming out, you gasp and grab your dick.",
     "You lose control of your muscles, you groan and double over.",
     "Suddenly. You lose control of your bladder, you gasp and you can feel your face turning red.",
-    "Suddenly the control on your sphincter slips, you shudder and you can feel your face turning red."];
+    "Suddenly the control on your sphincter slips, you shudder and you can feel your face turning red."
+];
 
 //
 //  She denies she wet her panties ... sort of
@@ -532,6 +533,14 @@ String.prototype.format = String.prototype.f = function() {
     return s;
 };
 
+//Format a given string adding the variables
+String.prototype.formatVars = function() {
+    let s = this;
+    s = s.replaceAll(new RegExp("girlname",'gm'), girlname);
+    s = s.replaceAll(new RegExp("girltalk", 'gm'), girltalk);
+    return s;
+}
+
 function formatString(expr, arguments){
     return expr.format(arguments);
 }
@@ -542,6 +551,20 @@ function formatAll(exprList, values){
     for(let i=0;i<exprList.length; i++){
         result.push(formatString(exprList[i], values[i]));
     }
+    return result;
+}
+
+//Formats all Strings in exprList to add the variables
+function formatAllVars(exprList){
+    let result = [];
+    exprList.forEach(str => result.push(str.formatVars()));
+    return result;
+}
+
+//Formats all String in a list of list to add the variables
+function formatAllVarsList(list){
+    let result = [];
+    list.forEach(exprList => result.push(formatAllVars(exprList)));
     return result;
 }
 
@@ -663,11 +686,50 @@ function c(choice, curtext) {
     return curtext;
 }
 
+// Cache a choice for a click listener
+// choice - array of length 2 with tag on index 0 and desc on index 1
+//   tag - function to activate using choice
+//   desc - description of choice to display.
+// loc - the name of the location used
+function cListener(choice, loc){
+    const html = "<p><li class='cListener' id='"+loc+"'>"+choice[1]+"</li></p>";
+    document.getElementById('textsp').innerHTML += html;
+    let temp = choice[0];
+    document.getElementById(loc).addEventListener("click", temp
+    );
+}
 
+//Adds an element to a created click listener
+//This is done separately because if the list contains more listeners things break
+function addListeners(choice, loc){
+    let temp = choice[0];
+    document.getElementById(loc).addEventListener("click", temp
+    );
+}
+
+//For a given list adds a listener to all created click listeners
+function addListenersList(list){
+    list.forEach(item => addListeners(item[0], item[1]));
+}
+
+//For the given choice creates both the element and the listener
+function cListenerGen(choice, loc){
+    cListener(choice, loc);
+    addListeners(choice, loc);
+}
+
+//print the given lines list on the screen
 function sayText(lines){
     let result = "";
     lines.forEach(item => result += "<p>" + item + "</p>");
     document.getElementById('textsp').innerHTML = result;
+}
+
+//Adds the given line list to the already existing screen.
+function addSayText(lines){
+    let result = "";
+    lines.forEach(item => result += "<p>" + item + "</p>");
+    document.getElementById('textsp').innerHTML += result;
 }
 
 function setText(lines){

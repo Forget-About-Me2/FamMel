@@ -223,6 +223,15 @@ body{
     text-align: center;
 }
 
+.cListener {
+    cursor: pointer;
+    color: #000088;
+}
+
+.cListener:hover {
+   color: #888800;
+}
+
 #perDecErr {
     display: none;
     color: #fa0202;
