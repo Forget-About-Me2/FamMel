@@ -18,7 +18,6 @@ const gasChance = 3; //Chance you'll encounter a gas station
 let gasStation;
 
 function driveAround(){
-    locations.driveAround.visited = 1;
     let curtext = printList([], driveRound["driveAround"][0]);
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);

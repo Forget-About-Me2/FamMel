@@ -180,6 +180,21 @@ objects = {
         "drinkquote": "Cheers.",
         "description":"Hmmm, alcohol."
     },
+    "barKey":{
+        "bpname" : "Bar Key",
+        "value" : 0,
+        "description": "Key to the bar."
+    },
+    "clubKey":{
+        "bpname": "Club Key",
+        "value": 0,
+        "description": "Key to the club."
+    },
+    "theatreKey":{
+        "bpname": "Theatre key",
+        "value" : 0,
+        "description": "Key to the Movie Theatre."
+    },
     "herKeys":{
         "bpname": "Set of Keys",
         "locations": ["herhome"],
@@ -224,25 +239,8 @@ const drinkLoc = ["pickup", "driveout", "domovie",
     "thehottub", "darkmovie", "photogame", "drinkinggame", "thehome"]
 
 //TODO add a mention need option
-//TODO integrate champagne from thehouse
 // standobjs function allows one to use the normal objects.
 function standobjs(curtext) {
-    // if (haveItem("roses") > 0)
-    //     curtext = c(["giveroses", "Give her a boquet of roses."], curtext);
-    // if (locstack[0] !== "dodance") {
-    //     if (haveItem("water") && locstack[0] !== "thebar")
-    //        curtext = c(["drinkchosen", "Do something with the water."], curtext);
-    //
-    //     if (haveItem("beer") && locstack[0] !== "driveout") {
-    //         curtext = c(["beerchosen", "Do something with the beer."], curtext);
-    //     }
-    //     if (haveItem("soda")) {
-    //         curtext = c(["sodachosen", "Do something with the soda"], curtext);
-    //     }
-    //     if (haveItem("cocktail") && locstack[0] !== "driveout") {
-    //         curtext = c(["cocktailchosen", "Do something with the cocktail"], curtext);
-    //     }
-    // }
     if (randomchoice(5) && gottagoflag < 1 && showedneed > 0 && !askholditcounter)
         curtext = c(["askpee", "Ask her if she has to pee."], curtext);
     else if (flirtedflag < maxflirts && noflirtflag < 1) {
@@ -301,7 +299,7 @@ function briberoses() {
     askholditcounter++;
     curtext = displayholdquip(curtext);
     curtext = printChoicesList(curtext, [0],  needs["choices"]);
-    roses -= 1;
+    objects.roses.value -= 1;
     sayText(curtext);
 }
 
@@ -311,7 +309,7 @@ function bribeearrings() {
     askholditcounter++;
     curtext = displayholdquip(curtext);
     curtext = printChoicesList(curtext, [0],  needs["choices"]);
-    earrings -= 1;
+    objects.earrings.value -= 1;
     sayText(curtext);
 }
 

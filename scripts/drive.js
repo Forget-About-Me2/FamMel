@@ -36,7 +36,6 @@ let suggestedLocation
 function driveout() {
     let curtext = [];
     if (locstack[0] !== "driveout") {
-        setupLocations();
         pushloc("driveout");
         locationMCSetup("driveout", drive);
         curtext = printIntro(curtext, 0);
@@ -61,28 +60,6 @@ function driveout() {
     }
     curtext = displayyourneed(curtext);
     curtext = printAlways(curtext);
-    // let choices = [0];
-    // if (suggestedloc !== "thebar")
-    //     choices.push(1);
-    // else
-    //     choices.push(2);
-    // if (suggestedloc !== "theclub")
-    //     choices.push(3);
-    // else
-    //     choices.push(4);
-    // if (suggestedloc !== "themovie")
-    //     choices.push(5);
-    // else
-    //     choices.push(6);
-    // if (suggestedloc !== "themakeout")
-    //     choices.push(7);
-    // else
-    //     choices.push(8);
-    // if (suggestedloc !== "thehome")
-    //     choices.push(9);
-    // else
-    //     choices.push(10);
-    // curtext = printChoices(curtext, choices);
     sayText(curtext);
     printLocationMenu();
 }

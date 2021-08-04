@@ -141,7 +141,9 @@ function go(tag) {
         document.getElementById('thepic').innerHTML = "<table style='text-align:right'><tr><td style='width:100px'><pre>&nbsp;</pre></table>";
     }
 
-    if(jsonlocs.includes(tag)&&!calledjsons.hasOwnProperty(tag)){
+    if (typeof tag === "function")
+        tag();
+    else if(jsonlocs.includes(tag)&&!calledjsons.hasOwnProperty(tag)){
         //checks whether the given location has a corresponding JSON file and calls it if it hasn't been called before
         getjsonT(tag);
     } else if (tag.includes("(")){

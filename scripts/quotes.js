@@ -703,6 +703,7 @@ function cListener(choice, loc){
 //This is done separately because if the list contains more listeners things break
 function addListeners(choice, loc){
     let temp = choice[0];
+    console.log(loc);
     document.getElementById(loc).addEventListener("click", temp
     );
 }

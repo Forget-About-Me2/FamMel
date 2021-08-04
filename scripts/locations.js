@@ -1,21 +1,9 @@
 //Object containing all locations and information connected to that location
 //Initialised with all locations to be iterated over later.
 let locations = {
-    "driveAround": {},
-    "theBar" :{}
+    "driveAround": driveAroundSetup(),
+    "theBar" :theBarSetup()
 };
-
-let locSetup = 0; //flag that locations have already been set-up
-
-//Initialises all locations if this hasn't happened yet
-function setupLocations(){
-    if (!locSetup) {
-        Object.keys(locations).forEach(loc => {
-            locations[loc] = eval(loc + "Setup(locations)");
-        });
-        locSetup = 1;
-    }
-}
 
 //Determines whether the wants to visit a location.
 function updateSuggestedLocation(){
@@ -37,13 +25,20 @@ function updateSuggestedLocation(){
 function printLocationMenu(){
     Object.keys(locations).forEach(loc => {
         if (suggestedloc === loc.toLowerCase())
-            cListener(locations[loc].wantVisit, loc);
+            cListener(goWrapper(locations[loc].wantVisit), loc);
         else
-            cListener(locations[loc].visit, loc);
+            cListener(goWrapper(locations[loc].visit), loc);
     });
     Object.keys(locations).forEach(loc => {
         addListeners(locations[loc].visit, loc)
     })
+}
+
+//Calls the given visit through go, aka it triggers a game tick.
+function goWrapper(visit){
+    let temp = visit[0];
+    visit[0] = function () { go(temp);}
+    return visit;
 }
 
 
