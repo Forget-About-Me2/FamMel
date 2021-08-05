@@ -203,29 +203,29 @@ var bargirldesc=["The girl tending the bar is really good-looking.",
 //
 //  Conversation in the bar has good, medium and bad answers
 //
-var bartalk=["I'll tell you about my family.  Mostly, there's just me and my brother.  The parents are miraculously still together, and still in the same house they bought back in the 60's...",
-    "Man, my work has been keeping me <u>so</u> busy.",
-    "You know, I haven't been dating for quite a while.",
-    "The weather has been really nice this week.",
-    "Do you have any pets?"];
-
-var bargoodans=["You say you wish you had a brother.",
-    "You ask her more about her job.",
-    "You ask her why a pretty girl like her hasn't been out dating.",
-    "You agree and ask her if she's been out doing anything since the weather's been so nice.",
-    "You say you had a dog as a kid ... and would like to get another someday."];
-
-var barmedans=["You say your parents are still together too.",
-    "You say her job sounds like a difficult one.",
-    "You say you're honored to be the one to break the losing streak.",
-    "You agree and tell her you've been out enjoying it.",
-    "You say you've never had a pet."];
-
-var barbadans=["You say you wish you had a sister growing up.",
-    "You talk about your job and how you're up for a promotion.",
-    "You say you've been dating a lot recently.",
-    "You say you hadn't noticed the weather because you've been at work.",
-    "You say you want to get a cat someday."];
+// var bartalk=["I'll tell you about my family.  Mostly, there's just me and my brother.  The parents are miraculously still together, and still in the same house they bought back in the 60's...",
+//     "Man, my work has been keeping me <u>so</u> busy.",
+//     "You know, I haven't been dating for quite a while.",
+//     "The weather has been really nice this week.",
+//     "Do you have any pets?"];
+//
+// var bargoodans=["You say you wish you had a brother.",
+//     "You ask her more about her job.",
+//     "You ask her why a pretty girl like her hasn't been out dating.",
+//     "You agree and ask her if she's been out doing anything since the weather's been so nice.",
+//     "You say you had a dog as a kid ... and would like to get another someday."];
+//
+// var barmedans=["You say your parents are still together too.",
+//     "You say her job sounds like a difficult one.",
+//     "You say you're honored to be the one to break the losing streak.",
+//     "You agree and tell her you've been out enjoying it.",
+//     "You say you've never had a pet."];
+//
+// var barbadans=["You say you wish you had a sister growing up.",
+//     "You talk about your job and how you're up for a promotion.",
+//     "You say you've been dating a lot recently.",
+//     "You say you hadn't noticed the weather because you've been at work.",
+//     "You say you want to get a cat someday."];
 
 //
 //  Solo Bargirl is really really hot looking...
@@ -538,6 +538,7 @@ String.prototype.formatVars = function() {
     let s = this;
     s = s.replaceAll(new RegExp("girlname",'gm'), girlname);
     s = s.replaceAll(new RegExp("girltalk", 'gm'), girltalk);
+    s = s.replaceAll(new RegExp("bladlose", 'gm'), bladlose);
     return s;
 }
 

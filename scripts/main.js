@@ -65,12 +65,9 @@ function go(tag) {
         lastattraction = attraction;
         lastshyness = shyness;
 
-        tumavg = Math.round((tumavg * (tumdecay - 1) + tummy) / tumdecay);
-        let tuminc = Math.round(tumavg / 10);
-        if (drankbeer === 0 && tuminc > 12) tuminc = 12;
-        if (drankbeer > 0 && tuminc > 18) tuminc = 18;
-        if (tuminc < 1) tuminc = 2;
-        tuminc = randtuminc(tuminc);
+
+        let tuminc = calcTuminc();
+
         tummy -= tuminc;
         if (tummy < 0) tummy = 0;
         bladder += tuminc;
@@ -165,6 +162,16 @@ function go(tag) {
     }
 }
 
+//Calculates her current tuminc
+function calcTuminc(){
+    tumavg = Math.round((tumavg * (tumdecay - 1) + tummy) / tumdecay);
+    let tuminc = Math.round(tumavg / 10);
+    if (drankbeer === 0 && tuminc > 12) tuminc = 12;
+    if (drankbeer > 0 && tuminc > 18) tuminc = 18;
+    if (tuminc < 1) tuminc = 2;
+    return randtuminc(tuminc);
+}
+
 //  increment the random number counter.
 function incrandom() {
     const now = new Date();
@@ -182,15 +189,18 @@ function randomchoice(probability) {
         return 1;
     else
         return 0;
-
 }
 
 //TODO potentially use this to choose quotes instead of randomchoice
 //Picks a random value from the given list
 function pickrandom(list) {
+    return list[randomIndex(list)];
+}
+
+//Picks a random index from a list.
+function randomIndex(list){
     let number = Math.random() * list.length;
-    number = Math.floor(number);
-    return list[number];
+    return Math.floor(number);
 }
 
 //This setups the game when you click start

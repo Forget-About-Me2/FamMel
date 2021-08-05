@@ -350,6 +350,7 @@ function wetyourself2(curtext) {
 //You're in the make out spot
 //TODO test
 function wetyourself2m() {
+    console.log("test");
     let curtext = yneeds["wetyourself"][1];
     // s("You frantically look around, wanting to safe your car seat. You fumble with the seat belt, then wrench the door open and jump out of the car.");
     wetyourself2(curtext);
@@ -358,6 +359,7 @@ function wetyourself2m() {
 //You're in the hottub
 //TODO test
 function wetyourself2t() {
+    console.log("test");
     let curtext = yneeds["wetyourself"][2];
     sayText(curtext);
     flushyourdrank();
@@ -392,6 +394,7 @@ function wetyourself3c() {
 //In the tub
 //TODO test
 function wetyourself3t() {
+    console.log("test");
     let curtext = yneeds["wetyourself"][5];
 /*    s("YOU: I'm <u>so</u> sorry... I just couldn't hold it.");
     s("The faint scent of your urine rises from the water.");

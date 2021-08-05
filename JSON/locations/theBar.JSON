@@ -1,5 +1,79 @@
 {
   "theBar": [
-    ["girlname giggles: \"But we've already been to the bar, silly!\""]
+    ["girlname giggles: \"But we've already been to the bar, silly!\""],
+    ["You and girlname enter the Bar, taking a couple of stools about halfway down."],
+    ["You are with girlname in the Bar."]
+  ],
+  "barTalk": [
+    [
+      "I'll tell you about my family.  Mostly, there's just me and my brother.  The parents are miraculously still together, and still in the same house they bought back in the 60's...",
+      "You say you wish you had a brother.",
+      "You say your parents are still together too.",
+      "You say you wish you had a sister growing up."
+    ],
+    [
+      "Man, my work has been keeping me <u>so</u> busy.",
+      "You ask her more about her job.",
+      "You say her job sounds like a difficult one.",
+      "You talk about your job and how you're up for a promotion."
+    ],
+    [
+      "You know, I haven't been dating for quite a while.",
+      "You ask her why a pretty girl like her hasn't been out dating.",
+      "You say you're honored to be the one to break the losing streak.",
+      "You say you've been dating a lot recently."
+    ],
+    [
+      "The weather has been really nice this week.",
+      "You agree and ask her if she's been out doing anything since the weather's been so nice.",
+      "You agree and tell her you've been out enjoying it.",
+      "You say you hadn't noticed the weather because you've been at work."
+    ],
+    [
+      "Do you have any pets?",
+      "You say you had a dog as a kid ... and would like to get another someday.",
+      "You say you've never had a pet.",
+      "You say you want to get a cat someday."
+    ],
+    [
+      "I <u>love</u> playing the piano. Do you play any instruments?",
+      "Yeah! I also play the piano. I learned it as a kid.",
+      "I've been wanting to learn guitar, but never gotten round to it.",
+      "Nah, I'm not really a music fan."
+    ]
+  ],
+  "barResp": [
+    [
+      "girlname looks you in the eyes and smiles as she talks.",
+      "girlname leans towards you and smile.",
+      "girlname seems pleased with the conversation.",
+      "you feel girlname's foot playfully brush your leg, and she smiles as she talks.",
+      "girlname touches your shoulder gently.",
+      "girlname seems to be playing with the top button of her blouse as she talks."
+    ],
+    [
+      "girlname seems uninterested in the conversation.",
+      "girlname twirls her hair around her finger as she talks.",
+      "girlname leans back in her chair.",
+      "girlname glances around the room.",
+      "girlname fiddles with her napkin.",
+      "girlname glances quickly at her watch"
+    ],
+    [
+      "girlname leans back in her chair and sighs.",
+      "girlname frowns.",
+      "girlname looks pointedly at her watch.",
+      "girlname seems more interested in shredding her napkin into little strips that what you have to say.",
+      "girlname appears engrossed in the program on the bar television ... which is an infomercial for Arizona real estate.",
+      "girlname looks exasperated."
+    ]
+  ],
+  "barQuotes": [
+    "<b>Bartender:</b> Nice girl you've got there. Bet she'll pee herself if she holds a drop over bladlose ml, though.",
+    "<b>Bartender:</b> She's cute, isn't she?  I bet if you found her a cocktail, she'd be a lot less inhibited about drinking.",
+    "<b>Bartender:</b> Did you know that beer is a diuretic?",
+    "<b>Bartender:</b> Say, you don't happen to know where a man could buy a set of wet panties around here, do you?",
+    "<b>Bartender:</b> How about them Dodgers?",
+    "<b>Bartender:</b> I've been thinking about starting a bladder buster night here on Mondays."
   ]
 }

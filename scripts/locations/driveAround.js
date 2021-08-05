@@ -39,7 +39,7 @@ function driveAround(){
         curtext = []
         if (yourbladder > yourblademer) {
             listenerList.push([[drivetell], "drivetell"]);
-            cListenerGen([drivetell, "Tell her you need to go."], "drivetell");
+            cListener([drivetell, "Tell her you need to go."], "drivetell");
         }
         // c("drivetell", "Tell her you need to go.");
         if (gottagoflag > 0) {
@@ -47,7 +47,7 @@ function driveAround(){
         } else curtext = standobjs(curtext);
         if (gasStation) {
             listenerList.push([[station], "gasStation"]);
-            cListenerGen([station, "Stop at the gas station"], "gasStation");
+            cListener([station, "Stop at the gas station"], "gasStation");
         }
         curtext = c([locstack[0], "Continue..."], curtext);
         addSayText(curtext);

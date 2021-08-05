@@ -189,6 +189,10 @@ CHANGES BY Forget_About_Me
 *Removed debug mode
 *Added the option to always ask her to pee into something, without caring about her need
 *Added a gas station
+*Tweaked the insistent asking to pee:
+    * WaitCounter now takes into account bladder size. With a minimum amount
+    * WaitCounter is only ignored if she's genuinely within 2 ticks of wetting
+*When selling panties you now get the option to buy more beer.
 */
 
     //TODO potentially clean up if statements with multiple locations
@@ -474,12 +478,12 @@ CHANGES BY Forget_About_Me
     //
     // Bartender quotes
     //
-    let barquotes = ["Nice girl you've got there.  Bet she'll pee herself if she holds a drop over " + bladlose + "ml, though.",
-        "She's cute, isn't she?  I bet if you found her a cocktail, she'd be a lot less inhibited about drinking.",
-        "Did you know that beer is a diuretic?",
-        "Say, you don't happen to know where a man could buy a set of wet panties around here, do you?",
-        "How about them Dodgers?",
-        "I've been thinking about starting a bladder buster night here on Mondays."];
+    // let barquotes = ["Nice girl you've got there.  Bet she'll pee herself if she holds a drop over " + bladlose + "ml, though.",
+    //     "She's cute, isn't she?  I bet if you found her a cocktail, she'd be a lot less inhibited about drinking.",
+    //     "Did you know that beer is a diuretic?",
+    //     "Say, you don't happen to know where a man could buy a set of wet panties around here, do you?",
+    //     "How about them Dodgers?",
+    //     "I've been thinking about starting a bladder buster night here on Mondays."];
 
 
     //
@@ -495,26 +499,26 @@ CHANGES BY Forget_About_Me
     //
     //  How the girl responds to what you say indicates good or bad answer
     //
-    let bargoodresp = [girlname + " looks you in the eyes and smiles as she talks.",
-        girlname + " leans towards you and smiles.",
-        girlname + " seems pleased with the conversation.",
-        "You feel " + girlname + "'s foot playfully brush your leg, and she smiles as she talks",
-        girlname + " touches your shoulder gently.",
-        girlname + " seems to be playing with the top button of her blouse as she talks."];
-
-    let barmedresp = [girlname + " seems uninterested in the conversation.",
-        girlname + " twirls her hair around her finger as she talks.",
-        girlname + " leans back in her chair.",
-        girlname + " glances around the room.",
-        girlname + " fiddles with her napkin.",
-        girlname + " glances quickly at her watch."];
-
-    let barbadresp = [girlname + " leans back in her chair and sighs.",
-        girlname + " frowns.",
-        girlname + " looks pointedly at her watch.",
-        girlname + " seems more interested in shredding her napkin into little strips that what you have to say.",
-        girlname + " appears engrossed in the program on the bar television ... which is an infomercial for Arizona real estate.",
-        girlname + " looks exasperated."];
+    // let bargoodresp = [girlname + " looks you in the eyes and smiles as she talks.",
+    //     girlname + " leans towards you and smiles.",
+    //     girlname + " seems pleased with the conversation.",
+    //     "You feel " + girlname + "'s foot playfully brush your leg, and she smiles as she talks",
+    //     girlname + " touches your shoulder gently.",
+    //     girlname + " seems to be playing with the top button of her blouse as she talks."];
+    //
+    // let barmedresp = [girlname + " seems uninterested in the conversation.",
+    //     girlname + " twirls her hair around her finger as she talks.",
+    //     girlname + " leans back in her chair.",
+    //     girlname + " glances around the room.",
+    //     girlname + " fiddles with her napkin.",
+    //     girlname + " glances quickly at her watch."];
+    //
+    // let barbadresp = [girlname + " leans back in her chair and sighs.",
+    //     girlname + " frowns.",
+    //     girlname + " looks pointedly at her watch.",
+    //     girlname + " seems more interested in shredding her napkin into little strips that what you have to say.",
+    //     girlname + " appears engrossed in the program on the bar television ... which is an infomercial for Arizona real estate.",
+    //     girlname + " looks exasperated."];
 
     /*
 
@@ -854,25 +858,7 @@ CHANGES BY Forget_About_Me
         c(locstack[0], "Continue...");
     }
 
-    function buybeer() {
-        if (money >= 3) {
-            s("You buy a beer for $3.00.");
-            beer += 1;
-            money -= 3;
-            s("<b>BARTENDER:</b> " + barquotes[randcounter]);
-            if (wetpanties > 0 && randcounter === 3) c("sellpanties", "Sell wet panties to the bartender.");
-            incrandom();
-        } else s("You don't have enough money!");
-        c("buybeer", "Buy another beer");
-        c(locstack[0], "Continue...");
-    }
 
-    function stealbeer() {
-        s("You climb behind the bar and find a clean glass.  Holding it under the tap, you carefully pull the lever and watch as the frothy amber liquid fills the glass.");
-        beer += 1;
-        c("stealbeer2", "Steal another beer");
-        c(locstack[0], "Continue...");
-    }
 
     //TODO put a limit on this/ Game update
     //TODO Randomize quotes
@@ -882,10 +868,6 @@ CHANGES BY Forget_About_Me
         c("stealbeer2", "Steal another beer");
         c(locstack[0], "Continue...");
     }
-
-
-
-
 
     function breakclub() {
         s("You try the door with your key...");
@@ -2704,11 +2686,11 @@ CHANGES BY Forget_About_Me
     }
 
 
-    function rebar() {
-        barkey = 0;
-        pushloc("thebar");
-        thebar();
-    }
+    // function rebar() {
+    //     barkey = 0;
+    //     pushloc("thebar");
+    //     thebar();
+    // }
 
     function darkbar() {
         if (locstack[0] !== "darkbar") {
@@ -2759,13 +2741,6 @@ CHANGES BY Forget_About_Me
                 beenbar = 1;
                 showneed();
 
-                if (bartopic < 5 && gottagoflag < 1) {
-                    s(girltalk + bartalk[bartopic]);
-                } else if (gottagoflag < 1 && bladder < blademer) {
-                    s(barmedresp[randcounter]); // she's bored
-                    incrandom();
-                    attraction -= 1;
-                }
 
                 if (bladder > bladlose) wetherself();
                 else if (yourbladder > yourbladlose) wetyourself();
@@ -2773,6 +2748,13 @@ CHANGES BY Forget_About_Me
                     if (gottagoflag > 0) {
                         preventpee();
                     } else {
+                        if (bartopic < 5 && gottagoflag < 1) {
+                            s(girltalk + bartalk[bartopic]);
+                        } else if (gottagoflag < 1 && bladder < blademer) {
+                            s(barmedresp[randcounter]); // she's bored
+                            incrandom();
+                            attraction -= 1;
+                        }
                         if (bartopic < 5) {
                             const ansorder = Math.floor(Math.random() * 3);
                             if (ansorder === 0) {
@@ -2800,38 +2782,6 @@ CHANGES BY Forget_About_Me
                 }
             } else itsclosed("thebar");
         }
-    }
-
-    function bartalkgood() {
-        s(bargoodresp[randcounter]);
-        if (randomchoice(7)) s(stareather[bartopic]);
-        incrandom();
-        attraction += 3;
-        bartopic += 1;
-        c(locstack[0], "Continue...");
-    }
-
-    function bartalkmed() {
-        s(barmedresp[randcounter]);
-        incrandom();
-        bartopic += 1;
-        c(locstack[0], "Continue...");
-    }
-
-    function bartalkbad() {
-        s(barbadresp[randcounter]);
-        incrandom();
-        attraction -= 3;
-        bartopic += 1;
-        c(locstack[0], "Continue...");
-    }
-
-    function sellpanties() {
-        const price = 20 + Math.floor(Math.random() * 20);
-        s("BARTENDER: I'll give you $" + price + " for those.");
-        money += price;
-        wetpanties -= 1;
-        c(locstack[0], "Continue...");
     }
 
     function failmakeout() {

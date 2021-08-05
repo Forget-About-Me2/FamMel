@@ -82,6 +82,12 @@ objects = {
         "owned": "{0} pair{1} of sexy panties",
         "description":"Whoo, someone's a bit ambitious, aren't they?"
     },
+    "wetPanties": {
+        "bpname": "Wet Panties",
+        "value": 0,
+        "owned": "{0} pair{1} of wet panties",
+        "description": "The panties {0} gave you after wetting herself."
+    },
     "champagne": {
         "bpname":"Champagne",
         "value": 0,
@@ -315,6 +321,7 @@ function bribeearrings() {
 
 //TODO test
 function holdpurse() {
+    console.log("test");
     haveherpurse = 1;
     let curtext = [];
     curtext.push(needs["holdpurse"][0]);
@@ -329,6 +336,7 @@ function holdpurse() {
 
 //TODO test
 function lookinsidepurse() {
+    console.log("test");
     let curtext = [];
     curtext.push(needs["holdpurse"][2]);
     // s("You open the top and see:");
@@ -366,27 +374,13 @@ function lookinsidepurse() {
 //TODO test
 //You steal the given item from her purse
 function takeHerItem(item){
+    console.log("test");
     let curtext = [];
     curtext.push(needs["holdpurse"][3].format(item.funDesc));
     curtext = printChoicesList(curtext, [9,1]);
     sayText(curtext);
 
 }
-//
-// function takeherkeys() {
-//     delete herpurse.keys;
-//     objects.herKeys.owned++;
-//     s("Thinking they might come in handy later, you pocket her keys.");
-//     c("lookinsidepurse", "Examine her purse again");
-//     c("indepee", "Continue...");
-// }
-//
-// function takeherphone() {
-//     hercellphone++;
-//     s("Thinking it might come in handy later, you pocket her cellphone.");
-//     c("lookinsidepurse", "Examine her purse again");
-//     c("indepee", "Continue...");
-// }
 
 function givedrypanties() {
     s(girltalk + "Where did you get those?");
@@ -411,8 +405,6 @@ function giveptowels() {
         c("givedrypanties", "Offer her a clean pair of panties");
     c(locstack[0], "Continue ... ");
 }
-
-
 
 function createItemButtonList(){
     const obj = Object.keys(objects);

@@ -130,8 +130,8 @@ function showneed(curtext) {
 
     // If she's within 2 turns of wetting and not too shy, she will vocalize
     // no matter what.
-
-    if (bladder >= (bladlose - 25) && shyness < 90) {
+    let tuminc = calcTuminc(); //Gets the current tuminc, used to calculate if she's within the 2 turns
+    if (bladder >= (bladlose - 2 * tuminc) && shyness < 90) {
         if (externalflirt) curtext = voccurse(curtext);
         curtext = displaygottavoc(curtext);
     } else if (changevenueflag) {
@@ -153,15 +153,15 @@ function showneed(curtext) {
         // She'll try to hold it if you flirted with somebody at that location
         // Shyness < 80 is enough to ask if she's having a bladder emergency
         if (shyness < 80 && bladder > blademer) {
-            waitcounter = 6;
+            waitcounter = Math.max(Math.round(bladlose/150), 6);
             curtext = displaygottavoc(curtext);
             // Shyness < 60 is enough to ask if she's merely needing to pee bad
         } else if (shyness < 60 && bladder > bladneed) {
-            waitcounter = 10;
+            waitcounter = Math.max(Math.round(bladlose/90), 9);
             curtext = displaygottavoc(curtext);
             // Shyness < 40 and she's letting you know at 1st urge.
         } else if (shyness < 40 && bladder > bladurge) {
-            waitcounter = 12;
+            waitcounter = Math.max(Math.round(bladlose/75), 12);
             curtext = displaygottavoc(curtext);
             // Otherwise, she may or may not show symptoms of having to go
         } else if ((Math.random() * bladlose) < bladder) {
@@ -224,6 +224,11 @@ function displaygottavoc(curtext, index) {
         textchoice.forEach(text => curtext.push(text));
     }
     return curtext;
+}
+
+//Updates the gottagoflag and time since last asked.
+function updateGotta(){
+
 }
 
 // Publish a note about her holding it for you.
@@ -389,6 +394,7 @@ function displayneed(curtext) {
 //TODO don't take her purse in certian situations
 //TODO test
 function askpee() {
+    console.log("test");
     let curtext = [needs["askpee"][0]];
     // s("<b>YOU:</b> Do you need to pee?");
     if (shyness > 60) curtext.push(needs["askpee"][1]);
@@ -515,6 +521,7 @@ function holdit() {
 function displayholdquip(curtext) {
     //TODO is the noneed ever used?
     //TODO test
+    console.log("test");
     let need = "noneed" //How full her bladder is influences what she says
     if (bladder >= bladlose)
         need = "lose";
@@ -534,6 +541,7 @@ function displayholdquip(curtext) {
 
 //TODO test
 function askcanhold() {
+    console.log("test");
     let curtext = needs["askcanhold"];
     // s("<b>YOU:</b> How are you doing?  Can you still hold it?");
     let needType = "holdokay";
@@ -557,6 +565,7 @@ let toldstories;
 let lastStory;
 //TODO test
 function pstory() {
+    console.log("test");
     let curtext = [needs["pstory"][0]];
     // s("<b>You ask her:</b> have you ever waited too long?");
     curtext = displayneed(curtext);
@@ -581,6 +590,7 @@ function pstory() {
 
 //TODO test
 function pstory2() {
+    console.log("test");
     let curtext = printListSelection([], needs["pstory"], [1,2])
     // s("<b>You ask her:</b> so... did you make it?");
     // s(girlname + " blushes and looks down at her feet.");
@@ -596,6 +606,7 @@ function pstory2() {
 function begtoilet(curtext) {
     //TODO mention having peed outside before? / autonomously choose that
     //TODO test
+    console.log("test");
     let selection = [0];
     // s(girlname + " looks intently into your eyes:");
     if (peedvase)
@@ -751,6 +762,7 @@ function bribeask() {
 
 //TODO test
 function bribefavor() {
+    console.log("test");
     let curtext = needs["bribefavor"]
     // s("<b>YOU:</b> Pretty please!  Remember you promised to do me a favor!");
     // s(girltalk + "Well... Okay.  But just a little bit.  I did promise you a favor.");
@@ -773,6 +785,7 @@ function allowpee() {
         curtext = callChoice(needs["choices"][1], curtext);
     } else {
         //TODO test
+        console.log("test");
         // s(girltalk + "Can you hold my purse for me?");
         curtext.push(needs["allowpee"][2]);
         attraction += 7;
@@ -928,6 +941,7 @@ function peein3(item){
 
 //TODO test
 function peeintub() {
+    console.log("test");
     let curtext = [];
     if (bladder > blademer) {
         curtext = displaygottavoc(curtext);
@@ -947,6 +961,7 @@ function peeintub() {
 
 //TODO test
 function peeintub2() {
+    console.log("test");
     let curtext = printListSelection([], needs["peeintub"], range(2, 5));
     // s(girlgasp + "Ungh!  I can't hold it.");
     // s("You nonchalantly move closer and slip your hand under her butt.  The strong stream of pee flows out between your fingers for nearly a minute, and you can detect the barest scent of urine rising from the hot water.  It feels strangely cool in the warm water of the tub.");
@@ -963,6 +978,7 @@ function peeintub2() {
 //TODO fix the duplicate code
 //TODO test
 function peeoutside() {
+    console.log("test");
     let curtext = [];
     if (attraction > 30) {
         if (bladder > blademer) {
@@ -1007,6 +1023,7 @@ function peeoutside() {
 // In the car
 //TODO test
 function peeoutside2() {
+    console.log("test");
     let curtext = [];
     if (pantycolor !== "none") curtext.push(appearance["clothes"][heroutfit]["peeoutsidequote"]);
     else curtext.push(appearance["clothes"][heroutfit]["peeoutsidequotebare"]);
@@ -1022,6 +1039,7 @@ function peeoutside2() {
 // Not in the car
 //TODO test
 function peeoutside2b() {
+    console.log("test");
     let curtext = [];
     if (pantycolor !== "none") curtext.push(appearance["clothes"][heroutfit]["peeoutsidebquote"]);
     else curtext.push(appearance["clothes"][heroutfit]["peeoutsidebquotebare"]);
@@ -1041,6 +1059,7 @@ function peeoutside2b() {
 // She was in the car
 //TODO test
 function peeoutside3() {
+    console.log("test");
     let curtext = itscomingout([]);
     curtext = printListSelection(curtext, needs["peeoutside"], range(8,10));
     // s("You try to be nonchalant as you stare, and she doesn't seem to notice.  The pee hisses out from between her smooth thighs for nearly a minute, and runs in a stream under the car.  You can smell her scent as steam rises from the hot river.");
@@ -1056,6 +1075,7 @@ function peeoutside3() {
 //  Again, she's not in the car
 //TODO test
 function peeoutside3b() {
+    console.log("test");
     let curtext = itscomingout([]);
     curtext = printListSelection(curtext, needs["peeoutside"], range(11,13));
     // s("You nonchalantly move closer and watch as the pee hisses out from between her delicate pussy lips for nearly a minute, and runs in a stream along the ground.  You can smell her scent as steam rises from the hot river and she sighs in relief.");
@@ -1073,6 +1093,7 @@ function peeoutside3b() {
 //  Pee on the beach
 //TODO test
 function peeoutside3c() {
+    console.log("test");
     let curtext = itscomingout([]);
     curtext = printListSelection(curtext, needs["peeoutside"], range(14,16));
     // s("You nonchalantly move closer and watch as the pee hisses out from between her delicate pussy lips for nearly a minute, soaking quickly into the sand and turning it dark.  You can smell her scent and hear the hiss of the urine hitting the sand and she sighs orgasimcally.");
@@ -1092,6 +1113,7 @@ function peeoutside3c() {
 //Here's actually where we decide if she wet or just spurted
 //TODO test
 function wetherself() {
+    console.log("test");
     let curtext = [pickrandom(needs["wetquote"])];
     // s(wetquote[randcounter]);
     // incrandom();
@@ -1119,6 +1141,7 @@ function wetherself() {
 
 //TODO test
 function wetherself2(curtext) {
+    console.log("test");
     if (!curtext)
         curtext = [];
     curtext.push(needs["wetherself"][0]);
@@ -1137,6 +1160,7 @@ function wetherself2(curtext) {
 // She's in the makeout spot
 //TODO test
 function wetherself2m() {
+    console.log("test");
     let curtext = [needs["wetherself"][1]];
     // s(girlname + " suddenly and frantically looks around.  She fumbles with her seat belt, then the wrenches open the door and jumps out of the car.");
     wetherself2(curtext);
@@ -1145,6 +1169,7 @@ function wetherself2m() {
 // She's in the hottub
 //TODO test
 function wetherself2t() {
+    console.log("test");
     let curtext = printListSelection([],  needs["wetherself"], range(2,4));
     // s(girlname + " suddenly stiffens and whispers: Oh no!");
     flushdrank();
@@ -1158,6 +1183,7 @@ function wetherself2t() {
 // She's in the car
 //TODO test
 function wetherself2c() {
+    console.log("test");
     let curtext = printListSelection([],  needs["wetherself"], range(5,8));
     // s(girlname + " suddenly and frantically looks around, pulling open the glove box and feeling under her chair.");
     // s(girltalk + " Oh No!  Your seat!");
@@ -1174,6 +1200,7 @@ function wetherself2c() {
 
 //TODO test
 function wetherself3c() {
+    console.log("test");
     let curtext = printListSelection([],  needs["wetherself"], [9,10]);
     // s(girltalk + "I'm <u>so</u> sorry about your car...");
     // s("She settles unhappily into the squishy wet seat.");
@@ -1186,6 +1213,7 @@ function wetherself3c() {
 
 //TODO test
 function wetherself3() {
+    console.log("test");
     let curtext = [];
     if (pantycolor !== "none" && shyness < 70) {
         curtext.push(appearance["clothes"][heroutfit]["wetherselfquote"]);
@@ -1194,7 +1222,7 @@ function wetherself3() {
             curtext = printListSelection(curtext, needs["wetherself"], [11,12]);
             // s(girlname + " hands you the wet panties, soaked with her fragrant urine.");
             // s(girltalk + "Is there someplace you can put these?");
-            wetpanties += 1;
+            objects.wetPanties.value++
         }
         pantycolor = "none";
     } else if (pantycolor === "none")
@@ -1216,6 +1244,7 @@ function wetherself3() {
 // In the tub
 //TODO test
 function wetherself3t() {
+    console.log("test");
     let curtext = printListSelection(curtext, needs["wetherself"] ,range(14, 16));
     // s(girltalk + "I'm <u>so</u> sorry ... I just couldn't hold it.");
     // s("The faint scent of her urine rises from the water.");
@@ -1229,6 +1258,7 @@ function wetherself3t() {
 
 //TODO test
 function spurtedherself(curtext) {
+    console.log("test");
     bladder -= 50;
     spurtthresh -= 0.1 * spurtthresh;
     shespurted = 1;
@@ -1244,6 +1274,7 @@ function spurtedherself(curtext) {
 
 //TODO test
 function askspurted() {
+    console.log("test");
     let curtext = [needs["askspurted"][0]];
     // s("<b>YOU:</b> Did you just pee yourself?");
     curtext.push(pickrandom(needs["spurtquote"]));
@@ -1263,6 +1294,7 @@ function askspurted() {
 
 //TODO test
 function checkspurted() {
+    console.log("test");
     let curtext = [needs["askspurted"][1]];
     // s("<b>YOU:</b> I'm not sure I believe you.");
     let choices = [];
@@ -1297,6 +1329,7 @@ function checkspurted() {
 
 //TODO test
 function smellspurted() {
+    console.log("test");
     let curtext = [needs["askspurted"][8]];
     // s("You sniff your damp fingers.");
     curtext.push(pickrandom(needs["smellpee"]));
@@ -1310,6 +1343,7 @@ function smellspurted() {
 //TODO make this more pleasurable/more BDSM like scolding?
 //TODO test
 function scoldher() {
+    console.log("test");
     let curtext = needs["scoldher"];
     // s("<b>YOU:</b> You're such a baby, wetting yourself like that!");
     // s("She pouts and turns away from you.");
@@ -1326,6 +1360,7 @@ function scoldher() {
 //
 function itscomingout(curtext) {
     //TODO test
+    console.log("test");
     if (!sawherpee)
         curtext.push(girltalk + pickrandom(needs["outpeelook"]));
         // s(girltalk + outpeelook[randcounter]);
