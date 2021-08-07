@@ -85,7 +85,7 @@ function getKey(loc){
 }
 
 //TODO fix the double desperate
-function itsClosed(locname, fun) {
+function itsClosed(locname, fun, curloc) {
     let theloc;
     if (locname === "theBar") theloc = "bar";
     if (locname === "theClub") theloc = "night club";
@@ -113,8 +113,33 @@ function itsClosed(locname, fun) {
     addListenersList(listenerList);
 }
 
-function breakLoc(loc){
-
+let funAfterEmBreak;
+function breakLoc(loc, curloc){
+    let curtext = printList(locJson["breakLoc"][0], []);
+    let listenerList = [];
+    if (bladder > blademer){
+        //There's a 30% chance she'll run to the bathroom as soon as you break in.
+        if (randomchoice(3)) {
+            curtext.push(pickrandom(locJson["sayHero"][1]));
+            curtext = printList(locJson["breakLoc"][1], curtext);
+            curtext = displayneed(curtext);
+            curtext = displayyourneed(curtext);
+            funAfterEmBreak = loc
+            pushloc(curloc);
+            sayText(curtext);
+            listenerList.push([[holdit], "holdit"]);
+            listenerList.push([[indepee], "indepee"]);
+            cListener([holdit, "Grab her arm to stop her."]);
+            cListener([loc, "Let her go."], "indepee");
+            addListenersList(listenerList);
+            return
+        } else
+            curtext.push(pickrandom(locJson["sayHero"][0]));
+    }
+    curtext = displayneed(curtext);
+    curtext = displayyourneed(curtext);
+    sayText(curtext);
+    
 }
 
 
