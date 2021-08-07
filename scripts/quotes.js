@@ -1,6 +1,6 @@
 //TODO make a more general function for handling curtext
 
-const jsonlocs = ["options", "start", "thebar", "yourhome", "herhome"]; //List of locations that have a corresponding json file
+const jsonlocs = ["options", "start", "yourhome", "herhome"]; //List of locations that have a corresponding json file
 let jsonvars = {}; //Dictiornary list of variables that might need to be inserted in the string found in the json
 let calledjsons = {}; //Dictionary list of all location that have already been queried, this saves them being queried multiple times meaning less requests for the server
 
@@ -140,12 +140,13 @@ var soloview=["You see nothing special.",
 //
 // You look around the bar
 //
-var barview=["You see nothing special.",
-    "You notice another couple making out in a dark corner.",
-    "You look down at the floor and see a condom wrapper among the littering of spent peanut shells.",
-    "You notice a phone number carved into the edge of the bar: 867-5309.",
-    "You see a gorgeous girl in a tight tube top with an empty stool next to her at the end of the bar.  There's a puddle of some liquid on the seat.",
-    "You look down at the floor and see a glint of metal."];
+// var barview=[
+//     "You see nothing special.",
+//     "You notice another couple making out in a dark corner.",
+//     "You look down at the floor and see a condom wrapper among the littering of spent peanut shells.",
+//     "You notice a phone number carved into the edge of the bar: 867-5309.",
+//     "You see a gorgeous girl in a tight tube top with an empty stool next to her at the end of the bar.  There's a puddle of some liquid on the seat.",
+//     "You look down at the floor and see a glint of metal."];
 
 //
 // You look around the club
@@ -695,18 +696,19 @@ function c(choice, curtext) {
 function cListener(choice, loc){
     const html = "<p><li class='cListener' id='"+loc+"'>"+choice[1]+"</li></p>";
     document.getElementById('textsp').innerHTML += html;
-    let temp = choice[0];
-    document.getElementById(loc).addEventListener("click", temp
-    );
 }
 
 //Adds an element to a created click listener
 //This is done separately because if the list contains more listeners things break
 function addListeners(choice, loc){
-    let temp = choice[0];
+    let func = goWrapper(choice[0]);
     console.log(loc);
-    document.getElementById(loc).addEventListener("click", temp
-    );
+    document.getElementById(loc).addEventListener("click", func);
+}
+
+//Calls the given visit through go, aka it triggers a game tick.
+function goWrapper(func){
+    return function () { go(func);}
 }
 
 //For a given list adds a listener to all created click listeners

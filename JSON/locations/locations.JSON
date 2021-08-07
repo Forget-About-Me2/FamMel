@@ -1,0 +1,35 @@
+{
+  "lookAround": [
+    "You take a moment to glance around."
+  ],
+  "theBar": [
+    ["You see nothing special.",
+    "You notice another couple making out in a dark corner.",
+    "You look down at the floor and see a condom wrapper among the littering of spent peanut shells.",
+    "You notice a phone number carved into the edge of the bar: 867-5309.",
+    "You see a gorgeous girl in a tight tube top with an empty stool next to her at the end of the bar.  There's a puddle of some liquid on the seat."],
+    "You look down at the floor and see a glint of metal."
+  ],
+  "theClub": [
+    ["You see nothing special.",
+    "You see a couple making out in a dark corner.",
+    "You notice a gorgeous girl in a short and tight black dress pressing at her crotch under the table as she appears to be in rapt conversation with her date.",
+    "You see a couple dancing.  As she twirls, her short skirt flies up revealing a pair of skimpy, translucent panties.",
+    "You see a waitress having an urgent conversation with the bartender.  She's squirming and pressing her crotch into a bar stool while pointing repeatedly in the direction of the restrooms."],
+    "You look down at the floor and see a glint of metal."
+  ],
+  "makeOut": [
+    ["You see nothing special.",
+    "You see city lights below and sparkling stars above.",
+    "You see another car parked in the corner of the lot with its windows fogged up.",
+    "You see a darker patch of ground a couple of spaces over, with what looks like a tiny rivulet draining into the gutter.",
+    "You see a soaked pair of white cotton panties lying on the ground."],
+    "You look down and see a glint of metal."
+  ],
+  "lookKey": [
+    "It looks like some sort of key."
+  ],
+  "getKey": [
+    "You reach down and pocket the key."
+  ]
+}

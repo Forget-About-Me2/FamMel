@@ -186,17 +186,17 @@ objects = {
         "drinkquote": "Cheers.",
         "description":"Hmmm, alcohol."
     },
-    "barKey":{
+    "theBarKey":{
         "bpname" : "Bar Key",
         "value" : 0,
         "description": "Key to the bar."
     },
-    "clubKey":{
+    "theClubKey":{
         "bpname": "Club Key",
         "value": 0,
         "description": "Key to the club."
     },
-    "theatreKey":{
+    "makeOutKey":{
         "bpname": "Theatre key",
         "value" : 0,
         "description": "Key to the Movie Theatre."

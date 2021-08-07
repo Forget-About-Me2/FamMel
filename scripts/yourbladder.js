@@ -126,7 +126,7 @@ function youbathroomlocked(curtext) {
     else if (yourbladder > yourbladneed)
         curtext.push(locked["urgency"][1]);
     else
-        curtext.push(locked["urgency"[2]]);
+        curtext.push(locked["urgency"][2]);
     if(locstack[0] === "thebar") {
         //Tell her the bathroom was locked, depending on how often you tried already
         if (yrrlockedflag > 3) {

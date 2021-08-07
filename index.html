@@ -193,6 +193,7 @@ CHANGES BY Forget_About_Me
     * WaitCounter now takes into account bladder size. With a minimum amount
     * WaitCounter is only ignored if she's genuinely within 2 ticks of wetting
 *When selling panties you now get the option to buy more beer.
+*Added more topics for talking in the bar.
 */
 
     //TODO potentially clean up if statements with multiple locations
@@ -858,16 +859,6 @@ CHANGES BY Forget_About_Me
         c(locstack[0], "Continue...");
     }
 
-
-
-    //TODO put a limit on this/ Game update
-    //TODO Randomize quotes
-    function stealbeer2(){
-        s("You find another clean glass, and fill it up in a similar way as the previous one.");
-        beer += 1;
-        c("stealbeer2", "Steal another beer");
-        c(locstack[0], "Continue...");
-    }
 
     function breakclub() {
         s("You try the door with your key...");
@@ -2717,72 +2708,72 @@ CHANGES BY Forget_About_Me
     }
 
 
-    //TODO fix you losing control scene.
-    //TODO fix boredom to be less harsh
-    //TODO have bartopics be ore random
-    function thebar() {
-        //TODO figure out this mess of if statement combinations
-        if (beenbar && locstack[0] === "driveout" && thetime < barclosingtime) {
-            s(girlname + " giggles: But we've already been to the bar, silly!");
-            if (barkey > 0)
-                c("rebar", "But I found this key I have to return!");
-            c(locstack[0], "Continue...");
-        } else {
-            if ((thetime < barclosingtime) || locstack[0] === "thebar") {
-                if (locstack[0] !== "thebar") {
-                    s("You and " + girlname + " enter the Bar, taking a couple of stools about halfway down.");
-                    pushloc("thebar");
-                } else {
-                    s("You are with " + girlname + " in the Bar.");
-                    if (randomchoice(3)) noteholding();
-                    else if (randomchoice(5)) interpbladder();
-                }
-                displayyourneed();
-                beenbar = 1;
-                showneed();
-
-
-                if (bladder > bladlose) wetherself();
-                else if (yourbladder > yourbladlose) wetyourself();
-                else {
-                    if (gottagoflag > 0) {
-                        preventpee();
-                    } else {
-                        if (bartopic < 5 && gottagoflag < 1) {
-                            s(girltalk + bartalk[bartopic]);
-                        } else if (gottagoflag < 1 && bladder < blademer) {
-                            s(barmedresp[randcounter]); // she's bored
-                            incrandom();
-                            attraction -= 1;
-                        }
-                        if (bartopic < 5) {
-                            const ansorder = Math.floor(Math.random() * 3);
-                            if (ansorder === 0) {
-                                c("bartalkgood", bargoodans[bartopic]);
-                                c("bartalkmed", barmedans[bartopic]);
-                                c("bartalkbad", barbadans[bartopic]);
-                            } else if (ansorder === 1) {
-                                c("bartalkmed", barmedans[bartopic]);
-                                c("bartalkgood", bargoodans[bartopic]);
-                                c("bartalkbad", barbadans[bartopic]);
-                            } else {
-                                c("bartalkbad", barbadans[bartopic]);
-                                c("bartalkgood", bargoodans[bartopic]);
-                                c("bartalkmed", barmedans[bartopic]);
-                            }
-                        }
-                        c("buybeer", "Buy a beer.");
-                        if (barkey < 1) c("lookaround", "Look around.");
-                        if (bartopic > 4 && gottagoflag < 1) noflirtflag = 0; else noflirtflag = 1;
-                        standobjs();
-                        if (yourbladder > yourbladurge)
-                            c("youpee", "Go to the bathroom.");
-                    }
-                    c("leavehm", "Leave the bar.");
-                }
-            } else itsclosed("thebar");
-        }
-    }
+    // //TODO fix you losing control scene.
+    // //TODO fix boredom to be less harsh
+    // //TODO have bartopics be ore random
+    // function thebar() {
+    //     //TODO figure out this mess of if statement combinations
+    //     if (beenbar && locstack[0] === "driveout" && thetime < barclosingtime) {
+    //         s(girlname + " giggles: But we've already been to the bar, silly!");
+    //         if (barkey > 0)
+    //             c("rebar", "But I found this key I have to return!");
+    //         c(locstack[0], "Continue...");
+    //     } else {
+    //         if ((thetime < barclosingtime) || locstack[0] === "thebar") {
+    //             if (locstack[0] !== "thebar") {
+    //                 s("You and " + girlname + " enter the Bar, taking a couple of stools about halfway down.");
+    //                 pushloc("thebar");
+    //             } else {
+    //                 s("You are with " + girlname + " in the Bar.");
+    //                 if (randomchoice(3)) noteholding();
+    //                 else if (randomchoice(5)) interpbladder();
+    //             }
+    //             displayyourneed();
+    //             beenbar = 1;
+    //             showneed();
+    //
+    //
+    //             if (bladder > bladlose) wetherself();
+    //             else if (yourbladder > yourbladlose) wetyourself();
+    //             else {
+    //                 if (gottagoflag > 0) {
+    //                     preventpee();
+    //                 } else {
+    //                     if (bartopic < 5 && gottagoflag < 1) {
+    //                         s(girltalk + bartalk[bartopic]);
+    //                     } else if (gottagoflag < 1 && bladder < blademer) {
+    //                         s(barmedresp[randcounter]); // she's bored
+    //                         incrandom();
+    //                         attraction -= 1;
+    //                     }
+    //                     if (bartopic < 5) {
+    //                         const ansorder = Math.floor(Math.random() * 3);
+    //                         if (ansorder === 0) {
+    //                             c("bartalkgood", bargoodans[bartopic]);
+    //                             c("bartalkmed", barmedans[bartopic]);
+    //                             c("bartalkbad", barbadans[bartopic]);
+    //                         } else if (ansorder === 1) {
+    //                             c("bartalkmed", barmedans[bartopic]);
+    //                             c("bartalkgood", bargoodans[bartopic]);
+    //                             c("bartalkbad", barbadans[bartopic]);
+    //                         } else {
+    //                             c("bartalkbad", barbadans[bartopic]);
+    //                             c("bartalkgood", bargoodans[bartopic]);
+    //                             c("bartalkmed", barmedans[bartopic]);
+    //                         }
+    //                     }
+    //                     c("buybeer", "Buy a beer.");
+    //                     if (barkey < 1) c("lookaround", "Look around.");
+    //                     if (bartopic > 4 && gottagoflag < 1) noflirtflag = 0; else noflirtflag = 1;
+    //                     standobjs();
+    //                     if (yourbladder > yourbladurge)
+    //                         c("youpee", "Go to the bathroom.");
+    //                 }
+    //                 c("leavehm", "Leave the bar.");
+    //             }
+    //         } else itsclosed("thebar");
+    //     }
+    // }
 
     function failmakeout() {
         shyness += 10;

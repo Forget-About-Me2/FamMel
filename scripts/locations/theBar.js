@@ -3,10 +3,11 @@ let bar;
 function theBarSetup(){
     getjson("locations/theBar", barJsonSetup);
     return {
-        "visit": [theBar, "Go to the bar"],
-        "wantVisit": [theBar, "Go to the bar like she asked."],
+        "visit": [thebar, "Go to the bar"],
+        "wantVisit": [thebar, "Go to the bar like she asked."],
         "group": 1,
         "visited": 0,
+        "keyChance": 1
     }
 }
 
@@ -18,11 +19,12 @@ function barJsonSetup(){
     talkUnused = bar["barTalk"];
 }
 
-function theBar(){
+function thebar(){
+    console.log("fuck?");
     let curtext = [];
     if (locstack[0] === "driveout" && beenbar && thetime < barclosingtime){
         curtext = printList(curtext, bar["theBar"][0]);
-        curtext = callChoice(["curtext", "Continue..."], curtext);
+        curtext = callChoice([driveout, "Continue..."], curtext);
         sayText(curtext);
         if (haveItem("barKey"))
             cListenerGen([rebar, "But I found this key I have to return!"]);
@@ -36,21 +38,20 @@ function theBar(){
             curtext = printList(curtext, bar["theBar"][2]);
             if (randomchoice(3)) curtext = noteholding(curtext);
             else if (randomchoice(5)) curtext = interpbladder(curtext);
+            curtext = displayyourneed(curtext);
         }
-        curtext = displayyourneed(curtext);
         if (bladder > bladlose) wetherself();
         else if (yourbladder > yourbladlose) wetyourself();
         else {
             if (gottagoflag > 0){
                 preventpee();
             }
-            barTalk(curtext);
-            let listenerList = [];
-            listenerList.push([buybeer], "buybeer");
+            let listenerList = barTalk(curtext);
+            listenerList.push([[buybeer], "buybeer"]);
             cListener([buybeer, "Buy a beer."], "buybeer");
-            if (!haveItem("barKey")){
-                listenerList.push([[lookAround], "lookAround"]);
-                cListener([lookAround, "Look around."], "lookAround");
+            if (!haveItem("theBarKey")){
+                listenerList.push([[function () {lookAround("theBar")}], "lookAround"]);
+                cListener(["", "Look around."], "lookAround");
             }
             curtext = standobjs([]);
             addSayText(curtext);
@@ -75,54 +76,63 @@ function barTalk(curtext){
         curtext.push(curTopic[0]);
         let listenerList = [];
         sayText(curtext);
-        while (order){
+        while (order.length !== 0){
             let i = randomIndex(order);
-            let f = function () {
-                barResp(i);
-            }
-            listenerList.push([f], "barResp"+i);
-            cListener([f, curTopic[i]], "barResp"+i);
+            let cur = order[i];
+            order.splice(i, 1);
+            listenerList.push([[function () {
+                barResp(cur);
+            }], "barResp"+cur]);
+            cListener(["", curTopic[cur]], "barResp"+cur);
         }
-        addListenersList(listenerList);
+        return listenerList;
     } else
         sayText(curtext);
+    return [];
 }
 
 function barResp(choice){
     let curtext = [pickrandom(bar["barResp"][choice-1])];
     if (choice === 1 && randomchoice(7))
-        curtext.push(pickrandom(appearance[basegirl]["stareather"][heroutfit]));
+        curtext.push(pickrandom(appearance["girls"][basegirl]["stareather"][heroutfit]));
     attraction += 6 - 3*choice;
     bartopic++;
-    talkUnused.remove(curTopicI);
+    talkUnused.splice(curTopicI,1);
     sayText(curtext);
-    cListenerGen([theBar, "Continue..."], "theBar");
+    cListenerGen([thebar, "Continue..."], "theBar");
 }
 
 //TODO turn this into a JSON
 function buybeer() {
     let curtext = [];
-    sayText(curtext);
-    let listenerList = [];
-    if (money >= 3) {
-        curtext.push("You buy a beer for $3.00.");
-        objects.beer.value++;
-        money -= 3;
-        const i = randomIndex(bar["barquotes"]);
-        curtext.push(bar["barquotes"][i]);
+    if (randomchoice(3)) curtext = noteholding(curtext);
+    else if (randomchoice(5)) curtext = interpbladder(curtext);
+    curtext = displayyourneed(curtext);
+    if (bladder > bladlose) wetherself();
+    else if (yourbladder > yourbladlose) wetyourself();
+    else {
         sayText(curtext);
-        curtext = [];
-        if (haveItem("wetPanties") && i === 3) {
-            listenerList.push([[sellPanties], "sellPanties"]);
-            cListener([sellPanties, "Sell wet panties to the bartender."], "sellPanties");
-        }
-    } else curtext.push("You don't have enough money!");
-    addSayText(curtext);
-    listenerList.push([[buybeer], "buybeer"]);
-    listenerList.push([[theBar], "theBar"]);
-    cListener([buybeer, "Buy another beer"], "buybeer");
-    cListener([theBar, "Continue..."], "theBar");
-    addListenersList(listenerList);
+        let listenerList = [];
+        if (money >= 3) {
+            curtext.push("You buy a beer for $3.00.");
+            objects.beer.value++;
+            money -= 3;
+            const i = randomIndex(bar["barQuotes"]);
+            curtext.push(bar["barQuotes"][i]);
+            sayText(curtext);
+            curtext = [];
+            if (haveItem("wetPanties") && i === 3) {
+                listenerList.push([[sellPanties], "sellPanties"]);
+                cListener([sellPanties, "Sell wet panties to the bartender."], "sellPanties");
+            }
+        } else curtext.push("You don't have enough money!");
+        addSayText(curtext);
+        listenerList.push([[buybeer], "buybeer"]);
+        listenerList.push([[thebar], "theBar"]);
+        cListener([buybeer, "Buy another beer"], "buybeer");
+        cListener([thebar, "Continue..."], "theBar");
+        addListenersList(listenerList);
+    }
 }
 
 function sellPanties(){
@@ -130,16 +140,44 @@ function sellPanties(){
     sayText(["BARTENDER: I'll give you $" + price + " for those."]);
     money += price;
     objects.wetPanties.value -= 1;
-    cListenerGen([buybeer, "Buy another beer"], "buybeer");
-    cListenerGen([theBar, "Continue"], "theBar");
+    let listenerList = [];
+    listenerList.push([[buybeer], "buybeer"]);
+    listenerList.push([[thebar], "theBar"]);
+    cListener([buybeer, "Buy another beer"], "buybeer");
+    cListener([thebar, "Continue..."], "theBar");
+    addListenersList(listenerList);
 }
 
 //TODO turn this into a JSON
 function stealbeer() {
-    s("You climb behind the bar and find a clean glass.  Holding it under the tap, you carefully pull the lever and watch as the frothy amber liquid fills the glass.");
-    beer += 1;
-    c("stealbeer2", "Steal another beer");
-    c(locstack[0], "Continue...");
+    let curtext = [];
+    curtext.push("You climb behind the bar and find a clean glass.  Holding it under the tap, you carefully pull the lever and watch as the frothy amber liquid fills the glass.");
+    objects.beer.value++;
+    sayText(curtext);
+    cListener([stealbeer2, "steal another beer"], "stealbeer");
+    cListener([darkbar, "Continue..."], "darkbar");
+    addListeners([stealbeer2, "steal another beer"], "stealbeer");
+    addListeners([darkbar, "Continue..."], "darkbar");
+}
+
+//TODO put a limit on this/ Game update
+//TODO Randomize quotes
+function stealbeer2(){
+    let curtext = [];
+    if (randomchoice(3)) curtext = noteholding(curtext);
+    else if (randomchoice(5)) curtext = interpbladder(curtext);
+    curtext = displayyourneed(curtext);
+    if (bladder > bladlose) wetherself();
+    else if (yourbladder > yourbladlose) wetyourself();
+    else {
+        curtext.push("You find another clean glass, and fill it up in a similar way as the previous one.");
+        objects.beer.value++;
+        sayText(curtext);
+        cListener([stealbeer2, "steal another beer"], "stealbeer");
+        cListener([darkbar, "Continue..."], "darkbar");
+        addListeners([stealbeer2, "steal another beer"], "stealbeer");
+        addListeners([darkbar, "Continue..."], "darkbar");
+    }
 }
 
 //Use the key to open the closed bar
@@ -151,5 +189,5 @@ function breakBar(){
 function rebar(){
     objects.barKey.value = 0;
     pushloc("thebar");
-    theBar();
+    thebar();
 }

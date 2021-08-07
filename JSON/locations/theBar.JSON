@@ -6,7 +6,7 @@
   ],
   "barTalk": [
     [
-      "I'll tell you about my family.  Mostly, there's just me and my brother.  The parents are miraculously still together, and still in the same house they bought back in the 60's...",
+      "I'll tell you about my family.  Mostly, there's just me and my brother.  My parents are miraculously still together, and still in the same house they bought back in the 60's...",
       "You say you wish you had a brother.",
       "You say your parents are still together too.",
       "You say you wish you had a sister growing up."
@@ -40,7 +40,11 @@
       "Yeah! I also play the piano. I learned it as a kid.",
       "I've been wanting to learn guitar, but never gotten round to it.",
       "Nah, I'm not really a music fan."
-    ]
+    ],
+    [ "Do you play any sports",
+      "I love playing tennis, what about you?",
+      "I go to the gym every now and then.",
+      "No, I don't really like to sport."]
   ],
   "barResp": [
     [

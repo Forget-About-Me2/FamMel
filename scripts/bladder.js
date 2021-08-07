@@ -226,11 +226,6 @@ function displaygottavoc(curtext, index) {
     return curtext;
 }
 
-//Updates the gottagoflag and time since last asked.
-function updateGotta(){
-
-}
-
 // Publish a note about her holding it for you.
 // Depends on whether you asked her to hold it,
 // and emergency bladder state
@@ -864,6 +859,7 @@ function peein(item){
         curtext = printList(curtext, list[6]);
         attraction -= 3;
         if (attraction < 0) attraction = 0;
+        //TODO add check for makeout
         if (locstack[0] === "driveout"){
             //When in the car she'll throw the item out of the window.
             curtext.push("She throws it out of the window.");
