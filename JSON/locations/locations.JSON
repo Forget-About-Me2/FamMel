@@ -31,5 +31,22 @@
   ],
   "getKey": [
     "You reach down and pocket the key."
+  ],
+  "breakLoc": [
+    "You try the door with your key..."
+  ],
+  "itsClosed": [
+    ["You and girlname arrive at the {0}.",
+     "It seems a bit deserted."],
+    ["girltalk <i>It had better not be closed</i>"],
+    ["The {0} is definetly closed."]
+  ],
+  "sayHero": [
+    "You are my <b>hero</b>!",
+    "I thank you, my bladder thanks you, now get outta my way!",
+    "Thank <b>god</b>, I was dying!",
+    "You the <b>man<b>!",
+    "You've saved my life tonight!",
+    "Damn you're good!"
   ]
 }

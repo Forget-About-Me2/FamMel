@@ -6,7 +6,12 @@ let locations = {
 };
 
 let locJson;
-getjson("/locations/locations", function () {locJson = json});
+getjson("/locations/locations", locJsonSetup);
+
+function locJsonSetup(){
+    locJson = json;
+    locJson["itsClosed"] = formatAllVarsList(locJson["itsClosed"]);
+}
 
 //Determines whether the wants to visit a location.
 function updateSuggestedLocation(){
@@ -77,6 +82,39 @@ function getKey(loc){
     objects[loc+"Key"].value++;
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
+}
+
+//TODO fix the double desperate
+function itsClosed(locname, fun) {
+    let theloc;
+    if (locname === "theBar") theloc = "bar";
+    if (locname === "theClub") theloc = "night club";
+    if (locname === "makeOut") theloc = "movie theater";
+    let curtext = []
+    let list = new Array(locJson["itsClosed"][0].length).fill([theloc]);
+    let temp = formatAll(locJson["itsClosed"][0], list);
+    curtext = printList(curtext, temp);
+    if (bladder > blademer) {
+        curtext = printList(curtext, locJson["itsClosed"][1]);
+        curtext = displaygottavoc(curtext);
+    }
+    list = new Array(locJson["itsClosed"][2].length).fill([theloc]);
+    temp = formatAll(locJson["itsClosed"][2], list);
+    curtext = printList(curtext, temp);
+    curtext = showneed(curtext);
+    curtext = displayyourneed(curtext);
+    sayText(curtext);
+    let listenerList = []
+    if (haveItem(locname+"Key")){
+        listenerList.push([[fun], locname]);
+        cListener([fun, "Try to break in with your key."], locname);
+    }
+    addSayText(callChoice(["curloc", "Continue..."], []));
+    addListenersList(listenerList);
+}
+
+function breakLoc(loc){
+
 }
 
 

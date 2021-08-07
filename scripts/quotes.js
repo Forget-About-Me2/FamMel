@@ -466,7 +466,13 @@ var ywetquote=["Suddenly, you are overwhelmed by your bladder, you groan and the
 //  You are her hero - now get out of the way before she wets herself
 //
 
-var sayhero=["You are my <b>hero</b>!","I thank you, my bladder thanks you, now get outta my way!","Thank <b>god</b>, I was dying!","You the <b>man<b>!","You've saved my life tonight!","Damn you're good!"];
+var sayhero=[
+    "You are my <b>hero</b>!",
+    "I thank you, my bladder thanks you, now get outta my way!",
+    "Thank <b>god</b>, I was dying!",
+    "You the <b>man<b>!",
+    "You've saved my life tonight!",
+    "Damn you're good!"];
 
 
 //

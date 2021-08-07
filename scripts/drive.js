@@ -104,27 +104,3 @@ function drivepee() {
     c(locstack[0], "No, I got nothing!")
 }
 
-//TODO fix the double desperate
-function itsclosed(locname) {
-    let theloc;
-    if (locname === "thebar") theloc = "bar";
-    if (locname === "theclub") theloc = "night club";
-    if (locname === "themovie") theloc = "movie theater";
-
-    s("You and " + girlname + " arrive at the " + theloc + ".");
-    s("It seems a bit deserted.");
-    if (bladder > blademer) {
-        s(girltalk + "<i>It had better not be closed.</i>");
-        displaygottavoc();
-    }
-    s("The " + theloc + " is definitely closed.");
-    showneed();
-    displayyourneed();
-    if (locname === "thebar" && barkey > 0)
-        c("breakbar", "Try to break in with your key.");
-    if (locname === "theclub" && clubkey > 0)
-        c("breakclub", "Try to break in with your key.");
-    if (locname === "themovie" && theaterkey > 0)
-        c("breakmovie", "Try to break in with your key.");
-    c(locstack[0], "Continue...");
-}
