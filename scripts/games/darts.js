@@ -115,7 +115,14 @@ function tripleFinish(points){
     } else if (score < points)
         //if you scored lower than your points subtract the score from your points
         score = points - score;
-    else score = points
+    else {
+        //If you score higher than points you still have find out which throw crossed it.
+        if (list[0] > points)
+            return [[list[0]], points];
+        else if (list[0]+list[1] > points)
+            return [[list[0], [list[1]]], points];
+        score = points
+    }
     return [list, score];
 }
 
@@ -132,6 +139,7 @@ function playDarts(){
                 if (finished){
                     dartPoints[player] = 0;
                     winner = player;
+                    console.log(player + " played: " + res);
                     console.log("And won!");
                     break;
                 }
@@ -141,7 +149,7 @@ function playDarts(){
                 finished = res.length === 2;
                 if (finished){
                     dartPoints[player] = 0;
-                    console.log(player + "played: " + res);
+                    console.log(player + " played: " + res);
                     console.log("And won!");
                     winner = player;
                     break;
@@ -158,6 +166,8 @@ function playDarts(){
             }
 
         }
+        console.log("current points:")
+        console.log(dartPoints);
     }
     console.log(dartPoints);
 }
