@@ -15,6 +15,7 @@ function barJsonSetup(){
     json["theBar"] = formatAllVarsList(json["theBar"]);
     json["barResp"] = formatAllVarsList(json["barResp"]);
     json["barQuotes"] = formatAllVars(json["barQuotes"]);
+    json["darkBar"] = formatAllVarsList(json["darkBar"]);
     bar = json;
     talkUnused = bar["barTalk"];
 }
@@ -27,7 +28,7 @@ function thebar(){
         sayText(curtext);
         if (haveItem("barKey"))
             cListenerGen([rebar, "But I found this key I have to return!"]);
-    } else if (!((thetime < barclosingtime) || locstack[0] === "thebar")) itsClosed("theBar", darkBar);
+    } else if (!((thetime < barclosingtime) || locstack[0] === "thebar")) itsClosed("theBar", darkBar, "darkBar");
     else {
         if (locstack[0] !== "thebar"){
             curtext = printList(curtext, bar["theBar"][1]);
@@ -153,10 +154,10 @@ function stealbeer() {
     curtext.push("You climb behind the bar and find a clean glass.  Holding it under the tap, you carefully pull the lever and watch as the frothy amber liquid fills the glass.");
     objects.beer.value++;
     sayText(curtext);
-    cListener([stealbeer2, "steal another beer"], "stealbeer");
-    cListener([darkbar, "Continue..."], "darkbar");
-    addListeners([stealbeer2, "steal another beer"], "stealbeer");
-    addListeners([darkbar, "Continue..."], "darkbar");
+    cListener([stealbeer2, "Steal another beer"], "stealbeer");
+    cListener([darkBar, "Continue..."], "darkbar");
+    addListeners([stealbeer2, "Steal another beer"], "stealbeer");
+    addListeners([darkBar, "Continue..."], "darkbar");
 }
 
 //TODO put a limit on this/ Game update
@@ -172,10 +173,10 @@ function stealbeer2(){
         curtext.push("You find another clean glass, and fill it up in a similar way as the previous one.");
         objects.beer.value++;
         sayText(curtext);
-        cListener([stealbeer2, "steal another beer"], "stealbeer");
-        cListener([darkbar, "Continue..."], "darkbar");
-        addListeners([stealbeer2, "steal another beer"], "stealbeer");
-        addListeners([darkbar, "Continue..."], "darkbar");
+        cListener([stealbeer2, "Steal another beer"], "stealbeer");
+        cListener([darkBar, "Continue..."], "darkbar");
+        addListeners([stealbeer2, "Steal another beer"], "stealbeer");
+        addListeners([darkBar, "Continue..."], "darkbar");
     }
 }
 
@@ -188,6 +189,50 @@ function rebar(){
 }
 
 function darkBar(){
+    let curtext = [];
+   if (emerBreak || emerHold && bladder < 20)
+       curtext = printList(curtext, bar["darkBar"][0]);
+   else if (emerHold)
+       curtext = printList(curtext, bar["darkBar"][1]);
+   else if (locstack[0] !== "darkBar") {
+       curtext = printList(curtext, bar["darkBar"][2]);
+       pushloc("darkBar");
+   }
+   else {
+       curtext = printList(curtext, bar["darkBar"][3]);
+   }
+   curtext = showneed(curtext);
+   curtext = displayyourneed(curtext);
+   if (bladder > bladlose) wetherself();
+   else if (yourbladder > yourbladlose) wetyourself();
+   else if (gottagoflag > 0) {
+       preventpee(curtext);
+       sayText(curtext);
+   }
+   else {
+       let listenerList = [];
+       curtext = standobjs(curtext);
+       sayText(curtext);
+       listenerList.push([[stealbeer], "stealBeer"]);
+       cListener([stealbeer, "Get a beer."], "stealBeer");
+       listenerList.push([[kissher], "kissHer"]);
+       cListener([kissher, "Kiss her."], "kissHer");
+       listenerList.push([[feelup], "feelUp"]);
+       cListener([feelup, "Feel her up."], "feelUp");
+       listenerList.push([[playDarts], "playDarts"]);
+       cListener([playDarts, "Play a game of darts"], "playDarts");
+       if (!checkedherout){
+           listenerList.push([[checkherout], "checkOut"]);
+           cListener([checkherout, "Check her out."], "checkOut");
+       }
+       if (yourbladder > yourbladurge) {
+           listenerList.push([[youpee], "youPee"]);
+           cListener([youpee, "Go to the bathroom."], "youPee");
+       }
+       listenerList.push([[leavehm], "leaveHm"]);
+       cListener([leavehm, "Leave the bar."], "leaveHm");
+       addListenersList(listenerList);
+   }
 
 }
 

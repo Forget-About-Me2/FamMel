@@ -34,6 +34,7 @@
     <script src="scripts/locations/driveAround.js"></script>
     <script src="scripts/locations/theBar.js"></script>
     <script src="scripts/locations.js"></script>
+    <script src="scripts/games/darts.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <title>Melissa Explains it All</title>
 </head>
@@ -1360,116 +1361,7 @@ CHANGES BY Forget_About_Me
         c(locstack[0], "Continue...");
     }
 
-    function checkherout() {
-        checkedherout = 1;
-        s(stareather[randcounter]);
-        incrandom();
-        c(locstack[0], "Continue ...");
-    }
 
-    function feelup() {
-        feelcounter += 1;
-        if (locstack[0] !== "thehottub") {
-            s(feelher[randcounter]);
-            if (bladder > blademer) s(feelpee[randcounter]);
-            else s(feelres[randcounter]);
-        } else {
-            s(feelhertub[randcounter]);
-            if (bladder > blademer) s(feelpeetub[randcounter]);
-            else s(feelrestub[randcounter]);
-        }
-        incrandom();
-        if (flirtcounter > 1 && attraction > 35) {
-            s(girlname + respfeelup[randcounter]);
-            if (locstack[0] !== "thehottub")
-                s("She " + feelyou[randcounter]);
-            else
-                s("She " + feelyoutub[randcounter]);
-            if (feelcounter < maxfeel) {
-                attraction += 5;
-                shyness -= 2;
-                arousal += 1;
-            }
-        } else if (attraction > 20) {
-            if (locstack[0] !== "thehottub")
-                s(girlname + " " + feelyou[randcounter]);
-            else
-                s(girlname + " " + feelyoutub[randcounter]);
-            if (feelcounter < maxfeel) {
-                attraction += 3;
-                shyness -= 5;
-                arousal += 2;
-            }
-        } else {
-            s(girltalk + feelbad[randcounter]);
-            attraction -= 2;
-            shyness += 5;
-        }
-        incrandom();
-        flirtcounter += 4;
-        c(locstack[0], "Continue...");
-    }
-
-    function kissher() {
-        kisscounter += 1;
-        s("You kiss " + girlname + " directly on the lips.");
-        if (attraction < 10 || (flirtcounter > 1 && attraction < 20)) {
-            s("She breaks away.");
-            s(girltalk + "Hey! Not so fast.");
-            attraction -= 3;
-        } else if (attraction < 20 || (flirtcounter > 2 && attraction < 30)) {
-            s("She seems pleased.");
-            if (kisscounter < maxkiss) {
-                flirtcounter += 3;
-                attraction += 3;
-                shyness -= 3;
-                arousal += 2;
-            }
-        } else if (attraction < 30) {
-            s("She kisses you back.");
-            if (kisscounter < maxkiss) {
-                flirtcounter += 3;
-                attraction += 3;
-                shyness -= 3;
-                arousal += 4;
-            }
-        } else if (attraction < 50) {
-            s("She returns your kiss passionately.");
-            if (kisscounter < maxkiss) {
-                attraction += 3;
-                shyness -= 3;
-                arousal += 6;
-            }
-        } else {
-            if (bladder < blademer) {
-                if (locstack[0] !== "thehottub") {
-                    s(sxykiss[randcounter]);
-                    arousal += 8;
-                }
-                else {
-                    s(sxynkdkiss[randcounter]);
-                    arousal += 15;
-                }
-                incrandom();
-            } else {
-                if (locstack[0] !== "thehottub") {
-                    s(peekiss[randcounter]);
-                    arousal += 10;
-                }
-                else {
-                    s(nkdpeekiss[randcounter]);
-                    arousal += 15;
-                }
-                incrandom();
-            }
-            if (kisscounter < maxkiss) {
-                attraction += 3;
-                shyness -= 3;
-            }
-        }
-        arousal += 2;
-        c(locstack[0], "Continue...");
-    }
 
     //TODO put flag in proper place
     let floorcounter = 0;
@@ -2481,48 +2373,12 @@ CHANGES BY Forget_About_Me
         c(locstack[0], "Continue...");
     }
 
-    function breakbar() {
-        s("You try the door with your key...");
-        if (bladder > blademer) {
-            s(girltalk + sayhero[randcounter]);
-            attraction += 3;
-        }
-        incrandom();
-        displayneed();
-        displayyourneed();
-        c("darkbar", "Continue...");
-    }
-
 
     // function rebar() {
     //     barkey = 0;
     //     pushloc("thebar");
     //     thebar();
     // }
-
-    function darkbar() {
-        if (locstack[0] !== "darkbar") {
-            s("You and " + girlname + " enter the Bar.  It's dark, silent and deserted.");
-            pushloc("darkbar");
-        } else {
-            s("You are with " + girlname + " in the closed Bar.");
-        }
-
-        showneed();
-        displayyourneed();
-        if (bladder > bladlose) wetherself();
-        else if (yourbladder > yourbladlose) wetyourself();
-        else if (gottagoflag > 0) preventpee();
-        else {
-            c("stealbeer", "Get a beer.");
-            standobjs();
-            c("kissher", "Kiss her.");
-            c("feelup", "Feel her up.");
-            if (!checkedherout) c("checkherout", "Check her out.");
-            if (yourbladder > yourbladurge) c("youpee", "Go to the bathroom.");
-            c("leavehm", "Leave the bar.");
-        }
-    }
 
 
     // //TODO fix you losing control scene.

@@ -440,7 +440,7 @@ function preventpee(curtext) {
         choices.push(3); //Watch
     if (locstack[0] === "darkmovie")
         choices.push(4); //No restroom
-    if (locstack[0] === "darkbar")
+    if (locstack[0] === "darkBar")
         choices.push(5); //pdrinkinggame
     if (locstack[0] === "darkclub")
         choices.push(6); //pphotegame

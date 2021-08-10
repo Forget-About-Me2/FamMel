@@ -82,5 +82,99 @@
     "neutral": [
       "{0} nods"
     ]
+  },
+  "feel": {
+    "you": [
+      " sneaks her hand down the back of your pants squeezes your butt.",
+      " reaches up under your shirt and rubs your back.",
+      " lifts her leg between your thighs, rubbing it along the bottom of your dick.",
+      " presses you closer, squeezing her breasts against your chest.",
+      " presses her crotch into your leg.",
+      " sneaks her hand down your pants and grabs your dick through the thin fabric of your underwear."
+    ],
+    "resp": [
+      "girlname puts her hand on her chest: <b>You're making me hot.</b>",
+      "girlname squeezes her breasts between her upper arms: <b>Stop it - that's embarassing.</b>",
+      "girlname giggles and crosses her legs: <b>You're making me wet!</b>",
+      "girlname grabs your butt: <b>You're turning me on.</b>",
+      "girlname laughs and curtseys: <b>Stop trying to get me excited!</b>",
+      "girlname covers her face: <b>Don't look at me like that!</b>"
+    ],
+    "tub": [
+      "You reach over under the water and slide your hand onto her butt." ,
+      "You reach around under the dark water and put your hand on her breast." ,
+      "You slide your hand onto her thigh",
+      "You reach around and put your hand on her belly." ,
+      "You slip your hand between her legs under the dark, warm water." ,
+      "You slide your hand down her back under the water."],
+    "resTub": [
+      "It's tight and smooth.",
+      "It's warm and soft.  You run your hand over her erect nipple, slippery in the water." ,
+      "The skin is smooth and supple ... and just warmer than the water." ,
+      "It's toned, warm and smooth." ,
+      "Her mons is warm, and you can feel the curls of her pubic hair." ,
+      "You can trace her spine with your finger as it disappears in to her smooth, tight butt crack."
+    ],
+    "peeTub": [
+      "You feel it clenching occasionally.",
+      "You feel it suddenly firm with gooseflesh." ,
+      "You feel her muscles trembling under the smooth skin." ,
+      "It's swollen and rock hard." ,
+      "Her mons is burning, and she grinds it firmly back into your hand." ,
+      "You trace her spine with your finger to the top of her butt crack.  She tenses and traps your finger for a moment."],
+    "youTub": [
+      " sneaks her hand under the water and squeezes your butt.",
+      " reaches up out of the water rubs your back.",
+      " lifts her leg over yours, pressing it into your crotch.",
+      " presses you closer, squeezing her breasts against your chest.",
+      " pulls your hand under the water and places it back between her legs.",
+      " sneaks her hand between your legs and gently strokes your dick."],
+    "bad": [
+      "girltalk Hey! That tickles!",
+      "girltalk No touchee!",
+      "girltalk Stop it!",
+      "girltalk Don't.  Just don't.",
+      "girltalk Watch your hands, mister!",
+      "girltalk What the?"]
+  },
+  "kiss": {
+    "diag": [
+      [ "You kiss girlname directly on the lips"],
+      [
+        "She breaks away",
+        "girltalk Hey! Not so fast."
+      ],
+      [ "She seems pleased."],
+      [ "She kisses you back"],
+      [ "She returns your kiss passionately."]
+    ],
+    "sxy": [
+      "She presses her body onto yours and returns your kiss passionately.  She rubs her firm, flat stomach against your expanding dick.",
+      "She hugs you tightly and returns your kiss long and hard, straddling your thigh and rubbing her soft, hot crotch up and down." ,
+      "She grips you securely and returns your kiss.",
+      "She leans into you and returns the kiss passionately, breathing heavily and forcing her tongue between your lips." ,
+      "She squeezes against you as she returns your kiss, and your hands wander down her back to her ass, which is firm and a little sweaty." ,
+      "She leans forward to passionately return the kiss, and incidentally giving you an excellent view down the top of her blouse."],
+    "sxyNkd": [
+      "She presses her naked body onto yours and returns your kiss passionately.  She rubs her firm, flat stomach against your expanding dick.",
+      "She hugs you tightly to her bare breast and returns your kiss long and hard, straddling your thigh and rubbing her soft, hot crotch up and down." ,
+      "She grips your head securely and returns your kiss as your gaze wanders down her naked body.",
+      "She leans into you, pressing your bare flesh to hers, and returns the kiss passionately, breathing heavily and forcing her tongue between your lips.",
+      "She squeezes her bare skin against you as she returns your kiss, and your hands wander down her back to her firm ass.",
+      "She leans forward to passionately return the kiss, pressing her naked breasts firmly against you.  You feel her hard nipples rub against your chest hair."],
+    "pee": [
+      "She presses her body onto yours and returns your kiss passionately.  You can feel her rock hard bladder pressing into your crotch.",
+      "She hugs you tightly and returns your kiss long and hard, all the while grinding her crotch into your thigh.",
+      "She grips you securely and returns your kiss lovingly while you can feel her body shaking as she tries to resist the urge to empty her bursting bladder.",
+      "She leans into you and returns the kiss passionately, breathing heavily with lust, or maybe with the effort to control her need to pee." ,
+      "She squeezes against you as she returns your kiss, and your hands wander down her back to her ass, which is tensing and relaxing rhythmically." ,
+      "She leans forward to passionately return the kiss, holding her rock hard bladder and squirming thighs safely away from any further pressure."],
+    "nkdPee":[
+      "She presses her bare body onto yours and returns your kiss passionately.  You can feel her rock hard bladder pressing against your stiff member.",
+      "She hugs you tightly and returns your kiss long and hard, all the while grinding her naked crotch into your thigh." ,
+      "She grips you securely and returns your kiss lovingly while you can feel her nude body shaking as she tries to resist the urge to empty her bursting bladder.",
+      "She leans her naked body onto yours and returns the kiss passionately, breathing heavily with lust, or maybe with the effort to control her need to pee." ,
+      "She squeezes her bare breasts against you as she returns your kiss, and your hands wander down her back to her ass, which is tensing and relaxing rhythmically.  You feel her hard nipples rub against your chest." ,
+      "She leans forward to passionately return the kiss, holding her rock hard bladder and squirming thighs safely away from any further pressure.  You stare down at her bare breasts - firm with her arousal."]
   }
 }

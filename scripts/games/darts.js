@@ -129,6 +129,9 @@ function tripleFinish(points){
 function playDarts(){
     let finished = false;
     let winner;
+    //Resets the scores if the game has been played before.
+    for (let player in dartPoints)
+        dartPoints[player] = 301;
     while (!finished){
         for (let player in dartPoints) {
             let res = [];
@@ -172,11 +175,11 @@ function playDarts(){
     console.log(dartPoints);
 }
 
-setupScores();
+// setupScores();
 // console.log(possibleScores);
 // console.log(doubles);
-genScores();
-playDarts();
+// genScores();
+// playDarts();
 // let maxVal = 0;
 // console.log(scores);
 // console.log(scores2);

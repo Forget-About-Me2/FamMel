@@ -8,6 +8,8 @@ let calledjsons = {}; //Dictionary list of all location that have already been q
 //TODO maybe compress this in a list or something?
 let flirtquotes; //This stores all possible flirts called from the JSON
 let flirtresps; //This stores all possible responses called from the JSON
+let feelUp; //This stores all quotes related to feeling her up
+let kissing; //This stores all quotes related to kissing her
 let ypeelines; //This stores all dialogues regarding to you going to the bathroom called from the JSON
 let peelines; //This stores all dialogues regarding to her going to the bathroom called from the JSON
 let needs; //This stores descriptions of her needs called from the JSON
@@ -16,14 +18,6 @@ let drinklines; //This stores all lines regarding drinking from the JSON
 let appearance; // This stores the appearance quotes from the JSON
 let drive; //This stores all dialogues regarding driving around from the JSON
 let general; //This stores all general quotes from JSON call
-
-var respfeelup=[" puts her hand on her chest: <b>You're making me hot.</b>", " squeezes her breasts between her upper arms: <b>Stop it - that's embarassing.</b>", " giggles and crosses her legs: <b>You're making me wet!</b>", " grabs your butt: <b>You're turning me on.</b>", " laughs and curtseys: <b>Stop trying to get me excited!</b>", " covers her face: <b>Don't look at me like that!</b>"];
-
-//  Feel her up in the hot tub
-var feelhertub=["You reach over under the water and slide your hand onto her butt." , "You reach around under the dark water and put your hand on her breast." , "You slide your hand onto her thigh", "You reach around and put your hand on her belly." , "You slip your hand between her legs under the dark, warm water." , "You slide your hand down her back under the water."];
-var feelrestub=["It's tight and smooth.", "It's warm and soft.  You run your hand over her erect nipple, slippery in the water." , "The skin is smooth and supple ... and just warmer than the water." , "It's toned, warm and smooth." , "Her mons is warm, and you can feel the curls of her pubic hair." , "You can trace her spine with your finger as it disappears in to her smooth, tight butt crack."];
-var feelpeetub=["You feel it clenching occasionally.", "You feel it suddenly firm with gooseflesh." , "You feel her muscles trembling under the smooth skin." , "It's swollen and rock hard." , "Her mons is burning, and she grinds it firmly back into your hand." , "You trace her spine with your finger to the top of her butt crack.  She tenses and traps your finger for a moment."];
-var feelyoutub=["sneaks her hand under the water and squeezes your butt.", "reaches up out of the water rubs your back.", "lifts her leg over yours, pressing it into your crotch.", "presses you closer, squeezing her breasts against your chest.", "pulls your hand under the water and places it back between her legs.", "sneaks her hand between your legs and gently strokes your dick."];
 
 //
 //  Feel up her thighs description when she has to go badly
@@ -85,14 +79,6 @@ const outpeectrl=[
     "Oh! I can't wait any more!",
     "Fuck!",
     "Dammit!"
-];
-const outpeecome=[
-    "It's coming out.",
-    "I'm starting.",
-    "I'm going to start.",
-    "It's coming!",
-    "It's starting!",
-    "I'm peeing!"
 ];
 
 //
@@ -202,50 +188,6 @@ var bargirldesc=["The girl tending the bar is really good-looking.",
     "The bartender bites her lip as she locks eyes with you."];
 
 //
-//  Conversation in the bar has good, medium and bad answers
-//
-// var bartalk=["I'll tell you about my family.  Mostly, there's just me and my brother.  The parents are miraculously still together, and still in the same house they bought back in the 60's...",
-//     "Man, my work has been keeping me <u>so</u> busy.",
-//     "You know, I haven't been dating for quite a while.",
-//     "The weather has been really nice this week.",
-//     "Do you have any pets?"];
-//
-// var bargoodans=["You say you wish you had a brother.",
-//     "You ask her more about her job.",
-//     "You ask her why a pretty girl like her hasn't been out dating.",
-//     "You agree and ask her if she's been out doing anything since the weather's been so nice.",
-//     "You say you had a dog as a kid ... and would like to get another someday."];
-//
-// var barmedans=["You say your parents are still together too.",
-//     "You say her job sounds like a difficult one.",
-//     "You say you're honored to be the one to break the losing streak.",
-//     "You agree and tell her you've been out enjoying it.",
-//     "You say you've never had a pet."];
-//
-// var barbadans=["You say you wish you had a sister growing up.",
-//     "You talk about your job and how you're up for a promotion.",
-//     "You say you've been dating a lot recently.",
-//     "You say you hadn't noticed the weather because you've been at work.",
-//     "You say you want to get a cat someday."];
-
-//
-//  Solo Bargirl is really really hot looking...
-//
-var bargirlhotness=["You admire the fact that her short shorts are so short and loose that you can see her dark, moist crotch barely covered by her thong panties as she sits next to you.",
-    "You spend some time staring at the outline of her large breasts beneath her very tight top.  The top is so thin that the dark color of her erect nipples shows through, begging for your touch.",
-    "You mentally undress her as she talks - first pulling off her tight top and exposing those huge breasts, next pulling down the short shorts - or maybe just pulling them aside...",
-    "You admire her perfect red lips and imagine them buried in your crotch - she only has to bend down...",
-    "You admire the smooth skin of her exposed belly and mentally picture the taper of her mound beneath her short shorts.",
-    "You notice she's really hot looking"];
-
-var bargirlemerhotness=["You look up her loose and extremely short shorts, and see that her crotch is slightly damp with exertion or perhaps with a spurt of pee.",
-    "You stare at her large breasts and imagine that they might be extra emergency reservoirs of pee ... which makes you want to squeeze them hard.",
-    "You mentally undress her as she talks - you imagine feeling her spasm as she fights the urge to pee while you pull off her tight top and stretch her short shorts to the side.",
-    "You watch in fascination as she clenches and relaxes her bottom, imagining how she's clenching and relaxing her sphincters to retain control.",
-    "You notice how her bladder has slightly swollen her tight tummy beneath the waistband of her short shorts.",
-    "You can only imagine how much she needs to relieve herself."];
-
-//
 //  She's trying to hold it despite availability of restroom
 //  ( used during Champagne pouring )
 //
@@ -269,18 +211,6 @@ var poseemer=["<i>She seems to be having trouble keeping her legs still for any 
 var fillchamp=["She bends over to fill the glasses, jamming one hand into her crotch.", "She fills both glasses and you can see her hand shaking with the effort to control herself." , "She fills both glasses, the bottle rattling against their rims as she shudders in an effort of self control." , "She quickly sits on her heel and fills the glasses kneeling in front of you.", "She jerks her ass back and forth violently as she bends over to fill both glasses.", "She nearly drops the bottle and her whole body shudders violently as she fills both glasses."];
 
 var fillchampbad=["She's gasping for breath as she fills both glasses, sloppily spilling most of it onto the table top." , "She bends over to fill both glasses and stumbles backwards, spilling champagne onto the floor.", "She kneels and presses her pussy into the corner of the coffee table as she fights for control while filling both glasses.", "She jams the champagne bottle into her crotch and holds very still for a few seconds before splashing the drink in the direction of the glasses, spilling most of it onto the floor." , "She sits down heavily on the coffee table as she fills the glasses, shuddering and spilling most of it onto the floor.", "She holds the bottle pressed to her crotch as she raises the glasses and tries to fill them, spilling most of it onto the floor."];
-
-//
-//  She returns your kiss
-//
-var sxykiss=["She presses her body onto yours and returns your kiss passionately.  She rubs her firm, flat stomach against your expanding dick.", "She hugs you tightly and returns your kiss long and hard, straddling your thigh and rubbing her soft, hot crotch up and down." , "She grips you securely and returns your kiss.", "She leans into you and returns the kiss passionately, breathing heavily and forcing her tongue between your lips." , "She squeezes against you as she returns your kiss, and your hands wander down her back to her ass, which is firm and a little sweaty." , "She leans forward to passionately return the kiss, and incidentally giving you an excellent view down the top of her blouse."];
-
-var sxynkdkiss=["She presses her naked body onto yours and returns your kiss passionately.  She rubs her firm, flat stomach against your expanding dick.", "She hugs you tightly to her bare breast and returns your kiss long and hard, straddling your thigh and rubbing her soft, hot crotch up and down." , "She grips your head securely and returns your kiss as your gaze wanders down her naked body.", "She leans into you, pressing your bare flesh to hers, and returns the kiss passionately, breathing heavily and forcing her tongue between your lips." , "She squeezes her bare skin against you as she returns your kiss, and your hands wander down her back to her firm ass." , "She leans forward to passionately return the kiss, pressing her naked breasts firmly against you.  You feel her hard nipples rub against your chest hair."];
-
-var peekiss=["She presses her body onto yours and returns your kiss passionately.  You can feel her rock hard bladder pressing into your crotch.", "She hugs you tightly and returns your kiss long and hard, all the while grinding her crotch into your thigh." , "She grips you securely and returns your kiss lovingly while you can feel her body shaking as she tries to resist the urge to empty her bursting bladder.", "She leans into you and returns the kiss passionately, breathing heavily with lust, or maybe with the effort to control her need to pee." , "She squeezes against you as she returns your kiss, and your hands wander down her back to her ass, which is tensing and relaxing rhythmically." , "She leans forward to passionately return the kiss, holding her rock hard bladder and squirming thighs safely away from any further pressure."];
-
-var nkdpeekiss=["She presses her bare body onto yours and returns your kiss passionately.  You can feel her rock hard bladder pressing against your stiff member.", "She hugs you tightly and returns your kiss long and hard, all the while grinding her naked crotch into your thigh." , "She grips you securely and returns your kiss lovingly while you can feel her nude body shaking as she tries to resist the urge to empty her bursting bladder.", "She leans her naked body onto yours and returns the kiss passionately, breathing heavily with lust, or maybe with the effort to control her need to pee." , "She squeezes her bare breasts against you as she returns your kiss, and your hands wander down her back to her ass, which is tensing and relaxing rhythmically.  You feel her hard nipples rub against your chest." , "She leans forward to passionately return the kiss, holding her rock hard bladder and squirming thighs safely away from any further pressure.  You stare down at her bare breasts - firm with her arousal."];
-
 
 //
 //  Interpreted descriptions of how she looks like she has to pee
@@ -335,88 +265,6 @@ var needquotes=["I've gotta pee pretty badly.","I need to visit the little girls
 
 var urgequotes=["I'm going to want to go and pee soon.","I think my bladder is getting full.","I might have to stop at the restoom before too long.","I guess I'll need to freshen up next.","I'd better go powder my nose soon.","I'd like to stop by the restroom in the next little bit."];
 
-// var denyquotes=[
-//     "I'm fine, thanks for asking.",
-//     "No, thanks.  I'm okay.",
-//     "Nope - not at all.",
-//     "I'm alright.  It's nice of you to ask.",
-//     "I'm great, thanks.",
-//     "I'm okay, thanks for asking."];
-//
-// //
-// //  from the holding game or when asking how she is doing,
-// //  she doesn't know how much longer she can hold it
-// //
-// var holdlosequotes=["I can't hold it anymore!",
-//     "I can't control it any longer!",
-//     "I can't wait any more!",
-//     "I'm losing control!",
-//     "I can't stop it!",
-//     "It's coming out!"];
-// var holdemerquotes=["I don't think I can hold it much longer.",
-//     "I don't know if I can control it much longer.",
-//     "I don't think I can last much longer.",
-//     "I don't know if I can control it much longer.",
-//     "I can't control my bladder much longer.",
-//     "I'm not going to be able to hold it too much longer."];
-// var holdneedquotes=["I think I can hold it a little longer.",
-//     "I can control it for just a little longer.",
-//     "I'll be okay for a little bit.",
-//     "I think I can wait just a little while.",
-//     "I think I'll be okay for a little bit.",
-//     "I'm not sure, but I can probably last a little longer."];
-// var holdurgequotes=["I have to go, but I can hold it.",
-//     "I can control myself for a while",
-//     "I can wait.",
-//     "It's not an emergency.  I can hold it.",
-//     "I'll be fine for a while.",
-//     "I'll be okay for a bit."];
-// var holdokayquotes=["I don't even feel the slightest need to go.",
-//     "I don't have to pee at all.",
-//     "My bladder's not even a little bit full.",
-//     "I don't need to pee yet.",
-//     "I'm prefectly fine.",
-//     "I don't need to go at all."];
-//
-// //
-// //  She responds to your request to hold it positively.
-// //  for displayholdquip()
-// //
-//
-// var quiplose=[
-//     "I've never in my life had to go so bad, but I'll try to hold it for you.",
-//     "I <i>can't</i> wait - but I'm trying as hard as I can.",
-//     "I'm trying to control it.  I'm trying to control...",
-//     "I can feel it coming out, but I'm holding as hard as I can.",
-//     "God! Don't pee!  Don't pee! Don't pee!",
-//     "It's pulsing! Gotta hold!  Gotta hold!"
-// ];
-//
-// var quipemer=[
-//     "I'm desperate here, but I'll try to hold on.",
-//     "I'll try to wait, but I <b><i>really</i></b> need to go.",
-//     "I don't know how much longer I can wait, but I'm trying.",
-//     "I don't think I can hold it much longer, but I'm trying.",
-//     "I don't think I've had to go this bad in a long time, but I'm gonna hold it.",
-//     "I'll try to control my bladder for you."
-// ];
-//
-// var quipneed=[
-//     "I've gotta go soon, but I'll wait.",
-//     "I can wait a little bit ... I guess.",
-//     "I'm awfully full, but I can hold it.",
-//     "I don't want to explode my bladder, but I'll wait.",
-//     "I can hold it... I think.",
-//     "I need to go, but I've held it longer than this before."];
-//
-// var quipurge=[
-//     "I don't have to go very bad yet.  I can wait.",
-//     "I don't really need to pee that bad yet.",
-//     "I'm fine.  I can hold it.",
-//     "I've held it longer lots of times.",
-//     "I don't need the little girls room yet - I can wait.",
-//     "No problem.  I'll hold it."
-// ];
 
 //
 //  She's embarassed she couldn't hold it.
@@ -440,27 +288,6 @@ var ywetquote=["Suddenly, you are overwhelmed by your bladder, you groan and the
     "Suddenly the control on your sphincter slips, you shudder and you can feel your face turning red."
 ];
 
-//
-//  She denies she wet her panties ... sort of
-//
-// const spurtdenyquote = ["Of course not!  I'm not a 3 year old.",
-//     "I think I'm still dry.",
-//     "No, I don't think so.",
-//     "Not really.",
-//     "I'm all dry.",
-//     "Nope.  Still in control."];
-
-
-//
-//  She seems embarassed ( she spurted in her panties )
-//
-// var spurtquote=["She seems a little embarassed.",
-//     "She seems quieter than usual.",
-//     "She doesn't seem to be able to look you in the eyes.",
-//     "She reaches towards her butt.",
-//     "She seems nervous.",
-//     "She looks like she's embarrassed about something."];
-
 
 //
 //  You are her hero - now get out of the way before she wets herself
@@ -473,30 +300,6 @@ var sayhero=[
     "You the <b>man<b>!",
     "You've saved my life tonight!",
     "Damn you're good!"];
-
-
-//
-//  She's reminded of the other time she desperately had to pee
-//
-// var peestory=["I used to never want to go to the restroom at school, and I'd hold it until I got home, which usually worked okay.  But one day, I was late for the bus and I didn't have a chance to pee in the morning after I got up.  I was <u>so</u> desperate all day.",
-//     "Once my toilet broke and I had to call the plumbers and they took <i>forever</i> to come.  I was nearly wetting myself when they did finally show up, but I didn't want to say anything.",
-//     "One time I got stuck in traffic on the way home from work.  I <u>really</u> had to pee, but there was nowhere to pull off.",
-//     "You know, I once bet my brother I could hold my pee longer than him.",
-//     "I really hate those porta-potties they have at fairs.  I remember one time I went to the county fair and I really had to pee, but I didn't want to leave.  I kept wandering around looking for a real restroom, getting more and more desperate.",
-//     "In college we used to play a game where they duct taped beers to your hands, and you had to finish the beers before you could go to the bathroom.",
-//     "One summer, I was working as a receptionist at an airline office, and everybody else in the office would go out for lunch, leaving me to deal with everything.  I wasn't allowed to leave my desk during lunch hour.  This was usually fine, but I had too much coffee one morning, and I was in big trouble.  I had to pee so bad!",
-//     "In school I got a date with this really great guy, and I was so nervous that I'd do something to mess it up, I kept drinking water at dinner in the pauses in the conversation.  By the end of dinner, I really had to pee, but I was too shy to say anything and I didn't want to make us late for the movie.",
-//     "I went on a boating trip with some friends on spring break.  We all dressed up in our bikinis, drank a bunch of beer, and teased the guys on the river.  Nobody told us the boat didn't have a restroom.  We all had to pee <i>so</i> badly, but we were trying to act all cool about it."];
-//
-// var peestory2=["I almost made it.  I was walking back home and I just couldn't hold it anymore - I always thought I could just try a little harder and hold it in, but it just started coming out.  There was nothing I could do.  I soaked my panties right outside my front door.",
-//     "I tried so hard to hold it without them noticing.  But after a while, I just couldn't control myself - I ended up going out into the backyard away from the plumbers and peeing in a cup.",
-//     "I saw all these people pulling off to the side of the road and peeing on the ground behind their cars.  I was about to do the same thing, but then the traffic jam eased up and I made it home.  I might have leaked a little bit into my panties, though.  It was <i>so</i> hard to from the car to the bathroom without peeing myself.",
-//     "I won.  He finally gave up and pulled out his dick and let go - but then I couldn't get my panties down before I started peeing.  I ended up wetting myself right in front of him - with my panties only halfway down.",
-//     "I ended up almost wetting myself - I just <u>had</u> to go.  It got so bad I couldn't walk and hold myself at the same time, so I finally went in one of the portapotties.  It was sooo gross.",
-//     "It was <b>so</b> embarassing.  I finished the beers, but I peed myself right in front of everybody while they were taking the duct tape off.  Never played that game again.",
-//     "I kept waiting and waiting for the rest of the crew to come back from lunch, but they were late that day.  And I started thinking I could use the trash can or something, but then when I made it to 1pm and they hadn't come back yet, I started worrying that if I did have to use the trashcan, they'd come back and find me peeing.  But it got so bad I simply had to try it.  I went over to bring the trash can behind my desk, and then everybody came back from lunch.  I nearly lost it completely ... definitely spurted in my panties.",
-//     "We went to see the movie, and I just couldn't sit still.  I didn't know what to do.  I felt it almost coming out, but I was trapped in the row of seats.  Luckily, it was dark, so I hiked up the back of my dress and let it out slowly into the cushion.  It was so embarassing, but nobody ever found out.",
-//     "Well - finally my friend couldn't hold it anymore, and jumped in the water to pee.  We all ended up peeing in our bikinis in the river."];
 
 //
 // Walk descriptions
@@ -687,10 +490,6 @@ function callChoice(choice, curtext){
 function c(choice, curtext) {
     const html = "<li><a href=\"javascript:go('" + choice[0] + "')\">" + choice[1] + "</a>"
     curtext.push(html);
-    //TODO decide if this is needed?
-    // if (didintro) {
-    //     displaystats();
-    // }
     return curtext;
 }
 
@@ -748,7 +547,6 @@ function setText(lines){
     document.getElementById('textsp').innerHTML = result;
 }
 
-const quoteID = "";
 let json = null;
 let locjson = null; //This is the main json for the current location
 
@@ -949,6 +747,11 @@ function flirtSetup(){
             flirtresps[key] = addGirlname(value);
         }
     }
+    feelUp = json.feel;
+    feelUp["resp"] = formatAllVars(feelUp["resp"]);
+    feelUp["bad"] = formatAllVars(feelUp["bad"]);
+    kissing = json.kiss;
+    kissing["diag"] = formatAllVarsList(kissing["diag"]);
 }
 
 

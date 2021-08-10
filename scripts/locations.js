@@ -106,14 +106,18 @@ function itsClosed(locname, fun, curloc) {
     sayText(curtext);
     let listenerList = []
     if (haveItem(locname+"Key")){
-        listenerList.push([[fun], locname]);
-        cListener([fun, "Try to break in with your key."], locname);
+        let breakFun = function () {
+            breakLoc(fun, curloc);
+        }
+        listenerList.push([[breakFun], locname]);
+        cListener(["", "Try to break in with your key."], locname);
     }
     addSayText(callChoice(["curloc", "Continue..."], []));
     addListenersList(listenerList);
 }
 
-let funAfterEmBreak;
+let emerBreak; //True if she rushed to the toilet after you opened the door
+let emerHold; //True if you asked her to hold it.
 function breakLoc(loc, curloc){
     let curtext = printList(locJson["breakLoc"][0], []);
     let listenerList = [];
@@ -124,13 +128,20 @@ function breakLoc(loc, curloc){
             curtext = printList(locJson["breakLoc"][1], curtext);
             curtext = displayneed(curtext);
             curtext = displayyourneed(curtext);
-            funAfterEmBreak = loc
             pushloc(curloc);
             sayText(curtext);
-            listenerList.push([[holdit], "holdit"]);
-            listenerList.push([[indepee], "indepee"]);
-            cListener([holdit, "Grab her arm to stop her."]);
-            cListener([loc, "Let her go."], "indepee");
+            let holdFun = function () {
+                emerHold = 1;
+                holdit();
+            }
+            let peeFun = function () {
+                emerBreak = 1;
+                indepee();
+            }
+            listenerList.push([[holdFun], "holdit"]);
+            listenerList.push([[peeFun], "indepee"]);
+            cListener([holdFun, "Grab her arm to stop her."], "holdit");
+            cListener([peeFun, "Let her go."], "indepee");
             addListenersList(listenerList);
             return
         } else
@@ -139,7 +150,7 @@ function breakLoc(loc, curloc){
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);
     sayText(curtext);
-    
+    cListenerGen([loc, "Continue..."], "curloc");
 }
 
 
