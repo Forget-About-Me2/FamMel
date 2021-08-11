@@ -1,0 +1,30 @@
+{
+  "play": [
+    ["<b>You:</b> Let's play a game of darts",
+     "girltalk That sounds fun, you're going down!"],
+    ["<b>You:</b> Shall we play another dart game? The last one was so fun!",
+    "girltalk Oh yes, I'd love to! "],
+    [ "You find some darts in a drawer.",
+     "You and girlname make your way over towards the dart board.",
+      "Both of you start with 301 points, the first to get it down to exactly 0 wins.",
+      "When you go below 0 in a turn you get the same amount of points as you had at the beginning of the turn.",
+      "You have to end by hitting a double."
+    ]
+  ],
+  "round": [
+    ["Both of you throw your darts in turns."]
+
+  ],
+  "points": {
+    "you": [
+      "You go first and play [{0}].",
+      "getting a total of {0} points.",
+      "Leaving you at {0} points."
+    ],
+    "her": [
+      "girlname goes after you and plays [{0}]",
+      "getting a total of {0} points",
+      "Leaving her at {0} points"
+    ]
+}
+}

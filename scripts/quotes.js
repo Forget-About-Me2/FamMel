@@ -18,6 +18,14 @@ let drinklines; //This stores all lines regarding drinking from the JSON
 let appearance; // This stores the appearance quotes from the JSON
 let drive; //This stores all dialogues regarding driving around from the JSON
 let general; //This stores all general quotes from JSON call
+let darts; //This stores the json quotes for the darts game
+
+
+let girlname = "Laura";
+let customgirlname = "Amanda";
+let basegirl = "Laura";
+let girltalk = "<b>" + girlname + ":&nbsp;</b>";
+let girlgasp = "<b>" + girlname + " gasps:&nbsp;</b>";
 
 //
 //  Feel up her thighs description when she has to go badly
@@ -360,7 +368,7 @@ function formatString(expr, arguments){
 function formatAll(exprList, values){
     let result = [];
     for(let i=0;i<exprList.length; i++){
-        result.push(formatString(exprList[i], values[i]));
+        result.push(formatString(exprList[i], [values[i].toString()]));
     }
     return result;
 }
@@ -507,7 +515,6 @@ function cListener(choice, loc){
 //This is done separately because if the list contains more listeners things break
 function addListeners(choice, loc){
     let func = goWrapper(choice[0]);
-    console.log(loc);
     document.getElementById(loc).addEventListener("click", func);
 }
 
@@ -733,7 +740,8 @@ function setupQuotes(){
     });
     getjson("general", function (){
         general = json;
-    })
+    });
+    getjson("games/darts", dartSetup);
 }
 
 function flirtSetup(){

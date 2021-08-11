@@ -1,29 +1,8 @@
-//TODO get rid of this because this is copieid from main
-function range(start, end) {
-    if(start === end) return [start];
-    return [start, ...range(start + 1, end)];
-}
-
-function pickrandom(list) {
-    return list[randomIndex(list)];
-}
-
-//Picks a random index from a list.
-function randomIndex(list){
-    let number = Math.random() * list.length;
-    return Math.floor(number);
-}
-
-function randomchoice(probability) {
-    if (Math.floor(Math.random() * 10) <= probability)
-        return 1;
-    else
-        return 0;
-}
-
-let dartPoints = {
-    "you": 301,
-    "her": 301
+function dartSetup(){
+    darts = json;
+    darts["play"] = formatAllVarsList(darts["play"]);
+    setupScores();
+    genScores();
 }
 
 let possibleScores = [25, 50];
@@ -79,7 +58,7 @@ function genScores(){
 function singleFinish(points){
     if (doubles.includes(points)){
         if (randomchoice(5))
-            return [points];
+            return [[points], points, 0];
     }
     return [];
 }
@@ -91,7 +70,7 @@ function doubleFinish(points){
         //The given formula give 100% chance when the length is 64
         const chance = Math.round(5*Math.pow(1.01, list.length));
         if (randomchoice(chance)){
-            return pickrandom(list);
+            return [pickrandom(list), points, 0];
         }
     }
     return [];
@@ -101,87 +80,93 @@ function tripleFinish(points){
     if (points in scores.double){
         //If it's possible to finsih with 3 darts there's a 70% chance this succeeds
         if (randomchoice(7)){
-            return [pickrandom(scores.double[points]), 0];
+            return [pickrandom(scores.double[points]), points, 0];
         }
     }
     let score = pickrandom(Object.keys(scores.normal));
     let list = pickrandom(scores.normal[score]);
+    let endPoints = points;
     //If you somehow still pick a wining move you win, otherwise your point amount doesn't change
     if (score === points){
         if (doubles.includes(list[2]))
-            score = 0
+            endPoints = 0
         else
-            score = points;
+            endPoints = points;
     } else if (score < points)
         //if you scored lower than your points subtract the score from your points
-        score = points - score;
+        endPoints = points - score;
     else {
         //If you score higher than points you still have find out which throw crossed it.
         if (list[0] > points)
-            return [[list[0]], points];
+            return [[list[0]],0, points];
         else if (list[0]+list[1] > points)
-            return [[list[0], [list[1]]], points];
-        score = points
+            return [[list[0], [list[1]]], 0, points];
+        endPoints = points
     }
-    return [list, score];
+    return [list, score, endPoints];
 }
 
-function playDarts(){
-    let finished = false;
-    let winner;
-    //Resets the scores if the game has been played before.
-    for (let player in dartPoints)
-        dartPoints[player] = 301;
-    while (!finished){
-        for (let player in dartPoints) {
-            let res = [];
-            let curPoints = dartPoints[player];
-            if (curPoints <= 60){
-                res = singleFinish(curPoints);
-                finished = res.length === 1;
-                if (finished){
-                    dartPoints[player] = 0;
-                    winner = player;
-                    console.log(player + " played: " + res);
-                    console.log("And won!");
-                    break;
-                }
-            }
-            if (curPoints <= 100){
-                res = doubleFinish(curPoints);
-                finished = res.length === 2;
-                if (finished){
-                    dartPoints[player] = 0;
-                    console.log(player + " played: " + res);
-                    console.log("And won!");
-                    winner = player;
-                    break;
-                }
-            }
-            res = tripleFinish(curPoints);
-            console.log(player + " played: " + res[0]);
-            finished = res[1] === 0;
-            dartPoints[player] = res[1];
-            if (finished){
-                console.log("And won!");
-                winner = player;
-                break;
-            }
+let playedDarts = false;
+//Play a game of darts with her
+function playDarts() {
+    let curtext = [];
+    //Have you played the darts game before.
+    if (!playedDarts) {
+        curtext = printList(curtext, darts["play"][0]);
+        playedDarts = true;
+    } else
+        curtext = printList(curtext, darts["play"][1]);
+    curtext = printList(curtext, darts["play"][2]);
+    let dartPoints = {
+        "you": 301,
+        "her": 301
+    }
+    sayText(curtext);
+    let round = function () {
+        dartRound(dartPoints);
+    }
+    cListenerGen([round, "Continue..."], "dartRound");
+}
 
+//Play a round of the dart game
+function dartRound(dartPoints){
+    let curtext = printList([], darts["round"][0]);
+    let winner = false; //Flags whether the game has been won
+    let res = [];
+    for (let player in dartPoints) {
+        let curPoints = dartPoints[player];
+        if (curPoints <= 60){
+            res = singleFinish(curPoints);
         }
-        console.log("current points:")
-        console.log(dartPoints);
+        if (res.length === 0) {
+            if (curPoints <= 100) {
+                res = doubleFinish(curPoints);
+            }
+            if (res.length === 0)
+                res = tripleFinish(curPoints);
+        }
+        curtext = printList(curtext, formatAll(darts["points"][player], res));
+        if (res[2] === 0){
+            if (player === "you"){
+                curtext.push("<b>You have won the game!</b>");
+            } else
+                curtext.push("<b>" + girlname + " has won the game!</b>");
+            winner = true;
+            break;
+        }
+        dartPoints[player] = res[2];
+        res = []; //Reinitialize res
     }
-    console.log(dartPoints);
+    sayText(curtext);
+    let listenerList = [];
+    if (!winner){
+        let round = function () {
+            dartRound(dartPoints);
+        }
+        listenerList.push([[round], "dartRound"]);
+        cListener([round, "Play the next round"], "dartRound");
+    }
+    listenerList.push([[darkBar], "darkBar"]);
+    cListener([darkBar, "Stop the game"], "darkBar");
+    addListenersList(listenerList);
 }
-
-// setupScores();
-// console.log(possibleScores);
-// console.log(doubles);
-// genScores();
-// playDarts();
-// let maxVal = 0;
-// console.log(scores);
-// console.log(scores2);
-// Object.keys(scores.double).forEach(key => maxVal = Math.max(scores.double[key].length, maxVal));
-// console.log(maxVal);
