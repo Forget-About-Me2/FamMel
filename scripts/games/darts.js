@@ -116,16 +116,23 @@ function playDarts() {
         playedDarts = true;
     } else
         curtext = printList(curtext, darts["play"][1]);
+    curtext = showneed(curtext);
     curtext = printList(curtext, darts["play"][2]);
+    curtext = displayneed(curtext);
+    curtext = displayyourneed(curtext);
     let dartPoints = {
         "you": 301,
         "her": 301
     }
-    sayText(curtext);
-    let round = function () {
-        dartRound(dartPoints);
+    if (bladder > bladlose) wetherself();
+    else if (yourbladder > yourbladlose) wetyourself();
+    else {
+        sayText(curtext);
+        let round = function () {
+            dartRound(dartPoints);
+        }
+        cListenerGen([round, "Continue..."], "dartRound");
     }
-    cListenerGen([round, "Continue..."], "dartRound");
 }
 
 //Play a round of the dart game
@@ -157,16 +164,22 @@ function dartRound(dartPoints){
         dartPoints[player] = res[2];
         res = []; //Reinitialize res
     }
-    sayText(curtext);
-    let listenerList = [];
-    if (!winner){
-        let round = function () {
-            dartRound(dartPoints);
+    curtext = displayneed(curtext);
+    curtext = displayyourneed(curtext);
+    if (bladder > bladlose) wetherself();
+    else if (yourbladder > yourbladlose) wetyourself();
+    else {
+        sayText(curtext);
+        let listenerList = [];
+        if (!winner) {
+            let round = function () {
+                dartRound(dartPoints);
+            }
+            listenerList.push([[round], "dartRound"]);
+            cListener([round, "Play the next round"], "dartRound");
         }
-        listenerList.push([[round], "dartRound"]);
-        cListener([round, "Play the next round"], "dartRound");
+        listenerList.push([[darkBar], "darkBar"]);
+        cListener([darkBar, "Stop the game"], "darkBar");
+        addListenersList(listenerList);
     }
-    listenerList.push([[darkBar], "darkBar"]);
-    cListener([darkBar, "Stop the game"], "darkBar");
-    addListenersList(listenerList);
 }

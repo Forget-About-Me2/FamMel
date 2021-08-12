@@ -321,17 +321,17 @@ function wetyourself() {
     let curtext = [pickrandom(yneeds["wetquote"])];
     sayText(curtext);
     if (randomchoice(yspurtthresh) && locstack[0] !== "thehottub") {
-        spurtedyourself();
+        spurtedyourself(curtext);
     } else {
         yspurtthresh = 3;
         if (locstack[0] === "driveout")
-            cListener([wetyourself2c, "Continue ..."], "wetyourself");
+            cListenerGen([wetyourself2c, "Continue ..."], "wetyourself");
         else if (locstack[0] === "themakeout")
-            cListener([wetyourself2m, "Continue ..."], "wetyourself");
+            cListenerGen([wetyourself2m, "Continue ..."], "wetyourself");
         else if (locstack[0] === "thehottub")
-            cListener([wetyourself2t, "Continue ..."],"wetyourself");
+            cListenerGen([wetyourself2t, "Continue ..."],"wetyourself");
         else
-            cListener([wetyourself2, "Continue ..."], "wetyourself");
+            cListenerGen([wetyourself2, "Continue ..."], "wetyourself");
     }
 }
 
@@ -404,10 +404,10 @@ function wetyourself3t() {
 }
 
 //TODO more text options and her reponse
-function spurtedyourself() {
+function spurtedyourself(curtext) {
     yourbladder -= 50;
     yspurtthresh -= 0.1 * yspurtthresh;
-    let curtext = [yneeds["spurtquote"]];
+    curtext.push(yneeds["spurtquote"]);
     // s("You manage to get your control back but you still let out a little bit.");
     curtext = callChoice(["curloc", "Continue ..."], curtext);
     sayText(curtext);

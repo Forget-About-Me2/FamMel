@@ -1107,12 +1107,8 @@ function peeoutside3c() {
 //TODO chance with triggering each other into wetting when desperate
 //TODO it's impossible to spurt more than once while it shouldn't be
 //Here's actually where we decide if she wet or just spurted
-//TODO test
 function wetherself() {
-    console.log("test");
     let curtext = [pickrandom(needs["wetquote"])];
-    // s(wetquote[randcounter]);
-    // incrandom();
     if (randomchoice(spurtthresh) && locstack[0] !== "thehottub" && !shespurted) {
         curtext = spurtedherself(curtext);
     } else {
@@ -1120,36 +1116,26 @@ function wetherself() {
         let choices = [];
         if (locstack[0] === "driveout")
             choices.push(24);
-            // c("wetherself2c", "Continue ...");
         else if (locstack[0] === "themakeout")
             choices.push(25);
-            // c("wetherself2m", "Continue ...");
         else if (locstack[0] === "thehottub")
             choices.push(26);
-            // c("wetherself2t", "Continue ...");
         else
             choices.push(27);
-            // c("wetherself2", "Continue ...");
         curtext = printChoicesList(curtext, choices, needs["choices"]);
     }
     sayText(curtext);
 }
 
-//TODO test
 function wetherself2(curtext) {
-    console.log("test");
     if (!curtext)
         curtext = [];
     curtext.push(needs["wetherself"][0]);
-    // s("You hear the loud hissing as her bladder uncontrollably empties itself.");
     flushdrank();
     wetlegs = 1;
     wetherpanties = 1;
     curtext.push(girltalk + pickrandom(needs["embarquote"]));
-    // s(girltalk + embarquote[randcounter]);
-    // incrandom();
-    curtext = printChoicesList(curtext, [31], needs["choices"]);
-    // c("wetherself3", "Continue ...");
+    curtext = printChoicesList(curtext, [32], needs["choices"]);
     sayText(curtext);
 }
 
@@ -1207,33 +1193,24 @@ function wetherself3c() {
     sayText(curtext);
 }
 
-//TODO test
 function wetherself3() {
-    console.log("test");
     let curtext = [];
     if (pantycolor !== "none" && shyness < 70) {
         curtext.push(appearance["clothes"][heroutfit]["wetherselfquote"]);
-        // s(wetherselfquote);
         if (attraction > 40) {
             curtext = printListSelection(curtext, needs["wetherself"], [11,12]);
-            // s(girlname + " hands you the wet panties, soaked with her fragrant urine.");
-            // s(girltalk + "Is there someplace you can put these?");
+
             objects.wetPanties.value++
         }
         pantycolor = "none";
     } else if (pantycolor === "none")
         curtext.push(needs["wetherself"][13]);
-        // s(girltalk + "Good thing I wasn't wearing panties, I guess.");
     curtext.push(pickrandom(appearance["clothes"][heroutfit]["dryquote"]));
-    // s(dryquote[randcounter]);
-    // incrandom();
     if (locstack[0] !== "drinkinggame") {
         shyness += 15;
         if (shyness > 100) shyness = 100;
     }
     curtext = printChoicesList(curtext, [35, 0], needs["choices"]);
-    // c("scoldher", "Scold her for wetting herself");
-    // c(locstack[0], "Continue ...");
     sayText(curtext);
 }
 
@@ -1252,20 +1229,14 @@ function wetherself3t() {
     sayText(curtext);
 }
 
-//TODO test
 function spurtedherself(curtext) {
-    console.log("test");
     bladder -= 50;
     spurtthresh -= 0.1 * spurtthresh;
     shespurted = 1;
     curtext.push(pickrandom(needs["spurtquote"]));
-    // s(spurtquote[randcounter]);
-    // incrandom();
     curtext = displayneed(curtext);
     curtext = printChoicesList(curtext, [0, 28], needs["choices"]);
     return curtext;
-    // c("askspurted", "Ask her if she peed herself.");
-    // c(locstack[0], "Continue ...");
 }
 
 //TODO test
@@ -1337,16 +1308,26 @@ function smellspurted() {
 }
 
 //TODO make this more pleasurable/more BDSM like scolding?
-//TODO test
 function scoldher() {
-    console.log("test");
-    let curtext = needs["scoldher"];
+    let curtext = printList([], needs["scoldher"]);
     // s("<b>YOU:</b> You're such a baby, wetting yourself like that!");
     // s("She pouts and turns away from you.");
     // s("Her face turns bright red and she begins to cry.");
     attraction -= 20;
     curtext = printChoicesList(curtext, [31], needs["choices"]);
     // c("comforther", "Apologize and comfort her");
+    sayText(curtext);
+}
+
+//Comfort her after hurting her feelings by scolding her.for wetting.
+function comforther() {
+    let curtext = printList([], needs["comforther"]);
+    // s("You walk to her and hold her as she cries.");
+    // s("<b>YOU:</b> I'm so sorry.  You're really a beautiful, sexy girl.");
+    // s("She stops crying and seems a little happier.");
+    curtext = callChoice(["curloc", "Continue..."], curtext);
+    attraction += 5;
+    shyness -= 2;
     sayText(curtext);
 }
 

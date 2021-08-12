@@ -690,9 +690,14 @@
     "The smell reminds you of a toilet filled with golden urine, just before it's flushed."
   ],
   "scoldher": [
-    "<b>YOU:</b> You're such a baby, wetting yourself like that!",
+    "<b>You:</b> You're such a baby, wetting yourself like that!",
     "She pouts and turns away from you.",
     "Her face turns bright red and she begins to cry."
+  ],
+  "comforther": [
+    "You walk to her and hold her as she cries.",
+    "<b>You:</b> I'm so sorry.  You're really a beautiful, sexy girl.",
+    "She stops crying and seems a little happier."
   ],
   "drinkquote": [
     "{0} I've <b>really</b> got to go to the bathroom, but I'll drink it if that's what you want me to do.",

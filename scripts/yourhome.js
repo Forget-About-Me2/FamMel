@@ -21,9 +21,13 @@ function yourhome() {
     }
     curtext = printAlways(curtext);
     curtext = displayyourneed(curtext);
-    if (playerbladder)
+    if (playerbladder) {
+        if (yourbladder > yourbladlose) {
+            wetyourself();
+            return;
+        }
         curtext = printAllChoices(curtext);
-    else {
+    } else {
         curtext = printChoices(curtext, [0,1,4]);
     }
     sayText(curtext)
