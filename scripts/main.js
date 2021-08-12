@@ -150,16 +150,6 @@ function go(tag) {
     } else {
         eval(tag + "()");
     }
-
-    if (tag !== "hidescreen") {
-        comma = 0;
-        document.getElementById('objsp').innerHTML = "You are carrying: ";
-        const obj = Object.values(objects);
-        obj.forEach(value => displaypos(value));
-        if (comma === 0) {
-            document.getElementById('objsp').innerHTML += " nothing.";
-        }
-    }
 }
 
 //Calculates her current tuminc
