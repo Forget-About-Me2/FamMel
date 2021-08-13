@@ -94,7 +94,55 @@
     [ "girltalk Okay. But let's go pee first."],
     [ "girltalk No way, dude. I'm outta here."],
     [ "You both head off to the restrooms to empty your bladders.",
-      "Standing in front of the urinal, you imagine her sitting and peeing on the other side of the wall as you drain your bladder of every last drop."
+      "Standing in front of the urinal, you imagine her sitting and peeing on the other side of the wall as you drain your bladder of every last drop.",
+      "You hear the muffled flush of a toilet from the ladies room and walk back out to meet her coming out of the restroom.",
+      "She seems really relieved, and a bit aroused."
+    ],
+    [ "<b>You: </b> Okay.  All better now?",
+      "<b>You:</b> Here's the rules: we both drink shots of beer until one of us can't hold it.  There's no holding, no tickling, and you have to drain the glass in one go.  Any questions?",
+      "girltalk Okay but you're going <i>DOWN</i>!"
+    ],
+    [ "You're playing a drinking game with girlname."],
+    [ "<b>You:</b> It's time to drink up!",
+      "You pull two beers, toast, and both drain the glasses."
     ]
+  ],
+  "postGameHer": [
+    [ "<b>You</b> You lost it, didn't you? You spurted!",
+      "<b>You:</b>What were we playing for again?"
+    ],
+    [ "<b>YOU:</b> Ha!  You lose!  What were we playing for again?"],
+    [ "<b>girlname laughs:</b> We didn't really think of that, did we? How about a kiss?"],
+    [ "You wince slightly at your throbbing bladder.",
+      "\"I gotta pee <b>first<b>.\"",
+      "Both of you say simultaneously",
+      "You both head off to the restrooms to relieve and clean up."
+    ],
+    [ "You reach out to take her in your arms... hoping to squeeze her really tight.",
+      "girltalk But I gotta pee <b>FIRST</b>.",
+      "She heads towards the bathroom, you stay behind waiting for her to come back."
+    ],
+    [ "She reaches towards you, and you want to stay, but you simply have to head off to the restrooms to relieve yourself."],
+    [ "She reaches towards you and you pull her on your lap, kissing her soundly while cupping a feel."]
+  ],
+  "postGameYou": [
+    [ "girltalk You lost it, didn't you? You spurted!",
+      "girltalk What were we playing for again?"
+    ],
+    [ "girltalk Ha! I told you'd I'd win. Now what though?" ],
+    [ "<b>You: </b> Yeah, we didn't really think that through, did we?",
+      "<b>You: </b> How about a kiss.",
+      "girlname nods her head in agreement."
+    ],
+    [ "\"I have to pee first though\"",
+      "You say at the same time.",
+      "Both of you move to the restrooms to take care of buisness."
+    ],
+    [ "You reach out to take her in your arms... hoping to squeeze her really tight.",
+      "girltalk But I gotta pee <b>FIRST</b>.",
+      "She heads towards the bathroom, you stay behind waiting for her to come back."
+    ],
+    [ "She reaches towards you, and you want to stay, but you simply have to head off to the restrooms to relieve yourself."],
+    [ "She reaches towards you and you pull her on your lap, kissing her soundly while cupping a feel."]
   ]
 }

@@ -399,10 +399,12 @@ function wetyourself3t() {
     sayText(curtext);
 }
 
+let youSpurted = 0;
 //TODO more text options and her reponse
 function spurtedyourself(curtext) {
     yourbladder -= 50;
     yspurtthresh -= 0.1 * yspurtthresh;
+    youSpurted = 1;
     curtext.push(yneeds["spurtquote"]);
     // s("You manage to get your control back but you still let out a little bit.");
     curtext = callChoice(["curloc", "Continue ..."], curtext);

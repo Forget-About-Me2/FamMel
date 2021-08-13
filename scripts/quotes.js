@@ -534,6 +534,12 @@ function cListenerGen(choice, loc){
     addListeners(choice, loc);
 }
 
+//For a given list generates the element and lsiteners
+function cListenerGenList(list){
+    list.forEach(item => cListener(item[0], item[1]));
+    addListenersList(list);
+}
+
 //print the given lines list on the screen
 function sayText(lines){
     let result = "";

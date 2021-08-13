@@ -17,6 +17,7 @@ function barJsonSetup(){
     json["barQuotes"] = formatAllVars(json["barQuotes"]);
     json["darkBar"] = formatAllVarsList(json["darkBar"]);
     json["drinkingGame"] = formatAllVarsList(json["drinkingGame"]);
+    json["postGame"] = formatAllVarsList(json["postGame"]);
     bar = json;
     talkUnused = bar["barTalk"];
 }
@@ -247,6 +248,7 @@ function pdrinkinggame() {
         curtext = printList(curtext, bar["drinkingGame"][1]);
         // s(girltalk + "Okay.  But let's go pee first.");
         curtext = displayneed(curtext);
+        sayText(curtext);
         cListenerGen([pDrinkingGame2, "Continue..."], "pdrinking");
     } else {
         curtext = printList(curtext, bar["drinkingGame"][2]);
@@ -255,60 +257,75 @@ function pdrinkinggame() {
             attraction -= 2;
         indepee(curtext);
     }
+
 }
 
 function pDrinkingGame2() {
-    s("You both head off to the restrooms to empty your bladders.");
-    s("Standing in front of the urinal, you imagine her sitting and peeing on the other side of the wall as you drain your bladder of every last drop.");
-    s("You hear the muffled flush of a toilet from the ladies room and walk back out to meet her coming out of the restroom.");
-    s("She seems really relieved, and a bit aroused.");
-    flushdrank();
+    let curtext = printList([], bar["drinkingGame"][3]);
+    // s("You both head off to the restrooms to empty your bladders.");
+    // s("Standing in front of the urinal, you imagine her sitting and peeing on the other side of the wall as you drain your bladder of every last drop.");
+    // s("You hear the muffled flush of a toilet from the ladies room and walk back out to meet her coming out of the restroom.");
+    // s("She seems really relieved, and a bit aroused.");
+    flushyourdrank();
     yourbladder = 0;
-    c("pdrinkinggame3", "Continue...");
+    sayText(curtext);
+    cListenerGen([pDrinkingGame3, "Continue..."], "pdrinking");
 }
 
-function pdrinkinggame3() {
+function pDrinkingGame3() {
     pushloc("drinkinggame");
-    s("<b>YOU:</b> Okay.  All better now?");
-    s("<b>YOU:</b> Here's the rules: we both drink shots of beer until one of us can't hold it.  There's no holding, no tickling, and you have to drain the glass in one go.  Any questions?");
-    s(girltalk + "Okay.  But you're going <i>DOWN</i>!");
-    c(locstack[0], "Continue...");
+    let curtext = printList([], bar["drinkingGame"][4]);
+    // s("<b>YOU:</b> Okay.  All better now?");
+    // s("<b>YOU:</b> Here's the rules: we both drink shots of beer until one of us can't hold it.  There's no holding, no tickling, and you have to drain the glass in one go.  Any questions?");
+    // s(girltalk + "Okay.  But you're going <i>DOWN</i>!");
+    curtext = callChoice(["curloc", "Continue..."], curtext);
+    sayText(curtext);
+    cListenerGen([drinkinggame, "Continue..."], "pdrinking");
 }
 
+let loser;
 //TODO more interactions
 //TODO  choose what happenes when both lose at the same time
 //TODO have a chance to have it escalate
 function drinkinggame() {
-    s("You're playing a drinking game with " + girlname + ".");
-    let peedself = 0; //This flag is purely used to prevent the dialog of the drinking game from popping up if you lost
+    let curtext = printList([], bar["drinkingGame"][5]);
+    // s("You're playing a drinking game with " + girlname + ".");
     if (yourbladder >= yourbladlose) {
         if (!holdself || randomchoice(holdpeethresh)) {
-            peedself = 1;
             poploc();
-            pushloc("postgamelose");
+            pushloc("postgame");
             wetyourself();
+            loser = "You";
+            return
         }
     }
     if (bladder >= bladlose) {
         poploc();
         pushloc("postgame");
         wetherself();
-    } else if (!peedself) {
-        displayneed();
-        displayyourneed();
-        s("<b>YOU:</b> It's time to drink up!");
-        s("You pull two beers, toast, and both drain the glasses.");
+        loser = "Her"
+    } else {
+        curtext = displayneed(curtext);
+        curtext = displayyourneed(curtext);
+        curtext = printList(curtext, bar["drinkingGame"][6]);
+        // s("<b>YOU:</b> It's time to drink up!");
+        // s("You pull two beers, toast, and both drain the glasses.");
         tummy += 40;
         yourtummy += 40;
         holdself = 0;
         drankbeer = 2;
         ydrankbeer = 2;
+        let listenerList = [];
         if (yourbladder > yourblademer)
-            c("holdyourself", "You grab your dick.");
-        c("feelup", "You feel her up.");
-        c("askcanhold", "You ask her how she's doing.");
-        c("pstory", "Ask her if she's ever wet herself.");
-        c("drinkinggamewait", "Continue...");
+            listenerList.push([[holdyourself, "You grab your dick"], "grabDick"]);
+        listenerList.push([[feelup, "You feel her up."], "feelUp"]);
+        listenerList.push([[kissher, "Kiss her."], "kissHer"]);
+        listenerList.push([[askcanhold, "You ask her how she's doing."], "askHold"]);
+        listenerList.push([[playDarts, "Ask her to play darts"], "playDarts"]);
+        listenerList.push([[pstory, "Ask her if she's ever wet herself."], "pStory"]);
+        listenerList.push([[drinkinggamewait, "Continue..."], "drinkWait"]);
+        sayText(curtext);
+        cListenerGenList(listenerList);
     }
 }
 
@@ -317,52 +334,49 @@ function postgame() {
     notdesperate = 0;
     notydesperate = 0;
     nothdesperate = 0;
-    if (shespurted) {
-        s("<b>YOU:</b>You lost it, didn't you? You spurted!");
-        s("<b>YOU:</b>What were we playing for again?");
-    } else {
-        s("<b>YOU:</b> Ha!  You lose!  What were we playing for again?");
-    }
-    s("<b>" + girlname + " laughs:</b>  We didn't really think of that, did we?  How about a kiss?");
+    let curtext = [];
+    let quoteList = bar["postGame"+loser];
+    if ((shespurted && loser === "Her")||youSpurted && loser === "You")
+        curtext = printList(curtext, quoteList[0]);
+        // s("<b>YOU:</b>You lost it, didn't you? You spurted!");
+        // s("<b>YOU:</b>What were we playing for again?");
+    else
+        curtext = printList(curtext, quoteList[1]);
+        // s("<b>YOU:</b> Ha!  You lose!  What were we playing for again?");
+    curtext = printList(curtext, quoteList[2]);
+    // s("<b>" + girlname + " laughs:</b>  We didn't really think of that, did we?  How about a kiss?");
     if (bladder > blademer && yourbladder > yourblademer) {
-        //TODO fix this scene
-        s("You reach out to take her in your arms... hoping to squeeze her really tight.");
-        s(girltalk + "But I gotta pee <b>FIRST</b>.");
-        s("You both head off to the restrooms to relieve yourselves and clean up.");
+        // s("You reach out to take her in your arms... hoping to squeeze her really tight.");
+        // s(girltalk + "But I gotta pee <b>FIRST</b>.");
+        // s("You both head off to the restrooms to relieve yourselves and clean up.");
+        curtext = printList(curtext, quoteList[3]);
         flushdrank();
         flushyourdrank();
     } else if(bladder > blademer){
         notydesperate=1;
-        s("You reach out to take her in your arms... hoping to squeeze her really tight.");
-        s(girltalk + "But I gotta pee <b>FIRST</b>.");
-        s("She heads towards the bathroom, you stay behind waiting for her to come back.");
+        curtext = printList(curtext, quoteList[4]);
+        // s("You reach out to take her in your arms... hoping to squeeze her really tight.");
+        // s(girltalk + "But I gotta pee <b>FIRST</b>.");
+        // s("She heads towards the bathroom, you stay behind waiting for her to come back.");
         flushdrank();
     } else {
         if (yourbladder > yourblademer) {
             nothdesperate=1;
-            s("She reaches towards you, and you want to stay, but you simply have to head off to the restrooms to relieve yourself.");
+            curtext = printList(curtext, quoteList[5]);
+            // s("She reaches towards you, and you want to stay, but you simply have to head off to the restrooms to relieve yourself.");
             flushyourdrank();
         } else {
-            s("She reaches towards you and you pull her on your lap, kissing her soundly while cupping a feel.");
+            curtext = printList(curtext, quoteList[6]);
+            // s("She reaches towards you and you pull her on your lap, kissing her soundly while cupping a feel.");
             attraction += 5;
             shyness -= 7;
             notdesperate = 1;
         }
     }
-    c("goback", "Continue...");
+    sayText(curtext);
+    cListenerGen([goback, "Continue..."], "goback");
 }
 
-//TODO you spurted.
-function postgamelose() {
-    s(girltalk + "Ha!  You lose!  What were we playing for again?");
-    s("<b>" + girlname + " laughs:</b>  We didn't really think of that, did we?  How about a kiss?");
-    s("You reach out to take her in your arms... hoping to squeeze her really tight.");
-    s(girltalk + "But I gotta pee <b>FIRST</b>.  And you've got to clean up.");
-    s("You both head off to the restrooms.  You to clean up and her to find sweet relief.");
-    flushdrank();
-    flushyourdrank();
-    c("goback", "Continue...");
-}
 
 function holdyourself() {
     s("You surreptitiously sneak your hand down into your crotch and massage.");
