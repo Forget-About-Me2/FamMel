@@ -366,7 +366,7 @@ function wetyourself2t() {
     // s("You stiffen and let out a shaky breath.");
     // s("You sigh and slump back in the tub, letting the relieve course through you.");
     // s("When you are finally empty you open your eyes to meet hers");
-    cListener([wetyourself3t, "Continue ..."], "wetyourself");
+    cListenerGen([wetyourself3t, "Continue ..."], "wetyourself");
 }
 
 //You're in the car
@@ -374,12 +374,8 @@ function wetyourself2t() {
 function wetyourself2c() {
     let curtext = yneeds["wetyourself"][3];
     sayText(curtext);
-    // s("There is nothing you can do, your hands tighten on the steering wheel.");
-    // s("YOU: Dammit!");
-    // s("You are helpless as your bladder uncontrollably empties itself.");
-    // s("Surely she can hear the hissing.");
     flushyourdrank();
-    cListener([wetyourself3c, "Continue ..."], "wetyourself");
+    cListenerGen([wetyourself3c, "Continue ..."], "wetyourself");
 }
 
 function wetyourself3c() {
