@@ -16,6 +16,7 @@ function barJsonSetup(){
     json["barResp"] = formatAllVarsList(json["barResp"]);
     json["barQuotes"] = formatAllVars(json["barQuotes"]);
     json["darkBar"] = formatAllVarsList(json["darkBar"]);
+    json["drinkingGame"] = formatAllVarsList(json["drinkingGame"]);
     bar = json;
     talkUnused = bar["barTalk"];
 }
@@ -237,21 +238,26 @@ function darkBar(){
 }
 
 function pdrinkinggame() {
-    s("<b>YOU:</b> Why don't you go ahead and go.  But afterwards let's play a little drinking game.");
-    s(girltalk + "What <u>kind</u> of drinking game?");
-    s("<b>YOU:</b> We'll pace each other drinking beers.  First one to pee is the loser.");
+    let curtext = printList(bar["drinkingGame"][0]);
+    // s("<b>YOU:</b> Why don't you go ahead and go.  But afterwards let's play a little drinking game.");
+    // s(girltalk + "What <u>kind</u> of drinking game?");
+    // s("<b>YOU:</b> We'll pace each other drinking beers.  First one to pee is the loser.");
     if (attraction >= drinkinggamethreshold) {
-        displayneed();
-        s(girltalk + "Okay.  But let's go pee first.");
-        displayneed();
-        c("pdrinkinggame2", "Continue...");
+        curtext = displayneed(curtext);
+        curtext = printList(curtext, bar["drinkingGame"][1]);
+        // s(girltalk + "Okay.  But let's go pee first.");
+        curtext = displayneed(curtext);
+        cListenerGen([pDrinkingGame2, "Continue..."], "pdrinking");
     } else {
-        s(girltalk + "No way, dude.  I'm outta here.");
-        indepee();
+        curtext = printList(curtext, bar["drinkingGame"][2]);
+        // s(girltalk + "No way, dude.  I'm outta here.");
+        if (attraction < 50)
+            attraction -= 2;
+        indepee(curtext);
     }
 }
 
-function pdrinkinggame2() {
+function pDrinkingGame2() {
     s("You both head off to the restrooms to empty your bladders.");
     s("Standing in front of the urinal, you imagine her sitting and peeing on the other side of the wall as you drain your bladder of every last drop.");
     s("You hear the muffled flush of a toilet from the ladies room and walk back out to meet her coming out of the restroom.");

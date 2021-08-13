@@ -85,5 +85,16 @@
     ["You and girlname enter the bar, she's making no effort to hide how badly she has to pee and you are loving it."],
     ["You and girlname enter the Bar. It's dark, silent and deserted."],
     ["You are with girlname in the closed Bar."]
+  ],
+  "drinkingGame": [
+    [ "<b>You: </b> Why don't you go ahead and go. But afterwards let's play a little drinking game.",
+      "girltalk What <u>kind</u> of drinking game?",
+      "<b>You: </b> We'll pace each other drinking beers. First one to pee is the loser."
+    ],
+    [ "girltalk Okay. But let's go pee first."],
+    [ "girltalk No way, dude. I'm outta here."],
+    [ "You both head off to the restrooms to empty your bladders.",
+      "Standing in front of the urinal, you imagine her sitting and peeing on the other side of the wall as you drain your bladder of every last drop."
+    ]
   ]
 }
