@@ -442,6 +442,9 @@ function printFormatDialogue(curtext, loc, index, begin, end, values){
     return curtext;
 }
 
+//Adds a list to the curText. Note this is also used when addind a single list to an empty curtext list
+//Reason for this is that it actually creates a deepcopy of the list, otherwise everything change to curtext is stored
+//In the previous list.
 function printList(curtext, list){
     list.forEach(item => curtext.push(item));
     return curtext;
@@ -774,10 +777,10 @@ function needSetup(){
     needs["girltalk"] = addGirlTalk(needs["girltalk"]);
     needs["girlname"] = addGirlname(needs["girlname"]);
     needs["girlgasp"] = addGirlGasp(needs["girlgasp"]);
-    needs["askpee"] = replaceWCLC(needs["askpee"], "girlname", needs["girlname"]);
-    needs["askpee"] = replaceWCLC(needs["askpee"], "girltalk", needs["girltalk"]);
-    needs["preventpee"] = replaceChoicesList(needs["preventpee"], "girlname", needs["girlname"]);
-    needs["pstory"] = replaceWCLC(needs["pstory"], "girlname", needs["girlname"]);
+    needs["askpee"] = replaceWCLC(needs["askpee"],  needs["girlname"], "girlname");
+    needs["askpee"] = replaceWCLC(needs["askpee"], needs["girltalk"], "girltalk");
+    needs["preventpee"] = replaceChoicesList(needs["preventpee"],  needs["girlname"], "girlname");
+    needs["pstory"] = replaceWCLC(needs["pstory"], needs["girlname"], "girlname");
     needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
     needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
     needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girltalk"], "girltalk");

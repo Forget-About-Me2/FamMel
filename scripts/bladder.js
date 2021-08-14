@@ -534,66 +534,41 @@ function displayholdquip(curtext) {
     return curtext;
 }
 
-//TODO test
 function askcanhold() {
-    console.log("test");
-    let curtext = needs["askcanhold"];
-    // s("<b>YOU:</b> How are you doing?  Can you still hold it?");
+    let curtext = printList([], needs["askcanhold"]);
     let needType = "holdokay";
     if (bladder >= bladlose) needType = "holdlose";
     else if (bladder >= blademer) needType = "holdemer";
     else if (bladder >= bladneed) needType = "holdneed";
     else if (bladder >= bladurge) needType = "holdurge";
     curtext.push(girltalk + pickrandom(needs[needType]));
-    // if (bladder >= bladlose) s(girltalk + holdlosequotes[randcounter]);
-    // else if (bladder >= blademer) s(girltalk + holdemerquotes[randcounter]);
-    // else if (bladder >= bladneed) s(girltalk + holdneedquotes[randcounter]);
-    // else if (bladder >= bladurge) s(girltalk + holdurgequotes[randcounter]);
-    // else s(girltalk + holdokayquotes[randcounter]);
     curtext = interpbladder(curtext);
     curtext = printChoicesList(curtext, [0], needs["choices"]);
-    // c(locstack[0], "Continue...");
     sayText(curtext);
 }
 
 let toldstories;
 let lastStory;
-//TODO test
 function pstory() {
-    console.log("test");
     let curtext = [needs["pstory"][0]];
-    // s("<b>You ask her:</b> have you ever waited too long?");
     curtext = displayneed(curtext);
-    // If all stories have been visited reset the list,
-    // filter out the last one to prevent the same story being told twice in a row
     if (toldstories.length === 0) {
-        toldstories = range(0, needs["peestory"].length);
-        toldstories.remove(toldstories.indexOf(lastStory));
+        toldstories = range(0, needs["peestory"].length-1);
+        toldstories.splice(toldstories.indexOf(lastStory), 1);
     }
     lastStory = pickrandom(toldstories);
-    toldstories.remove(toldstories.indexOf(lastStory));
+    toldstories.splice(toldstories.indexOf(lastStory), 1);
     curtext.push(needs["peestory"][lastStory]);
-    // s(girltalk + peestory[pstorycounter]);
-    // oldpstorycounter = pstorycounter;
-    // pstorycounter++;
-    // if (pstorycounter > maxpstory) pstorycounter = 0;
-    curtext = printChoicesList(curtext, [0, 23], needs["choices"]);
-    // c("pstory2", "Ask her what happened.");
-    // c(locstack[0], "Continue...");
+    curtext = printChoicesList(curtext, [23, 0], needs["choices"]);
     sayText(curtext);
 }
 
 //TODO test
 function pstory2() {
-    console.log("test");
     let curtext = printListSelection([], needs["pstory"], [1,2])
-    // s("<b>You ask her:</b> so... did you make it?");
-    // s(girlname + " blushes and looks down at her feet.");
-    // s(girltalk + peestory2[oldpstorycounter]);
     curtext.push(needs["peestory2"][lastStory]);
     curtext = displayneed(curtext);
     curtext = printChoicesList(curtext, [0], needs["choices"]);
-    // c(locstack[0], "Continue...");
     sayText(curtext);
 }
 
@@ -1251,9 +1226,10 @@ function askspurted() {
     // s(girltalk + spurtdenyquote[randcounter]);
     // incrandom();
     curtext = displayneed(curtext);
-    let choices = [0];
+    let choices = [];
     if (locstack[0] !== "thehottub")
         choices.push(29);
+    choices.push(0);
     // c(locstack[0], "Continue ...");
     curtext = printChoicesList(curtext, choices, needs["choices"]);
     sayText(curtext);

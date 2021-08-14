@@ -113,9 +113,9 @@ function feelup() {
     sayText(curtext);
 }
 
-function kissher() {
+function kissher(curtext=[]) {
     kisscounter += 1;
-    let curtext = printList([], kissing["diag"][0]);
+    curtext = printList(curtext, kissing["diag"][0]);
     if (attraction < 10 || (flirtcounter > 1 && attraction < 20)) {
         curtext = printList(curtext, kissing["diag"][1]);
         attraction -= 3;

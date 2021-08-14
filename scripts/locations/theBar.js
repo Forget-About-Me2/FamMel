@@ -18,6 +18,9 @@ function barJsonSetup(){
     json["darkBar"] = formatAllVarsList(json["darkBar"]);
     json["drinkingGame"] = formatAllVarsList(json["drinkingGame"]);
     json["postGame"] = formatAllVarsList(json["postGame"]);
+    json["postGameHer"] = formatAllVarsList(json["postGameHer"]);
+    json["postGameYou"] = formatAllVarsList(json["postGameYou"]);
+    json["holdYourself"] = formatAllVarsList(json["holdYourself"]);
     bar = json;
     talkUnused = bar["barTalk"];
 }
@@ -28,7 +31,7 @@ function thebar(){
         curtext = printList(curtext, bar["theBar"][0]);
         curtext = callChoice([driveout, "Continue..."], curtext);
         sayText(curtext);
-        if (haveItem("barKey"))
+        if (haveItem("theBarKey"))
             cListenerGen([rebar, "But I found this key I have to return!"]);
     } else if (!((thetime < barclosingtime) || locstack[0] === "thebar")) itsClosed("theBar", darkBar, "darkBar");
     else {
@@ -239,7 +242,7 @@ function darkBar(){
 }
 
 function pdrinkinggame() {
-    let curtext = printList(bar["drinkingGame"][0]);
+    let curtext = printList([], bar["drinkingGame"][0]);
     // s("<b>YOU:</b> Why don't you go ahead and go.  But afterwards let's play a little drinking game.");
     // s(girltalk + "What <u>kind</u> of drinking game?");
     // s("<b>YOU:</b> We'll pace each other drinking beers.  First one to pee is the loser.");
@@ -267,6 +270,7 @@ function pDrinkingGame2() {
     // s("You hear the muffled flush of a toilet from the ladies room and walk back out to meet her coming out of the restroom.");
     // s("She seems really relieved, and a bit aroused.");
     flushyourdrank();
+    flushdrank();
     yourbladder = 0;
     sayText(curtext);
     cListenerGen([pDrinkingGame3, "Continue..."], "pdrinking");
@@ -278,7 +282,6 @@ function pDrinkingGame3() {
     // s("<b>YOU:</b> Okay.  All better now?");
     // s("<b>YOU:</b> Here's the rules: we both drink shots of beer until one of us can't hold it.  There's no holding, no tickling, and you have to drain the glass in one go.  Any questions?");
     // s(girltalk + "Okay.  But you're going <i>DOWN</i>!");
-    curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
     cListenerGen([drinkinggame, "Continue..."], "pdrinking");
 }
@@ -317,7 +320,7 @@ function drinkinggame() {
         ydrankbeer = 2;
         let listenerList = [];
         if (yourbladder > yourblademer)
-            listenerList.push([[holdyourself, "You grab your dick"], "grabDick"]);
+            listenerList.push([[holdYourself, "You grab your dick"], "grabDick"]);
         listenerList.push([[feelup, "You feel her up."], "feelUp"]);
         listenerList.push([[kissher, "Kiss her."], "kissHer"]);
         listenerList.push([[askcanhold, "You ask her how she's doing."], "askHold"]);
@@ -335,6 +338,7 @@ function postgame() {
     notydesperate = 0;
     nothdesperate = 0;
     let curtext = [];
+    let situation = "none";
     let quoteList = bar["postGame"+loser];
     if ((shespurted && loser === "Her")||youSpurted && loser === "You")
         curtext = printList(curtext, quoteList[0]);
@@ -346,6 +350,7 @@ function postgame() {
     curtext = printList(curtext, quoteList[2]);
     // s("<b>" + girlname + " laughs:</b>  We didn't really think of that, did we?  How about a kiss?");
     if (bladder > blademer && yourbladder > yourblademer) {
+        situation = "both";
         // s("You reach out to take her in your arms... hoping to squeeze her really tight.");
         // s(girltalk + "But I gotta pee <b>FIRST</b>.");
         // s("You both head off to the restrooms to relieve yourselves and clean up.");
@@ -353,7 +358,7 @@ function postgame() {
         flushdrank();
         flushyourdrank();
     } else if(bladder > blademer){
-        notydesperate=1;
+        situation = "you";
         curtext = printList(curtext, quoteList[4]);
         // s("You reach out to take her in your arms... hoping to squeeze her really tight.");
         // s(girltalk + "But I gotta pee <b>FIRST</b>.");
@@ -361,7 +366,7 @@ function postgame() {
         flushdrank();
     } else {
         if (yourbladder > yourblademer) {
-            nothdesperate=1;
+            situation = "you";
             curtext = printList(curtext, quoteList[5]);
             // s("She reaches towards you, and you want to stay, but you simply have to head off to the restrooms to relieve yourself.");
             flushyourdrank();
@@ -374,24 +379,71 @@ function postgame() {
         }
     }
     sayText(curtext);
-    cListenerGen([goback, "Continue..."], "goback");
+    cListenerGen([function () {postGame2(situation)}, "Continue..."], "goback");
+}
+
+function postGame2(situation){
+    let curtext = [];
+    if (situation === "none") {
+        curtext = printList(curtext, bar["postGame"][0]);
+        // s("She smiles at you as she moves back to her own chair.");
+
+    } else if(situation === "her"){
+        //TODO move back to her own chair
+        curtext = printList(curtext, bar["postGame"][1]);
+        // s("When she finally emerges from the bathroom she sits down in your lap.");
+        // s("She kissed you soundly, before whispering in your ear: <strong>I feel <i>so</i> naughty!</strong>");
+        attraction += 5;
+        shyness -= 7;
+    } else if(situation === "you"){
+        //TODO probably have a shyness/attraction check
+        //Create a deepCopy of the dialogue that needs to be added so if you insert an element the bar variable itself won't be changed
+        let temp = printList([], bar["postGame"][2]);
+        if (loser === "her") temp.splice(2, 0, "<em>Yes, you won the game. But it had been a close one.</em>");
+        // s("You dash towards the urinal, already pulling your dick out of your boxers.");
+        // s("You don't bother holding back a moan as your bladder finally empties.");
+        // if(loser === "her") s("<em>Yes, you won the game. But it had been a close one.</em>");
+        // s("Suddenly the door to the men's room opens.");
+        // s("Surprised you turn your head to see " + girlname + " entering the room with a sultry smile");
+        // s("She moves over towards you and you can't help but jump a little as she grasps your still peeing dick");
+        // s("She captures your lips before whispering: <strong>That was really hot!</strong>");
+        curtext = printList([], temp);
+        attraction += 10;
+        shyness -= 10;
+    }
+    else{
+        curtext = printList(curtext, bar["postGame"][3]);
+        // s("You emerge from the restroom first, then " + girlname + " comes back, looking a little damp and very aroused.");
+        // s(girltalk + "I feel <i>so</i> naughty!");
+        poploc();
+        kissher(curtext);
+        return;
+    }
+    poploc();
+    sayText(curtext);
+    cListenerGen([darkBar, "Continue..."], "darkBar");
 }
 
 
-function holdyourself() {
-    s("You surreptitiously sneak your hand down into your crotch and massage.");
+function holdYourself() {
+    let curtext = printList([], bar["holdYourself"][0]);
+    // s("You surreptitiously sneak your hand down into your crotch and massage.");
     if (randomchoice(7)) {
-        s(girlname + " doesn't seem to notice.");
+        curtext = printList(curtext, bar["holdYourself"][1]);
+        // s(girlname + " doesn't seem to notice.");
         holdself = 1;
-    } else {
-        s(girlname + " sees you and pulls your hand back away from your dick.");
-    }
-    showneed();
-    c("drinkinggame", "Continue...");
+    } else
+        curtext = printList(curtext, bar["holdYourself"][2]);
+        // s(girlname + " sees you and pulls your hand back away from your dick.");
+    curtext = showneed(curtext);
+    sayText(curtext);
+    cListenerGen([drinkinggame, "Continue..."], "pdrinking");
 }
 
 function drinkinggamewait() {
-    s("You and " + girlname + " stare at each other as your feel the beer taking effect.");
-    displayneed();
-    c("drinkinggame", "Continue...");
+    let curtext = printList([], bar["drinkinggame"][7]);
+    // s("You and " + girlname + " stare at each other as your feel the beer taking effect.");
+    curtext = displayneed(curtext);
+    sayText(curtext);
+    cListenerGen([drinkinggame, "Continue..."], "pdrinking");
 }

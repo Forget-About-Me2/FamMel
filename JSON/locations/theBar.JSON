@@ -105,7 +105,8 @@
     [ "You're playing a drinking game with girlname."],
     [ "<b>You:</b> It's time to drink up!",
       "You pull two beers, toast, and both drain the glasses."
-    ]
+    ],
+    ["You and girlname stare at each other as you feel the beer taking effect."]
   ],
   "postGameHer": [
     [ "<b>You</b> You lost it, didn't you? You spurted!",
@@ -144,5 +145,28 @@
     ],
     [ "She reaches towards you, and you want to stay, but you simply have to head off to the restrooms to relieve yourself."],
     [ "She reaches towards you and you pull her on your lap, kissing her soundly while cupping a feel."]
+  ],
+  "postGame": [
+    ["She smiles at you as she moves back to her own chair."],
+    ["When she finally emerges from the bathroom she sits down in your lap.",
+     "She kissed you soundly, before whispering in your ear: <strong>I feel <i>so</i> naughty!</strong>"
+    ],
+    [ "You dash towards the urinal, already pulling your dick out of your boxers.",
+      "You don't bother holding back a moan as your bladder finally empties.",
+      "Suddenly the door to the men's room opens.",
+      "Surprised you turn your head to see girlname entering the room with a sultry smile.",
+      "She moves over towards you and you can't help but jump a little as she grasps your still peeing cock.",
+      "girlname captures your lips before whispering: <strong>That was really hot!</strong>"
+    ],
+    [ "You emerge from the restroom first, then girlname comes back, looking a little damp and very aroused.",
+      "girltalk I feel <i>so</i> naughthy!"
+    ]
+  ],
+"holdYourself": [
+  [ "You surreptitiously sneak your hand down into your crotch and massage."],
+  [ "girlname doesn't seem to notice"],
+  [ "girlname sees you and puls your hand back, away from your dick.",
+    "girltalk Oi! No cheating!"
   ]
+]
 }

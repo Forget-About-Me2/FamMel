@@ -137,7 +137,7 @@ function playDarts() {
 
 //Play a round of the dart game
 function dartRound(dartPoints){
-    let curtext = printList([], darts["round"][0]);
+    let curText = printList([], darts["round"][0]);
     let winner = false; //Flags whether the game has been won
     let res = [];
     for (let player in dartPoints) {
@@ -152,24 +152,24 @@ function dartRound(dartPoints){
             if (res.length === 0)
                 res = tripleFinish(curPoints);
         }
-        curtext = printList(curtext, formatAll(darts["points"][player], res));
+        curText = printList(curText, formatAll(darts["points"][player], res));
         if (res[2] === 0){
             if (player === "you"){
-                curtext.push("<b>You have won the game!</b>");
+                curText.push("<b>You have won the game!</b>");
             } else
-                curtext.push("<b>" + girlname + " has won the game!</b>");
+                curText.push("<b>" + girlname + " has won the game!</b>");
             winner = true;
             break;
         }
         dartPoints[player] = res[2];
         res = []; //Reinitialize res
     }
-    curtext = displayneed(curtext);
-    curtext = displayyourneed(curtext);
+    curText = displayneed(curText);
+    curText = displayyourneed(curText);
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
-        sayText(curtext);
+        sayText(curText);
         let listenerList = [];
         if (!winner) {
             let round = function () {
@@ -178,9 +178,8 @@ function dartRound(dartPoints){
             listenerList.push([[round], "dartRound"]);
             cListener([round, "Play the next round"], "dartRound");
         }
-        listenerList.push([[darkBar], "darkBar"]);
-        let curtext = callChoice(["curloc", "Continue..."], []);
-        addSayText(curtext);
+        curText = callChoice(["curloc", "Continue..."], []);
+        addSayText(curText);
         addListenersList(listenerList);
     }
 }
