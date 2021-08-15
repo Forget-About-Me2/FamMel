@@ -2,7 +2,8 @@
 //Initialised with all locations to be iterated over later.
 let locations = {
     "driveAround": driveAroundSetup(),
-    "theBar" :theBarSetup()
+    "theBar" :theBarSetup(),
+    "theatre": theatreSetup()
 };
 
 let locJson;

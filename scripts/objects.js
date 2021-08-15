@@ -196,7 +196,7 @@ objects = {
         "value": 0,
         "description": "Key to the club."
     },
-    "makeOutKey":{
+    "theTheatreKey":{
         "bpname": "Theatre key",
         "value" : 0,
         "description": "Key to the Movie Theatre."
@@ -249,11 +249,10 @@ const drinkLoc = ["pickup", "driveout", "domovie",
 function standobjs(curtext) {
     if (randomchoice(5) && gottagoflag < 1 && showedneed > 0 && !askholditcounter)
         curtext = c(["askpee", "Ask her if she has to pee."], curtext);
-    else if (flirtedflag < maxflirts && noflirtflag < 1) {
+    if (flirtedflag < maxflirts && noflirtflag < 1)
         curtext = handleFlirt(curtext);
-    } else if (gottagoflag < 1 && askholditcounter) {
+    if (gottagoflag < 1 && askholditcounter)
         curtext = c(["askcanhold", "You ask her how she's doing."],curtext);
-    }
     return curtext;
 }
 

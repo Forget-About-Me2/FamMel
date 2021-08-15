@@ -5,7 +5,7 @@ function theBarSetup(){
     return {
         "visit": [thebar, "Go to the bar"],
         "wantVisit": [thebar, "Go to the bar like she asked."],
-        "group": 1,
+        "group": 4,
         "visited": 0,
         "keyChance": 1
     }
@@ -27,48 +27,58 @@ function barJsonSetup(){
 
 function thebar(){
     let curtext = [];
+    let listenerList = [];
     if (locstack[0] === "driveout" && beenbar && thetime < barclosingtime){
         curtext = printList(curtext, bar["theBar"][0]);
-        curtext = callChoice([driveout, "Continue..."], curtext);
         sayText(curtext);
-        if (haveItem("theBarKey"))
-            cListenerGen([rebar, "But I found this key I have to return!"]);
+        listenerList.push([[driveout, "Continue..."], "driveOut"]);
+        cListener([driveout, "Continue..."], "driveOut");
+        if (haveItem("theBarKey")) {
+            listenerList.push([[rebar, "But I found this key I have to return!"], "reBar"]);
+            cListener([rebar, "But I found this key I have to return!"], "reBar");
+        }
     } else if (!((thetime < barclosingtime) || locstack[0] === "thebar")) itsClosed("theBar", darkBar, "darkBar");
     else {
         if (locstack[0] !== "thebar"){
             curtext = printList(curtext, bar["theBar"][1]);
             pushloc("thebar");
-            beenbar = 1;
-        } else {
+            locations.theBar.visited = 1;
+        } else
             curtext = printList(curtext, bar["theBar"][2]);
-            if (randomchoice(3)) curtext = noteholding(curtext);
-            else if (randomchoice(5)) curtext = interpbladder(curtext);
-            curtext = displayyourneed(curtext);
-        }
+        if (randomchoice(3)) curtext = noteholding(curtext);
+        else if (randomchoice(5)) curtext = interpbladder(curtext);
+        curtext = displayyourneed(curtext);
         if (bladder > bladlose) wetherself();
         else if (yourbladder > yourbladlose) wetyourself();
-        else {
-            if (gottagoflag > 0){
-                preventpee();
-            }
-            let listenerList = barTalk(curtext);
-            listenerList.push([[buybeer], "buybeer"]);
-            cListener([buybeer, "Buy a beer."], "buybeer");
-            if (!haveItem("theBarKey")){
-                listenerList.push([[function () {lookAround("theBar")}], "lookAround"]);
-                cListener(["", "Look around."], "lookAround");
-            }
-            curtext = standobjs([]);
-            addSayText(curtext);
-            if (yourbladder > yourbladurge){
-                listenerList.push([[youpee], "youpee"],);
-                cListener([youpee, "Go to the bathroom."], "youpee");
-            }
-            listenerList.push([[leavehm], "leavehm"]);
-            cListener([leavehm, "Leave the bar."], "leavehm");
-            addListenersList(listenerList);
+        else if (gottagoflag > 0){
+            curtext = preventpee(curtext);
+            sayText(curtext);
+        } else {
+        listenerList = barTalk(curtext);
+        listenerList.push([[buybeer], "buybeer"]);
+        cListener([buybeer, "Buy a beer."], "buybeer");
+        if (!haveItem("theBarKey")){
+            listenerList.push([[function () {lookAround("theBar")}], "lookAround"]);
+            cListener(["", "Look around."], "lookAround");
+        }
+        curtext = standobjs([]);
+        addSayText(curtext);
+        if (yourbladder > yourbladurge){
+            listenerList.push([[youpee], "youpee"],);
+            cListener([youpee, "Go to the bathroom."], "youpee");
+        }
+        listenerList.push([[leavehm], "leavehm"]);
+        cListener([leavehm, "Leave the bar."], "leavehm");
         }
     }
+    addListenersList(listenerList);
+}
+
+//You use the key you found as excuse to go to the bar another time
+function rebar(){
+    objects.theBarKey.value = 0;
+    pushloc("thebar");
+    thebar();
 }
 
 let talkUnused; //Bar talk topics that have not been covered yet
@@ -185,16 +195,8 @@ function stealbeer2(){
     }
 }
 
-
-//You use the key you found as excuse to go to the bar another time
-function rebar(){
-    objects.barKey.value = 0;
-    pushloc("thebar");
-    thebar();
-}
-
 function darkBar(){
-    let curtext = [];
+   let curtext = [];
    if (emerBreak || emerHold && bladder < 20)
        curtext = printList(curtext, bar["darkBar"][0]);
    else if (emerHold)

@@ -265,7 +265,9 @@ function indepee(curtext=[], called=false) {
         curtext.push(peelines["noneavailable"][0]);
     } else
         curtext = printList(curtext, peelines["remaining"]);
-    if ((locstack[0] === "thebar" && randomchoice(rrlockedthresh) ) || ((locstack[0] === "theclub" || locstack[0] === "dodance") && randomchoice(rrlinethresh)) ){
+    if ((locstack[0] === "thebar" && randomchoice(rrlockedthresh) ) ||
+        ((locstack[0] === "theclub" || locstack[0] === "dodance") && randomchoice(rrlinethresh)) ||
+        (locstack[0] === "themovie" && randomchoice(rrMovieLineThresh) || locstack[0] === "domovie" && randomchoice(rrMovieLineThresh))){
         curtext = bathroomlocked(curtext);
     } else if (locstack[0] === "themakeout") {
         curtext.push(peelines["noneavailable"][1]);
@@ -387,20 +389,12 @@ function displayneed(curtext) {
 //TODO add extra options like pee outside
 //TODO make responses more realisitc
 //TODO don't take her purse in certian situations
-//TODO test
 function askpee() {
-    console.log("test");
     let curtext = [needs["askpee"][0]];
-    // s("<b>YOU:</b> Do you need to pee?");
     if (shyness > 60) curtext.push(needs["askpee"][1]);
     else curtext.push(needs["askpee"][2]);
-    // if (shyness > 60) s(girlname + " blushes.");
-    // else s(girltalk + "...");
-
     if (bladder > bladneed && bladder < blademer)
         curtext.push(needs["askpee"][3]);
-        // s("She seems to be considering the matter...");
-
     if (((shyness < 50 && bladder > bladneed) ||
         bladder > blademer) &&
         (locstack[0] !== "drinkinggame" && !externalflirt)) {
@@ -408,15 +402,12 @@ function askpee() {
         curtext = interpbladder(curtext);
         curtext = showneed(curtext);
         curtext = printChoicesList(curtext, [22], needs["choices"]);
-        // c("pstory", "Ask her if she's ever wet herself.");
         curtext = preventpee(curtext);
     } else {
         curtext.push(girltalk + pickrandom(needs["deny"]));
-        // s(girltalk + denyquotes[randcounter]);
         curtext = displayneed(curtext);
         curtext = interpbladder(curtext);
         curtext = printChoicesList(curtext, [0], needs["choices"]);
-        // c(locstack[0], "Continue...");
     }
     sayText(curtext);
 }
@@ -438,7 +429,7 @@ function preventpee(curtext) {
         choices.push(2); //Pee together
     if (locstack[0] === "darkbar" || locstack[0] === "darkmovie" || locstack[0] === "darkclub")
         choices.push(3); //Watch
-    if (locstack[0] === "darkmovie")
+    if (locstack[0] === "darkTheatre")
         choices.push(4); //No restroom
     if (locstack[0] === "darkBar")
         choices.push(5); //pdrinkinggame
