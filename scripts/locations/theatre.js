@@ -18,7 +18,7 @@ function theatreJsonSetup(){
     theatre["noRest"] = formatAllVarsList(theatre["noRest"]);
     Object.keys(theatre["noToilet"]).forEach(key => {
         const item = theatre["noToilet"][key];
-        item["quotes"] = formatAllVarsList(item["quotes"])
+        item["quotes"] = formatAllVarsList(item["quotes"]);
     });
 }
 

@@ -30,22 +30,34 @@ function displaystats() {
     if (!showstats) {
         document.getElementById("tum").innerText = "?";
         document.getElementById("blad").innerText = "?";
+        if(playerbladder) {
+            document.getElementById("ytum").innerText = "?";
+            document.getElementById("yblad").innerText = "?";
+        }
     }
-    if (attraction !== lastattraction) {
-        document.getElementById("att").className="stats-cells-green";
-    } else {
-        document.getElementById("att").className="stats-cells-white";
-    }
-    if (shyness !== lastshyness) {
-        document.getElementById("shy").className="stats-cells-green";
-    } else {
-        document.getElementById("shy").className="stats-cells-blue";
-    }
-    if (money !== lastmoney) {
-        document.getElementById("mon").className="stats-cells-green";
-    } else {
-        document.getElementById("mon").className="stats-cells-blue";
-    }
+    if (attraction < lastattraction) {
+        setColour("att", "red", "white");
+    } else if (attraction > lastattraction)
+        setColour("att", "green", "white");
+
+    if (shyness < lastshyness) {
+        setColour("shy", "green", "blue");
+    } else if (shyness > lastshyness)
+        setColour("shy", "red", "blue");
+
+    if (money < lastmoney) {
+        setColour("mon", "red", "blue");
+    } else if (money > lastmoney)
+        setColour("mon", "green", "blue");
+}
+
+//Sets the given colour to the given id attribute for half a second
+function setColour(id, colour, original){
+    let elem = document.getElementById(id);
+    elem.className = "stats-cells-"+colour;
+    setTimeout(function () {
+        elem.className = "stats-cells-"+original;
+    }, 500);
 }
 
 
@@ -59,11 +71,6 @@ function go(tag) {
         changevenueflag = 0; // clear venue change.
         noflirtflag = 0; // clear no flirting flag.
         nowpeeing = 0; // clear the currently peeing flag.
-
-        // Flash changed stuff...
-        lastmoney = money;
-        lastattraction = attraction;
-        lastshyness = shyness;
 
 
         let tuminc = calcTuminc();
@@ -130,6 +137,11 @@ function go(tag) {
     if (didintro) {
         displaystats();
     }
+
+    // Flash changed stuff...
+    lastmoney = money;
+    lastattraction = attraction;
+    lastshyness = shyness;
 
     if (tag === "hidescreen") {
         enablehide = 1;
