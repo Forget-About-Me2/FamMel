@@ -14,6 +14,7 @@ function theatreSetup(){
 function theatreJsonSetup(){
     theatre = json;
     theatre["theatre"] = formatAllVarsList(theatre["theatre"]);
+    theatre["buySoda2"] = formatAllVarsList(theatre["buySoda2"]);
     theatre["darkTheatre"] = formatAllVarsList(theatre["darkTheatre"]);
     theatre["noRest"] = formatAllVarsList(theatre["noRest"]);
     Object.keys(theatre["noToilet"]).forEach(key => {
@@ -66,152 +67,174 @@ function reTheatre() {
     theTheatre();
 }
 
+//Let's you choose the amount of Soda you want.
 function buySoda() {
-    if (money >= 5) {
-        s("You buy a soda for $5.00.");
-        soda += 1;
-        money -= 5;
-    } else s("You don't have enough money!");
-    c("buysoda", "Buy another soda" )
-    c(locstack[0], "Continue...");
+    setText(theatre["buySoda"]);
+    let sodaElem = document.getElementById("sodaAm");
+    let value = 1;
+    let price = 5;
+    sodaElem.addEventListener("keyup", function (){
+        value = sodaElem.value;
+        price = sodaElem.value*5;
+        const moneyElem = document.getElementById("monAmount");
+        if (price < 0)
+            moneyElem.innerText = "NaN";
+        else
+            moneyElem.innerText= price;
+    });
+    addListeners([function(){
+        buySoda2(value, price);
+    }], "buy");
+    // if (money >= 5) {
+    //     s("You buy a soda for $5.00.");
+    //     soda += 1;
+    //     money -= 5;
+    // } else s("You don't have enough money!");
+    // c("buysoda", "Buy another soda" )
+    // c(locstack[0], "Continue...");
+}
+
+//You actually buy the soda, errors for invalid numbers.
+function buySoda2(value, price){
+    let curtext = [];
+    let listenerList = [];
+    //Check if you have the money to buy as many as you indicated.
+    if (money < price){
+        curtext = printList(curtext, theatre["buySoda2"][0]);
+        listenerList.push([[buySoda, "Try again."], "buySoda"]);
+        listenerList.push([[theTheatre, "Forget it."], "theatre"]);
+    } else if (price < 0){
+        curtext = printList(curtext, theatre["buySoda2"][1]);
+        listenerList.push([[buySoda, "Try again."], "buySoda"]);
+        listenerList.push([[theTheatre, "Forget it."], "theatre"]);
+    } else if (price > 100){
+        curtext = printList(curtext, theatre["buySoda2"][2]);
+        listenerList.push([[buySoda, "Try again."], "buySoda"]);
+        listenerList.push([[theTheatre, "Forget it."], "theatre"]);
+    } else {
+        curtext = printList(curtext, theatre["buySoda2"][3]);
+        money -= price;
+        objects.soda.value += value;
+        listenerList.push([[theTheatre, "Continue..."], "theatre"]);
+    }
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
 
 function askMovie() {
+    let curtext = [];
+    let listenerList = [];
     if (moviecounter === 0) {
         askedfavourite = 1;
         let moviename = theatre["favouriteMovie"][favoritemovie]["name"];
-        s(girlname + " smiles at you.");
-        s(girltalk + "I'd love to see " + moviename + ".");
-        c("moviefavor", "Let's watch that then.");
-        if (favoritemovie === "theurge")
-            c("chooseothermovie", "Nah. Horror flicks are boring.");
-        if (favoritemovie === "thedesp")
-            c("chooseothermovie", "Nah. That's a chick flick!");
-        if (favoritemovie === "thectrl")
-            c("chooseothermovie", "Nah. College films are stupid.");
-        if (favoritemovie === "thelitr")
-            c("chooseothermovie", "Nah. I'm really not into crime and punishment.");
+        let list = new Array(theatre["watchMovie"][0].length).fill([moviename]);
+        let temp = formatAll(theatre["watchMovie"][0], list);
+        curtext = printList(curtext, temp);
+        listenerList.push([[function () {
+            moviechoice = favoritemovie;
+            attraction += 2;
+            preMoviePee();}, "Let's watch that then."], "movieFavour"]);
+        // s(girlname + " smiles at you.");
+        // s(girltalk + "I'd love to see " + moviename + ".");
+        listenerList.push([[chooseOtherMovie, theatre["favouriteMovie"][favoritemovie]["choice"]], "chooseOther"]);
     } else {
-        s(girlname + " laughs: Two movies in one night?  Let's go do something else!");
-        c(locstack[0], "Continue...");
+        curtext = printList(curtext, theatre["watchMovie"][1]);
+        // s(girlname + " laughs: Two movies in one night?  Let's go do something else!");
+        listenerList.push([[theTheatre, "Continue..."], "theTheatre"]);
     }
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
-function chooseothermovie() {
-    s("The other movies that are playing:");
-    if (favoritemovie !== "theurge")
-        c("movieurge", "The Urge - <i>A horror flick</i>");
-    if (favoritemovie !== "thedesp")
-        c("moviedesp", "Desperate Housewives : The Movie");
-    if (favoritemovie !== "thectrl")
-        c("moviectrl", "Control Yourself - <i>A romantic comedy</i>");
-    if (favoritemovie !== "thelitr")
-        c("movielitr", "2 Liters, 25 Hours - <i>A police drama</i>");
+function chooseOtherMovie() {
+    let curtext = printList([], theatre["watchMovie"][2]);
+    // s("The other movies that are playing:");
+    let listenerList = [];
+    Object.keys(theatre["favouriteMovie"]).forEach(id => {
+        if (id !== favoritemovie) {
+            listenerList.push([[function () {
+                moviechoice = id;
+                movieArgue();
+            }, theatre["favoritemovie"][id]["description"]], id]);
+        }
+    });
+    sayText(curtext);
+    cListenerGenList(listenerList);
 
 }
 
 function choosemovie() {
+    let curtext = [];
+    let listenerList = [];
     if (moviecounter === 0) {
-        s("There are many movies playing:");
-        c("movieurge", "The Urge - <i>A horror flick</i>");
-        c("moviedesp", "Desperate Housewives : The Movie");
-        c("moviectrl", "Control Yourself - <i>A romantic comedy</i>");
-        c("movielitr", "2 Liters, 25 Hours - <i>A police drama</i>");
+        curtext = printList(curtext, theatre["watchMovie"][3]);
+        // s("There are many movies playing:");
+        Object.keys(theatre["favouriteMovie"]).forEach(id => {
+            if (id !== favoritemovie) {
+                listenerList.push([[function () {
+                    moviechoice = id;
+                    movieArgue();
+                }, theatre["favoritemovie"][id]["description"]], id]);
+            } else {
+                listenerList.push([[function () {
+                    moviechoice = id;
+                    preMoviePee();
+                }, theatre["favoritemovie"][id]["description"]], id]);
+
+            }
+        });
     } else {
-        s(girlname + " laughs: Two movies in one night?  Let's go do something else!");
-        c(locstack[0], "Continue...");
+        curtext = printList(curtext, theatre["watchMovie"][1]);
+        // s(girlname + " laughs: Two movies in one night?  Let's go do something else!");
+        listenerList.push([[theTheatre, "Continue..."], "theTheatre"]);
     }
-}
-
-function movieurge() {
-    moviechoice = 0;
-    if (favoritemovie === "theurge") premoviepee(); else movieargue();
-}
-
-function moviedesp() {
-    moviechoice = 1;
-    if (favoritemovie === "thedesp") premoviepee(); else movieargue();
-}
-
-function moviectrl() {
-    moviechoice = 2;
-    if (favoritemovie === "thectrl") premoviepee(); else movieargue();
-}
-
-function movielitr() {
-    moviechoice = 3;
-    if (favoritemovie === "thelitr") premoviepee(); else movieargue();
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
 function movieargue() {
+    let curtext = [];
     if (askedfavourite) {
-        s("She looks like she wants to argue, but doesn't.");
+        //You asked her which movie she wanted to watch and then deliberately chose a different one.
+        curtext = printList(curtext, theatre["watchMovie"][4]);
         attraction -= 5;
-        premoviepee()
+        preMoviePee(curtext);
     } else {
-        let moviename;
-        if (favoritemovie === "theurge") moviename = "The Urge";
-        if (favoritemovie === "thedesp") moviename = "Desperate Houswives";
-        if (favoritemovie === "thectrl") moviename = "Control Yourself";
-        if (favoritemovie === "thelitr") moviename = "2 Liters";
-        s(girlname + " looks you directly in the eyes and a pout forms on her lips.");
-        s(girltalk + "But I wanna watch " + moviename + "!");
-        c("moviefavor", "Okay.  But you owe me one.");
-        if (favoritemovie === "theurge")
-            c("premoviepee", "Nah. Horror flicks are boring.");
-        if (favoritemovie === "thedesp")
-            c("premoviepee", "Nah. That's a chick flick!");
-        if (favoritemovie === "thectrl")
-            c("premoviepee", "Nah. College films are stupid.");
-        if (favoritemovie === "thelitr")
-            c("premoviepee", "Nah. I'm really not into crime and punishment.");
+        let moviename = theatre["favouriteMovie"][favoritemovie]["name"];
+        let list = new Array(theatre["watchMovie"][5].length).fill([moviename]);
+        let temp = formatAll(theatre["watchMovie"][5], list);
+        curtext = printList(curtext, temp);
+        sayText(curtext);
+        let listenerList = [];
+        listenerList.push([[function (){
+            owedfavor += 1;
+            moviechoice = favoritemovie;
+            preMoviePee();
+        }], "favour"]);
+        listenerList.push([[preMoviePee,theatre["favoritemovie"][favoritemovie]["description"]], "denyFavor"]);
+        cListenerGenList(listenerList);
     }
 }
 
-//TODO figure out moviename
-function moviefavor() {
-    if (favoritemovie === "theurge") {
-        moviename = "The Urge";
-        moviechoice = 0;
-    }
-    if (favoritemovie === "thedesp") {
-        moviename = "Desperate Houswives";
-        moviechoice = 1;
-    }
-    if (favoritemovie === "thectrl") {
-        moviename = "Control Yourself";
-        moviechoice = 2;
-    }
-    if (favoritemovie === "thelitr") {
-        moviename = "2 Liters";
-        moviechoice = 3;
-    }
-
-    if (!askedfavourite) {
-        owedfavor += 1;
-    } else {
-        attraction += 2;
-    }
-    premoviepee();
-}
 
 //TODO figure out duplicate continue's
-function premoviepee() {
+function preMoviePee(curtext=[]) {
     pushloc("domovie");
     changevenueflag = 1;//TODO probs delete
-    showneed();
-    displayyourneed();
+    curtext = displayyourneed(curtext);
+    curtext = showneed(curtext);
+    sayText(curtext);
+    let listenerList = [];
     if (gottagoflag > 0) {
-        c("holdit", "Ask her to hold it.");
-        c("allowpee", "Let her go.");
-    } else if (yourbladder > yourbladneed) {
-        c("youpee", "Use the bathroom before watching the movie.");
-        c(locstack[0], "Buy the tickets and head over to find the auditorium.");
+        listenerList.push([[holdit, "Ask her to hold it."], "holdIt"]);
+        listenerList.push([[allowpee, "Let her go."], "allowPee"]);
     } else {
-        s("You buy tickets and head over to find the auditorium.");
-        c(locstack[0], "Continue...");
+        if (yourbladder > yourbladneed)
+            listenerList.push([[youpee, "Use the bathroom before watching the movie."], "youPee"]);
     }
+    listenerList.push([[domovie, "Buy the tickets and head over to find the auditorium."], "doMovie"]);
+    cListenerGenList(listenerList);
 }
 
 //TODO you can go to the bathroom if you're desperate

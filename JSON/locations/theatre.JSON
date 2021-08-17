@@ -34,7 +34,13 @@
     [ "girlname smiles at you.",
       "girltalk I'd love to see {0}."
     ],
-    [ "girlname laughs: Two movies in one night? Let's go do something else!"]
+    [ "girlname laughs: Two movies in one night? Let's go do something else!"],
+    [ "the other movies that are playing:"],
+    [ "there are many movies playing."],
+    [ "She looks like she wants to argue, but doesn't."],
+    [ "girlname looks you directly in the eyes and a pout forms on her lips.",
+      "girltalk But I wanna watch {0}!"
+    ]
   ],
   "stealSoda": [
     ["You climb behind the snack counter, grab a big paper cup.  You scoop a bit of ice and fill it to the top, capping it with a lid and a straw."],
@@ -94,5 +100,18 @@
         [ "girlname starts to pee immediately.  Her stream hisses out and spatters on the carpet, which soaks it up quickly, making a gurgling spattering noise.  The scent of her pee fills the air."]
       ]
     }
-  }
+  },
+  "buySoda": [
+    "<form name=buySoda>",
+    "<p> You buy ",
+    "<input class=buy type=number name=sodaAm id=sodaAm value=1 min=1 max=100> soda(s)</p>",
+    "</p>For $ <text id=monAmount>5</text></p>",
+    "<p><li class='cListener' id=buy>Continue...</li></p>"
+  ],
+  "buySoda2": [
+    ["You don't have enough money."],
+    ["Uhm, you can't buy negative drinks."],
+    ["Whoa, give the poor employee a break, there is no way you need more than a 100 drinks..."],
+    ["You pay for them before going back to girlname."]
+  ]
 }

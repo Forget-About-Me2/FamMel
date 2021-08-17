@@ -2,6 +2,20 @@ body{
     background-color: #f0f6f6;
     overflow: hidden;
     height: 100%;
+    font-family: sans-serif;
+}
+
+a:hover {
+    color: #888800;
+}
+
+a {
+    text-decoration: none;
+    color: #000088;
+}
+
+text {
+    text-decoration: none;
 }
 
 #titlebar {
@@ -242,5 +256,8 @@ body{
     color: #fa0202;
 }
 
+.buy {
+    width: 50px;
+}
 
 
