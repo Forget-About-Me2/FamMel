@@ -110,37 +110,44 @@ var bargirlnames=["Tiffany", "Brittney", "Vanessa" , "Maya", "Angelina", "Samant
 //             5 : Sexy
 //             6 : Romantic
 //  This is "The Urge"
-var moviedesc0=["The movie has just started.", "On the big screen, the heroine is being introduced - she apparently has some kind of super powers which are only activated by an intense need to pee.", "The movie has gotten to a scary part where the heroine is being stalked, but her bladder is far from full.", "The movie has reached a point where the heroine, after finally filling her bladder and dispensing with her attackers, is making out with her lover.", "The movie has reached a romantic interlude where the heroine decides to rescue her lover ... though she apparently has to pee bad since she never went to the restroom!", "In the movie, the lover has been rescued, and they are making out again.  The heroine is heroically resisting her incredible urge to pee.", "The movie is reaching a conclusion and the heroine is running hand in hand with her lover towards the bathroom as the credits roll."];
+// var moviedesc0=[
+//     "The movie has just started.",
+//     "On the big screen, the heroine is being introduced - she apparently has some kind of super powers which are only activated by an intense need to pee.",
+//     "The movie has gotten to a scary part where the heroine is being stalked, but her bladder is far from full.",
+//     "The movie has reached a point where the heroine, after finally filling her bladder and dispensing with her attackers, is making out with her lover.",
+//     "The movie has reached a romantic interlude where the heroine decides to rescue her lover ... though she apparently has to pee bad since she never went to the restroom!",
+//     "In the movie, the lover has been rescued, and they are making out again.  The heroine is heroically resisting her incredible urge to pee.",
+//     "The movie is reaching a conclusion and the heroine is running hand in hand with her lover towards the bathroom as the credits roll."];
 
 //  This is "Desperate Housewives, The Movie"
-var moviedesc1=["The movie is starting.", "On the screen, the main characters are being introduced - three young newlyweds - a blonde, brunette and redhead - with controlling husbands who tell them they're not allowed to pee while the husband is away at work.", "In the movie, the redhead is waiting at home in the late afternoon, desperate to pee.  Tension rapidly builds as her husband is stuck in traffic on the way home.  She's on the verge of losing control.", "On screen, the redhead's husband finally shows up and she is overjoyed to see him.  They end up passionately making out at the front door.", "In the movie, the redhead is lovingly undressed and sat on the toilet by her husband, after which they share the romantic dinner she prepared while she was waiting for him to come home." , "In the movie, the blonde and brunette both meet up unexpectedly while out walking their dogs and trying to get their minds off their bursting bladders.  They make small talk, and because their minds are otherwise occupied, they don't seem to be able to tear themselves away from the conversaion.  Eventually, the secret comes out, and they are turned on so much they engage in some heavy petting on the excuse of helping to hold it in.", "In the movie, the two entangled and desperate women are found by their returning husbands, who rather than being angry, declare their gratitude for such devotion in the face of extreme bladder pressure.  The foursome goes out for a romantic candle-lit dinner after a discrete stop behind the bushes."];
+// var moviedesc1=[
+//     "The movie is starting.",
+//     "On the screen, the main characters are being introduced - three young newlyweds - a blonde, brunette and redhead - with controlling husbands who tell them they're not allowed to pee while the husband is away at work.",
+//     "In the movie, the redhead is waiting at home in the late afternoon, desperate to pee.  Tension rapidly builds as her husband is stuck in traffic on the way home.  She's on the verge of losing control.",
+//     "On screen, the redhead's husband finally shows up and she is overjoyed to see him.  They end up passionately making out at the front door."
+//     "In the movie, the redhead is lovingly undressed and sat on the toilet by her husband, after which they share the romantic dinner she prepared while she was waiting for him to come home." ,
+//     "In the movie, the blonde and brunette both meet up unexpectedly while out walking their dogs and trying to get their minds off their bursting bladders.  They make small talk, and because their minds are otherwise occupied, they don't seem to be able to tear themselves away from the conversation.  Eventually, the secret comes out, and they are turned on so much they engage in some heavy petting on the excuse of helping to hold it in.",
+//     "In the movie, the two entangled and desperate women are found by their returning husbands, who rather than being angry, declare their gratitude for such devotion in the face of extreme bladder pressure.  The foursome goes out for a romantic candle-lit dinner after a discrete stop behind the bushes."];
 
 //  This is "Control Yourself"
-var moviedesc2=["The previews have just finished and the movie comes on." , "The movie's main character is introduced, a young and outgoing college girl whose one failing is her shyness when it comes to telling other people she needs to pee.", "Ominous music plays and tension rises as the film follows the slender youth into a 7-11 where she buys a huge soda <i>right before her two hour final exams</i>.", "On the big screen, the girl quickly downs the soda on the way to her test when she meets up with her boyfriend.  They adjourn behind a tree for a quickie and the camera is not afraid to follow them as they run their hands underneath each others clothes and build up a little sweat.", "The movie has reached a point where the girl must leave for her test, and her boyfriend comforts her fears of failure, promising to marry her if she passes.", "On the screen, after a very interesting stop motion sequence showing the test and the girl's increasingly desperate need to pee, the test is finally over and she speeds out of the room - of course running into her boyfriend again, who mistakes her desperate struggles for another type of desire.  They find a private restroom this time and clumsily rip each others clothes off.  The girl looks longingly at the toilet but says nothing." , "As the credits roll, the girl finally works up the courage to admit she has to pee like hell, and they kiss passionately as she finally is able to sit on the toilet and empty her bladder."];
+// var moviedesc2=[
+//     "The previews have just finished and the movie comes on.",
+//     "The movie's main character is introduced, a young and outgoing college girl whose one failing is her shyness when it comes to telling other people she needs to pee.",
+//     "Ominous music plays and tension rises as the film follows the slender youth into a 7-11 where she buys a huge soda <i>right before her two hour final exams</i>.",
+//     "On the big screen, the girl quickly downs the soda on the way to her test when she meets up with her boyfriend.  They adjourn behind a tree for a quickie and the camera is not afraid to follow them as they run their hands underneath each others clothes and build up a little sweat.",
+//     "The movie has reached a point where the girl must leave for her test, and her boyfriend comforts her fears of failure, promising to marry her if she passes.",
+//     "On the screen, after a very interesting stop motion sequence showing the test and the girl's increasingly desperate need to pee, the test is finally over and she speeds out of the room - of course running into her boyfriend again, who mistakes her desperate struggles for another type of desire.  They find a private restroom this time and clumsily rip each others clothes off.  The girl looks longingly at the toilet but says nothing." ,
+//     "As the credits roll, the girl finally works up the courage to admit she has to pee like hell, and they kiss passionately as she finally is able to sit on the toilet and empty her bladder."];
 
 //  This is 2 liters, 25 Hours
-var moviedesc3=["You settle into your cushy seat with her by your side and the lights dim.", "The main detective is being introduced to dramatic music.  She's a young chinese woman with mad kung-fu skills, out to prove herself in the police force.  At the beginning of the movie, she's in kung-fu focus training, which somehow involves trying to ignore a very full bladder while practicing forms.", "On the big screen, our heroine is staking out a gangster.  More specifically, she's gotten herself stuck in a closet in his bedroom and he seems to have come home with company.", "In the movie, the head gangster has entered the bedroom and he's making out with a bevy of gangsterettes while our heroine watches from the closet.  She is getting turned on big time watching it all and she's got to pee in a bad way ... her hand strays to caress her pussy under her short skirt.", "After a harrowing escape, our heroine comes home and is greeted by her dog, to whom she confesses her doubts and fears while seated on the toilet.  The dog is suitably sympathetic and lays its head in her lap.", "The movie continues into a strange sex scene where the heroine is making out with the gangster boss and keeps excusing herself to go pee.  Not only is he reluctant to let her go pee, but when she is finally allowed to pee, she immediately feels an even stronger urge to go again when she returns.  Still, they work their way up to a sweaty climax - her acting is excellent, or maybe not even acting - the bulge of her bladder is clearly visible on screen." , "In the movie the heroine finally wakes up - it was all a dream.  She's in bed with her husband who hugs her tight and says she's been sleeping for nearly 25 hours.  He says he can't believe she didn't even get up to pee, and offers her a mason jar, which she fills, blissfully held in his arms."];
-
-//
-// You're driving around alone
-//
-var soloview=["You see nothing special.",
-    "You see a couple walking down the sidewalk, their hands all over each other.",
-    "You pass by a lonely gas station with a single car filling up.",
-    "You drive by a club and hear loud music pounding out of the door.  There's a short line of very pretty young ladies waiting to get in.",
-    "You see a car stopped alongside the road with the passenger door open.  It looks like someone in a short skirt is squatting behind the door.",
-    "You notice a scantily clad young lady standing on the corner of the street.  She makes eye contact with you."];
-
-//
-// You look around the bar
-//
-// var barview=[
-//     "You see nothing special.",
-//     "You notice another couple making out in a dark corner.",
-//     "You look down at the floor and see a condom wrapper among the littering of spent peanut shells.",
-//     "You notice a phone number carved into the edge of the bar: 867-5309.",
-//     "You see a gorgeous girl in a tight tube top with an empty stool next to her at the end of the bar.  There's a puddle of some liquid on the seat.",
-//     "You look down at the floor and see a glint of metal."];
+// var moviedesc3=[
+//     "You settle into your cushy seat with her by your side and the lights dim.",
+//     "The main detective is being introduced to dramatic music.  She's a young chinese woman with mad kung-fu skills, out to prove herself in the police force.  At the beginning of the movie, she's in kung-fu focus training, which somehow involves trying to ignore a very full bladder while practicing forms.",
+//     "On the big screen, our heroine is staking out a gangster.  More specifically, she's gotten herself stuck in a closet in his bedroom and he seems to have come home with company.",
+//     "In the movie, the head gangster has entered the bedroom and he's making out with a bevy of gangsterettes while our heroine watches from the closet.  She is getting turned on big time watching it all and she's got to pee in a bad way ... her hand strays to caress her pussy under her short skirt.",
+//     "After a harrowing escape, our heroine comes home and is greeted by her dog, to whom she confesses her doubts and fears while seated on the toilet.  The dog is suitably sympathetic and lays its head in her lap.",
+//     "The movie continues into a strange sex scene where the heroine is making out with the gangster boss and keeps excusing herself to go pee.  Not only is he reluctant to let her go pee, but when she is finally allowed to pee, she immediately feels an even stronger urge to go again when she returns.  Still, they work their way up to a sweaty climax - her acting is excellent, or maybe not even acting - the bulge of her bladder is clearly visible on screen." ,
+//     "In the movie the heroine finally wakes up - it was all a dream.  She's in bed with her husband who hugs her tight and says she's been sleeping for nearly 25 hours.  He says he can't believe she didn't even get up to pee, and offers her a mason jar, which she fills, blissfully held in his arms."];
 
 //
 // You look around the club

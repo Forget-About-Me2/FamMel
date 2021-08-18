@@ -1,11 +1,25 @@
 body{
-    background-color: #ffffe0;
+    background-color: #f0f6f6;
     overflow: hidden;
     height: 100%;
+    font-family: sans-serif;
+}
+
+a:hover {
+    color: #888800;
+}
+
+a {
+    text-decoration: none;
+    color: #000088;
+}
+
+text {
+    text-decoration: none;
 }
 
 #titlebar {
-    background-color: #ffff66;
+    background-color: #b0e9f3;
     height: 30px;
     position: sticky;
     top:  0;
@@ -81,10 +95,9 @@ body{
 
 #textsp {
     overflow-y: auto;
-    max-height: calc(100% - 150px);
+    max-height: calc(100% - 115px);
     float: left;
     width: 60vw;
-    /*line-height: 2;*/
 }
 
 
@@ -97,26 +110,42 @@ body{
 
 .stats-cells {
     text-align: center;
-    background-color: #ffff90;
+    background-color: #b0e9f3;
 }
 
 .stats-cells-blue {
     text-align: center;
-    background-color: #ffff90;
-    width:12.5%;
+    background-color: #b0e9f3;
 }
 
 .stats-cells-white {
     text-align: center;
-    background-color: #ffffe0;
+    background-color: #f0f6f6;
+}
+
+.stats-cells-green{
+    text-align: center;
+    background-color: #b5ff9d;
+}
+
+.stats-cells-red{
+    text-align: center;
+    background-color: #ef7878;
+}
+
+.cell-width {
     width:12.5%;
+}
+
+.cell-width-noPlay {
+    width: 16.67%;
 }
 
 #statsp {
     position: sticky;
     vertical-align: bottom;
     bottom: 20px;
-    background-color: #ffffe0;
+    background-color: #f0f6f6;
 }
 
 #objsp {
@@ -127,5 +156,108 @@ body{
     font-size: 20px;
     text-align: center;
     font-weight: bold;
-    padding-right: 10%;
 }
+
+#test {
+    height: 30%;
+    width: 40%;
+    background: #b0c6c6;
+    opacity: 15%;
+}
+
+#backpack {
+    position: absolute;
+    height: 5%;
+    bottom: 15%;
+    left: 5%;
+}
+
+#backpack:hover {
+    transform: scale(1.5);
+}
+
+#backpack-cnt{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#backpackcontent{
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+#closebackpack {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+#closebackpack:hover,
+#closebackpack:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-group .itembtn {
+    background-color: #bcf6f6;
+    border: none;
+    color: #a21717;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.btn-group .itembtn:hover{
+    background-color: #b0e9f3;
+}
+
+.btn-clicked{
+    background-color: #b0e9f3;
+}
+
+#item-text {
+    background-color: #f0f9f9;
+    float:right;
+    width: 30%;
+    height: 50%;
+    line-height: 2;
+    text-align: center;
+}
+
+.cListener {
+    cursor: pointer;
+    color: #000088;
+}
+
+.cListener:hover {
+   color: #888800;
+}
+
+#perDecErr {
+    display: none;
+    color: #fa0202;
+}
+
+.buy {
+    width: 50px;
+}
+
+

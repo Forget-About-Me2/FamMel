@@ -164,7 +164,7 @@ function chooseOtherMovie() {
 
 }
 
-function choosemovie() {
+function chooseMovie() {
     let curtext = [];
     let listenerList = [];
     if (moviecounter === 0) {
@@ -193,7 +193,7 @@ function choosemovie() {
     cListenerGenList(listenerList);
 }
 
-function movieargue() {
+function movieArgue() {
     let curtext = [];
     if (askedfavourite) {
         //You asked her which movie she wanted to watch and then deliberately chose a different one.
@@ -216,7 +216,6 @@ function movieargue() {
         cListenerGenList(listenerList);
     }
 }
-
 
 //TODO figure out duplicate continue's
 function preMoviePee(curtext=[]) {
