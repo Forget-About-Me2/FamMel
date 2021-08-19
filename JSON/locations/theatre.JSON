@@ -72,7 +72,16 @@
     [ "She looks like she wants to argue, but doesn't."],
     [ "girlname looks you directly in the eyes and a pout forms on her lips.",
       "girltalk But I wanna watch {0}!"
-    ]
+    ],
+    ["You and girlname enter the darkened theatre."],
+    ["You are watching the movie."],
+    ["The movie has ended."],
+    ["girlname is sitting beside you."]
+  ],
+  "movieRomance": [
+    ["You reach over and hold your hand in hers."],
+    ["She gives your hand a squeeze."],
+    "Her hand is kind of cold."
   ],
   "stealSoda": [
     ["You climb behind the snack counter, grab a big paper cup.  You scoop a bit of ice and fill it to the top, capping it with a lid and a straw."],

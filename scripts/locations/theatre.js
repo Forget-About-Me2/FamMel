@@ -220,6 +220,7 @@ function movieArgue() {
 //TODO figure out duplicate continue's
 function preMoviePee(curtext=[]) {
     pushloc("domovie");
+    moviecounter = 0;
     changevenueflag = 1;//TODO probs delete
     curtext = displayyourneed(curtext);
     curtext = showneed(curtext);
@@ -238,45 +239,56 @@ function preMoviePee(curtext=[]) {
 
 //TODO you can go to the bathroom if you're desperate
 function domovie() {
-    if (locstack[0] !== "domovie") {
-        s("You and " + girlname + " enter the darkened theater.");
-        pushloc("domovie");
-        moviecounter = 0;
+    let curtext = [];
+    if (moviecounter === 0) {
+        curtext = printList(curtext, theatre["watchMovie"][6]);
+        // s("You and " + girlname + " enter the darkened theater.");
+        seenmovie = 1;
     } else {
-        s("You are watching the movie.");
+        curtext = printList(curtext, theatre["watchMovie"][7]);
+        // s("You are watching the movie.");
         moviecounter += 1;
     }
 
-    seenmovie = 1;
-
     if (moviecounter >= 7) {
-        s("The movie has ended.");
+        curtext = printList(curtext, theatre["watchMovie"][8]);
+        // s("The movie has ended.");
         poploc();
         changevenueflag = 1;
     } else {
-        if (moviechoice === 0) s(moviedesc0[moviecounter]);
-        else if (moviechoice === 1) s(moviedesc1[moviecounter]);
-        else if (moviechoice === 2) s(moviedesc2[moviecounter]);
-        else s(moviedesc3[moviecounter]);
+        curtext.push(theatre["favouriteMovie"][moviechoice]["plot"][moviecounter]);
+        // if (moviechoice === 0) s(moviedesc0[moviecounter]);
+        // else if (moviechoice === 1) s(moviedesc1[moviecounter]);
+        // else if (moviechoice === 2) s(moviedesc2[moviecounter]);
+        // else s(moviedesc3[moviecounter]);
     }
 
-    s(girlname + " is sitting beside you.");
-    if (randomchoice(4)) noteholding();
+    curtext = printList(curtext, theatre["watchMovie"][9]);
+    // s(girlname + " is sitting beside you.");
+    if (randomchoice(4)) curtext = noteholding(curtext);
+    curtext = showneed(curtext);
+    curtext = displayyourneed(curtext);
 
-    showneed();
-    displayyourneed();
+    let listenerList = [];
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            preventpee();
+            curtext = preventpee(curtext);
         } else {
-            c("movieromance", "Reach over and hold her hand.");
-            c("moviesex", "Reach over and touch her thigh.");
-            c("moviescary", "Lean closer to her.");
-            c("moviedoh", "Look her in the eyes.");
+            listenerList.push([[movieRomance, "Reach over and hold her hand."], "movieRomance"]);
+            listenerList.push([[movieSex, "Reach over and touch her thigh."], "movieSex"]);
+            listenerList.push([[movieScary, "Lean closer to her"], "movieScary"]);
+            listenerList.push([[movieDoh, "Look her in the eyes."], "movieDoh"]);
+            // c("movieromance", "Reach over and hold her hand.");
+            // c("moviesex", "Reach over and touch her thigh.");
+            // c("moviescary", "Lean closer to her.");
+            // c("moviedoh", "Look her in the eyes.");
         }
-        if (moviecounter < 7) c("leavehm", "Leave the theater.");
+        if (moviecounter < 7)
+            listenerList.push([[leavehm, "Leave the theatre."]]);
+        sayText(curtext);
+        cListenerGenList(listenerList);
     }
 }
 
@@ -287,18 +299,25 @@ function domovie() {
 //             4 : Romantic
 //             5 : Sexy
 //             6 : Romantic
+//             7 : End
 
 
 function movieromance() {
-    s("You reach over and hold your hand in hers.");
-    if (moviecounter === 4 || moviecounter === 6 || attraction > 30) {
-        s("She gives your hand a squeeze.");
+    let curtext = [];
+    curtext = printList(curtext, theatre["movieRomance"][0]);
+    // s("You reach over and hold your hand in hers.");
+    if (moviecounter === 4 || moviecounter === 6 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 30)) {
+        curtext = printList(curtext, theatre["movieRomance"][1]);
+        // s("She gives your hand a squeeze.");
         attraction += 3;
         shyness -= 3;
     } else {
-        s("Her hand is kind of cold.");
+        curtext = printList(curtext, theatre["movieRomance"][2]);
+        // s("Her hand is kind of cold.");
     }
-    c(locstack[0], "Continue...");
+    sayText(curtext);
+    cListenerGen([domovie, "Continue"]);
+    // c(locstack[0], "Continue...");
 }
 
 function moviesex() {
