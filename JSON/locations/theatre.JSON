@@ -76,12 +76,29 @@
     ["You and girlname enter the darkened theatre."],
     ["You are watching the movie."],
     ["The movie has ended."],
-    ["girlname is sitting beside you."]
+    ["girlname is sitting beside you."],
+    ["You move over to the register with girlname."]
   ],
   "movieRomance": [
     ["You reach over and hold your hand in hers."],
     ["She gives your hand a squeeze."],
-    "Her hand is kind of cold."
+    ["Her hand is kind of cold."]
+  ],
+  "movieSex": [
+    ["You reach over and brush her thigh lightly with the back of your hand."],
+    ["She firmly moves your hand off her leg."]
+  ],
+  "movieScary": [
+    ["You lean towards her."],
+    ["She leans back toward you and puts her hand in yours."],
+    ["She doesn't seem to notice."]
+  ],
+  "movieDoh": [
+    [ "You look over at her sitting beside you."],
+    [ "... and find her staring back at you.",
+      "Your eyes meet, and she smiles."
+    ],
+    ["... and see her intently watching the movie."]
   ],
   "stealSoda": [
     ["You climb behind the snack counter, grab a big paper cup.  You scoop a bit of ice and fill it to the top, capping it with a lid and a straw."],

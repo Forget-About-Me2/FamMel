@@ -17,6 +17,7 @@ function theatreJsonSetup(){
     theatre["buySoda2"] = formatAllVarsList(theatre["buySoda2"]);
     theatre["darkTheatre"] = formatAllVarsList(theatre["darkTheatre"]);
     theatre["noRest"] = formatAllVarsList(theatre["noRest"]);
+    theatre["watchMovie"] = formatAllVarsList(theatre["watchMovie"]);
     Object.keys(theatre["noToilet"]).forEach(key => {
         const item = theatre["noToilet"][key];
         item["quotes"] = formatAllVarsList(item["quotes"]);
@@ -51,6 +52,7 @@ function theTheatre(){
         } else {
             listenerList.push([[buySoda, "Buy soda."], "buySoda"]);
             listenerList.push([[askMovie, "Ask her which movie she wants to watch."], "askMovie"]);
+            listenerList.push([[chooseMovie, "Watch a movie."], "chooseMovie"]);
             if (yourbladder > yourbladurge)
                 listenerList.push([[youpee, "Go to the bathroom."], "youPee"]);
             listenerList.push([[leavehm, "Leave the Movie Theatre."], "leaveHm"]);
@@ -85,13 +87,6 @@ function buySoda() {
     addListeners([function(){
         buySoda2(value, price);
     }], "buy");
-    // if (money >= 5) {
-    //     s("You buy a soda for $5.00.");
-    //     soda += 1;
-    //     money -= 5;
-    // } else s("You don't have enough money!");
-    // c("buysoda", "Buy another soda" )
-    // c(locstack[0], "Continue...");
 }
 
 //You actually buy the soda, errors for invalid numbers.
@@ -135,12 +130,9 @@ function askMovie() {
             moviechoice = favoritemovie;
             attraction += 2;
             preMoviePee();}, "Let's watch that then."], "movieFavour"]);
-        // s(girlname + " smiles at you.");
-        // s(girltalk + "I'd love to see " + moviename + ".");
         listenerList.push([[chooseOtherMovie, theatre["favouriteMovie"][favoritemovie]["choice"]], "chooseOther"]);
     } else {
         curtext = printList(curtext, theatre["watchMovie"][1]);
-        // s(girlname + " laughs: Two movies in one night?  Let's go do something else!");
         listenerList.push([[theTheatre, "Continue..."], "theTheatre"]);
     }
     sayText(curtext);
@@ -149,14 +141,13 @@ function askMovie() {
 
 function chooseOtherMovie() {
     let curtext = printList([], theatre["watchMovie"][2]);
-    // s("The other movies that are playing:");
     let listenerList = [];
     Object.keys(theatre["favouriteMovie"]).forEach(id => {
         if (id !== favoritemovie) {
             listenerList.push([[function () {
                 moviechoice = id;
                 movieArgue();
-            }, theatre["favoritemovie"][id]["description"]], id]);
+            }, theatre["favouriteMovie"][id]["description"]], id]);
         }
     });
     sayText(curtext);
@@ -169,24 +160,22 @@ function chooseMovie() {
     let listenerList = [];
     if (moviecounter === 0) {
         curtext = printList(curtext, theatre["watchMovie"][3]);
-        // s("There are many movies playing:");
         Object.keys(theatre["favouriteMovie"]).forEach(id => {
             if (id !== favoritemovie) {
                 listenerList.push([[function () {
                     moviechoice = id;
                     movieArgue();
-                }, theatre["favoritemovie"][id]["description"]], id]);
+                }, theatre["favouriteMovie"][id]["description"]], id]);
             } else {
                 listenerList.push([[function () {
                     moviechoice = id;
                     preMoviePee();
-                }, theatre["favoritemovie"][id]["description"]], id]);
+                }, theatre["favouriteMovie"][id]["description"]], id]);
 
             }
         });
     } else {
         curtext = printList(curtext, theatre["watchMovie"][1]);
-        // s(girlname + " laughs: Two movies in one night?  Let's go do something else!");
         listenerList.push([[theTheatre, "Continue..."], "theTheatre"]);
     }
     sayText(curtext);
@@ -211,8 +200,8 @@ function movieArgue() {
             owedfavor += 1;
             moviechoice = favoritemovie;
             preMoviePee();
-        }], "favour"]);
-        listenerList.push([[preMoviePee,theatre["favoritemovie"][favoritemovie]["description"]], "denyFavor"]);
+        }, "Okay, but you own me one."], "favour"]);
+        listenerList.push([[preMoviePee,theatre["favouriteMovie"][favoritemovie]["choice"]], "denyFavor"]);
         cListenerGenList(listenerList);
     }
 }
@@ -221,9 +210,11 @@ function movieArgue() {
 function preMoviePee(curtext=[]) {
     pushloc("domovie");
     moviecounter = 0;
+    seenmovie = 0;
     changevenueflag = 1;//TODO probs delete
     curtext = displayyourneed(curtext);
     curtext = showneed(curtext);
+    curtext = printList(curtext, theatre["watchMovie"][10]);
     sayText(curtext);
     let listenerList = [];
     if (gottagoflag > 0) {
@@ -240,31 +231,23 @@ function preMoviePee(curtext=[]) {
 //TODO you can go to the bathroom if you're desperate
 function domovie() {
     let curtext = [];
-    if (moviecounter === 0) {
+    if (seenmovie === 0) {
         curtext = printList(curtext, theatre["watchMovie"][6]);
-        // s("You and " + girlname + " enter the darkened theater.");
         seenmovie = 1;
     } else {
         curtext = printList(curtext, theatre["watchMovie"][7]);
-        // s("You are watching the movie.");
         moviecounter += 1;
     }
 
     if (moviecounter >= 7) {
         curtext = printList(curtext, theatre["watchMovie"][8]);
-        // s("The movie has ended.");
         poploc();
         changevenueflag = 1;
     } else {
         curtext.push(theatre["favouriteMovie"][moviechoice]["plot"][moviecounter]);
-        // if (moviechoice === 0) s(moviedesc0[moviecounter]);
-        // else if (moviechoice === 1) s(moviedesc1[moviecounter]);
-        // else if (moviechoice === 2) s(moviedesc2[moviecounter]);
-        // else s(moviedesc3[moviecounter]);
     }
 
     curtext = printList(curtext, theatre["watchMovie"][9]);
-    // s(girlname + " is sitting beside you.");
     if (randomchoice(4)) curtext = noteholding(curtext);
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
@@ -280,10 +263,6 @@ function domovie() {
             listenerList.push([[movieSex, "Reach over and touch her thigh."], "movieSex"]);
             listenerList.push([[movieScary, "Lean closer to her"], "movieScary"]);
             listenerList.push([[movieDoh, "Look her in the eyes."], "movieDoh"]);
-            // c("movieromance", "Reach over and hold her hand.");
-            // c("moviesex", "Reach over and touch her thigh.");
-            // c("moviescary", "Lean closer to her.");
-            // c("moviedoh", "Look her in the eyes.");
         }
         if (moviecounter < 7)
             listenerList.push([[leavehm, "Leave the theatre."]]);
@@ -302,60 +281,70 @@ function domovie() {
 //             7 : End
 
 
-function movieromance() {
+function movieRomance() {
     let curtext = [];
     curtext = printList(curtext, theatre["movieRomance"][0]);
-    // s("You reach over and hold your hand in hers.");
     if (moviecounter === 4 || moviecounter === 6 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 30)) {
         curtext = printList(curtext, theatre["movieRomance"][1]);
-        // s("She gives your hand a squeeze.");
         attraction += 3;
         shyness -= 3;
     } else {
         curtext = printList(curtext, theatre["movieRomance"][2]);
-        // s("Her hand is kind of cold.");
     }
     sayText(curtext);
-    cListenerGen([domovie, "Continue"]);
-    // c(locstack[0], "Continue...");
+    if (moviecounter < 7)
+        cListenerGen([domovie, "Continue..."], "doMovie");
+    else
+        cListenerGen([theTheatre, "Continue..."], "theTheatre");
 }
 
-function moviesex() {
-    s("You reach over and brush her thigh lightly with the back of your hand.");
-    if (moviecounter === 3 || moviecounter === 5 || attraction > 70) {
-        s(thighresp[randcounter]);
-        incrandom();
+function movieSex() {
+    let curtext = [];
+    curtext = printList(curtext, theatre["movieSex"][0]);
+    if (moviecounter === 3 || moviecounter === 5 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 70)) {
+        curtext.push(pickrandom(appearance["clothes"][heroutfit]["thighresp"]));
         attraction += 3;
         shyness -= 3;
     } else {
-        s("She firmly moves your hand off her leg.");
+        curtext = printList(curtext, theatre["movieSex"][1]);
     }
-    c(locstack[0], "Continue...");
+    sayText(curtext);
+    if (moviecounter < 7)
+        cListenerGen([domovie, "Continue..."], "doMovie");
+    else
+        cListenerGen([theTheatre, "Continue..."], "theTheatre");
 }
 
-function moviescary() {
-    s("You lean towards her.");
-    if (moviecounter === 2 || attraction > 40) {
-        s("She leans back toward you and puts her hand in yours.");
+function movieScary() {
+    let curtext = printList([], theatre["movieScary"][0]);
+    if (moviecounter === 2 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 40)) {
+        curtext = printList(curtext, theatre["movieScary"][1]);
         attraction += 3;
         shyness -= 3;
     } else {
-        s("She doesn't seem to notice.");
+        curtext = printList(curtext, theatre["movieScary"][2]);
     }
-    c(locstack[0], "Continue...");
+    sayText(curtext);
+    if (moviecounter < 7)
+        cListenerGen([domovie, "Continue..."], "doMovie");
+    else
+        cListenerGen([theTheatre, "Continue..."], "theTheatre");
 }
 
-function moviedoh() {
-    s("You look over at her sitting beside you.");
-    if (moviecounter === 1 || attraction > 50) {
-        s("... and find her staring back at you.");
-        s("Your eyes meet, and she smiles.");
+function movieDoh() {
+    let curtext = printList([], theatre["movieDoh"][0]);
+    if (moviecounter === 1 || ((moviecounter >= 7 || moviecounter === 0) && attraction > 50)) {
+        curtext = printList(curtext, theatre["movieDoh"][1]);
         attraction += 3;
         shyness -= 3;
     } else {
-        s("... and see her intently watching the movie.");
+        curtext = printList(curtext, theatre["movieDoh"][2]);
     }
-    c(locstack[0], "Continue...");
+    sayText(curtext);
+    if (moviecounter < 7)
+        cListenerGen([domovie, "Continue..."], "doMovie");
+    else
+        cListenerGen([theTheatre, "Continue..."], "theTheatre");
 }
 
 //TODO fix thehold my purse
@@ -391,7 +380,6 @@ function darkTheatre() {
 
 function stealSoda() {
     let curtext = printList([], theatre["stealSoda"][0]);
-    // s("You climb behind the snack counter, grab a big paper cup.  You scoop a bit of ice and fill it to the top, capping it with a lid and a straw.");
     objects.soda.value += 1;
     let listenerList = [
         [[stealSoda2, "Steal another soda."], "stealSoda"],
@@ -405,7 +393,6 @@ function stealSoda() {
 //TODO randomize quotes
 function stealSoda2(){
     let curtext = printList([], theatre["stealSoda"][1]);
-    // s("You grab another paper cup, and fill it up in a similar way as the previous one.");
     objects.soda.value += 1;
     let listenerList = [
         [[stealSoda2, "Steal another soda."], "stealSoda"],
@@ -418,11 +405,9 @@ function stealSoda2(){
 //TODO let her choose.
 function pnorestroom() {
     let curtext = printList([], theatre["noRest"][0]);
-    // s("<b>YOU:</b> Why don't you go ahead and go.  But not in the restrooms.");
     if (attraction >= pnorestroomthreshold) {
         curtext = displayneed(curtext);
         curtext = printList(curtext, theatre["noRest"][1]);
-        // s(girltalk + "What?  Then where am I supposed to go?");
         curtext = displayneed(curtext);
         sayText(curtext);
         let listenerList = [];
@@ -436,7 +421,6 @@ function pnorestroom() {
         cListenerGenList(listenerList);
     } else {
         curtext = printList(curtext, theatre["noRest"][2]);
-        // s(girltalk + "No way, dude.  I'm outta here.");
         indepee(curtext);
     }
 }
@@ -462,67 +446,3 @@ function noToiletPee2(){
     let curtext = printList([], theatre["noRest"][3]);
     kissher(curtext);
 }
-
-// function ptrashcan() {
-//     s("<b>YOU:</b> How about that trashcan?");
-//     displayneed();
-//     s(girlname + " looks around apprehensively before heading over to it.");
-//     s(girltalk + "Am I gonna regret this?");
-//     if (pantycolor === "none")
-//         s(peeprepquotebare);
-//     else
-//         s(peeprepquote);
-//     s("Quickly, " + girlname + " lowers herself over the trashcan and lets go.  Her pee hisses out and hits the trashcan liner with a loud clatter.");
-//     flushdrank();
-//     sawherpee = 1;
-//     s("The bottom of the trashcan is a sea of fragrant pee.  You offer her a tissue, but she simply gets back up and gives you a hug.");
-//     s(girltalk + "That's <u>so</u> much better.");
-//     c("goback", "Continue...");
-// }
-
-// function psink() {
-//     s("<b>YOU:</b> How about the sink over there?");
-//     displayneed();
-//     s(girlname + " looks around apprehensively before climbing over the snack counter.");
-//     s(girltalk + "How am I gonna do this?");
-//     if (pantycolor === "none")
-//         s(peeprepquotebare);
-//     else
-//         s(peeprepquote);
-//     s("Carefully, " + girlname + " lifts herself up onto the counter and positions her butt over the sink.  Even before she's settled into place, she lets go.  Her pee hisses out and hits the metal sink with a loud clatter.");
-//     flushdrank();
-//     sawherpee = 1;
-//     c("goback", "Continue...");
-// }
-
-// function psodacup() {
-//     s("<b>YOU:</b> How about a soda cup?");
-//     displayneed();
-//     s(girlname + " looks around apprehensively as you get a big plastic soda cup from behind the snack counter.");
-//     s(girltalk + "Am I gonna regret this?");
-//     if (pantycolor === "none")
-//         s(peeprepquotebare);
-//     else
-//         s(peeprepquote);
-//     s("Carefully, " + girlname + " brings the cup between her beautiful trembling thighs and lets go.  Her pee hisses out and foams into the cup.");
-//     flushdrank();
-//     sawherpee = 1;
-//     s(girltalk + "That's better!");
-//     s("She puts a lid on the cup and hands it to you.  The cup is warm with the heat of her urine, and her scent wafts from the straw hole.");
-//     c("goback", "Continue...");
-// }
-
-// function pfloor() {
-//     s("<b>YOU:</b> Why don't you pee right there on the carpet?");
-//     displayneed();
-//     s(girlname + " looks around apprehensively before squatting down.");
-//     s(girltalk + "Are you sure we're not gonna get in trouble?");
-//     if (pantycolor === "none")
-//         s(peeprepquotebare);
-//     else
-//         s(peeprepquote);
-//     s(girlname + " starts to pee immediately.  Her stream hisses out and spatters on the carpet, which soaks it up quickly, making a gurgling spattering noise.  The scent of her pee fills the air.");
-//     flushdrank();
-//     sawherpee = 1;
-//     c("goback", "Continue...");
-// }

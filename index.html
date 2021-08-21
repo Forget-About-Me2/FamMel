@@ -185,6 +185,7 @@ CHANGES BY Forget_About_Me
 *There can now be a line for the bathroom in the theatre
 *the statusbar now just flashes temporary when an attribute changes instead of until the next button is pressed
 *The flashing of the statusbar now differentiates between positive(green) and negative(red) changed
+*During the movie, the only time attraction checks are used are at the beginning and the end.
 */
 
     //TODO potentially clean up if statements with multiple locations
@@ -249,7 +250,6 @@ CHANGES BY Forget_About_Me
     let multiplemoves = 1;
     let rstmoves = 0; //Whether the sex moves reset after a make-out session
     //Formatting Parameters
-    let ulopen = 0; // Formatting : flags if <ul> has been made.
     let slopen = 0; // Formatting : flags if string has been placed.
     let imageprev = "imgs/Laura/pixnorm.gif";  // Previous image
     const imagedesc = '"Picture of girl"';
@@ -261,9 +261,7 @@ CHANGES BY Forget_About_Me
     const maxfeel = 7; // maximum number of feel-ups that have effect
 
     const randmax = 5; // Maximum value of random counter
-    const maxpstory = 8; // Maximum value of story counter
     let pstorycounter = 0;
-    let oldpstorycounter = pstorycounter;
 
     let posectr = 0; // keep track of which pose is next/last.
     const posemax = 5; // Maximum value of pose counter
@@ -281,7 +279,6 @@ CHANGES BY Forget_About_Me
     let spurtthresh = 5; // Likelihood of her spurting rather than wetting
     let yspurtthresh = 3; // Likelihood of you spurting rather than wetting
     let bribeaskthresh = 8; //Likelihood she'll hold it if you ask her when desperate
-    let lookaroundthresh = 5; //Likelihood you'll find a key when looking around.
 
     //  Attraction thresholds
     const ptogetherthreshold = 100; // She'll take you with her to the bathroom.
@@ -328,28 +325,6 @@ CHANGES BY Forget_About_Me
     let noflirtflag = 0; // Suppress flirty options
 
     let externalflirt = 0; // You flirted with somebody else
-
-    let roses = 0; // flowers object counter
-    let water = 0; // water bottle object counter
-    //TODO limit what vase can hold
-    let vase = 0; // vase object counter
-    let ptowels = 0; // paper towel object counter
-    let panties = 0; // panties object counter
-    let champagne = 0; // champagne object counter
-    let shotglass = 0; // shot glass object
-    let earrings = 0; // earrings object counter
-    let hercellphone = 0; // cellphone object counter
-    let herkeys = 0; // her keys object counter
-
-    let wetpanties = 0; // wet panties object
-    let beer = 0; // beer bottle object ( increased bladder cap on beer only )
-    let cocktail = 0; // cocktail object ( each increases maxtummy by 100 )
-    let soda = 0; // soda object ( This is a 500ml soda. )
-
-    // Keys to the buildings
-    let barkey = 0; // key to the bar
-    let clubkey = 0; // key to the club
-    let theaterkey = 0; // key to the theater
 
     // Girl stats(Counter and Flags)
     let owedfavor = 0; // she owes you a favor
@@ -398,12 +373,9 @@ CHANGES BY Forget_About_Me
     //
     //
 
-    let thighresp;
     let feelher;
     let feelres;
     let feelpee;
-    let feelyou;
-    let feelbad;
     let posenorm;
     let poseoutfit;
     let donoutfit;
@@ -416,11 +388,7 @@ CHANGES BY Forget_About_Me
     let stareather;
     let dryquote;
     let peeshotquote;
-    let peeshotquotebare;
-    let peeskirtquote;
-    let peeskirtquotebare;
     let peetowelquote;
-    let peetowelquotebare;
     let peeoutsidequote;
     let peeoutsidequotebare;
     let peeoutsidebquote;
@@ -430,7 +398,6 @@ CHANGES BY Forget_About_Me
     let firstmtgtightquote;
     let firstmtgtightquotebare;
     let soakedseatquote;
-    let peeprepquote;
     let peeprepquotebare;
     let undressquote;
     let undressquoteemer;
@@ -462,18 +429,6 @@ CHANGES BY Forget_About_Me
     let swimstripquotebare;
     let swimstripquotepanties;
 
-    //TODO figure out dependencies
-    //
-    // Bartender quotes
-    //
-    // let barquotes = ["Nice girl you've got there.  Bet she'll pee herself if she holds a drop over " + bladlose + "ml, though.",
-    //     "She's cute, isn't she?  I bet if you found her a cocktail, she'd be a lot less inhibited about drinking.",
-    //     "Did you know that beer is a diuretic?",
-    //     "Say, you don't happen to know where a man could buy a set of wet panties around here, do you?",
-    //     "How about them Dodgers?",
-    //     "I've been thinking about starting a bladder buster night here on Mondays."];
-
-
     //
     //  She loses control
     //
@@ -483,31 +438,6 @@ CHANGES BY Forget_About_Me
         girlname + " squeals and doubles over.",
         girlname + " suddenly gasps and her face turns red.",
         girlname + " suddenly shudders and her face turns red."];
-
-    //
-    //  How the girl responds to what you say indicates good or bad answer
-    //
-    // let bargoodresp = [girlname + " looks you in the eyes and smiles as she talks.",
-    //     girlname + " leans towards you and smiles.",
-    //     girlname + " seems pleased with the conversation.",
-    //     "You feel " + girlname + "'s foot playfully brush your leg, and she smiles as she talks",
-    //     girlname + " touches your shoulder gently.",
-    //     girlname + " seems to be playing with the top button of her blouse as she talks."];
-    //
-    // let barmedresp = [girlname + " seems uninterested in the conversation.",
-    //     girlname + " twirls her hair around her finger as she talks.",
-    //     girlname + " leans back in her chair.",
-    //     girlname + " glances around the room.",
-    //     girlname + " fiddles with her napkin.",
-    //     girlname + " glances quickly at her watch."];
-    //
-    // let barbadresp = [girlname + " leans back in her chair and sighs.",
-    //     girlname + " frowns.",
-    //     girlname + " looks pointedly at her watch.",
-    //     girlname + " seems more interested in shredding her napkin into little strips that what you have to say.",
-    //     girlname + " appears engrossed in the program on the bar television ... which is an infomercial for Arizona real estate.",
-    //     girlname + " looks exasperated."];
-
     /*
 
   -----------------------------------------------------------------
@@ -616,34 +546,6 @@ CHANGES BY Forget_About_Me
   -----------------------------------------------------------------
 
 */
-
-
-    /*
-//TODO update comments
-  Location handling.
-    curloc is ALWAYS the current location, but...
-       curloc is ONLY set under certain circumstances:
-         1)  Leaving car to go to a destination _and_ the
-	     destination is not a repeat and still open.
-	 2)  Special locations such as the dancefloor.
-
-    nextloc is the INTENDED destination.  Meaning you set it
-       when you choose to head somewhere.
-
-*/
-    //TODO probably delete these functions
-    function pushloc(newloc) {
-        if (newloc !== locstack[0]) {
-            locstack.unshift(newloc);
-        }
-    }
-
-    function poploc() {
-        if (locstack[0] !== locstack[1]) {
-            locstack.shift();
-        }
-    }
-
     function champagnenow() {
         if (champagnecounter > 5) {
             s("Sadly, the bottle of champagne is empty.");

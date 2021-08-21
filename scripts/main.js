@@ -174,6 +174,32 @@ function calcTuminc(){
     return randtuminc(tuminc);
 }
 
+/*
+//TODO update comments
+Location handling.
+curloc is ALWAYS the current location, but...
+   curloc is ONLY set under certain circumstances:
+     1)  Leaving car to go to a destination _and_ the
+     destination is not a repeat and still open.
+ 2)  Special locations such as the dancefloor.
+
+nextloc is the INTENDED destination.  Meaning you set it
+   when you choose to head somewhere.
+
+*/
+//TODO probably delete these functions
+function pushloc(newloc) {
+    if (newloc !== locstack[0]) {
+        locstack.unshift(newloc);
+    }
+}
+
+function poploc() {
+    if (locstack[0] !== locstack[1]) {
+        locstack.shift();
+    }
+}
+
 //  increment the random number counter.
 function incrandom() {
     const now = new Date();
