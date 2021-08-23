@@ -25,6 +25,74 @@
     <title>Melissa Explains it All</title>
 </head>
 <body>
+<!--TODO fix text flicker when start is loaded with picture-->
+<link rel="stylesheet" type="text/css" href="style.css">
+<div class="fullscreen">
+    <div id="backpack-cnt">
+        <div id="backpackcontent">
+            <span id="closebackpack">&times;</span>
+            <p>This is your backpack</p>
+            <div id="item-text">
+
+            </div>
+            <div class="btn-group" id="backpackitems">
+            </div>
+        </div>
+    </div>
+    <div id="titlebar">
+        <div id="credits">Game Engine 3.2a by drw</div>
+        <div id="version">VER 4.2: June 24, 2020</div>
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div id="gamescreen">
+        <div id="picture">
+            <pre id="thepic"></pre>
+        </div>
+        <div id="textsp">
+            <p class="title">Melissa Explains it All </p>
+            <p style="text-align: center">This game contains mature content.</p>
+            <!--            TODO change class-->
+            <ul id="choices" class="choices-start">
+<!--                <li class="choices-items-start"><a href='javascript:go("start")'>Continue</a></li>-->
+<!--                <li class="choices-items-start"><a href='javascript:go("under18")'>Leave</a></li>-->
+<!--                <li class="choices-items-start"><a href='javascript:Object.keys(objects).forEach(key => objects[key].value = 2);'>All Items</a></li>-->
+            </ul>
+            <pre style="padding-top: 10vh;padding-left:30vw;"><br>  ((<br>  -))<br>  /\) <br> ( |)<br>   \ \<br>   _/ )<br>  //-/<br>  ||<br>  d/<br></pre>
+        </div>
+        <a href="javascript:backpack()"><img id="backpack" src="icons/backpack.png" alt="Picture of girl" class="pic"></a>
+    </div>
+    <div id="statsp">
+        <table id="stats-bar">
+            <tbody>
+            <tr>
+                <td>&nbsp;</td>
+                <td class="stats-cells"><small>Money</small></td>
+                <td class="stats-cells"><small>Attraction</small></td>
+                <td class="stats-cells"><small>Shyness</small></td>
+                <td class="stats-cells"><small>Tummy</small></td>
+                <td class="stats-cells"><small>Her Bladder</small></td>
+                <td class="stats-cells"><small>Time</small></td>
+                <td class="stats-cells"><small>Your Tummy</small></td>
+                <td class="stats-cells"><small>Your Bladder</small></td>
+            </tr>
+            <tr>
+                <!--                TODO fix this-->
+                <td>&nbsp;</td>
+                <td id="mon" class="stats-cells-blue">$200</td>
+                <td id="att" class="stats-cells-white">10</td>
+                <td id="shy" class="stats-cells-blue">90</td>
+                <td id="tum" class="stats-cells-white">92</td>
+                <td id="blad" class="stats-cells-blue">308</td>
+                <td id="time" class="stats-cells-white">7:02 PM</td>
+                <td id="ytum" class="stats-cells-blue">190</td>
+                <td id="yblad" class="stats-cells-white">510</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 <script>
     /*
 
@@ -1862,9 +1930,9 @@ CHANGES BY Forget_About_Me
                 displayyourneed();
             }
         }
-            if (flirtcounter < 1) attraction += 5;
-            flirtcounter += 4;
-            c(locstack[0], "Continue...");
+        if (flirtcounter < 1) attraction += 5;
+        flirtcounter += 4;
+        c(locstack[0], "Continue...");
     }
 
     function thewalk() {
@@ -2285,79 +2353,28 @@ CHANGES BY Forget_About_Me
         s("<div style='text-align:right'><i>Hit Reload to start over...</i></div>");
     }
 
+    function startChoices(){
+        const listenerList = [
+            [["start", "Play"], "start"],
+            [["under18", "Leave"], "leave"],
+            [[function () {
+                Object.keys(objects).forEach(key => objects[key].value = 2);
+                go("start");
+            }, "All Items (starts the game with all items)"], "allItems"]
+        ];
+        let html = "";
+        listenerList.forEach(item => html += cListenerString(item[0], item[1]));
+        console.log(document.getElementById("choices"));
+        console.log(html);
+        document.getElementById("choices").innerHTML = html;
+        listenerList.forEach(item => {
+            document.getElementById(item[1]).classList.add("choices-items-start");
+        })
+        addListenersList(listenerList);
+    }
+
+    startChoices();
+
 </script>
-<!--TODO fix text flicker when start is loaded with picture-->
-<link rel="stylesheet" type="text/css" href="style.css">
-<div class="fullscreen">
-    <div id="backpack-cnt">
-        <div id="backpackcontent">
-            <span id="closebackpack">&times;</span>
-            <p>This is your backpack</p>
-            <div id="item-text">
-
-            </div>
-            <div class="btn-group" id="backpackitems">
-                <button onclick="selectitem('Soda')" class="itembtn" id="Soda">Soda</button>
-                <button onclick="selectitem('Water')" class="itembtn" id="Water">Water</button>
-                <button onclick="selectitem('Cocktail')" class="itembtn" id="Cocktail">Cocktail</button>
-                <button onclick="selectitem('Champagne')" class="itembtn" id="Champagne">Champagne</button>
-            </div>
-        </div>
-    </div>
-    <div id="titlebar">
-        <div id="credits">Game Engine 3.2a by drw</div>
-        <div id="version">VER 4.2: June 24, 2020</div>
-    </div>
-    <br>
-    <hr>
-    <br>
-    <div id="gamescreen">
-        <div id="picture">
-            <pre id="thepic"></pre>
-        </div>
-        <div id="textsp">
-            <p class="title">Melissa Explains it All </p>
-            <p style="text-align: center">This game contains mature content.</p>
-            <!--            TODO change class-->
-            <ul id="choices" class="choices-start">
-                <li class="choices-items-start"><a href='javascript:go("start")'>Continue</a></li>
-                <li class="choices-items-start"><a href='javascript:go("under18")'>Leave</a></li>
-                <li class="choices-items-start"><a href='javascript:Object.keys(objects).forEach(key => objects[key].value = 2);'>All Items</a></li>
-            </ul>
-            <pre style="padding-top: 10vh;padding-left:30vw;"><br>  ((<br>  -))<br>  /\) <br> ( |)<br>   \ \<br>   _/ )<br>  //-/<br>  ||<br>  d/<br></pre>
-        </div>
-        <a href="javascript:backpack()"><img id="backpack" src="icons/backpack.png" alt="Picture of girl" class="pic"></a>
-    </div>
-    <div id="statsp">
-        <table id="stats-bar">
-            <tbody>
-            <tr>
-                <td>&nbsp;</td>
-                <td class="stats-cells"><small>Money</small></td>
-                <td class="stats-cells"><small>Attraction</small></td>
-                <td class="stats-cells"><small>Shyness</small></td>
-                <td class="stats-cells"><small>Tummy</small></td>
-                <td class="stats-cells"><small>Her Bladder</small></td>
-                <td class="stats-cells"><small>Time</small></td>
-                <td class="stats-cells"><small>Your Tummy</small></td>
-                <td class="stats-cells"><small>Your Bladder</small></td>
-            </tr>
-            <tr>
-                <!--                TODO fix this-->
-                <td>&nbsp;</td>
-                <td id="mon" class="stats-cells-blue">$200</td>
-                <td id="att" class="stats-cells-white">10</td>
-                <td id="shy" class="stats-cells-blue">90</td>
-                <td id="tum" class="stats-cells-white">92</td>
-                <td id="blad" class="stats-cells-blue">308</td>
-                <td id="time" class="stats-cells-white">7:02 PM</td>
-                <td id="ytum" class="stats-cells-blue">190</td>
-                <td id="yblad" class="stats-cells-white">510</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
 </body>
 </html>

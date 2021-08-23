@@ -517,8 +517,13 @@ function c(choice, curtext) {
 //   desc - description of choice to display.
 // loc - the name of the location used
 function cListener(choice, loc){
-    const html = "<p><li class='cListener' id='"+loc+"'>"+choice[1]+"</li></p>";
+    const html = "<p>" + cListenerString(choice, loc) + "</p>";
     document.getElementById('textsp').innerHTML += html;
+}
+
+//Gets the string html for the given choice
+function cListenerString(choice, loc){
+    return "<li class='cListener' id='"+loc+"'>"+choice[1]+"</li>";
 }
 
 //Adds an element to a created click listener
