@@ -12,6 +12,7 @@ getjson("/locations/locations", locJsonSetup);
 function locJsonSetup(){
     locJson = json;
     locJson["itsClosed"] = formatAllVarsList(locJson["itsClosed"]);
+    locJson["sayHero"] = formatAllVarsList(locJson["sayHero"]);
 }
 
 //Determines whether the wants to visit a location.

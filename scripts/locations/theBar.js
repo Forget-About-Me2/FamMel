@@ -28,7 +28,7 @@ function barJsonSetup(){
 function thebar(){
     let curtext = [];
     let listenerList = [];
-    if (locstack[0] === "driveout" && beenbar && thetime < barclosingtime){
+    if (locstack[0] === "driveout" && locations.theBar.visited && thetime < barclosingtime){
         curtext = printList(curtext, bar["theBar"][0]);
         sayText(curtext);
         listenerList.push([[driveout, "Continue..."], "driveOut"]);

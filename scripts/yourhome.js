@@ -232,16 +232,29 @@ function predrink() {
         if (tummy < maxtummy / 2 && attraction > 12) {
             curtext = printDialogue(curtext, "predrink", 1);
             tummy += 200;
-            drankwaters += 2;
+            objects.water.shedrank += 2;
         } else if (tummy < maxtummy && attraction > 15) {
             curtext = printDialogue(curtext, "predrink", 2);
             tummy += 200;
-            drankwaters += 2;
+            objects.water.shedrank += 2;
         } else {
             curtext = printDialogue(curtext, "predrink", 3);
         }
     }
     curtext = printChoices(curtext, [10]);
+    sayText(curtext);
+}
+
+function ypredrink() {
+    let curtext = []
+    if (yourtummy < ymaxtummy) {
+        curtext = printList(curtext, drinklines["ypredrink"][0]);
+        yourtummy += 200;
+        objects.water.ydrank += 2;
+    } else {
+        curtext = printList(curtext, drinklines["ypredrink"][1]);
+    }
+    curtext = c([locstack[0], "Continue..."], curtext);
     sayText(curtext);
 }
 

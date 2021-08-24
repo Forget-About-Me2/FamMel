@@ -27,7 +27,7 @@ function theatreJsonSetup(){
 function theTheatre(){
     let curtext = [];
     let listenerList = [];
-    if (seenmovie && locstack[0] === "driveout" && thetime < theaterclosingtime){
+    if (locations.theatre.visited && locstack[0] === "driveout" && thetime < theaterclosingtime){
         curtext = printList(curtext, theatre["theatre"][0]);
         sayText(curtext);
         listenerList.push([[driveout, "Continue..."], "driveOut"]);

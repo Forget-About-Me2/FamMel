@@ -27,7 +27,7 @@ function pickup() {
         if (thetime < 55) {
             curtext = printIntro(curtext, 1);
         } else if (!askholditcounter && bladder >= bladneed) {
-            bladder = 0; // You did not ask her to wait.
+            flushdrank(); // You did not ask her to wait.
         }
         if (bladder > blademer)
             curtext = printIntro(curtext, 2);
@@ -38,9 +38,10 @@ function pickup() {
             attraction -= 5;
             shyness -= 10;
         }
-        curtext = showneed(curtext);
+        curtext = displayneed(curtext);
         if (prepeed) {
             curtext = printIntro(curtext, 5);
+            curtext = displaygottavoc(curtext);
         } else if (bladder > bladneed && askholditcounter) {
             if (thetime > 60)
                 curtext = printIntro(curtext, 6);
@@ -52,13 +53,14 @@ function pickup() {
             gottagoflag = 1;
         } else if (askholditcounter) {
             curtext = printIntro(curtext, 8);
+            curtext = displaygottavoc(curtext);
             askholditcounter = 0;
             waitcounter = 0;
         }
     } else {
         curtext = printIntro(curtext, 9);
+        curtext = displaygottavoc(curtext);
     }
-    curtext = displaygottavoc(curtext);
     curtext = displayyourneed(curtext);
     sayText(curtext);
     curtext = [];

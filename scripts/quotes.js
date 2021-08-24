@@ -816,6 +816,8 @@ function needSetup(){
     needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girltalk"], "girltalk");
     needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girlgasp"], "girlgasp");
     needs["wetquote"] = addGirlname(needs["wetquote"]);
+    needs["wetherself"] = replaceWCLC(needs["wetherself"], needs["girlname"], "girlname");
+    needs["wetherself"] = replaceWCLC(needs["wetherself"], needs["girltalk"], "girltalk");
     needs["drinkquote"] = addGirlname(needs["drinkquote"]);
     toldstories = range(0, needs["peestory"].length);
 }
@@ -834,7 +836,6 @@ function yNeedSetup(){
     yneeds["girlname"] = addGirlname(yneeds["girlname"]);
     yneeds["shotglass"] = replaceWCLCI(yneeds["shotglass"], yneeds["girlname"], "girlname");
     yneeds["vase"] = replaceWCLCI(yneeds["vase"], yneeds["girlname"], "girlname");
-    go("yourhome");
 }
 
 function yPeeSetup(){

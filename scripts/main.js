@@ -80,8 +80,9 @@ function go(tag) {
         bladder += tuminc;
 
         //  If she's not with you, then she can go pee
-        if (playOnly.includes(locstack[0]) && bladder > blademer)
-            bladder = 0;
+        if (playOnly.includes(locstack[0]) && bladder > blademer && !askholditcounter)
+            if (locstack[0] !== "callher")
+                flushdrank();
 
         if (playerbladder || (locstack[0]==="drinkinggame" && playerGame)) {
             yourtumavg = Math.round((yourtumavg * (tumdecay - 1) + yourtummy) / tumdecay);
@@ -243,7 +244,7 @@ function gamestart(){
         yourbladder = 0;
     }
     displaystats();
-    setupQuotes();
+    go("yourhome");
 }
 
 
@@ -268,4 +269,5 @@ function start() {
     let curtext = locjson.always;
     curtext = printAllChoices(curtext);
     sayText(curtext);
+    setupQuotes();
 }

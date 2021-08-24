@@ -261,10 +261,12 @@ function haveItem(item){
 }
 
 // displaypos function prints the given object.
-function displaypos(itemobj) {
-    let number = itemobj.value;
+//TODO probably combine with getOwned
+function displaypos(itemobj, number) {
+    if (typeof number === "undefined")
+        number = itemobj.value;
     let description = ""
-    if (itemobj.value > 0){
+    if (number > 0){
         if (comma > 0) description += ",&nbsp;"
         description += itemobj.owned;
         let formatlist = [number.toString()];
@@ -285,17 +287,21 @@ function displaypos(itemobj) {
     return description;
 }
 
-function ypredrink() {
-    let curtext = []
-    if (yourtummy < ymaxtummy) {
-        curtext = printList(curtext, drinklines["ypredrink"][0]);
-        yourtummy += 200;
-        ydrankwaters += 2;
-    } else {
-        curtext = printList(curtext, drinklines["ypredrink"][1]);
+function displaydrank(curtext){
+    let sentence = " ";
+    comma = 0;
+    Object.keys(objects).forEach(item => sentence += displayDrankItem(item));
+    if (sentence.length > 1){
+        curtext.push(girltalk + "I drank " + sentence + " " + pickrandom(needs["drankburst"]));
     }
-    curtext = c([locstack[0], "Continue..."], curtext);
-    sayText(curtext);
+    return curtext;
+}
+
+function displayDrankItem(item){
+    if (item.hasOwnProperty("shedrank")){
+        return displaypos(item, item.shedrank);
+    }
+    return ""
 }
 
 function briberoses() {

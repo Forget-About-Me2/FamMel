@@ -33,10 +33,6 @@ let peedoutside = 0; // has she peed outside
 // been waiting and how much she's drunk.
 let lastpeetime = 0;  // When did she last go?
 let timeheld = 0; // for stats
-let drankbeers = 0;
-let drankcocktails = 0;
-let dranksodas = 0;
-let drankwaters = 0;
 
 let drankbeer = 0; // has she drunk beer?  Changes capacities and rates.
 
@@ -100,14 +96,14 @@ function flushdrank() {
         }
     }
 
+    Object.keys(objects).forEach(item => {
+        if (item.hasOwnProperty("shedrank"))
+            item.shedrank = 0;
+    });
     bladder = 0;
     askholditcounter = 0;
     waitcounter = 0;
     gottagoflag = 0;
-    drankwaters = 0;
-    drankcocktails = 0;
-    drankbeers = 0;
-    dranksodas = 0;
     lastpeetime = thetime;
     rrlockedflag = 0;
     shespurted = 0;
@@ -506,8 +502,6 @@ function holdit() {
 //  saying she's going to try to hold it for you.
 function displayholdquip(curtext) {
     //TODO is the noneed ever used?
-    //TODO test
-    console.log("test");
     let need = "noneed" //How full her bladder is influences what she says
     if (bladder >= bladlose)
         need = "lose";
@@ -630,55 +624,55 @@ function displaywaited(curtext) {
 //  She says how much she's drank since she last peed.
 //
 //TODO change for new objects
-function displaydrank(curtext) {
-
-    let sentence = " ";
-    comma = 0;
-
-    if (drankwaters > 0) {
-        comma = 1;
-        sentence += drankwaters + " water";
-        if (drankwaters > 1) sentence += "s";
-    }
-
-    if (drankbeers > 0) {
-        if (comma > 0) {
-            if (dranksodas + drankcocktails === 0)
-                sentence += " and ";
-            else
-                sentence += ", ";
-        }
-        comma = 1;
-
-        sentence += drankbeers + " beer";
-        if (drankbeers > 1) sentence += "s";
-    }
-
-    if (dranksodas > 0) {
-        if (comma > 0) {
-            if (drankcocktails === 0)
-                sentence += " and ";
-            else
-                sentence += ", ";
-        }
-        comma = 1;
-        sentence += dranksodas + " soda";
-        if (dranksodas > 1) sentence += "s";
-    }
-
-    if (drankcocktails > 0) {
-        if (comma > 0) sentence += " and ";
-        comma = 1;
-        sentence += drankcocktails + " cocktail";
-        if (drankcocktails > 1) sentence += "s";
-    }
-
-    if ((drankwaters + drankbeers + drankcocktails + dranksodas) > 0) {
-        curtext.push(girltalk + "I drank " + sentence + " " + pickrandom(needs["drankburst"]));
-    }
-
-    return curtext;
-}
+// function displaydrank(curtext) {
+//
+//     let sentence = " ";
+//     comma = 0;
+//
+//     if (drankwaters > 0) {
+//         comma = 1;
+//         sentence += drankwaters + " water";
+//         if (drankwaters > 1) sentence += "s";
+//     }
+//
+//     if (drankbeers > 0) {
+//         if (comma > 0) {
+//             if (dranksodas + drankcocktails === 0)
+//                 sentence += " and ";
+//             else
+//                 sentence += ", ";
+//         }
+//         comma = 1;
+//
+//         sentence += drankbeers + " beer";
+//         if (drankbeers > 1) sentence += "s";
+//     }
+//
+//     if (dranksodas > 0) {
+//         if (comma > 0) {
+//             if (drankcocktails === 0)
+//                 sentence += " and ";
+//             else
+//                 sentence += ", ";
+//         }
+//         comma = 1;
+//         sentence += dranksodas + " soda";
+//         if (dranksodas > 1) sentence += "s";
+//     }
+//
+//     if (drankcocktails > 0) {
+//         if (comma > 0) sentence += " and ";
+//         comma = 1;
+//         sentence += drankcocktails + " cocktail";
+//         if (drankcocktails > 1) sentence += "s";
+//     }
+//
+//     if ((drankwaters + drankbeers + drankcocktails + dranksodas) > 0) {
+//         curtext.push(girltalk + "I drank " + sentence + " " + pickrandom(needs["drankburst"]));
+//     }
+//
+//     return curtext;
+// }
 
 //
 //  You try to convince her to hold it.
@@ -723,10 +717,7 @@ function bribeask() {
 
 //TODO test
 function bribefavor() {
-    console.log("test");
     let curtext = needs["bribefavor"]
-    // s("<b>YOU:</b> Pretty please!  Remember you promised to do me a favor!");
-    // s(girltalk + "Well... Okay.  But just a little bit.  I did promise you a favor.");
     curtext = displayholdquip(curtext);
     curtext = interpbladder(curtext);
     owedfavor -= 1;
@@ -1159,6 +1150,7 @@ function wetherself3c() {
     sayText(curtext);
 }
 
+//TODO check this, for unfilled in variables
 function wetherself3() {
     let curtext = [];
     if (pantycolor !== "none" && shyness < 70) {
