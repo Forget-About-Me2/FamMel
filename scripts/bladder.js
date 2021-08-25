@@ -174,9 +174,10 @@ function showneed(curtext) {
 
 // DisplayGottaVoc function prints a quasi-random vocalization from "+girlname+"
 // indication her sincere hope to find a bathroom soon.
+//TODO this probably should only be used by showneed
 function displaygottavoc(curtext, index) {
     let textchoice = [];
-    if (askholditcounter > 0 && bladder > bladurge && randomchoice(3)) {
+    if (askholditcounter > 0 && waitcounter < 3 && bladder > bladurge && randomchoice(3)) {
         textchoice.push(girltalk + "" + wanthold[randcounter]);
     }
 
@@ -578,15 +579,6 @@ function begtoilet(curtext) {
     // s("I'm <i>begging</i> you - find me somewhere to pee.  <b>NOW!</b>");
     printListSelection(curtext, needs["begtoilet"]["dialogue"], selection);
     selection = [];
-    if (shotglass > 0)
-        selection.push(0);
-    // c("peeshot", "Offer her the shot glass.");
-    if (ptowels > 0)
-        selection.push(1);
-    // c("peetowels", "Offer her the roll of paper towels.");
-    if (vase > 0)
-        selection.push(2);
-    // c("peevase", "Offer her the vase.");
     if (locstack[0] === "themakeout")
         selection.push(3);
     // c("peeoutside", "Suggest she pee outside.");
@@ -1154,10 +1146,9 @@ function wetherself3c() {
 function wetherself3() {
     let curtext = [];
     if (pantycolor !== "none" && shyness < 70) {
-        curtext.push(appearance["clothes"][heroutfit]["wetherselfquote"]);
+        curtext.push(appearance["clothes"][heroutfit]["wetherselfquote"].format([pantycolor]));
         if (attraction > 40) {
             curtext = printListSelection(curtext, needs["wetherself"], [11,12]);
-
             objects.wetPanties.value++
         }
         pantycolor = "none";
@@ -1168,8 +1159,21 @@ function wetherself3() {
         shyness += 15;
         if (shyness > 100) shyness = 100;
     }
-    curtext = printChoicesList(curtext, [35, 0], needs["choices"]);
+    let listenerList = [[[scoldher, "Scold her for wetting herself"]]];
+    if (haveItem("ptowels")) {
+        listenerList.push([[function () {
+            giveHer("ptowels");
+        }, "Offer her paper towels."], "pTowels"]);
+    } if (haveItem("panties")) {
+        listenerList.push([[function () {
+            giveHer("panties");
+        }, "Offer her a clean pair of panties."], "panties"]);
+    }
     sayText(curtext);
+    listenerList.forEach(item => cListener(item[0], item[1]));
+    curtext = callChoice(["curloc", "Continue..."] );
+    addSayText(curtext);
+    addListenersList(listenerList);
 }
 
 // In the tub
@@ -1197,23 +1201,16 @@ function spurtedherself(curtext) {
     return curtext;
 }
 
-//TODO test
 function askspurted() {
     console.log("test");
     let curtext = [needs["askspurted"][0]];
-    // s("<b>YOU:</b> Did you just pee yourself?");
     curtext.push(pickrandom(needs["spurtquote"]));
-    // s(spurtquote[randcounter]);
-    // incrandom();
     curtext.push(pickrandom(needs["spurtdenyquote"]));
-    // s(girltalk + spurtdenyquote[randcounter]);
-    // incrandom();
     curtext = displayneed(curtext);
     let choices = [];
     if (locstack[0] !== "thehottub")
         choices.push(29);
     choices.push(0);
-    // c(locstack[0], "Continue ...");
     curtext = printChoicesList(curtext, choices, needs["choices"]);
     sayText(curtext);
 }
@@ -1238,17 +1235,12 @@ function checkspurted() {
             // s("There are drops of some liquid up there.");
         } else {
             curtext = printListSelection(curtext, needs["askspurted"], [6,7]);
-            // s("You run your hand up her thigh until you feel the thin fabric of her panties.");
-            // s("They aren't sopping wet, but the gusset has a definite wet spot.");
         }
         if (bladder > blademer)
             curtext.push(pickrandom(needs["feelthigh"]));
-            // s(feelthigh[randcounter]);
         choices.push(30);
-        // c("smellspurted", "Smell your fingers.");
     }
     choices.push(0);
-    // c(locstack[0], "Continue ...");
     curtext = printChoicesList(curtext, choices, needs["choices"]);
     sayText(curtext);
 }

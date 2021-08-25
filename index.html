@@ -2364,8 +2364,6 @@ CHANGES BY Forget_About_Me
         ];
         let html = "";
         listenerList.forEach(item => html += cListenerString(item[0], item[1]));
-        console.log(document.getElementById("choices"));
-        console.log(html);
         document.getElementById("choices").innerHTML = html;
         listenerList.forEach(item => {
             document.getElementById(item[1]).classList.add("choices-items-start");

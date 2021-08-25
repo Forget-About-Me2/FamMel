@@ -492,7 +492,7 @@ function printAllChoicesList(curtext, list){
     return curtext;
 }
 
-function callChoice(choice, curtext){
+function callChoice(choice, curtext=[]){
     if(choice[0] === "curloc") {
         return c([locstack[0], choice[1]], curtext);
     } else {

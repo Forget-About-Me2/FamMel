@@ -64,7 +64,8 @@ objects = {
         "bpname":"Paper Towels",
         "value": 0,
         "peed" : 0,
-        "itemAttr": 50,
+        "attrThresh": 50,
+        "attraction": 5,
         "functions": [
             ["peein(&quot;ptowels&quot;)", "Suggests she pees into the paper towels."]
         ],
@@ -73,12 +74,21 @@ objects = {
         //     ["ypeein(&quot;ptowels&quot;)", "Pee into the paper towels."]
         // ],
         "quote": "peetowelquote",
+        "giveQuotes":[[
+            "girltalk Thanks",
+            "She wipes the pee from her legs and pussy."
+        ]],
         "owned": "{0} roll{1} of paper towels",
         "description":"One should always have paper towels handy."
     },
     "panties": {
         "bpname":"Sexy panties",
         "value": 0,
+        "giveQuotes": [
+            [   "girltalk Where did you get those?",
+                "She slips into the clean panties with a smile."
+        ],
+        ["Her still dripping pussy dampens the crotch of the new panties"]],
         "owned": "{0} pair{1} of sexy panties",
         "description":"Whoo, someone's a bit ambitious, aren't they?"
     },
@@ -387,6 +397,37 @@ function takeHerItem(item){
 
 }
 
+function giveHer(item){
+    //Closes the backpack since a function has been chosen
+    const backpackcnt = document.getElementById("backpack-cnt");
+    backpackcnt.style.display = "none";
+    let obj = objects[item];
+    obj.value -= 1;
+    let quotes = formatAllVarsList(obj.giveQuotes);
+    let curtext = printList([], quotes[0]);
+    let listenerList = [];
+    if (item === "panties"){
+        pantycolor = "sexy";
+        if (!wetlegs) attraction += 5;
+        else curtext = printList(curtext, quotes[1]);
+    } else if (item === "ptowels") {
+        wetlegs = 0;
+        if (haveItem("panties")) {
+            listenerList.push([[function () {
+                giveHer("panties");
+            }, "Offer her a clean pair of panties."], "panties"]);
+        }
+    }
+    if (obj.hasOwnProperty("attraction")){
+        attraction += obj.attraction;
+    }
+    sayText(curtext);
+    listenerList.forEach(item => cListener(item[0], item[1]));
+    curtext = callChoice(["curloc", "Continue..."] );
+    addSayText(curtext);
+    addListenersList(listenerList);
+}
+
 function givedrypanties() {
     s(girltalk + "Where did you get those?");
     s("She slips into the clean panties with a smile.");
@@ -431,7 +472,6 @@ function createItemButtonList(){
 }
 
 let btn;
-let itembtns;
 let previousbtn;
 let itemtext;
 function backpack(){

@@ -53,13 +53,13 @@ function pickup() {
             gottagoflag = 1;
         } else if (askholditcounter) {
             curtext = printIntro(curtext, 8);
-            curtext = displaygottavoc(curtext);
+            curtext = showneed(curtext);
             askholditcounter = 0;
             waitcounter = 0;
         }
     } else {
         curtext = printIntro(curtext, 9);
-        curtext = displaygottavoc(curtext);
+        curtext = showneed(curtext);
     }
     curtext = displayyourneed(curtext);
     sayText(curtext);

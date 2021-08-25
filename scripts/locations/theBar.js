@@ -48,6 +48,7 @@ function thebar(){
         if (randomchoice(3)) curtext = noteholding(curtext);
         else if (randomchoice(5)) curtext = interpbladder(curtext);
         curtext = displayyourneed(curtext);
+        curtext = showneed(curtext);
         if (bladder > bladlose) wetherself();
         else if (yourbladder > yourbladlose) wetyourself();
         else if (gottagoflag > 0){

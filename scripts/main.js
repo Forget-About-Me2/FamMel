@@ -39,6 +39,7 @@ function displaystats() {
         setColour("att", "red", "white");
     } else if (attraction > lastattraction)
         setColour("att", "green", "white");
+    if (attraction > 130)
 
     if (shyness < lastshyness) {
         setColour("shy", "green", "blue");
@@ -49,6 +50,21 @@ function displaystats() {
         setColour("mon", "red", "blue");
     } else if (money > lastmoney)
         setColour("mon", "green", "blue");
+
+    //  Hard Limits on shyness and attraction
+    if (shyness < 0) {
+        shyness = 0;
+        valueChange("shy", 0);
+    } if (shyness > 100) {
+        shyness = 100;
+        valueChange("shy", 100);
+    } if (attraction < 0) {
+        attraction = 0;
+        valueChange("att", 0);
+    } if (attraction > 130) {
+        attraction = 130;
+        valueChange("att", 130);
+    }
 }
 
 //Sets the given colour to the given id attribute for half a second
@@ -57,6 +73,13 @@ function setColour(id, colour, original){
     elem.className = "stats-cells-"+colour;
     setTimeout(function () {
         elem.className = "stats-cells-"+original;
+    }, 500);
+}
+
+//Sets the value of the given id after half a second.
+function valueChange(id, value){
+    setTimeout(function () {
+        document.getElementById(id).innerText = value;
     }, 500);
 }
 
@@ -124,12 +147,6 @@ function go(tag) {
     }
 
     enablehide = 0; // clear the hide screen flag.
-
-    //  Hard Limits on shyness and attraction
-    if (shyness < 0) shyness = 0;
-    if (shyness > 100) shyness = 100;
-    if (attraction < 0) attraction = 0;
-    if (attraction > 130) attraction = 130;
     if (bladder < 0) bladder = 0;
     if (tummy < 0) tummy = 0;
     if (money < 0) money = 0;
