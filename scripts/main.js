@@ -134,6 +134,12 @@ function go(tag) {
             ybeerdecCounter++;
         }
 
+        drankChamp++;
+        if (drankChamp > 10){
+            champagnecounter--;
+            drankChamp = 0;
+        }
+
         thetime += timespeed;
         minute += timespeed;
         if (minute > 59) {

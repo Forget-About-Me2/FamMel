@@ -63,10 +63,13 @@ function buy(number){
     const item = locjson.buying[number];
     const price = Number(item[1]);
     let curtext = [];
+    let obj = objects[item[2]];
     if (money >= price){
         curtext.push("You buy a "+ item[0]+ ".")
-        objects[item[2]].value += 1;
+        obj.value += 1;
         money -= price;
+        if (obj.hasOwnProperty("bottles"))
+            obj.bottles.push(6);
     } else curtext.push("You don't have enough money!");
     curtext = c(["gostore", "Back to store"], curtext);
     sayText(curtext);

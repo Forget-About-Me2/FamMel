@@ -206,9 +206,20 @@ var bargirldesc=["The girl tending the bar is really good-looking.",
 //  She's trying to hold it despite availability of restroom
 //  ( used during Champagne pouring )
 //
-var wonderwhy=["I shouldn't be doing this!" , "This is <b>so</b> hard!" , "Why am I doing this???" , "This is crazy, but I love it!" , "I'm such a ditz!", "I must be nuts."];
+var wonderwhy=[
+    "I shouldn't be doing this!" ,
+    "This is <b>so</b> hard!" ,
+    "Why am I doing this???" ,
+    "This is crazy, but I love it!" ,
+    "I'm such a ditz!",
+    "I must be nuts."];
 
-var cantdo=["I can't even think straight!", "I can't even walk right!" , "I can't stop moving or..." , "I'm out of control!" , "I've got to concentrate on the task at hand." , "I'm trembling all over."];
+var cantdo=["I can't even think straight!",
+    "I can't even walk right!" ,
+    "I can't stop moving or..." ,
+    "I'm out of control!" ,
+    "I've got to concentrate on the task at hand." ,
+    "I'm trembling all over."];
 
 //
 //  Descriptions of her posing for you
@@ -223,9 +234,20 @@ var poseemer=["<i>She seems to be having trouble keeping her legs still for any 
 // Descriptions of her filling the champagne glasses in various situations.
 //
 
-var fillchamp=["She bends over to fill the glasses, jamming one hand into her crotch.", "She fills both glasses and you can see her hand shaking with the effort to control herself." , "She fills both glasses, the bottle rattling against their rims as she shudders in an effort of self control." , "She quickly sits on her heel and fills the glasses kneeling in front of you.", "She jerks her ass back and forth violently as she bends over to fill both glasses.", "She nearly drops the bottle and her whole body shudders violently as she fills both glasses."];
+var fillchamp=[
+    "She bends over to fill the glasses, jamming one hand into her crotch.",
+    "She fills both glasses and you can see her hand shaking with the effort to control herself." ,
+    "She fills both glasses, the bottle rattling against their rims as she shudders in an effort of self control." ,
+    "She quickly sits on her heel and fills the glasses kneeling in front of you.",
+    "She jerks her ass back and forth violently as she bends over to fill both glasses.",
+    "She nearly drops the bottle and her whole body shudders violently as she fills both glasses."];
 
-var fillchampbad=["She's gasping for breath as she fills both glasses, sloppily spilling most of it onto the table top." , "She bends over to fill both glasses and stumbles backwards, spilling champagne onto the floor.", "She kneels and presses her pussy into the corner of the coffee table as she fights for control while filling both glasses.", "She jams the champagne bottle into her crotch and holds very still for a few seconds before splashing the drink in the direction of the glasses, spilling most of it onto the floor." , "She sits down heavily on the coffee table as she fills the glasses, shuddering and spilling most of it onto the floor.", "She holds the bottle pressed to her crotch as she raises the glasses and tries to fill them, spilling most of it onto the floor."];
+var fillchampbad=["She's gasping for breath as she fills both glasses, sloppily spilling most of it onto the table top." ,
+    "She bends over to fill both glasses and stumbles backwards, spilling champagne onto the floor.",
+    "She kneels and presses her pussy into the corner of the coffee table as she fights for control while filling both glasses.",
+    "She jams the champagne bottle into her crotch and holds very still for a few seconds before splashing the drink in the direction of the glasses, spilling most of it onto the floor." ,
+    "She sits down heavily on the coffee table as she fills the glasses, shuddering and spilling most of it onto the floor.",
+    "She holds the bottle pressed to her crotch as she raises the glasses and tries to fill them, spilling most of it onto the floor."];
 
 //
 //  Interpreted descriptions of how she looks like she has to pee
@@ -751,6 +773,7 @@ function setupQuotes(){
     getjson("shepee", shePeeSetup);
     getjson("drinking", function (){
         drinklines = json;
+        formatAllVarsList(drinklines["champagne"]);
     });
     //TODO format this json better?
     getjson("appearance", function (){

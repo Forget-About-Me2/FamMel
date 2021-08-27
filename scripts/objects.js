@@ -21,13 +21,39 @@ objects = {
         "bpname": "Bouquet",
         "value": 0,
         "owned": "{0} bouquet{1} of roses",
+        "emerAttr": 2,
+        "holdCount":2,
+        "attr": 7,
+        "functions": [
+            ['giveHer(&quot;roses&quot;)', "Give her a bouquet of roses"]
+        ],
+        "giveQuotes":[
+            [ "You produce the roses, offering them to her."],
+            [ "girltalk Thanks! They're beautiful."],
+            [ "girltalk Thanks for the flowers, but I've really got to go",
+              "She takes the roses and holds them against her belly."
+            ]
+        ],
         "description":"It's a nice bouquet, maybe you can give it to {0} to impress her."
     },
     "earrings" : {
         "bpname":"Earrings",
         "value": 0,
         "owned": "{0} pair{1} of earrings",
-        "description":"Ooh shiny! {0} surely will love these."
+        "emerAttr": 4,
+        "holdCount":4,
+        "attr": 14,
+        "functions": [
+            ['giveHer(&quot;earrings&quot;)', "Give her a pair of earrings"]
+        ],
+        "giveQuotes":[
+            [ "You produce the earrings, offering them to her."],
+            [ "girltalk Oh! Those are beautiful. These are perfect! How did you know!?"],
+            [ "girltalk Thanks for the earrings, they are beautiful, but I'm bursting",
+                "She takes the earrings from you, crossing her legs tightly."
+            ]
+        ],
+        "description":"Ooh shiny! {0} surely will love these. Giving these might make her more open to certain things."
     },
     "vase" : {
         "bpname":"Vase",
@@ -90,7 +116,7 @@ objects = {
         ],
         ["Her still dripping pussy dampens the crotch of the new panties"]],
         "owned": "{0} pair{1} of sexy panties",
-        "description":"Whoo, someone's a bit ambitious, aren't they?"
+        "description":"Whoo, someone's feeling a bit ambitious, aren't they?"
     },
     "wetPanties": {
         "bpname": "Wet Panties",
@@ -101,12 +127,19 @@ objects = {
     "champagne": {
         "bpname":"Champagne",
         "value": 0,
-        "owned": "{0} {2}bottle{1} of champagne",
+        "owned": ["a half-empty bottle of champagne",
+            "{0} bottle{1} of champagne"],
         "options": [
             "half-empty ",
             "empty "
         ],
-        "description": "Some nice champagne, maybe you can share it with {0}?"
+        "functions":[
+            ["champagneNow", "Offer her champagne."]
+        ],
+        //Each bottle you buy is represented as a number indicating how much uses it has left
+        "bottles": [],
+        "description": "Some nice champagne, maybe you can share it with {0}? " +
+            "If you give it at the right moment, she'll probably be more willing to take things further."
     },
     "champ-glass":{
         "bpname":"Champagne glass",
@@ -417,6 +450,22 @@ function giveHer(item){
                 giveHer("panties");
             }, "Offer her a clean pair of panties."], "panties"]);
         }
+    } else {
+        if (bladder < blademer) {
+            curtext = printList(curtext, quotes[1]);
+            attraction += obj.attr;
+            if (item === "earrings"){
+                //Giving earrings increases the chance she will hold it when desperate and you just ask.
+                // Up to a maximum of 90%
+                bribeAskBase += 1;
+                if (bribeAskBase > 9) bribeAskBase = 9;
+                bribeaskthresh = bribeAskBase;
+            }
+        } else {
+            curtext = printList(curtext, quotes[2]);
+            attraction += obj.emerAttr;
+            askholditcounter += obj.holdCount;
+        }
     }
     if (obj.hasOwnProperty("attraction")){
         attraction += obj.attraction;
@@ -494,8 +543,6 @@ function backpack(){
         if (event.target === backpackcnt)
             backpackcnt.style.display = "none";
     }
-    // itembtns = document.getElementsByClassName("itembtn");
-    // itembtns.onclick = selectitem;
     itemtext= document.getElementById("item-text");
     itemtext.innerHTML = "";
 }
@@ -534,16 +581,18 @@ function getOwned(selected) {
     let description = ""
     description += selected.owned;
     let formatlist = [number.toString()];
+    if (selected.bpname === "Champagne"){
+        if (selected.bottles[0] < 6) {
+            description = selected.owned[0];
+            if (number > 1)
+                description += "and " + selected[1];
+        } else
+            description = selected.owned[1];
+    }
     if (number > 1){
         if (description.includes("glass")) formatlist.push("es");
         else formatlist.push("s");
     } else formatlist.push("");
-    if (selected.hasOwnProperty("options")){
-        if (champagnecounter > 0){
-            if (champagnecounter < 6) formatlist.push(selected.options[0]);
-            else formatlist.push(selected.options[1]);
-        } else if (champagnecounter === 0) formatlist.push("");
-    }
     description = description.format(formatlist);
     return description;
 }
@@ -626,6 +675,65 @@ function ydrinknow(item){
         }
     }
     curtext = c([locstack[0], "Continue..."], curtext);
+    sayText(curtext);
+}
+
+let homeChampagne = 0; //Flag whether champagne has been drunk at her home before (aka whether she needs to get the glasses)
+//TODO turn into JSON
+function champagneNow() {
+    const backpackcnt = document.getElementById("backpack-cnt");
+    backpackcnt.style.display = "none";
+    let obj = objects.champagne;
+    let curtext = [];
+    if (locstack[0] === "thehome"){
+        curtext = printList(curtext, drinklines["champagne"][0]);
+        if (!homeChampagne){
+            curtext = printList(curtext, drinklines["champagne"][1]);
+            homeChampagne = 1;
+        }
+        curtext = displayneed(curtext);
+        if (bladder < blademer) {
+            curtext.push(pickrandom(appearance["clothes"][heroutfit]["fillchampok"]));
+            champagnecounter += 2;
+            drankChamp = 0;
+            obj.bottles[0] -= 2;
+            curtext = printList(curtext, drinklines["champagne"][2]);
+        } else if (bladder < bladlose){
+            curtext.push(girltalk + pickrandom(drinklines["wonderWhy"]));
+            curtext = showneed(curtext);
+            curtext.push(pickrandom(drinklines["fillChamp"]));
+            champagnecounter += 2;
+            drankChamp = 0;
+            obj.bottles[0] -= 2;
+            curtext= printList(curtext, drinklines["champagne"][3]);
+        } else {
+            curtext.push(girltalk + pickrandom(drinklines["cantDo"]));
+            curtext = printList(curtext, drinklines["champagne"][4]);
+            curtext = showneed(curtext);
+            curtext.push(pickrandom(drinklines["fillChampBad"]));
+            champagnecounter = 6;
+            curtext = printList(drinklines[5]);
+        }
+    } else if (objects["champ-glass"].value >= 2) {
+        curtext.push("You get out the glasses and champagne and fill up both glasses");
+        if (bladder < blademer){
+            curtext.push("She smiles at you before you toast and drink the champagne together.")
+        } else {
+            curtext.push(girlgasp + "Oh I have to go so bad, but if you want me to drink it, I will.");
+        }
+        champagnecounter+=2;
+        drankChamp = 0;
+        obj.bottles[0] -= 2;
+    } else {
+        curtext.push("Unfortunately you don't have any champagne glasses, so you can't drink champagne.");
+    }
+    if (obj.bottles[0] === 0) {
+        obj.bottles.shift();
+        obj.value--;
+    }
+    tummy += 50;
+    yourtummy += 50;
+    curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
 }
 

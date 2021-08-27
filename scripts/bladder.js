@@ -41,6 +41,34 @@ let notdesperate = 0; //neither you or her are desperate after drinking game.
 let notydesperate = 0; //You aren't desperate but she is after drinking game.
 let nothdesperate = 0; //She isn't desperate but you are after drinking game
 
+//  Randomness thresholds 1-10.
+//  1 corresponds to 10% likelihood.
+//  10 corresponds to 100% likelihood.
+const rrlockedthresh = 7; // Likelihood of bar restroom locked ( occupied )
+const rrlinethresh = 7; // Likelihood of line for restroom in club
+const phoneholdthresh = 7; // Likelihood of her holding it for you on the phone
+let spurtthresh = 5; // Likelihood of her spurting rather than wetting
+let yspurtthresh = 3; // Likelihood of you spurting rather than wetting
+let bribeaskthresh = 7; //Likelihood she'll hold it if you ask her when desperate
+let bribeAskBase = 7; //The base likelihood that the asks works, this is used to reset the askthresh when she pees
+
+
+
+
+//  Attraction thresholds
+const ptogetherthreshold = 100; // She'll take you with her to the bathroom.
+const pnorestroomthreshold = 110; // She'll pee outside of the restroom.
+const pwatchthreshold = 90; // You can watch her pee in a closed place.
+const drinkinggamethreshold = 90; // She'll play your silly drinking game.
+const photogamethreshold = 90; // She'll play your silly photo game
+const photogamecthreshold = 100; // She'll play your silly photo game in costume
+const photogamenthreshold = 110; // She'll play your silly photo game nude
+const hottubthresh = 90; //  She'll strip and go into the hot tub
+const holditneedthresh = 30; // She'll hold it for need
+const holditemerthresh = 60; // She'll hold it for emergency
+const holditlosethresh = 90; // She'll try to hold it for lose
+const gomakeoutthresh = 40; // She'll go to the makeout spot
+
 //Initializes the bladder values for the girl
 function initUrge(urge){
     minurge = urge * minperc/100;
@@ -108,7 +136,7 @@ function flushdrank() {
     rrlockedflag = 0;
     shespurted = 0;
     nowpeeing = 1;
-    bribeaskthresh = 8;
+    bribeaskthresh = bribeAskBase;
 }
 
 // Showneed calculates how she's going to indicate
