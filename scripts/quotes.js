@@ -19,6 +19,7 @@ let appearance; // This stores the appearance quotes from the JSON
 let drive; //This stores all dialogues regarding driving around from the JSON
 let general; //This stores all general quotes from JSON call
 let darts; //This stores the json quotes for the darts game
+let fuckHer; //This stores the json quotes related to fucking scenes
 
 
 let girlname = "Laura";
@@ -338,15 +339,15 @@ var sayhero=[
     "You've saved my life tonight!",
     "Damn you're good!"];
 
-//
-// Walk descriptions
-//
-var walkdesc=["You walk hand in hand past dark houses.",
-    "The sidewalk is a little bit cracked here.",
-    "You pass a deserted bus stop.",
-    "You walk past a vacant lot, overgrown with weeds.",
-    "You walk past a small city park.",
-    "You see a tall wooden fence, and a gate sitting slightly ajar."];
+// //
+// // Walk descriptions
+// //
+// var walkdesc=["You walk hand in hand past dark houses.",
+//     "The sidewalk is a little bit cracked here.",
+//     "You pass a deserted bus stop.",
+//     "You walk past a vacant lot, overgrown with weeds.",
+//     "You walk past a small city park.",
+//     "You see a tall wooden fence, and a gate sitting slightly ajar."];
 
 //
 // Leaving
@@ -786,6 +787,7 @@ function setupQuotes(){
         general = json;
     });
     getjson("games/darts", dartSetup);
+    getjson("fuckHer", fuckHerSetup);
 }
 
 function flirtSetup(){

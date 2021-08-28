@@ -3,7 +3,8 @@
 let locations = {
     "driveAround": driveAroundSetup(),
     "theBar" :theBarSetup(),
-    "theatre": theatreSetup()
+    "theatre": theatreSetup(),
+    "makeOut": makeOutSetup()
 };
 
 let locJson;

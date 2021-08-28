@@ -1,0 +1,51 @@
+{
+  "theMakeOut": [
+    [ "You and girlname drive up to the make-out spot.  It's dark and deserted, but has a beautiful view of the stars."],
+    [ "You start to drive out to the makeout spot, up a winding hilly road.",
+      "girltalk Hey! Where are we going?"
+    ],
+    [ "You and girlname are at the make-out spot."],
+    [ "girltalk I don't feel comfortable going up there with you.",
+      "girltalk Please let's go somewhere else."
+    ]
+  ],
+  "viewStars": [
+    ["You hold hands and stare into the sky together."],
+    ["The cold weather works some magic on girlname's bladder."],
+    ["The cold weather is making you hyper-aware of your bladder."]
+  ],
+  "theWalk": [
+    [ "You and girlname decide to take a walk. It's a warm, still night."],
+    [ "You and girlname are taking a walk together."],
+    [ "You slowly open the gate and peer behind."],
+    [ "The yard beyond is dark, illuminated only by starlight."],
+    [ "girltalk Hey! Let's check it out."],
+    [ "girlgasp We've made it to the beach!",
+      "There's sand beyond the gate, and you can hear the calm waves breaking on the shore."
+    ]
+  ],
+  "walkDesc": [
+    ["You walk hand in hand past dark houses.",
+      "The sidewalk is a little bit cracked here.",
+      "You pass a deserted bus stop.",
+      "You walk past a vacant lot, overgrown with weeds.",
+      "You walk past a small city park."],
+    [ "You see a tall wooden fence, and a gate sitting slightly ajar."]
+  ],
+  "theYard": [
+    [ "You and girlname quietly enter the yard. The grass is soft and slightly damp under your feet."],
+    [ "You and girlname are in somebody's back yard."],
+    [ "There is a hot tub here."],
+    [ "girltalk Are you sure it's going to be alright? What if someone sees us?"],
+    [ "girltalk But I didn't bring a bathing suit!"],
+    [ "You and girlname quickly strip off your clothes in the cover of the dark yard.",
+      "You slip into the warm water of the hot tub, and watch as  girlname, now completely nude, steps in to join you.",
+      "She looks so sexy in the starlight, her pussy masked in darkness and her erect nipples silhouetted against the dim sky.",
+      "Though it is dark, your eyes caress the shadows of her tight curves as they slowly submerge next to you."
+    ],
+    ["You and girlname are in the hot tub."]
+  ],
+  "theBeach": [
+
+  ]
+}

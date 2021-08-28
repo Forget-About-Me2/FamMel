@@ -6,7 +6,7 @@ function theatreSetup(){
     return {
         "visit": [theTheatre, "Go to the theatre"],
         "wantVisit": [theTheatre, "Go to see a movie as she suggested."],
-        "group": 3,
+        "group": 2,
         "visited": 0
     }
 }
