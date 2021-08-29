@@ -46,6 +46,45 @@
     ["You and girlname are in the hot tub."]
   ],
   "theBeach": [
-
+    [ "You and girlname walk out onto the sand.  It makes a soft swooshing noise as you step, like boots on dry snow."],
+    [ "You and girlname are on the dark beach."],
+    [ "girltalk Hey! Want to go for a swim together?",
+      "girlname seems strangely insistent. You realize that neither of you has swimming gear, so this means you get to see her naked.  Or at least see as much as you can in the dark."
+    ],
+    [ "You peel off your clothes and take her hand, walking slowly into the warm water.",
+      "It's dark, so you can't really see what she's doing.  You hear the swooshing of the water as you walk together."],
+    [ "<b>YOU:</b> But your panties - they'll get wet!",
+      "girltalk How do you know they're not already wet?",
+      "She has a point there."
+    ],
+    [ "girlname is standing beside you naked in the dark."],
+    [ "girlname is standing beside you in her {0} panties in the dark."],
+    [ "girltalk Aren't you going to come with me?",
+      "How can you resist the invitation of a sexy, naked girl to join her swimming?"
+    ],
+    [ "You walk hand in hand with girlname until you're waist deep in the calm water."],
+    [ "girlname gasps as a wave touches her naked crotch."],
+    [ "girlname gasps as a wave soaks the crotch of her {0} panties."],
+    [ "She squeezes your hand and you sense a shiver running up her spine."],
+    [ "You take girlname in your arms and hug her close to you, standing knee-deep in the calm water.",
+      "She pulls her belly away from you and gasps, but you grab her butt and press it into your thigh."
+    ],
+    [ "Her quivering bare pussy lips feel so wonderful pressed into your upper leg."],
+    [ "Her warm, wet panties feel wonderful pressed into your upper leg."],
+    [ "<b>I've <u>really</u> got to pee!</b> she confesses, whispering in your ear."],
+    [ "girlname pauses for a moment, and over the sound of the surf, you can barely hear the hiss of her urine hitting the water."],
+    [ "She's right there beside you in the dark, naked and peeing into the water."],
+    [ "She's right there beside you in the dark, peeing through her wet panties into the water."],
+    [ "girlname pauses for a moment.",
+      "You run your hand up her smooth leg under the water.",
+      "The water is even warmer around her crotch.  Probing closer, you feel a jet of hot pee escaping from between her pussy lips, passing through your fingers and warming your leg.",
+      "You feel it slow, spurt a couple of times, and finally come to a stop."
+    ],
+    [ "girltalk maybe we should go back. Could be sharks, you know!",
+      "You take her hand and lead her back to the beach where you dry off as well as you can and put your clothes back on."
+    ],
+    [ "She hands you her wet panties.",
+      "girltalk Is there someplace you can put these?"
+    ]
   ]
 }

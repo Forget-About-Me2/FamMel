@@ -268,6 +268,7 @@ function gamestart(){
     }
     displaystats();
     go("yourhome");
+    setupQuotes();
 }
 
 
@@ -292,5 +293,7 @@ function start() {
     let curtext = locjson.always;
     curtext = printAllChoices(curtext);
     sayText(curtext);
-    setupQuotes();
+    //the start of the game is dependent on yneeds, to save loading time it is called as soon as you move from the main screen
+    //And then the variables will be added when the game actually starts, but that's not necessary for the begin scene so this should be fine.
+    getjson("yneeds", function () {yneeds = json});
 }

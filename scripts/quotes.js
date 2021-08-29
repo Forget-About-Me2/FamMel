@@ -769,7 +769,6 @@ function LreplaceCheck(rpstring, list, tag){
 function setupQuotes(){
     getjson("flirting", flirtSetup);
     getjson("needs", needSetup);
-    getjson("yneeds", yNeedSetup);
     getjson("youpee", yPeeSetup);
     getjson("shepee", shePeeSetup);
     getjson("drinking", function (){
@@ -788,6 +787,7 @@ function setupQuotes(){
     });
     getjson("games/darts", dartSetup);
     getjson("fuckHer", fuckHerSetup);
+    yNeedSetup();
 }
 
 function flirtSetup(){
@@ -854,13 +854,12 @@ function voccurse(curtext) {
     return curtext;
 }
 
+
 function yNeedSetup(){
-    yneeds = json;
-    //This starts the game. Reason it's done here is because yourhome is dependent on yneeds to be defined
-    //And this is the cleanest way to not have everything crying
     yneeds["girlname"] = addGirlname(yneeds["girlname"]);
     yneeds["shotglass"] = replaceWCLCI(yneeds["shotglass"], yneeds["girlname"], "girlname");
     yneeds["vase"] = replaceWCLCI(yneeds["vase"], yneeds["girlname"], "girlname");
+
 }
 
 function yPeeSetup(){
