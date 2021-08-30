@@ -1,296 +1,588 @@
+//This object is used to keep track of everything related to the sexActions
+let sexActions = {
+    clothes:{
+        skirt:{
+            on: 1,
+            init: objInit,
+            reset: objReset,
+        },
+        top:{
+            on: 1,
+            init: objInit,
+            reset: objReset,
+        },
+        bra:{
+            on: 1,
+            init: objInit,
+            reset: objReset,
+        },
+        panties:{
+            on: 1,
+            init: objInit,
+            reset: objReset,
+        },
+        init: objInit,
+        reset: objReset
+    },
+    actions:{
+        kNeck: {
+            performed: 0,
+            needOff: [],
+            clothesArousal: [
+              [],
+              [],
+              []
+            ],
+            noTub: 0,
+            choiceLine: "Kiss her on the neck",
+            init: objInit,
+            reset: objReset,
+        },
+        kThigh: {
+            performed: 0,
+            needOff: ["skirt"],
+            clothesArousal: [
+                ["skirt", 6, "emer"],
+                ["none", 20, "emer"]
+            ],
+            noTub: 1,
+            emer: 1,
+            choiceLine: "Kiss her on the thigh",
+            init: objInit,
+            reset: objReset,
+        },
+        kPussy: {
+            performed: 0,
+            needOff: ["skirt"],
+            clothesArousal: [
+                [],
+                [],
+                []
+            ],
+            noTub: 1,
+            choiceLine: "Kiss her on the pussy",
+            init: objInit,
+            reset: objReset,
+        },
+        kBreast: {
+            performed: 0,
+            needOff: ["bra"],
+            clothesArousal: [
+                [],
+                [],
+                []
+            ],
+            noTub: 0,
+            choiceLine: "Kiss her on the nipple",
+            init: objInit,
+            reset: objReset,
+        },
+        tThigh: {
+            performed: 0,
+            needOff: ["skirt"],
+            clothesArousal: [
+                [],
+                [],
+                []
+            ],
+            noTub: 0,
+            choiceLine: "Touch her thigh",
+            init: objInit,
+            reset: objReset,
+        },
+        tPussy: {
+            performed: 0,
+            needOff: ["skirt"],
+            clothesArousal: [
+                [],
+                [],
+                []
+            ],
+            noTub: 0,
+            choiceLine: "Touch her pussy",
+            init: objInit,
+            reset: objReset,
+        },
+        tAss: {
+            performed: 0,
+            needOff: ["skirt"],
+            clothesArousal: [
+                ["skirt", 2, "emer"],
+                ["panties", 4, "emer"],
+                ["none", 10, "emer"]
+            ],
+            noTub: 0,
+            choiceLine: "Touch her ass",
+            init: objInit,
+            reset: objReset,
+        },
+        tBreast: {
+            performed: 0,
+            needOff: ["top"],
+            clothesArousal: [
+                ["top", 4, "none"],
+                ["bra", 2, "none"],
+                ["none", 20, "lose"]
+            ],
+            noTub: 0,
+            choiceLine: "Touch her breasts",
+            init: objInit,
+            reset: objReset,
+        },
+        init: objInit,
+        reset: objReset
+    },
+    fuckingNow: 0,
+    init: objInit,
+    reset: objReset,
+    isOn: function (item) {
+        return this.clothes[item].on;
+    },
+    takeOff: function (item) {
+        this.clothes[item].on = 0;
+    },
+    naked: function () {
+        this.clothes.skirt.on = 0;
+        this.clothes.top.on = 0;
+        this.clothes.bra.on = 0;
+        this.clothes.panties.on = 0;
+    },
+    getPerformed: function (item) {
+        return this.actions[item].performed;
+    },
+    setPerformed: function(item) {
+      this.actions[item].performed = 1;
+    },
+    noTubUse: function(item){
+        return this.actions[item].noTub;
+    }
+}
 function fuckHerSetup(){
-    fuckHer = json;
-    let temp = fuckHer["theTub"];
-    temp["intro"] = formatAllVarsList(temp["intro"]);
+    sexLines = json;
+    Object.keys(sexLines).forEach(loc => {
+        if (typeof loc === "object" && (loc !== "clothes" || loc !== "actions")) {
+            const obj = sexLines[loc];
+            obj["intro"][0] = formatAllVarsList(obj["intro"][0]);
+            obj["intro"][1] = formatAllVars(obj["intro"][1]);
+            obj["maxKiss"] = formatAllVars(obj["maxKiss"]);
+            obj["leaveSex"] = formatAllVars(obj["leaveSex"]);
+        }
+    });
+    sexLines["fuckTry"] = formatAllVars(sexLines["fuckTry"]);
+    sexActions.init();
 }
 
 function haveSex(location){
     let curtext = [];
-    let sexQuotes = fuckHer[location];
+    let sexQuotes = sexLines[location];
     if (locstack[0]!== "haveSex"){
         kisscounter = 0;
         arousal = 0;
         pushloc("haveSex");
         if (location === "theTub"){
-            xskirt = 1;
-            xtop = 1;
-            xbra = 1;
-            xpanties = 1;
-            curtext = printList(curtext, sexQuotes["intro"][0]);
-        } else if (location === "theBeach"){
-
-        } else if (location === "theBedroom") {
-
+            sexActions.naked();
+            curtext = printList(curtext, sexQuotes["intro"][0][0]);
+        } else {
+            if (pantycolor === "none") sexActions.takeOff("panties");
+            if (bladder > bladlose)
+                curtext = printList(curtext, sexQuotes["intro"][0][0]);
+            else
+                curtext = printList(curtext, sexQuotes["intro"][0][1]);
         }
     } else {
         curtext = printList(curtext, sexQuotes["intro"][1]);
     }
-}
-
-function tubsex() {
-    if (locstack[0] !== "tubsex") {
-        kisscounter = 0;
-        pushloc("tubsex");
-        arousal = 0;
-        s("You pull " + girlname + " on your lap.");
-        xskirt = 1;
-        xtop = 1;
-        xbra = 1;
-        xpanties = 1;
-    } else {
-        s(girlname + " is sitting on your lap... naked.")
-    }
-
-    if (kisscounter > maxkiss) {
-        s(girlname + " suddenly pulls away to sit back next to you.");
-        s(girltalk + "You know, this just isn't working out.");
-        resetclothes();
-        if (rstmoves === 1) {
-            resetmoves();
-        }
-        c("goback", "Continue...");
-    }
-
-    displayneed();
-    displayyourneed();
-
-    if (arousal < 40) {
-        s("She seems very aroused.");
-    } else if (arousal < 70) {
-        s("She seems extremely aroused.");
-    } else if (arousal < 100) {
-        s("She seems unbelievably aroused.");
-    } else if (arousal < 140) {
-        s("She seems earthshatterinly aroused.");
-    } else {
-        s("She seems madly hot, but still reluctant to take that last step here in the hot tub.");
-    }
-
-    s("What will you do?");
-
-    c("kissher", "Kiss her on the mouth.");
-    if (!tthigh) c("touchthigh", "Touch her thigh");
-    if (!tbreast) c("touchbreast", "Touch her breasts");
-    if (!tass) c("touchass", "Touch her ass");
-    if (!tpussy) c("touchpussy", "Touch her pussy");
-    if (!kneck) c("kissneck", "Kiss her on the neck");
-    if (!kbreast) c("kissbreast", "Kiss her on the nipple");
-    if (arousal > 120) c("fucktry", "Fuck her");
-    c("goback", "Lift her off of your lap.");
-
-}
-
-//TODO when making out attraction and shyness are updated?
-function beachsex() {
-    if (locstack[0] !== "beachsex") {
-        kisscounter = 0;
-        pushloc("beachsex");
-        arousal = 0;
-        if (bladder > bladlose)
-            s(girlname + " collapses onto the soft sand, pulling you on top of her.");
+    let listenerList = [];
+    if (kisscounter > maxkiss){
+        curtext = printList(curtext, sexQuotes["maxKiss"]);
+        if (location === "theBed")
+            listenerList.push([[gameOver, "Continue..."], "gameOver"]);
         else
-            s(girlname + " pulls you down onto the soft sand.");
-    } else {
-        s("You are lying on the beach with " + girlname);
+            listenerList.push([[function (){leaveSex(location)}, "Continue..."], "leaveSex"]);
     }
 
-    if (kisscounter > maxkiss) {
-        s(girlname + " suddenly pulls away from you and sits up.");
-        s(girltalk + "You know, this just isn't working out.");
-        c("goback", "Continue...");
-        resetclothes();
-        if (rstmoves === 1) {
-            resetmoves()
+    curtext = displayneed(curtext);
+    curtext = displayyourneed(curtext);
+
+    let choice = 4;
+    if (arousal < 40)
+        choice = 0;
+    else if (arousal < 70)
+        choice = 1;
+    else if (arousal < 100)
+        choice = 2;
+    else if (arousal < 140)
+        choice = 3;
+
+    //The only quote here that is location dependent is if her arousal is through the roof.
+    if (choice === 4)
+        curtext.push(pickrandom(sexLines[location]["arousal"]));
+    else
+        curtext.push(pickrandom(sexLines["arousal"][choice]));
+    curtext.push("What will you do?");
+    listenerList.push([[kissher, "Kiss her on the mouth."], "kissHer"]);
+    Object.keys(sexActions.clothes).forEach(item => {
+        if (sexActions.isOn(item)) {
+            listenerList.push([[function () {
+                takeOff(item, location);
+            }, appearance["clothes"][heroutfit]["sextakeoff" + item]], item]);
+        }});
+
+    Object.keys(sexActions.actions).forEach(action => {
+        if (!sexActions.getPerformed(action) && !(location === "theTub" && sexActions.noTubUse(action))){
+            let preReq = true;
+            sexActions.actions[action].needOff.forEach(item => preReq = preReq && !sexActions.isOn(item));
+            if (preReq)
+                listenerList.push([[function () {
+                    performAction(action, location);
+                }, sexActions.actions[action].choiceLine], "action"]);
         }
-    } else {
-
-        displayneed();
-        displayyourneed();
-        if (pantycolor === "none") xpanties = 1;
-
-        if (arousal < 40) {
-            s("She seems very aroused.");
-        } else if (arousal < 70) {
-            s("She seems extremely aroused.");
-        } else if (arousal < 100) {
-            s("She seems unbelievably aroused.");
-        } else if (arousal < 140) {
-            s("She seems earthshatterinly aroused.");
-        } else {
-            s("She seems madly hot, but still reluctant to take that last step out here on the beach.");
-        }
-
-        s("What will you do?");
-
-        c("kissher", "Kiss her on the mouth.");
-        if (!tthigh && xskirt) c("touchthigh", "Touch her thigh");
-        if (!tbreast && xtop) c("touchbreast", "Touch her breasts");
-        if (!tass && xskirt) c("touchass", "Touch her ass");
-        if (!tpussy && xskirt) c("touchpussy", "Touch her pussy");
-        if (!kneck) c("kissneck", "Kiss her on the neck");
-        if (!kbreast && xbra) c("kissbreast", "Kiss her on the nipple");
-        if (!kthigh && xskirt) c("kissthigh", "Kiss her on the thigh");
-        if (!kpussy && xskirt) c("kisspussy", "Kiss her on the pussy");
-        if (!xskirt) c("toskirt", sextakeoffskirt);
-        if (!xtop) c("totop", sextakeoffblouse);
-        if (!xbra && xtop) c("tobra", "Take off her bra");
-        if (!xpanties && xskirt) c("topanties", "Take off her panties");
-        if (arousal > 120 && xskirt && xpanties) c("fucktry", "Fuck her");
-        c("goback", "Get back up and dust yourself off.");
+    });
+    if (arousal > 120 && !sexActions.isOn("skirt") && !sexActions.isOn("panties")) {
+        if (location === "theBed")
+            if (arousal >= 140)
+                listenerList.push([[fuckNow, "Fuck her <b>NOW</b>."], "fuckNow"]);
+            else
+                listenerList.push([[fuckNow, "Fuck her"], "fuckNow"]);
+        else
+            listenerList.push([[function () {fuckTry(location)}, "Fuck her"], "fuckTry"]);
     }
+    if (location === "theBed")
+        listenerList.push([[gameOver, "Say goodnight"], "gameOVer"]);
+    else{
+        listenerList.push([[function (){leaveSex(location)}, sexLines[location]["leave"]], "leaveSex"]);
+    }
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
-function fucktry() {
-    s("You try to put it in, but she pushes you away");
-    s(girltalk + " Not here.  Later.");
+function takeOff(item, location){
+    let info = sexActions.clothes[item];
+
+}
+
+function performAction(action, location){
+    let info = sexActions.actions[action];
+    let processed = false;
+    let curtext = [];
+    for (let i = 0; !processed; i++){
+        let arousal = info.clothesArousal[i];
+        if (arousal[0]=== "none"){
+            arousal += arousal[i];
+            curtext = printList(curtext, sexLines["actions"][action][i][0]);
+            if (arousal[2] === "emer") {
+                if (bladder > blademer)
+                    curtext = printList(curtext, sexLines["actions"][action][i][1]);
+                else
+                    curtext = printList(curtext, sexLines["actions"][action][i][2]);
+            } else if (arousal[2] === "lose"){
+                if (bladder > bladlose)
+                    curtext = printList(curtext, sexLines["actions"][action][i][1]);
+                else
+                    curtext = printList(curtext, sexLines["actions"][action][i][2]);
+            }
+            processed = true;
+        } else if(sexActions.isOn(arousal[0])){
+            arousal += arousal[i];
+            if (info.clothesArousal.length > 2)
+                curtext.push(appearance["clothes"]["sex"+action+arousal[0]]);
+            else
+                curtext.push(appearance["clothes"]["sex"+action]);
+            if (arousal[2] === "emer") {
+                if (bladder > blademer)
+                    curtext = printList(curtext, sexLines["actions"][action][i][0]);
+                else
+                    curtext = printList(curtext, sexLines["actions"][action][i][1]);
+            } else if (arousal[2] === "lose"){
+                if (bladder > bladlose)
+                    curtext = printList(curtext, sexLines["actions"][action][i][0]);
+                else
+                    curtext = printList(curtext, sexLines["actions"][action][i][1]);
+            }
+            processed = true;
+        }
+    }
+    if (multiplemoves === 0)
+        sexActions.setPerformed(action);
+    curtext = callChoice([location, "Continue..."], curtext);
+    sayText(curtext);
+}
+
+function leaveSex(location){
+    let curtext = printList([], sexLines[location]["leaveSex"]);
+    curtext = callChoice([location, "Continue..."], curtext);
     resetclothes();
-    c("goback", "Continue...");
+    if (rstmoves === 1) resetmoves();
+    poploc();
+    sayText(curtext);
+}
+//
+// function tubsex() {
+//     if (locstack[0] !== "tubsex") {
+//         kisscounter = 0;
+//         pushloc("tubsex");
+//         arousal = 0;
+//         s("You pull " + girlname + " on your lap.");
+//         xskirt = 1;
+//         xtop = 1;
+//         xbra = 1;
+//         xpanties = 1;
+//     } else {
+//         s(girlname + " is sitting on your lap... naked.")
+//     }
+//
+//     if (kisscounter > maxkiss) {
+//         s(girlname + " suddenly pulls away to sit back next to you.");
+//         s(girltalk + "You know, this just isn't working out.");
+//         resetclothes();
+//         if (rstmoves === 1) {
+//             resetmoves();
+//         }
+//         c("goback", "Continue...");
+//     }
+//
+//     displayneed();
+//     displayyourneed();
+//
+//     if (arousal < 40) {
+//         s("She seems very aroused.");
+//     } else if (arousal < 70) {
+//         s("She seems extremely aroused.");
+//     } else if (arousal < 100) {
+//         s("She seems unbelievably aroused.");
+//     } else if (arousal < 140) {
+//         s("She seems earthshatterinly aroused.");
+//     } else {
+//         s("She seems madly hot, but still reluctant to take that last step here in the hot tub.");
+//     }
+//
+//     s("What will you do?");
+//
+//     c("kissher", "Kiss her on the mouth.");
+//     if (!tthigh) c("touchthigh", "Touch her thigh");
+//     if (!tbreast) c("touchbreast", "Touch her breasts");
+//     if (!tass) c("touchass", "Touch her ass");
+//     if (!tpussy) c("touchpussy", "Touch her pussy");
+//     if (!kneck) c("kissneck", "Kiss her on the neck");
+//     if (!kbreast) c("kissbreast", "Kiss her on the nipple");
+//     if (arousal > 120) c("fucktry", "Fuck her");
+//     c("goback", "Lift her off of your lap.");
+//
+// }
+//
+// //TODO when making out attraction and shyness are updated?
+// function beachsex() {
+//     if (locstack[0] !== "beachsex") {
+//         kisscounter = 0;
+//         pushloc("beachsex");
+//         arousal = 0;
+//         if (bladder > bladlose)
+//             s(girlname + " collapses onto the soft sand, pulling you on top of her.");
+//         else
+//             s(girlname + " pulls you down onto the soft sand.");
+//     } else {
+//         s("You are lying on the beach with " + girlname);
+//     }
+//
+//     if (kisscounter > maxkiss) {
+//         s(girlname + " suddenly pulls away from you and sits up.");
+//         s(girltalk + "You know, this just isn't working out.");
+//         c("goback", "Continue...");
+//         resetclothes();
+//         if (rstmoves === 1) {
+//             resetmoves()
+//         }
+//     } else {
+//
+//         displayneed();
+//         displayyourneed();
+//         if (pantycolor === "none") xpanties = 1;
+//
+//         if (arousal < 40) {
+//             s("She seems very aroused.");
+//         } else if (arousal < 70) {
+//             s("She seems extremely aroused.");
+//         } else if (arousal < 100) {
+//             s("She seems unbelievably aroused.");
+//         } else if (arousal < 140) {
+//             s("She seems earthshatterinly aroused.");
+//         } else {
+//             s("She seems madly hot, but still reluctant to take that last step out here on the beach.");
+//         }
+//
+//         s("What will you do?");
+//
+//         c("kissher", "Kiss her on the mouth.");
+//         if (!tthigh && xskirt) c("touchthigh", "Touch her thigh");
+//         if (!tbreast && xtop) c("touchbreast", "Touch her breasts");
+//         if (!tass && xskirt) c("touchass", "Touch her ass");
+//         if (!tpussy && xskirt) c("touchpussy", "Touch her pussy");
+//         if (!kneck) c("kissneck", "Kiss her on the neck");
+//         if (!kbreast && xbra) c("kissbreast", "Kiss her on the nipple");
+//         if (!kthigh && xskirt) c("kissthigh", "Kiss her on the thigh");
+//         if (!kpussy && xskirt) c("kisspussy", "Kiss her on the pussy");
+//         if (!xskirt) c("toskirt", sextakeoffskirt);
+//         if (!xtop) c("totop", sextakeoffblouse);
+//         if (!xbra && xtop) c("tobra", "Take off her bra");
+//         if (!xpanties && xskirt) c("topanties", "Take off her panties");
+//         if (arousal > 120 && xskirt && xpanties) c("fucktry", "Fuck her");
+//         c("goback", "Get back up and dust yourself off.");
+//     }
+// }
+
+function fuckTry(location) {
+    let curtext = printList([], sexLines["fuckTry"]);
+    // s("You try to put it in, but she pushes you away");
+    // s(girltalk + " Not here.  Later.");
+    sayText(curtext);
+    cListenerGen([function(){leaveSex(location)}, "Continue..."], "leaveSex");
+    // c("goback", "Continue...");
 }
 
-//TODO something with your own desperation to pee
-function thebed() {
-    if (locstack[0] !== "thebed") {
-        kisscounter = 0;
-        pushloc("thebed");
-        arousal = 0;
-        if (bladder > bladlose)
-            s(girlname + " collapses on the bed, pulling you on top of her.");
-        else
-            s(girlname + " pulls you down onto the bed.");
-    } else {
-        s("You are in bed with " + girlname);
-    }
-
-    if (kisscounter > maxkiss) {
-        s(girlname + " suddenly pulls away from you and sits up in bed.");
-        s(girltalk + "You know, this just isn't working out.");
-        s(girltalk + "I'm afraid we're going to have to call it a night.");
-        c("gameover", "Continue...");
-    } else {
-
-        displayneed();
-        displayyourneed();
-        if (pantycolor === "none") xpanties = 1;
-
-        if (arousal < 20) {
-            s("She seems very aroused.");
-        } else if (arousal < 40) {
-            s("She seems very aroused.");
-        } else if (arousal < 70) {
-            s("She seems extremely aroused.");
-        } else if (arousal < 100) {
-            s("She seems unbelievably aroused.");
-        } else if (arousal < 140) {
-            s("She seems earthshatterinly aroused.");
-        } else {
-            s(girltalk + "<i>Hurry!</i> Fuck me <b>NOW</b>!");
-        }
-
-        s("What will it be?");
-
-        c("kissher", "Kiss her on the mouth.");
-        if (!tthigh && xskirt) c("touchthigh", "Touch her thigh");
-        if (!tbreast && xtop) c("touchbreast", "Touch her breasts");
-        if (!tass && xskirt) c("touchass", "Touch her ass");
-        if (!tpussy && xskirt) c("touchpussy", "Touch her pussy");
-        if (!kneck) c("kissneck", "Kiss her on the neck");
-        if (!kbreast && xbra) c("kissbreast", "Kiss her on the nipple");
-        if (!kthigh && xskirt) c("kissthigh", "Kiss her on the thigh");
-        if (!kpussy && xskirt) c("kisspussy", "Kiss her on the pussy");
-        if (!xskirt) c("toskirt", sextakeoffskirt);
-        if (!xtop) c("totop", sextakeoffblouse);
-        if (!xbra && xtop) c("tobra", "Take off her bra");
-        if (!xpanties && xskirt) c("topanties", "Take off her panties");
-        if (arousal >= 140 && xpanties && xskirt) c("fucknow", "Fuck her <b>NOW</b>.");
-        else if (arousal > 120 && xpanties && xskirt) c("fucknow", "Fuck her");
-        c("gameover", "Say goodnight.");
-    }
-}
-
-
-function touchthigh() {
-    if (!xskirt) {
-        arousal += 6;
-        s(sextouchthighquote);
-        if (bladder > blademer) {
-            s("They are wet and slippery.  You pull your hand back out and smell her sweat.  No pee yet, you think.");
-        } else {
-            s("She moans and quivers with delight.");
-            s(girltalk + "That feels <i>so</i> good!");
-        }
-
-    } else {
-        s("You slide your hand up her inner thighs.");
-        if (bladder > blademer) {
-            s("She suddenly clamps her legs together, trapping your fingers.");
-            s("She squirms back and forth, trying to find a comfortable position, and pulling your arm around as she does it.");
-            s(girltalk + "Oops.  I have to go sooooo bad I almost lost it for a second there.  Here's your arm back.");
-        } else {
-            s("She moans and quivers with delight.");
-            s(girltalk + "That feels <i>so</i> good!");
-        }
-        arousal += 20;
-    }
-    if (multiplemoves === 0) {
-        tthigh = 1;
-    }
-    c(locstack[0], "Continue...");
-}
+// //TODO something with your own desperation to pee
+// function thebed() {
+//     if (locstack[0] !== "thebed") {
+//         kisscounter = 0;
+//         pushloc("thebed");
+//         arousal = 0;
+//         if (bladder > bladlose)
+//             s(girlname + " collapses on the bed, pulling you on top of her.");
+//         else
+//             s(girlname + " pulls you down onto the bed.");
+//     } else {
+//         s("You are in bed with " + girlname);
+//     }
+//
+//     if (kisscounter > maxkiss) {
+//         s(girlname + " suddenly pulls away from you and sits up in bed.");
+//         s(girltalk + "You know, this just isn't working out.");
+//         s(girltalk + "I'm afraid we're going to have to call it a night.");
+//         c("gameover", "Continue...");
+//     } else {
+//
+//         displayneed();
+//         displayyourneed();
+//         if (pantycolor === "none") xpanties = 1;
+//
+//         if (arousal < 20) {
+//             s("She seems very aroused.");
+//         } else if (arousal < 40) {
+//             s("She seems very aroused.");
+//         } else if (arousal < 70) {
+//             s("She seems extremely aroused.");
+//         } else if (arousal < 100) {
+//             s("She seems unbelievably aroused.");
+//         } else if (arousal < 140) {
+//             s("She seems earthshatterinly aroused.");
+//         } else {
+//             s(girltalk + "<i>Hurry!</i> Fuck me <b>NOW</b>!");
+//         }
+//
+//         s("What will it be?");
+//
+//         c("kissher", "Kiss her on the mouth.");
+//         if (!tthigh && xskirt) c("touchthigh", "Touch her thigh");
+//         if (!tbreast && xtop) c("touchbreast", "Touch her breasts");
+//         if (!tass && xskirt) c("touchass", "Touch her ass");
+//         if (!tpussy && xskirt) c("touchpussy", "Touch her pussy");
+//         if (!kneck) c("kissneck", "Kiss her on the neck");
+//         if (!kbreast && xbra) c("kissbreast", "Kiss her on the nipple");
+//         if (!kthigh && xskirt) c("kissthigh", "Kiss her on the thigh");
+//         if (!kpussy && xskirt) c("kisspussy", "Kiss her on the pussy");
+//         if (!xskirt) c("toskirt", sextakeoffskirt);
+//         if (!xtop) c("totop", sextakeoffblouse);
+//         if (!xbra && xtop) c("tobra", "Take off her bra");
+//         if (!xpanties && xskirt) c("topanties", "Take off her panties");
+//         if (arousal >= 140 && xpanties && xskirt) c("fucknow", "Fuck her <b>NOW</b>.");
+//         else if (arousal > 120 && xpanties && xskirt) c("fucknow", "Fuck her");
+//         c("gameover", "Say goodnight.");
+//     }
+// }
 
 
-function touchbreast() {
-    if (xtop === 0) {
-        arousal += 4;
-        s("You massage her breasts through the thin fabric of her blouse.");
-    } else if (xbra === 0) {
-        s("You rub her nipples through the silky lace of her bra.");
-        arousal += 2;
-    } else {
-        arousal += 20;
-        s("You twirl your finger around her erect nipples and she moans in pleasure.");
-        if (bladder > bladlose) {
-            s(girlname + " moans: Yes! Harder! I can't control it much longer.");
-        } else {
-            s("You didn't think it was possible, but her nipples are now even harder and sticking out even further.");
-        }
-    }
-    if (multiplemoves === 0) {
-        tbreast = 1;
-    }
-    c(locstack[0], "Continue...");
-}
+// function touchthigh() {
+//     if (!xskirt) {
+//         arousal += 6;
+//         s(sextouchthighquote);
+//         if (bladder > blademer) {
+//             s("They are wet and slippery.  You pull your hand back out and smell her sweat.  No pee yet, you think.");
+//         } else {
+//             s("She moans and quivers with delight.");
+//             s(girltalk + "That feels <i>so</i> good!");
+//         }
+//
+//     } else {
+//         s("You slide your hand up her inner thighs.");
+//         if (bladder > blademer) {
+//             s("She suddenly clamps her legs together, trapping your fingers.");
+//             s("She squirms back and forth, trying to find a comfortable position, and pulling your arm around as she does it.");
+//             s(girltalk + "Oops.  I have to go sooooo bad I almost lost it for a second there.  Here's your arm back.");
+//         } else {
+//             s("She moans and quivers with delight.");
+//             s(girltalk + "That feels <i>so</i> good!");
+//         }
+//         arousal += 20;
+//     }
+//     if (multiplemoves === 0) {
+//         tthigh = 1;
+//     }
+//     c(locstack[0], "Continue...");
+// }
+//
+//
+// function touchbreast() {
+//     if (xtop === 0) {
+//         arousal += 4;
+//         s("You massage her breasts through the thin fabric of her blouse.");
+//     } else if (xbra === 0) {
+//         s("You rub her nipples through the silky lace of her bra.");
+//         arousal += 2;
+//     } else {
+//         arousal += 20;
+//         s("You twirl your finger around her erect nipples and she moans in pleasure.");
+//         if (bladder > bladlose) {
+//             s(girlname + " moans: Yes! Harder! I can't control it much longer.");
+//         } else {
+//             s("You didn't think it was possible, but her nipples are now even harder and sticking out even further.");
+//         }
+//     }
+//     if (multiplemoves === 0) {
+//         tbreast = 1;
+//     }
+//     c(locstack[0], "Continue...");
+// }
 
-function touchass() {
-    if (!xskirt) {
-        arousal += 2;
-        s(sextouchassquote);
-        if (bladder > blademer && !xpanties) {
-            s("Her butt cheeks are clenching and releasing, and the panties are pulled way into her crack.");
-        } else {
-            s("The silky cloth slides easily over her smooth cheeks and she presses into your hands.");
-        }
-    } else if (!xpanties) {
-        arousal += 4;
-        s("You rub her ass though the silky fabric of her panties.");
-        if (bladder > blademer) {
-            s("The panties are damp with her sweat.");
-        } else {
-            s("The thin cloth slides easily over her smooth cheeks and your fingers find their way underneath.");
-        }
-    } else {
-        arousal += 10;
-        s("You grab her ass and your fingers slide towards her hot cunt from the rear.");
-        if (bladder > blademer) {
-            s("Her butt clenches and your fingers seem stuck before they slide back out, lubricated by her sweat.");
-        } else {
-            s("She gasps: That's so <i>good</i>!");
-        }
-    }
-    if (multiplemoves === 0) {
-        tass = 1;
-    }
-    c(locstack[0], "Continue...");
-}
+// function touchass() {
+//     if (!xskirt) {
+//         arousal += 2;
+//         s(sextouchassquote);
+//         if (bladder > blademer) {
+//             s("Her butt cheeks are clenching and releasing, as she struggles to hold her bursting bladder.");
+//         } else {
+//             s("The silky cloth slides easily over her smooth cheeks and she presses into your hands.");
+//         }
+//     } else if (!xpanties) {
+//         arousal += 4;
+//         s("You rub her ass though the silky fabric of her panties.");
+//         if (bladder > blademer) {
+//             s("The panties are damp with her sweat.");
+//         } else {
+//             s("The thin cloth slides easily over her smooth cheeks and your fingers find their way underneath.");
+//         }
+//     } else {
+//         arousal += 10;
+//         s("You grab her ass and your fingers slide towards her hot cunt from the rear.");
+//         if (bladder > blademer) {
+//             s("Her butt clenches and your fingers seem stuck before they slide back out, lubricated by her sweat.");
+//         } else {
+//             s("She gasps: That's so <i>good</i>!");
+//         }
+//     }
+//     if (multiplemoves === 0) {
+//         tass = 1;
+//     }
+//     c(locstack[0], "Continue...");
+// }
 
 function touchpussy() {
     if (xskirt === 0 && xpanties !== 0) {

@@ -1,11 +1,110 @@
 {
   "theTub": {
     "intro": [
-      ["You pull girlname on your lap."],
+      [["You pull girlname on your lap."]],
       ["girlname is sitting on your lap... naked."]
-    ]
+    ],
+    "maxKiss": [
+      "girlname suddenly pulls away, moving off your lap to sit back next to you again.",
+      "girltalk I'm sorry, this just isn't happening."
+    ],
+    "arousal": ["She is extremely turned on, but still doesn't seem to want to take things any further in the hot tub."],
+    "leave": "Lift her off of your lap.",
+    "leaveSex": ["You both sit there for a few seconds, trying to catch your breath."]
   },
   "theBeach": {
-
+    "intro": [
+      [
+        ["girlname collapses onto the soft sand, pulling you on top of her."],
+        ["girlname pulls you down onto the soft sand."]
+      ],
+      ["You are lying on the beach with girlname"]
+    ],
+    "maxKiss": [
+      "girlname suddenly pulls away from you and sits up.",
+      "girltalk You know, this just isn't working out."
+    ],
+    "arousal": ["She seems madly hot, but still reluctant to take that last step out here on the beach."],
+    "leave": "Get back up and dust yourself off.",
+    "leaveSex": [
+      "You both slowly get up from the sand and dust yourselves off.",
+      "You put yourself back together and help girlname make herself presentable."
+    ]
+  },
+  "theBed": {
+    "intro": [
+      [
+        ["girlname collapses on the bed, pulling you on top of her."],
+        ["girlname pulls you down onto the bed."]
+      ],
+      ["You are in bed with girlname"]
+    ],
+    "maxKiss": [
+      "girlname suddenly pulls away from you and sits up in bed.",
+      "girltalk You know, this just isn't working out.",
+      "girltalk I'm afraid we're going to have to call it a night."
+    ],
+    "arousal": ["girltalk <i>Hurry!</i> Fuck me <b>NOW</b>!"]
+  },
+  "arousal": [
+    ["She seems very aroused."],
+    ["She seems extremely aroused."],
+    ["She seems unbelievably aroused."],
+    ["She seems earthshatterinly aroused."]
+  ],
+  "fuckTry": [
+    "You try to push your cock into her pussy, but she pushes you away.",
+    "girltalk Not here. Later."
+  ],
+  "actions": {
+    "kNeck": [],
+    "kThigh": [
+      [
+        [
+          "They are wet and slippery.  You pull your hand back out and smell her sweat.  No pee yet, you think."
+        ],
+        [
+          "She moans and quivers with delight.",
+          "girltalk That feels <i>so</i> good!"
+        ]
+      ],
+      [ [ "You slide your hand up her inner thighs."],
+        [ "She suddenly clamps her legs together, trapping your fingers.",
+          "She squirms back and forth, trying to find a comfortable position, and pulling your arm around as she does it.",
+          "girltalk Oops. I have to go <i>sooooo</i> bad I almost lost it for a second there.  Here's your arm back."
+        ],
+        [
+          "She moans and quivers with delight.",
+          "girltalk That feels <i>so</i> good!"
+        ]
+      ]
+    ],
+    "kPussy": [],
+    "kBreast": [],
+    "tThigh": [],
+    "tPussy": [],
+    "tAss": [
+      [
+        ["Her butt cheeks are clenching and releasing, as she struggles to hold her bursting bladder."],
+        ["The silky cloth slides easily over her smooth cheeks and she presses into your hands."]
+      ],
+      [
+        ["The panties are damp with her sweat."],
+        ["The thin cloth slides easily over her smooth cheeks and your fingers find their way underneath."]
+      ],
+      [
+        ["You grab her ass and your fingers slide towards her hot cunt from the rear."],
+        ["Her butt clenches and your fingers seem stuck before they slide back out, lubricated by her sweat."],
+        ["She gasps: That's so <i>good</i>!"]
+      ]
+    ],
+    "tBreast": [
+      [], [],
+      [
+        ["You twirl your finger around her erect nipples and she moans in pleasure."],
+        ["girlname moans: Yes! Harder! I can't control it much longer."],
+        ["You didn't think it was possible, but her nipples are now even harder and sticking out even further."]
+      ]
+    ]
   }
 }

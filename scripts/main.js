@@ -10,6 +10,26 @@ function range(start, end) {
     return [start, ...range(start + 1, end)];
 }
 
+function objInit(){
+    let initVal = [];
+    Object.keys(this).forEach(prop => {
+        if (prop !== "initVal")
+            initVal[prop] = this[prop];
+            if (typeof this[prop] === "object")
+                this[prop].init();
+    });
+    this.initVal = initVal;
+}
+
+function objReset(){
+    Object.keys(this).forEach(prop => {
+        if (typeof this[prop] !== "object" || prop === "initVal")
+            this[prop] = this.initVal[prop];
+        else
+            this[prop].reset();
+    })
+}
+
 //TODO this is called way too often
 //  Updates the information on the stats
 function displaystats() {

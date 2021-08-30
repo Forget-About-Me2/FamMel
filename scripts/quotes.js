@@ -19,7 +19,7 @@ let appearance; // This stores the appearance quotes from the JSON
 let drive; //This stores all dialogues regarding driving around from the JSON
 let general; //This stores all general quotes from JSON call
 let darts; //This stores the json quotes for the darts game
-let fuckHer; //This stores the json quotes related to fucking scenes
+let sexLines; //This stores the json quotes related to fucking scenes
 
 
 let girlname = "Laura";
