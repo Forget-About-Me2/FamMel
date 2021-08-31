@@ -29,9 +29,7 @@ let sexActions = {
             performed: 0,
             needOff: [],
             clothesArousal: [
-              [],
-              [],
-              []
+              ["none", 4, "emer"],
             ],
             noTub: 0,
             choiceLine: "Kiss her on the neck",
@@ -55,9 +53,9 @@ let sexActions = {
             performed: 0,
             needOff: ["skirt"],
             clothesArousal: [
-                [],
-                [],
-                []
+                ["skirt", 0, "emer"],
+                ["panties", 8, "lose"],
+                ["none", 20, "emer"]
             ],
             noTub: 1,
             choiceLine: "Kiss her on the pussy",
@@ -68,9 +66,9 @@ let sexActions = {
             performed: 0,
             needOff: ["bra"],
             clothesArousal: [
-                [],
-                [],
-                []
+                ["top", 4, "none"],
+                ["bra", 10, "none"],
+                ["none", 20, "emer"]
             ],
             noTub: 0,
             choiceLine: "Kiss her on the nipple",
@@ -81,9 +79,8 @@ let sexActions = {
             performed: 0,
             needOff: ["skirt"],
             clothesArousal: [
-                [],
-                [],
-                []
+                ["skirt", 2, "none"],
+                ["none", 10, "emer"],
             ],
             noTub: 0,
             choiceLine: "Touch her thigh",
@@ -94,9 +91,9 @@ let sexActions = {
             performed: 0,
             needOff: ["skirt"],
             clothesArousal: [
-                [],
-                [],
-                []
+                [["skirt", "notpanties"], 4, "none"],
+                ["panties", 12, "lose"],
+                ["none", 20, "lose"]
             ],
             noTub: 0,
             choiceLine: "Touch her pussy",
@@ -166,9 +163,16 @@ function fuckHerSetup(){
             obj["intro"][1] = formatAllVars(obj["intro"][1]);
             obj["maxKiss"] = formatAllVars(obj["maxKiss"]);
             obj["leaveSex"] = formatAllVars(obj["leaveSex"]);
+        } else if (loc === "actions"){
+            Object.keys(sexLines[loc]).forEach(action => {
+                sexLines[loc][action].forEach(item => {
+                    sexLines[loc][action][item] = formatAllVarsList(sexLines[loc][action][item]);
+                })
+            })
         }
     });
     sexLines["fuckTry"] = formatAllVars(sexLines["fuckTry"]);
+
     sexActions.init();
 }
 
@@ -267,37 +271,58 @@ function performAction(action, location){
     let curtext = [];
     for (let i = 0; !processed; i++){
         let arousal = info.clothesArousal[i];
-        if (arousal[0]=== "none"){
+        if (Array.isArray(arousal[0])){
+            let met = true;
+            arousal[0].forEach(item => {
+                if (item.contains("not")){
+                    let temp = item.splice(3);
+                    met = met && !sexActions.isOn(temp);
+                } else
+                    met = met && sexActions.isOn(item);
+            });
+        } if (arousal[0]=== "none"){
             arousal += arousal[i];
             curtext = printList(curtext, sexLines["actions"][action][i][0]);
             if (arousal[2] === "emer") {
                 if (bladder > blademer)
                     curtext = printList(curtext, sexLines["actions"][action][i][1]);
-                else
+                else {
+                    if (action === "kPussy" && wetherpanties)
+                        curtext = printList(curtext, sexLines["actions"][action][i][3]);
                     curtext = printList(curtext, sexLines["actions"][action][i][2]);
+                }
             } else if (arousal[2] === "lose"){
                 if (bladder > bladlose)
                     curtext = printList(curtext, sexLines["actions"][action][i][1]);
                 else
                     curtext = printList(curtext, sexLines["actions"][action][i][2]);
             }
+            if (action === "kPussy" && bladder > bladlose)
+                curtext = printList(curtext, sexLines["actions"][action][i][4]);
             processed = true;
         } else if(sexActions.isOn(arousal[0])){
             arousal += arousal[i];
+            let temp;
             if (info.clothesArousal.length > 2)
-                curtext.push(appearance["clothes"]["sex"+action+arousal[0]]);
+                temp = appearance["clothes"]["sex"+action+arousal[0]];
             else
-                curtext.push(appearance["clothes"]["sex"+action]);
+                temp = appearance["clothes"]["sex"+action];
+            if (typeof temp !== "undefined")
+                curtext.push(temp)
+            curtext = printList(curtext, sexLines["actions"][action][i][0]);
             if (arousal[2] === "emer") {
                 if (bladder > blademer)
-                    curtext = printList(curtext, sexLines["actions"][action][i][0]);
-                else
                     curtext = printList(curtext, sexLines["actions"][action][i][1]);
+                else if (action !== "kPussy" || wetherpanties)
+                    curtext = printList(curtext, sexLines["actions"][action][i][2]);
             } else if (arousal[2] === "lose"){
                 if (bladder > bladlose)
-                    curtext = printList(curtext, sexLines["actions"][action][i][0]);
-                else
                     curtext = printList(curtext, sexLines["actions"][action][i][1]);
+                else {
+                    curtext = printList(curtext, sexLines["actions"][action][i][2]);
+                    if (action === "kPussy" && wetherpanties)
+                        curtext = printList(curtext, sexLines["actions"][action][i][3]);
+                }
             }
             processed = true;
         }
@@ -584,126 +609,126 @@ function fuckTry(location) {
 //     c(locstack[0], "Continue...");
 // }
 
-function touchpussy() {
-    if (xskirt === 0 && xpanties !== 0) {
-        arousal += 4;
-        s(sextouchpussyquote);
-    } else if (xpanties === 0) {
-        arousal += 12;
-        s("You stroke her burning pussy though the silky wet fabric of her panties.");
-        if (bladder > bladlose) {
-            s("She grabs your hand and presses it into her crotch.  You can feel her pee hole as a tight quivering bump right under your index finger.");
-            s(girltalk + "You have to help me hold it!");
-        } else {
-            s("She presses her cunt into your hand and reaches over to massage your dick.");
-        }
-    } else {
-        arousal += 20;
-        s("Your hand reaches up to firmly massage her dripping cunt as she moans in pleasure.");
-        if (bladder > bladlose) {
-            s("She grabs your hand and presses it more firmly into her crotch.  You can feel her pee hole as a tight quivering bump right under your index finger.");
-            s(girltalk + "You have to help me hold it!");
-        } else {
-            s("You feel the bump of her erect clit pulsing beneath your fingers.");
-        }
-    }
-    if (multiplemoves === 0) {
-        tpussy = 1;
-    }
-    c(locstack[0], "Continue...");
-}
+// function touchpussy() {
+//     if (xskirt === 0 && xpanties !== 0) {
+//         arousal += 4;
+//         s(sextouchpussyquote);
+//     } else if (xpanties === 0) {
+//         arousal += 12;
+//         s("You stroke her burning pussy though the silky wet fabric of her panties.");
+//         if (bladder > bladlose) {
+//             s("She grabs your hand and presses it into her crotch.  You can feel her pee hole as a tight quivering bump right under your index finger.");
+//             s(girltalk + "You have to help me hold it!");
+//         } else {
+//             s("She presses her cunt into your hand and reaches over to massage your dick.");
+//         }
+//     } else {
+//         arousal += 20;
+//         s("Your hand reaches up to firmly massage her dripping cunt as she moans in pleasure.");
+//         if (bladder > bladlose) {
+//             s("She grabs your hand and presses it more firmly into her crotch.  You can feel her pee hole as a tight quivering bump right under your index finger.");
+//             s(girltalk + "You have to help me hold it!");
+//         } else {
+//             s("You feel the bump of her erect clit pulsing beneath your fingers.");
+//         }
+//     }
+//     if (multiplemoves === 0) {
+//         tpussy = 1;
+//     }
+//     c(locstack[0], "Continue...");
+// }
 
-function kissneck() {
-    arousal += 4;
-    s("You nibble delicately on her neck.");
-    if (bladder > blademer) {
-        s("Goosebumps suddenly form and her whole body shakes uncontrollable for a second.");
-    } else {
-        s("She seems to like it.");
-    }
-    if (multiplemoves === 0) {
-        kneck = 1;
-    }
-    c(locstack[0], "Continue...");
-}
+// function kissneck() {
+//     arousal += 4;
+//     s("You nibble delicately on her neck.");
+//     if (bladder > blademer) {
+//         s("Goosebumps suddenly form and her whole body shakes uncontrollable for a second.");
+//     } else {
+//         s("She seems to like it.");
+//     }
+//     if (multiplemoves === 0) {
+//         kneck = 1;
+//     }
+//     c(locstack[0], "Continue...");
+// }
+//
+// function kissbreast() {
+//     if (!xtop) {
+//         arousal += 4;
+//         s("You bring your mouth up to her breasts and blow warm air through thin fabric of her blouse.  You can feel her nipples stiffen at the contact.");
+//     } else if (!xbra) {
+//         arousal += 10;
+//         s("You lick her nipples through the rough lace of her bra.");
+//     } else {
+//         arousal += 20;
+//         s("You suck and lick her stiff nipples and she moans in pleasure.");
+//         if (bladder > blademer) {
+//             s("They taste salty and sweet with her sweat.");
+//         }
+//     }
+//     if (multiplemoves === 0) {
+//         kbreast = 1;
+//     }
+//     c(locstack[0], "Continue...");
+// }
 
-function kissbreast() {
-    if (!xtop) {
-        arousal += 4;
-        s("You bring your mouth up to her breasts and blow warm air through thin fabric of her blouse.  You can feel her nipples stiffen at the contact.");
-    } else if (!xbra) {
-        arousal += 10;
-        s("You lick her nipples through the rough lace of her bra.");
-    } else {
-        arousal += 20;
-        s("You suck and lick her stiff nipples and she moans in pleasure.");
-        if (bladder > blademer) {
-            s("They taste salty and sweet with her sweat.");
-        }
-    }
-    if (multiplemoves === 0) {
-        kbreast = 1;
-    }
-    c(locstack[0], "Continue...");
-}
+// function kissthigh() {
+//     if (xskirt === 0) {
+//         arousal += 2;
+//         s(sexkissthighquote);
+//     } else {
+//         arousal += 10;
+//         s("You slide your cheek up her inner thighs, licking and kissing them passionately until you feel the heat of her pussy on your forhead.");
+//         if (bladder > blademer) {
+//             s("Her thighs are quivering with the effort keep her legs open and still clamp her pee hole shut.");
+//         }
+//     }
+//     if (multiplemoves === 0) {
+//         kthigh = 1;
+//     }
+//     c(locstack[0], "Continue...");
+// }
 
-function kissthigh() {
-    if (xskirt === 0) {
-        arousal += 2;
-        s(sexkissthighquote);
-    } else {
-        arousal += 10;
-        s("You slide your cheek up her inner thighs, licking and kissing them passionately until you feel the heat of her pussy on your forhead.");
-        if (bladder > blademer) {
-            s("Her thighs are quivering with the effort keep her legs open and still clamp her pee hole shut.");
-        }
-    }
-    if (multiplemoves === 0) {
-        kthigh = 1;
-    }
-    c(locstack[0], "Continue...");
-}
-
-function kisspussy() {
-    if (!xskirt) {
-        s(sexkisspussyquote);
-        if (bladder > blademer) {
-            s("She groans and tries to push your head away");
-        } else if (wetherpanties) {
-            s("You smell the fragrance of her pee remaining from when she wet herself.");
-        }
-    } else if (!xpanties) {
-        arousal += 8;
-        s("You lay your face in her lap and tongue her pussy though the silky wet fabric of her panties.");
-        if (bladder > bladlose) {
-            s("She suddenly squeezes her legs together and pushes your head out.");
-            s(girltalk + "Sorry!  I just had to do that.  I'm losing control!");
-        } else {
-            s("Your tongue finds her swollen clit through the thin cloth.");
-            if (wetherpanties)
-                s("You smell the fragrance of her pee remaining from when she wet herself.");
-        }
-    } else {
-        arousal += 20;
-        s("You brush your lips over her fragrant pussy before burying your tongue in her dripping cunt.");
-        if (bladder > blademer) {
-            s("The quivering you feel through your tounge reminds you of the overfilled reservoir of pee that is barely controlled just inches away from your lips.");
-        } else {
-            if (wetherpanties)
-                s("You smell the fragrance of her pee remaining from when she wet herself.");
-            s("It tastes of salt, and slightly sweet.  She gasps with sudden pleasure.");
-        }
-        if (bladder > bladlose) {
-            s(girltalk + "Oh God! Oh God! Stop stop stop stop.");
-            s("She suddenly slams her thighs together and pushes your head out.");
-            s(girltalk + "Sorry sorry sorry.  I almost let a squirt out.  I'm <i>so</i> full!");
-        }
-    }
-    if (multiplemoves === 0) {
-        kpussy = 1;
-    }
-    c(locstack[0], "Continue...");
-}
+// function kisspussy() {
+//     if (!xskirt) {
+//         s(sexkisspussyquote);
+//         if (bladder > blademer) {
+//             s("She groans and tries to push your head away");
+//         } else if (wetherpanties) {
+//             s("You smell the fragrance of her pee remaining from when she wet herself.");
+//         }
+//     } else if (!xpanties) {
+//         arousal += 8;
+//         s("You lay your face in her lap and tongue her pussy though the silky wet fabric of her panties.");
+//         if (bladder > bladlose) {
+//             s("She suddenly squeezes her legs together and pushes your head out.");
+//             s(girltalk + "Sorry!  I just had to do that.  I'm losing control!");
+//         } else {
+//             s("Your tongue finds her swollen clit through the thin cloth.");
+//             if (wetherpanties)
+//                 s("You smell the fragrance of her pee remaining from when she wet herself.");
+//         }
+//     } else {
+//         arousal += 20;
+//         s("You brush your lips over her fragrant pussy before burying your tongue in her dripping cunt.");
+//         if (bladder > blademer) {
+//             s("The quivering you feel through your tounge reminds you of the overfilled reservoir of pee that is barely controlled just inches away from your lips.");
+//         } else {
+//             if (wetherpanties)
+//                 s("You smell the fragrance of her pee remaining from when she wet herself.");
+//             s("It tastes of salt, and slightly sweet.  She gasps with sudden pleasure.");
+//         }
+//         if (bladder > bladlose) {
+//             s(girltalk + "Oh God! Oh God! Stop stop stop stop.");
+//             s("She suddenly slams her thighs together and pushes your head out.");
+//             s(girltalk + "Sorry sorry sorry.  I almost let a squirt out.  I'm <i>so</i> full!");
+//         }
+//     }
+//     if (multiplemoves === 0) {
+//         kpussy = 1;
+//     }
+//     c(locstack[0], "Continue...");
+// }
 
 
 function totop() {

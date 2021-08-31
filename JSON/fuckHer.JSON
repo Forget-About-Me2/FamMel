@@ -57,18 +57,23 @@
     "girltalk Not here. Later."
   ],
   "actions": {
-    "kNeck": [],
-    "kThigh": [
+    "kNeck": [
       [
-        [
-          "They are wet and slippery.  You pull your hand back out and smell her sweat.  No pee yet, you think."
-        ],
-        [
-          "She moans and quivers with delight.",
+        ["You nibble delicately on her neck."],
+        ["Goosebumps suddenly form and her whole body shakes uncontrollable for a second."],
+        ["She seems to like it."]
+      ]
+    ],
+    "tThigh": [
+      [
+        [],
+        [ "They are wet and slippery.  You pull your hand back out and smell her sweat.  No pee yet, you think."],
+        [ "She moans and quivers with delight.",
           "girltalk That feels <i>so</i> good!"
         ]
       ],
-      [ [ "You slide your hand up her inner thighs."],
+      [
+        [ "You slide your hand up her inner thighs."],
         [ "She suddenly clamps her legs together, trapping your fingers.",
           "She squirms back and forth, trying to find a comfortable position, and pulling your arm around as she does it.",
           "girltalk Oops. I have to go <i>sooooo</i> bad I almost lost it for a second there.  Here's your arm back."
@@ -79,16 +84,77 @@
         ]
       ]
     ],
-    "kPussy": [],
-    "kBreast": [],
-    "tThigh": [],
-    "tPussy": [],
+    "kPussy": [
+      [
+        [],
+        ["She groans and tries to push your head away"],
+        ["You smell the fragrance of her pee remaining from when she wet herself."]
+      ],
+      [
+        [ "You lay your face in her lap and tongue her pussy though the silky wet fabric of her panties."],
+        [
+          "She suddenly squeezes her legs together and pushes your head out.",
+          "girltalk Sorry! I just <i>had</i> to do that! I'm losing control!"
+        ],
+        [ "You tongue finds her swollen clit through the thin cloth."],
+        [ "You smell the fragrance of her pee remaining from when she wet herself."]
+      ],
+      [
+        [ "You brush your lips over her fragrant pussy before burying your tongue in her dripping cunt."],
+        [ "The quivering you feel through your tongue reminds you of the overfilled reservoir of pee that is barely controlled just inches away from your lips."],
+        [ "You smell the fragrance of her pee remaining from when she wet herself."],
+        [ "It tastes of salt, and slightly sweet. She gasps with sudden pleasure."],
+        [ "girltalk Oh God! Oh God! Stop stop stop stop.",
+          "She suddenly slams her thighs together and pushes your head out.",
+          "girltalk Sorry sorry sorry. I almost let a squirt out. I'm <i>so</i> full!!"
+        ]
+      ]
+    ],
+    "kBreast": [
+      [
+        ["You bring your mouth up to her breasts and blow warm air through thin fabric of her blouse.  You can feel her nipples stiffen at the contact."]
+      ],
+      [
+        ["You lick her nipples through the rough lace of her bra."]
+      ],
+      [
+        ["You suck and lick her stiff nipples and she moans in pleasure."],
+        ["They taste salty and sweet with her sweat."],
+        []
+      ]
+    ],
+    "kThigh": [
+      [],
+      [
+        ["You slide your cheek up her inner thighs, licking and kissing them passionately until you feel the heat of her pussy on your forehead."],
+        ["Her thighs are quivering with the effort keep her legs open and still clamp her pee hole shut."]
+      ]
+    ],
+    "tPussy": [
+     [],
+     [
+       [ "You stroke her burning pussy though the silky wet fabric of her panties."],
+       [ "She grabs your hand and presses it into her crotch.  You can feel her pee hole as a tight quivering bump right under your index finger.",
+         "girltalk You have to help me hold it!"
+       ],
+       [  "She presses her cunt into your hand and reaches over to massage your dick."]
+     ],
+     [
+       [  "Your hand reaches up to firmly massage her dripping cunt as she moans in pleasure."],
+       [  "She grabs your hand and presses it more firmly into her crotch.  You can feel her pee hole as a tight quivering bump right under your index finger.",
+         "girltalk You have to help me hold it!"
+       ],
+       [ "You feel the bump of her erect clit pulsing beneath your fingers."]
+     ]
+    ],
     "tAss": [
       [
+        [],
         ["Her butt cheeks are clenching and releasing, as she struggles to hold her bursting bladder."],
         ["The silky cloth slides easily over her smooth cheeks and she presses into your hands."]
       ],
       [
+        [],
         ["The panties are damp with her sweat."],
         ["The thin cloth slides easily over her smooth cheeks and your fingers find their way underneath."]
       ],
