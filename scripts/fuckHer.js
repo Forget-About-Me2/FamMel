@@ -3,21 +3,36 @@ let sexActions = {
     clothes:{
         skirt:{
             on: 1,
+            takeOffInfo:[
+                ["panties", "emer", "succ"],
+                ["none", "lose", "succ"]
+            ],
             init: objInit,
             reset: objReset,
         },
         top:{
             on: 1,
+            takeOffInfo: [
+                ["none", "lose", "succ"]
+            ],
             init: objInit,
             reset: objReset,
         },
         bra:{
             on: 1,
+            takeOffInfo: [
+              ["top", "lose", "fail"],
+              ["none", "lose", "succ"]
+            ],
             init: objInit,
             reset: objReset,
         },
         panties:{
             on: 1,
+            takeOffInfo: [
+                ["skirt", "lose", "fail"],
+                ["none", "emer", "succ"]
+            ],
             init: objInit,
             reset: objReset,
         },
@@ -261,8 +276,62 @@ function haveSex(location){
 }
 
 function takeOff(item, location){
+    arousal += 4;
     let info = sexActions.clothes[item];
-
+    let processed = false;
+    let failTakeOff = false;
+    let curtext = [];
+    if (item === "skirt" && bladder > blademer)
+        curtext.push(appearance["clothes"][heroutfit]["sextoskirtquoteemer"]);
+    for (let i = 0; !processed; i++){
+        let clothesInfo = info.takeOffInfo[i];
+        if (clothesInfo[0] === "none"){
+            let temp;
+            temp = appearance["clothes"]["sex"+item+clothesInfo[0]];
+            if (typeof temp !== "undefined")
+                curtext.push(temp);
+            if (item === "panties" && bladder > bladlose)
+                curtext = printList(curtext, sexLines["clothes"][item][i][3]);
+            curtext = printList(curtext, sexLines["clothes"][item][i][0]);
+            if (clothesInfo[1] === "lose") {
+                if (bladder > bladlose)
+                    curtext = printList(curtext, sexLines["clothes"][item][i][1]);
+                else
+                    curtext = printList(curtext, sexLines["clothes"][item][i][2]);
+            } else if (clothesInfo[1] === "emer"){
+                if (bladder > blademer)
+                    curtext = printList(curtext, sexLines["clothes"][item][i][1]);
+                else
+                    curtext = printList(curtext, sexLines["clothes"][item][i][2]);
+            }
+            processed = true;
+        } else if (clothesInfo[0] === item){
+            let temp;
+            temp = appearance["clothes"]["sex"+item+clothesInfo[0]];
+            if (typeof temp !== "undefined")
+                curtext.push(temp)
+            curtext = printList(curtext, sexLines["clothes"][item][i][0]);
+            failTakeOff = clothesInfo[2] === "fail";
+            if (clothesInfo[1] === "lose") {
+                if (bladder > bladlose)
+                    curtext = printList(curtext, sexLines["clothes"][item][i][1]);
+                else
+                    curtext = printList(curtext, sexLines["clothes"][item][i][2]);
+            } else if (clothesInfo[1] === "emer"){
+                if (bladder > blademer)
+                    curtext = printList(curtext, sexLines["clothes"][item][i][1]);
+                else
+                    curtext = printList(curtext, sexLines["clothes"][item][i][2]);
+            }
+            if (item === "skirt" && bladder > bladlose)
+                curtext = printList(curtext, sexLines["clothes"][item][i][3]);
+            processed = true;
+        }
+    }
+    if (!failTakeOff)
+        sexActions.takeOff(item);
+    curtext = callChoice([location, "Continue..."], curtext);
+    sayText(curtext);
 }
 
 function performAction(action, location){
@@ -336,8 +405,8 @@ function performAction(action, location){
 function leaveSex(location){
     let curtext = printList([], sexLines[location]["leaveSex"]);
     curtext = callChoice([location, "Continue..."], curtext);
-    resetclothes();
-    if (rstmoves === 1) resetmoves();
+    sexActions.clothes.reset();
+    if (rstmoves === 1) sexActions.actions.reset();
     poploc();
     sayText(curtext);
 }
@@ -731,107 +800,107 @@ function fuckTry(location) {
 // }
 
 
-function totop() {
-    arousal += 4;
-    s("You slowly unbutton and remove her top, making sure to feel her up on the way past her breasts.  Her breasts are gorgeous and firm beneath the lace of her bra.");
-    if (bladder > bladlose) {
-        s(girltalk + "<i>HURRY</i> - I can't hold it much longer.");
-        s("She looks like she's going to burst any second.");
-    } else {
-        s(girlname + " rubs her hands over your chest and begins to unbutton your shirt.");
-    }
-    xtop = 1;
-    c(locstack[0], "Continue...");
-}
+// function totop() {
+//     arousal += 4;
+//     s("You slowly unbutton and remove her top, making sure to feel her up on the way past her breasts.  Her breasts are gorgeous and firm beneath the lace of her bra.");
+//     if (bladder > bladlose) {
+//         s(girltalk + "<i>HURRY</i> - I can't hold it much longer.");
+//         s("She looks like she's going to burst any second.");
+//     } else {
+//         s(girlname + " rubs her hands over your chest and begins to unbutton your shirt.");
+//     }
+//     xtop = 1;
+//     c(locstack[0], "Continue...");
+// }
 
-function toskirt() {
-    arousal += 4;
-    if (bladder > blademer) {
-        s(sextoskirtquoteemer);
-    }
-    if (!xpanties) {
-        s(sextoskirtquote);
-        if (bladder > blademer) {
-            s("She momentarily catches her breath as a small bit of the pressure is reduced.")
-        } else {
-            s(girlname + " works at unzipping your pants, stroking your shaft through the cloth.");
-        }
-        if (bladder > bladlose) {
-            s("The waistband is soaked with sweat from her exertions.");
-        }
-    } else {
-        s(sextoskirtquotebare);
-        if (bladder > bladlose) {
-            s("It's spasmodically contracting as she fights to hold her pee.");
-        } else {
-            s(girlname + " unfastens your pants and pulls at your boxers, freeing your dick and stroking the shaft lightly.");
-        }
-    }
-    xskirt = 1;
-    c(locstack[0], "Continue...");
-}
+// function toskirt() {
+//     arousal += 4;
+//     if (bladder > blademer) {
+//         s(sextoskirtquoteemer);
+//     }
+//     if (!xpanties) {
+//         s(sextoskirtquote);
+//         if (bladder > blademer) {
+//             s("She momentarily catches her breath as a small bit of the pressure is reduced.")
+//         } else {
+//             s(girlname + " works at unzipping your pants, stroking your shaft through the cloth.");
+//         }
+//         if (bladder > bladlose) {
+//             s("The waistband is soaked with sweat from her exertions.");
+//         }
+//     } else {
+//         s(sextoskirtquotebare);
+//         if (bladder > bladlose) {
+//             s("It's spasmodically contracting as she fights to hold her pee.");
+//         } else {
+//             s(girlname + " unfastens your pants and pulls at your boxers, freeing your dick and stroking the shaft lightly.");
+//         }
+//     }
+//     xskirt = 1;
+//     c(locstack[0], "Continue...");
+// }
 
-function tobra() {
-    arousal += 4;
-    if (xtop === 0) {
-        s("You pull at her bra to very little effect.  Could it be she's still wearing her blouse?");
-        if (bladder > bladlose) {
-            s("UNGGGGHHHH! She grunts with the effort of holding it in.");
-        } else {
-            s(girltalk + "Having some technical difficulties?");
-            s("She giggles.");
-        }
-    } else {
-        s("You reach around behind her and find... that it's a front snap bra.  Problem is quickly solved ( good thinking! ) and you unsnap between her shapely round breasts.");
-        if (bladder > bladlose) {
-            s("Her chest is flushed, rising and falling quickly as she pants.");
-        } else {
-            s("She rips at your shirt and runs her cool hands all over your chest.");
-        }
-        xbra = 1;
-    }
-    c(locstack[0], "Continue...");
-}
+// function tobra() {
+//     arousal += 4;
+//     if (xtop === 0) {
+//         s("You pull at her bra to very little effect.  Could it be she's still wearing her blouse?");
+//         if (bladder > bladlose) {
+//             s("UNGGGGHHHH! She grunts with the effort of holding it in.");
+//         } else {
+//             s(girltalk + "Having some technical difficulties?");
+//             s("She giggles.");
+//         }
+//     } else {
+//         s("You reach around behind her and find... that it's a front snap bra.  Problem is quickly solved ( good thinking! ) and you unsnap between her shapely round breasts.");
+//         if (bladder > bladlose) {
+//             s("Her chest is flushed, rising and falling quickly as she pants.");
+//         } else {
+//             s("She rips at your shirt and runs her cool hands all over your chest.");
+//         }
+//         xbra = 1;
+//     }
+//     c(locstack[0], "Continue...");
+// }
 
-function topanties() {
-    arousal += 4;
-    if (!xskirt) {
-        s(sextopantiesquote);
-        if (bladder > bladlose) {
-            s("She suddenly slams her legs together.");
-            s(girltalk + "What are you doing? I'm nearly wetting myself!");
-        }
-    } else {
-        if (bladder > bladlose)
-            s("Her panties are stretched around the bulge of her unbelievably round and hard bladder.");
-        s("You slip her damp panties down to reveal her curly pubes and moist warm pussy.");
-        if (bladder > blademer) {
-            s("It's spasmodically contracting as she fights to hold her pee.");
-        } else {
-            s(girlname + " pulls at your boxers, freeing your dick and stroking the shaft lightly.");
-        }
-        xpanties = 1;
-    }
-    c(locstack[0], "Continue...");
-}
+// function topanties() {
+//     arousal += 4;
+//     if (!xskirt) {
+//         s(sextopantiesquote);
+//         if (bladder > bladlose) {
+//             s("She suddenly slams her legs together.");
+//             s(girltalk + "What are you doing? I'm nearly wetting myself!");
+//         }
+//     } else {
+//         if (bladder > bladlose)
+//             s("Her panties are stretched around the bulge of her unbelievably round and hard bladder.");
+//         s("You slip her damp panties down to reveal her curly pubes and moist warm pussy.");
+//         if (bladder > blademer) {
+//             s("It's spasmodically contracting as she fights to hold her pee.");
+//         } else {
+//             s(girlname + " pulls at your boxers, freeing your dick and stroking the shaft lightly.");
+//         }
+//         xpanties = 1;
+//     }
+//     c(locstack[0], "Continue...");
+// }
 
-function resetclothes() {
-    xpanties = 0;
-    xbra = 0;
-    xskirt = 0;
-    xtop = 0
-}
-
-function resetmoves() {
-    kneck = 0;
-    kthigh = 0;
-    kpussy = 0;
-    kbreast = 0;
-    tthigh = 0;
-    tpussy = 0;
-    tbreast = 0;
-    tass = 0;
-}
+// function resetclothes() {
+//     xpanties = 0;
+//     xbra = 0;
+//     xskirt = 0;
+//     xtop = 0
+// }
+//
+// function resetmoves() {
+//     kneck = 0;
+//     kthigh = 0;
+//     kpussy = 0;
+//     kbreast = 0;
+//     tthigh = 0;
+//     tpussy = 0;
+//     tbreast = 0;
+//     tass = 0;
+// }
 
 //TODO chance of failure upon pausing(still cuming)
 function fucknow() {
