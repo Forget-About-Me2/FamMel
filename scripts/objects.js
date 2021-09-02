@@ -1,7 +1,8 @@
 //TODO add keys and phone
-objects = {
+const objects = {
     "water" : {
         "bpname": "Water bottle",
+        price : 10,
         "value": 0,
         "owned": "{0} bottle{1} of water",
         "volume": 250,
@@ -19,6 +20,7 @@ objects = {
     },
     "roses" : {
         "bpname": "Bouquet",
+        price: 20,
         "value": 0,
         "owned": "{0} bouquet{1} of roses",
         "emerAttr": 2,
@@ -38,6 +40,7 @@ objects = {
     },
     "earrings" : {
         "bpname":"Earrings",
+        price: 60,
         "value": 0,
         "owned": "{0} pair{1} of earrings",
         "emerAttr": 4,
@@ -57,6 +60,7 @@ objects = {
     },
     "vase" : {
         "bpname":"Vase",
+        price: 30,
         "value": 0,
         "peed": 0,
         "functions": [
@@ -72,6 +76,7 @@ objects = {
     },
     "shotglass": {
         "bpname":"Shotglass",
+        price: 10,
         "value": 0,
         "volume": 100,
         "peed": 0,
@@ -88,6 +93,7 @@ objects = {
     },
     "ptowels": {
         "bpname":"Paper Towels",
+        price: 10,
         "value": 0,
         "peed" : 0,
         "attrThresh": 50,
@@ -109,6 +115,7 @@ objects = {
     },
     "panties": {
         "bpname":"Sexy panties",
+        price: 30,
         "value": 0,
         "giveQuotes": [
             [   "girltalk Where did you get those?",
@@ -126,6 +133,7 @@ objects = {
     },
     "champagne": {
         "bpname":"Champagne",
+        price: 50,
         "value": 0,
         "owned": ["a half-empty bottle of champagne",
             "{0} bottle{1} of champagne"],
@@ -143,6 +151,7 @@ objects = {
     },
     "champ-glass":{
         "bpname":"Champagne glass",
+        price : 12,
         "value": 0,
         "volume": 180,
         "peed": 0,
@@ -181,6 +190,7 @@ objects = {
     "soda":{
         "bpname":"Soda",
         "owned": "{0} cup{1} of soda",
+        price: 5,
         "value":0,
         "volume": 500,
         "shedrank": 0,
@@ -258,7 +268,7 @@ objects = {
     }
 }
 
-herpurse = {
+const herpurse = {
     "herKeys": {
         "desc": "set of keys",
         "funDesc": "her keys"
@@ -299,32 +309,106 @@ function standobjs(curtext) {
     return curtext;
 }
 
+function buyItem(item){
+    let html = printList([], objQuotes["buyItem"]);
+    let formatList = [[item],[]];
+    let temp = [item, item];
+    let obj = objects[item];
+    let value = 1;
+    let price = obj.price;
+    temp.push(displaypos(obj, value, true));
+    formatList.push(temp);
+    formatList.push([price]);
+    formatList.push([]);
+    html = formatAll(html, formatList);
+    setText(html);
+    const itemElem = document.getElementById(item+"Am");
+    itemElem.addEventListener("input", function () {
+    value = itemElem.value;
+    price = value*obj.price;
+    const itemIndic = document.getElementById("itemIndic");
+    itemIndic.innerText = displaypos(obj, value, true);
+    const moneyElem = document.getElementById("monAmount");
+    if (price < 0)
+        moneyElem.innerText = "NaN";
+    else
+        moneyElem.innerText = price;
+});
+    let form = document.getElementById("buy"+item);
+    form.onsubmit = function (event) {
+        event.preventDefault();
+        buyItem2(item, value, price);
+    };
+    addListeners([function(){
+        buyItem2(item, value, price);
+    }], "buy");
+}
+
+function buyItem2(item, value, price){
+    let curtext = [];
+    let listenerList = [];
+    let again = function (){
+        buyItem(item);
+    }
+    let choice = []
+    //Check if you have the money to buy as many as you indicated.
+    if (money < price){
+        curtext = printList(curtext, objQuotes["buyItem2"][0]);
+        listenerList.push([[again, "Try again."], "buySoda"]);
+        choice = callChoice(["curloc", "Forget it."], choice);
+    } else if (price < 0){
+        curtext = printList(curtext, objQuotes["buyItem2"][1]);
+        listenerList.push([[again, "Try again."], "buySoda"]);
+        choice = callChoice(["curloc", "Forget it."], choice);
+    } else if (value > 100){
+        curtext = printList(curtext, objQuotes["buyItem2"][2]);
+        listenerList.push([[again, "Try again."], "buySoda"]);
+        choice = callChoice(["curloc", "Forget it."], choice);
+    } else {
+        if (!playOnly.includes(locstack[0]))
+            curtext = printList(curtext, objQuotes["buyItem2"][3]);
+        else
+            curtext = printList(curtext, objQuotes["buyItem2"][4]);
+        money -= price;
+        objects.soda.value += value;
+        choice = callChoice(["curloc", "Continue..."], choice);
+    }
+    sayText(curtext);
+    cListenerGenList(listenerList);
+    addSayText(choice); //Adds the option to go back to the current location
+    addListenersList(listenerList);  //because of change in html all listeners are reset so re-add them,
+}
+
 function haveItem(item){
     return objects[item].value > 0;
 }
 
 // displaypos function prints the given object.
 //TODO probably combine with getOwned
-function displaypos(itemobj, number) {
+function displaypos(itemobj, number, buy=false) {
     if (typeof number === "undefined")
         number = itemobj.value;
     let description = ""
     if (number > 0){
-        if (comma > 0) description += ",&nbsp;"
+        if (!buy)
+            if (comma > 0) description += ",&nbsp;"
         description += itemobj.owned;
-        let formatlist = [number.toString()];
+        let formatList = []
+            if (buy)
+                formatList.push("");
+            else
+                formatList.push(number.toString());
         if (number > 1){
-            if (description.includes("shotglass")) formatlist.push("es");
-            else formatlist.push("s");
-        } else formatlist.push("");
+            if (description.includes("shotglass")) formatList.push("es");
+            else formatList.push("s");
+        } else formatList.push("");
         if (itemobj.hasOwnProperty("options")){
             if (champagnecounter > 0){
-                if (champagnecounter < 6) formatlist.push(itemobj.options[0]);
-                else formatlist.push(itemobj.options[1]);
-            } else if (champagnecounter === 0) formatlist.push("");
+                if (champagnecounter < 6) formatList.push(itemobj.options[0]);
+                else formatList.push(itemobj.options[1]);
+            } else if (champagnecounter === 0) formatList.push("");
         }
-        description = description.format(formatlist);
-        document.getElementById('objsp').innerHTML += description;
+        description = description.format(formatList);
         comma = 1;
     }
     return description;
@@ -347,6 +431,7 @@ function displayDrankItem(item){
     return ""
 }
 
+//TODO combine bribeRoses and bribEarrings
 function briberoses() {
     let curtext = [];
     curtext = printList(curtext, needs["briberoses"]);
@@ -367,65 +452,51 @@ function bribeearrings() {
     sayText(curtext);
 }
 
-//TODO test
 function holdpurse() {
-    console.log("test");
     haveherpurse = 1;
     let curtext = [];
     curtext.push(needs["holdpurse"][0]);
     curtext.push(needs["holdpurse"][1]);
-    // s(girltalk + "Great!");
-    // s("She hands you her small, stylish purse and runs off to relieve herself.");
     curtext = printChoicesList(curtext, [6,7], needs["choices"]);
-    // c("lookinsidepurse", "Look inside her purse.");
-    // c("indepee", "Be a gentleman");
     sayText(curtext)
 }
 
-//TODO test
 function lookinsidepurse() {
-    console.log("test");
     let curtext = [];
     curtext.push(needs["holdpurse"][2]);
-    // s("You open the top and see:");
     let tempstring = "A ";
-    herpurse.forEach((item, index) => {
-        if(index === 0)
-            tempstring += item["desc"];
-        else if (index === item.size - 1){
-            tempstring += "and a" + item["desc"];
-        } else {
-            tempstring += "a" + item["desc"];
+    let first = false;
+    let keys = Object.keys(herpurse);
+    for (let i = 0; i < keys.length; i++){
+        const item = herpurse[keys[i]];
+        if (!item.hasOwnProperty("funDesc") || !haveItem(keys[i])) {
+            if (!first) {
+                tempstring += item["desc"];
+                first = true;
+            } else if (i === keys.length - 1) {
+                tempstring += " and a " + item["desc"];
+            } else {
+                tempstring += ", a " + item["desc"];
+            }
         }
-    });
-    // if (!herkeys)
-    //     tempstring += "set of keys, a ";
-    // if (!hercellphone)
-    //     tempstring += "small cellphone, a ";
-    // tempstring += "compact makeup kit and a comb.";
-    // s(tempstring);
+    }
+
     curtext.push(tempstring);
-    herpurse.forEach(item => {
-        if ("funDesc" in item){
-            curtext = c(["takeHerItem(item.key)", "take "+ item.funDesc] ,curtext);
-        }
+    keys.forEach(key => {
+            const item = herpurse[key];
+            if ("funDesc" in item && !haveItem(key))
+                curtext = c(["takeHerItem(&quot;" + key + "&quot;)", "take " + item.funDesc], curtext);
     });
-    // if (!herkeys)
-    //     c("takeherkeys", "Take her keys");
-    // if (!hercellphone)
-    //     c("takeherphone", "Take her cellphone");
-    // c("indepee", "Close the purse");
     curtext = printChoicesList(curtext,[8], needs["choices"]);
     sayText(curtext);
 }
 
-//TODO test
 //You steal the given item from her purse
 function takeHerItem(item){
-    console.log("test");
     let curtext = [];
-    curtext.push(needs["holdpurse"][3].format(item.funDesc));
-    curtext = printChoicesList(curtext, [9,1]);
+    curtext.push(needs["holdpurse"][3].format([herpurse[item].funDesc]));
+    objects[item].value += 1;
+    curtext = printChoicesList(curtext, [9,1], needs["choices"]);
     sayText(curtext);
 
 }
@@ -475,30 +546,6 @@ function giveHer(item){
     curtext = callChoice(["curloc", "Continue..."] );
     addSayText(curtext);
     addListenersList(listenerList);
-}
-
-function givedrypanties() {
-    s(girltalk + "Where did you get those?");
-    s("She slips into the clean panties with a smile.");
-    panties -= 1;
-    pantycolor = "sexy";
-    if (wetlegs < 1) attraction += 5;
-    if (wetlegs > 0) {
-        s("Her still dripping pussy dampens the crotch of the new panties.");
-    }
-    wetlegs = 0;
-    c(locstack[0], "Continue ... ");
-}
-
-function giveptowels() {
-    s(girltalk + "Thanks!");
-    s("She wipes the pee from her legs and pussy.");
-    attraction += 5;
-    ptowels -= 1;
-    wetlegs = 0;
-    if (panties > 0)
-        c("givedrypanties", "Offer her a clean pair of panties");
-    c(locstack[0], "Continue ... ");
 }
 
 function createItemButtonList(){

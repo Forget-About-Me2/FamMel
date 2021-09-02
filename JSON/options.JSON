@@ -1,7 +1,7 @@
 {
   "html": [
     "<p class='title'>OPTIONS:</p>",
-    "<form name=options>",
+    "<form name=options onsubmit='gamestart(); return false;'>",
     "<b>Select Girl:</b>",
     "<input type=radio value=Jennifer name=girl id=jennifer {0} onclick=setgirl('Jennifer');> Jennifer &nbsp;&nbsp;",
     "<input type=radio value=Karen name=girl id=karen {0} onclick=setgirl('Karen');> Karen &nbsp;&nbsp;",
@@ -31,7 +31,7 @@
   ],
   "picsetup" : [
     "<p class=\"title\">OPTIONS:</p><p></p>",
-    "<form name=\"options\"><p></p></form>",
+    "<form name=\"options\" onsubmit='go('options'); return false;'><p></p></form>",
     "<b>Select Girl:</b>",
     "<select id=\"girlname\">",
     "</select>",
@@ -60,7 +60,7 @@
     "<a href=\"javascript:go('options')\">Continue...</a><p></p></li></div>"],
   "cusgirl": [
     "<p class=\"title\">CUSTOM GIRL:<p>",
-    "<form name=customgirl>",
+    "<form name=customgirl onsubmit='exitcustomgirl(); return false;'>",
     "Here, you can customize to some extent the girl of your dreams.<br><br>",
     "<b>Select Base Girl:</b>",
     "<input type=radio value=Jennifer name=girl id=jennifer {0} onclick=setbasegirl('Jennifer');> Jennifer &nbsp;&nbsp;",
@@ -76,7 +76,7 @@
   ],
   "bladder" : [
     "<p class='title'> BLADDER SETTINGS:</p>",
-    "<form name=bladderOptions>",
+    "<form name=bladderOptions onsubmit='options(); return false;'>",
     "<b>Your Comfortable Bladder Capacity:</b>",
     "<input type=text value={0} name=yourcustblad id=yourbladder onchange=setyourcustbladurge()><br><br>",
     "<b>Percentage bladder decay</b> <input type=text value={0} name=bladPer id=bladPer onchange=setBladPer();>%",

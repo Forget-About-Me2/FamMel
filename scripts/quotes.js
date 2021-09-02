@@ -20,6 +20,7 @@ let drive; //This stores all dialogues regarding driving around from the JSON
 let general; //This stores all general quotes from JSON call
 let darts; //This stores the json quotes for the darts game
 let sexLines; //This stores the json quotes related to fucking scenes
+let objQuotes; //This stores the json quotes related to objects.
 
 
 let girlname = "Laura";
@@ -386,6 +387,7 @@ String.prototype.formatVars = function() {
     let s = this;
     s = s.replaceAll(new RegExp("girlname",'gm'), girlname);
     s = s.replaceAll(new RegExp("girltalk", 'gm'), girltalk);
+    s = s.replaceAll(new RegExp("girlgasp", 'gm'), girlgasp);
     s = s.replaceAll(new RegExp("bladlose", 'gm'), bladlose);
     return s;
 }
@@ -398,7 +400,7 @@ function formatString(expr, arguments){
 function formatAll(exprList, values){
     let result = [];
     for(let i=0;i<exprList.length; i++){
-        result.push(formatString(exprList[i], [values[i].toString()]));
+        result.push(formatString(exprList[i], values[i]));
     }
     return result;
 }
@@ -787,6 +789,9 @@ function setupQuotes(){
     });
     getjson("games/darts", dartSetup);
     getjson("fuckHer", fuckHerSetup);
+    getjson("objects", function () {
+        objQuotes = json;
+    });
     yNeedSetup();
 }
 
@@ -844,6 +849,7 @@ function needSetup(){
     needs["wetherself"] = replaceWCLC(needs["wetherself"], needs["girlname"], "girlname");
     needs["wetherself"] = replaceWCLC(needs["wetherself"], needs["girltalk"], "girltalk");
     needs["drinkquote"] = addGirlname(needs["drinkquote"]);
+    needs["peeoutside"] = replaceWCLC(needs["peeoutside"], needs["girltalk"], "girltalk");
     toldstories = range(0, needs["peestory"].length);
 }
 
@@ -891,8 +897,8 @@ function shePeeSetup(){
     peelines["girltalk"]= addGirlTalk(peelines["girltalk"]);
     peelines["locked"]["girltalk"] = addGirlTalk(peelines["locked"]["girltalk"]);
     peelines["thehome"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
-    peelines["noneavailable"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
-    peelines["remaining"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
+    peelines["noneavailable"] = replaceWCLC(peelines["noneavailable"], peelines["girlname"], "girlname");
+    peelines["remaining"] = replaceWCLC(peelines["remaining"], peelines["girlname"], "girlname");
     let temp = [];
     peelines["peephone"].forEach(item => temp.push(replaceWCLC(item, peelines["girltalk"], "girltalk")));
     peelines["peephone"] = temp;

@@ -1,0 +1,16 @@
+{
+  "buyItem": [
+    "<form id=buy{0} name=buy{0} on>",
+    "<p> You buy ",
+    "<input class=buy type=number name={0}Am id={1}Am value=1 min=1 max=100> <text id=itemIndic>{2}</p>",
+    "</p>For $ <text id=monAmount>{0}</text></p></form>",
+    "<p><li class='cListener' id=buy>Continue...</li></p>"
+  ],
+  "buyItem2": [
+    ["You don't have enough money."],
+    ["Uhm, you can't buy negative drinks."],
+    ["Whoa, give the poor employee a break, there is no way you need more than a 100 of them..."],
+    ["You pay before going back to girlname."],
+    ["You pay and move away from the counter."]
+  ]
+}

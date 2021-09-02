@@ -3,7 +3,7 @@
 let locations = {
     "driveAround": driveAroundSetup(),
     "theBar" :theBarSetup(),
-    "theatre": theatreSetup(),
+    "theTheatre": theatreSetup(),
     "makeOut": makeOutSetup()
 };
 

@@ -178,17 +178,17 @@ function fuckHerSetup(){
             obj["intro"][1] = formatAllVars(obj["intro"][1]);
             obj["maxKiss"] = formatAllVars(obj["maxKiss"]);
             obj["leaveSex"] = formatAllVars(obj["leaveSex"]);
-        } else if (loc === "actions"){
+        } else if (loc === "actions" || loc === "clothes") {
             Object.keys(sexLines[loc]).forEach(action => {
-                sexLines[loc][action].forEach(item => {
-                    sexLines[loc][action][item] = formatAllVarsList(sexLines[loc][action][item]);
-                })
-            })
+                for (let i = 0; i < sexLines[loc][action].length; i++) {
+                    sexLines[loc][action][i] = formatAllVarsList(sexLines[loc][action][i]);
+                }
+            });
         }
-    });
     sexLines["fuckTry"] = formatAllVars(sexLines["fuckTry"]);
 
     sexActions.init();
+});
 }
 
 function haveSex(location){

@@ -15,7 +15,7 @@ function objInit(){
     Object.keys(this).forEach(prop => {
         if (prop !== "initVal")
             initVal[prop] = this[prop];
-            if (typeof this[prop] === "object")
+            if (typeof this[prop] === "object" && !Array.isArray(this[prop]))
                 this[prop].init();
     });
     this.initVal = initVal;

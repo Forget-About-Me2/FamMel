@@ -31,14 +31,15 @@
     "always": ["money0",
       "What are you going to buy?"],
     "choices": [
-      ["buy(0)", "An overpriced bottle of water ($10)"],
-      ["buy(1)", "A bouquet of red roses ($20)"],
-      ["buy(2)", "A pair of diamond earrings ($60)"],
-      ["buy(3)", "A flower vase ($30)"],
-      ["buy(4)", "A shot glass ($10)"],
-      ["buy(5)", "A roll of paper towels ($10)"],
-      ["buy(6)", "A pair of sexy panties ($30)"],
-      ["buy(7)", "A bottle of fancy champagne ($50)"],
+      ["buyItem(&quot;water&quot;)", "An overpriced bottle of water ($10)"],
+      ["buyItem(&quot;roses&quot;)", "A bouquet of red roses ($20)"],
+      ["buyItem(&quot;earrings&quot;)", "A pair of diamond earrings ($60)"],
+      ["buyItem(&quot;vase&quot;)", "A flower vase ($30)"],
+      ["buyItem(&quot;shotglass&quot;)", "A shot glass ($10)"],
+      ["buyItem(&quot;champ-glass&quot;)", "A champagne glass ($12)"],
+      ["buyItem(&quot;ptowels&quot;)", "A roll of paper towels ($10)"],
+      ["buyItem(&quot;panties&quot;)", "A pair of sexy panties ($30)"],
+      ["buyItem(&quot;champagne&quot;)", "A bottle of fancy champagne ($50)"],
       ["goback", "Nothing"]
     ],
   "buying": [

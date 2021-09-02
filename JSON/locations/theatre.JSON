@@ -158,18 +158,5 @@
         [ "girlname starts to pee immediately.  Her stream hisses out and spatters on the carpet, which soaks it up quickly, making a gurgling spattering noise.  The scent of her pee fills the air."]
       ]
     }
-  },
-  "buySoda": [
-    "<form name=buySoda>",
-    "<p> You buy ",
-    "<input class=buy type=number name=sodaAm id=sodaAm value=1 min=1 max=100> soda(s)</p>",
-    "</p>For $ <text id=monAmount>5</text></p>",
-    "<p><li class='cListener' id=buy>Continue...</li></p>"
-  ],
-  "buySoda2": [
-    ["You don't have enough money."],
-    ["Uhm, you can't buy negative drinks."],
-    ["Whoa, give the poor employee a break, there is no way you need more than a 100 drinks..."],
-    ["You pay for them before going back to girlname."]
-  ]
+  }
 }

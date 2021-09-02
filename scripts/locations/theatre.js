@@ -7,14 +7,14 @@ function theatreSetup(){
         "visit": [theTheatre, "Go to the theatre"],
         "wantVisit": [theTheatre, "Go to see a movie as she suggested."],
         "group": 2,
-        "visited": 0
+        "visited": 0,
+        "keyChance": 1
     }
 }
 
 function theatreJsonSetup(){
     theatre = json;
     theatre["theatre"] = formatAllVarsList(theatre["theatre"]);
-    theatre["buySoda2"] = formatAllVarsList(theatre["buySoda2"]);
     theatre["darkTheatre"] = formatAllVarsList(theatre["darkTheatre"]);
     theatre["noRest"] = formatAllVarsList(theatre["noRest"]);
     theatre["watchMovie"] = formatAllVarsList(theatre["watchMovie"]);
@@ -50,7 +50,7 @@ function theTheatre(){
             curtext = preventpee(curtext);
             sayText(curtext);
         } else {
-            listenerList.push([[buySoda, "Buy soda."], "buySoda"]);
+            listenerList.push([[function () {buyItem("soda")}, "Buy soda."], "buySoda"]);
             listenerList.push([[askMovie, "Ask her which movie she wants to watch."], "askMovie"]);
             listenerList.push([[chooseMovie, "Watch a movie."], "chooseMovie"]);
             if (yourbladder > yourbladurge)
@@ -68,54 +68,6 @@ function reTheatre() {
     pushloc("theTheatre");
     theTheatre();
 }
-
-//Let's you choose the amount of Soda you want.
-function buySoda() {
-    setText(theatre["buySoda"]);
-    let sodaElem = document.getElementById("sodaAm");
-    let value = 1;
-    let price = 5;
-    sodaElem.addEventListener("keyup", function (){
-        value = sodaElem.value;
-        price = sodaElem.value*5;
-        const moneyElem = document.getElementById("monAmount");
-        if (price < 0)
-            moneyElem.innerText = "NaN";
-        else
-            moneyElem.innerText= price;
-    });
-    addListeners([function(){
-        buySoda2(value, price);
-    }], "buy");
-}
-
-//You actually buy the soda, errors for invalid numbers.
-function buySoda2(value, price){
-    let curtext = [];
-    let listenerList = [];
-    //Check if you have the money to buy as many as you indicated.
-    if (money < price){
-        curtext = printList(curtext, theatre["buySoda2"][0]);
-        listenerList.push([[buySoda, "Try again."], "buySoda"]);
-        listenerList.push([[theTheatre, "Forget it."], "theatre"]);
-    } else if (price < 0){
-        curtext = printList(curtext, theatre["buySoda2"][1]);
-        listenerList.push([[buySoda, "Try again."], "buySoda"]);
-        listenerList.push([[theTheatre, "Forget it."], "theatre"]);
-    } else if (price > 100){
-        curtext = printList(curtext, theatre["buySoda2"][2]);
-        listenerList.push([[buySoda, "Try again."], "buySoda"]);
-        listenerList.push([[theTheatre, "Forget it."], "theatre"]);
-    } else {
-        curtext = printList(curtext, theatre["buySoda2"][3]);
-        money -= price;
-        objects.soda.value += value;
-        listenerList.push([[theTheatre, "Continue..."], "theatre"]);
-    }
-    sayText(curtext);
-    cListenerGenList(listenerList);
-}
-
 
 function askMovie() {
     let curtext = [];

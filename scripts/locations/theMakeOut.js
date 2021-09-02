@@ -6,8 +6,7 @@ function makeOutSetup(){
         "visit": [theMakeOut, "Go to the make-out spot"],
         "wantVisit": [theMakeOut, "Take her up to the make-out spot"],
         "group": 1,
-        "visited": 0,
-        "keyChance": 1
+        "visited": 0
     }
 }
 
@@ -27,7 +26,7 @@ function theMakeOut() {
         if (attraction > gomakeoutthresh) {
             curtext = printList(curtext, makeOut["theMakeOut"][0]);
             // s("You and " + girlname + " drive up to the make-out spot.  It's dark and deserted, but has a beautiful view of the stars.");
-            pushloc("themakeout");
+            pushloc("theMakeOut");
         } else {
             curtext = printList(curtext, makeOut["theMakeOut"][1]);
             // s("You start to drive out to the makeout spot, up a winding hilly road.");
@@ -45,8 +44,8 @@ function theMakeOut() {
         else if (randomchoice(5)) curtext = interpbladder(curtext);
     }
     locations.makeOut.visited = 1;
-    curtext = showneed();
-    curtext = displayyourneed();
+    curtext = showneed(curtext);
+    curtext = displayyourneed(curtext);
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
@@ -57,12 +56,11 @@ function theMakeOut() {
             listenerList.push([[viewStars, "Suggest that you gaze at the stars."], "viewStars"]);
             listenerList.push([[theWalk, "Invite " + girlname + " to take a walk."], "theWalk"]);
             if (!haveItem("theTheatreKey")) {
-                listenerList.push([[function () {lookAround("makeOut")}, "look around."], "lookAround"]);
+                listenerList.push([[function () {lookAround("theTheatre")}, "look around."], "lookAround"]);
             }
             curtext = standobjs(curtext);
             if (yourbladder > yourbladurge)
                 listenerList.push([[ypeeoutside, "Pee outside."], "ypeeOutside"])
-                c("ypeeoutside", "Pee outside.")
         }
         listenerList.push([[leavehm, "Drive off."], "leaveHm"]);
     }
@@ -73,9 +71,7 @@ function theMakeOut() {
 function failMakeOut() {
     shyness += 10;
     attraction -= 10;
-    let curtext = printList([], makeOut["theMakeOut"]);
-    // s(girltalk + "I don't feel comfortable going up there with you.");
-    // s(girltalk + "Please let's go somewhere else.");
+    let curtext = printList([], makeOut["theMakeOut"][3]);
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);
     sayText(curtext);
@@ -418,6 +414,8 @@ function beachSwim3() {
       [[beachSwim4b, "Feel her up."], "feelHer"],
       [[beachSwim4, "Continue..."], "beachSwim"]
     ];
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
 //TODO tell her you got to go too.

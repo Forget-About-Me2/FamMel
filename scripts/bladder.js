@@ -281,26 +281,26 @@ function indepee(curtext=[], called=false) {
         locstack[0] === "fuckher6") {
         curtext.push(peelines["thehome"][0]);
         // s(girlname + " heads for the bathroom, leaving the door slightly ajar.");
-    } else if (locstack[0] === "themakeout" ||
-        locstack[0] === "thehottub" ||
+    } else if (locstack[0] === "theMakeOut" ||
+        locstack[0] === "theHotTub" ||
         locstack[0] === "driveout" ||
         locstack[0] === "thehome" ||
         locstack[0] === "thebedroom" ||
-        locstack[0] === "thewalk" || locstack[0] === "theyard" || locstack[0] === "thebeach") {
+        locstack[0] === "theWalk" || locstack[0] === "theYard" || locstack[0] === "theBeach") {
         curtext.push(peelines["noneavailable"][0]);
     } else
         curtext = printList(curtext, peelines["remaining"]);
-    if ((locstack[0] === "thebar" && randomchoice(rrlockedthresh) ) ||
-        ((locstack[0] === "theclub" || locstack[0] === "dodance") && randomchoice(rrlinethresh)) ||
-        (locstack[0] === "themovie" && randomchoice(rrMovieLineThresh) || locstack[0] === "domovie" && randomchoice(rrMovieLineThresh))){
+    if ((locstack[0] === "theBar" && randomchoice(rrlockedthresh) ) ||
+        ((locstack[0] === "theClub" || locstack[0] === "doDance") && randomchoice(rrlinethresh)) ||
+        (locstack[0] === "theTheatre" && randomchoice(rrMovieLineThresh) || locstack[0] === "domovie" && randomchoice(rrMovieLineThresh))){
         curtext = bathroomlocked(curtext);
-    } else if (locstack[0] === "themakeout") {
+    } else if (locstack[0] === "theMakeOut") {
         curtext.push(peelines["noneavailable"][1]);
         curtext = displayneed(curtext);
     } else if (locstack[0] === "driveout") {
         curtext.push(peelines["noneavailable"][2]);
         curtext = displayneed(curtext);
-    } else if (locstack[0] === "thewalk" || locstack[0] === "theyard" || locstack[0] === "thebeach" || locstack[0] === "thehottub") {
+    } else if (locstack[0] === "theWalk" || locstack[0] === "theYard" || locstack[0] === "theBeach" || locstack[0] === "theHotTub") {
         curtext.push(peelines["noneavailable"][3]);
         curtext = displayneed(curtext);
         curtext = interpbladder(curtext);
@@ -641,60 +641,6 @@ function displaywaited(curtext) {
 }
 
 //
-//  She says how much she's drank since she last peed.
-//
-//TODO change for new objects
-// function displaydrank(curtext) {
-//
-//     let sentence = " ";
-//     comma = 0;
-//
-//     if (drankwaters > 0) {
-//         comma = 1;
-//         sentence += drankwaters + " water";
-//         if (drankwaters > 1) sentence += "s";
-//     }
-//
-//     if (drankbeers > 0) {
-//         if (comma > 0) {
-//             if (dranksodas + drankcocktails === 0)
-//                 sentence += " and ";
-//             else
-//                 sentence += ", ";
-//         }
-//         comma = 1;
-//
-//         sentence += drankbeers + " beer";
-//         if (drankbeers > 1) sentence += "s";
-//     }
-//
-//     if (dranksodas > 0) {
-//         if (comma > 0) {
-//             if (drankcocktails === 0)
-//                 sentence += " and ";
-//             else
-//                 sentence += ", ";
-//         }
-//         comma = 1;
-//         sentence += dranksodas + " soda";
-//         if (dranksodas > 1) sentence += "s";
-//     }
-//
-//     if (drankcocktails > 0) {
-//         if (comma > 0) sentence += " and ";
-//         comma = 1;
-//         sentence += drankcocktails + " cocktail";
-//         if (drankcocktails > 1) sentence += "s";
-//     }
-//
-//     if ((drankwaters + drankbeers + drankcocktails + dranksodas) > 0) {
-//         curtext.push(girltalk + "I drank " + sentence + " " + pickrandom(needs["drankburst"]));
-//     }
-//
-//     return curtext;
-// }
-
-//
 //  You try to convince her to hold it.
 //
 function convinceher(curtext) {
@@ -756,14 +702,9 @@ function allowpee() {
         || locstack[0] === "pickup" || locstack[0] === "darkclub" || locstack[0] === "darkbar") {
         curtext = callChoice(needs["choices"][1], curtext);
     } else {
-        //TODO test
-        console.log("test");
-        // s(girltalk + "Can you hold my purse for me?");
         curtext.push(needs["allowpee"][2]);
         attraction += 7;
         curtext = printChoicesList(curtext, [1,5], needs["choices"]);
-        // c("holdpurse", "Sure, I'll take care of it!");
-        // c("indepee", "I think you'd better take it with you.");
     }
     sayText(curtext);
 }
@@ -949,46 +890,33 @@ function peeintub2() {
 //TODO do something if you peed outside already(mention to follow your lead)
 //TODO she pees outside if she's not bursting
 //TODO fix the duplicate code
-//TODO test
 function peeoutside() {
-    console.log("test");
     let curtext = [];
     if (attraction > 30) {
         if (bladder > blademer) {
             if (peedoutside)
                 curtext.push(needs["peeoutside"][0]);
-                // s(girltalk + "I'm so embarrassed to have to pee outside again.");
             else
                 curtext.push(needs["peeoutside"][1]);
-                // s(girltalk + "That's pretty daring.  I've never gone outside before.");
             curtext = printListSelection(curtext, needs["peeoutside"], [2,3]);
-            // s(girltalk + "But I'm about to wet my panties if I don't go somewhere!");
-            // s(girltalk + "I can't hold it!  What am I gonna do???");
             curtext = displayneed(curtext);
             let choices = [];
             if (locstack[0] === "themakeout") choices.push(17);
             else choices.push(18);
-            // if (locstack[0] === "themakeout") c("peeoutside2", "Continue...");
-            // else c("peeoutside2b", "Continue...");
             curtext = printChoicesList(curtext, choices, needs["choices"]);
         } else {
             curtext = displaygottavoc(curtext);
             curtext = printListSelection(curtext, needs["peeoutside"], [4,5]);
-            // s(girltalk + "But I can't just go outside!");
-            // s(girltalk + "At least not yet.");
             curtext = displayholdquip(curtext);
             gottagoflag = 0;
             curtext = printChoicesList(curtext, [0], needs["choices"]);
-            // c(locstack[0], "Continue...");
         }
     } else {
         //TODO this code is almost impossible to reach? since you need at least 40 attraction to get outside
         curtext.push(needs["peeoutisde"][6]);
-        // s(girltalk + "Pee outside?  No way am I exposing my privates to the whole world!");
         attraction -= 3;
         if (attraction < 0) attraction = 0;
         curtext = printChoicesList(curtext, [0], needs["choices"]);
-        // c(locstack[0], "Continue...");
     }
     sayText(curtext);
 }
@@ -999,7 +927,7 @@ function peeoutside2() {
     console.log("test");
     let curtext = [];
     if (pantycolor !== "none") curtext.push(appearance["clothes"][heroutfit]["peeoutsidequote"]);
-    else curtext.push(appearance["clothes"][heroutfit]["peeoutsidequotebare"]);
+    else curtext.push(appearance["clothes"][heroutfit]["peeoutsidequotebare"].format([pantycolor]));
     // if (pantycolor !== "none") s(peeoutsidequote);
     // else s(peeoutsidequotebare);
     curtext.push(needs["peeoutside"][7]);

@@ -57,7 +57,7 @@ function thebar(){
         } else {
         listenerList = barTalk(curtext);
         listenerList.push([[buybeer], "buybeer"]);
-        cListener([buybeer, "Buy a beer."], "buybeer");
+        cListener([function () {buyItem("beer")}, "Buy a beer."], "buybeer");
         if (!haveItem("theBarKey")){
             listenerList.push([[function () {lookAround("theBar")}], "lookAround"]);
             cListener(["", "Look around."], "lookAround");
