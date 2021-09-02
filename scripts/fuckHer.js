@@ -978,7 +978,7 @@ function fuckHer2b() {
     cListenerGen([fuckHer3, "Continue..."], "fuckHer");
 }
 
-function fuckher3() {
+function fuckHer3() {
     let curtext = [], listenerList = [];
     if (bladder > blademer) {
         curtext = printList(curtext, sexLines["fuckNow"][13]);
@@ -1008,7 +1008,7 @@ function preWet(curtext = []) {
     cListenerGen([wetBed, "Continue..."], "wetBed");
 }
 
-function fuckher4() {
+function fuckHer4() {
     pushloc("fuckher6");
     sayText(sexLines["fuckNow"][16]);
     let listenerList = [];
@@ -1023,7 +1023,7 @@ function fuckher4() {
     cListenerGenList(listenerList);
 }
 
-function fuckher5() {
+function fuckHer5() {
     sayText(sexLines["fuckNow"][17]);
     // s(girlname + " takes a deep breath, and you hear her quietly counting to 3 as a calm takes over her body.");
     // s(girltalk + "That would be more fun, wouldn't it?");
@@ -1032,56 +1032,64 @@ function fuckher5() {
     cListenerGen([fuckHer6, "I promise..."], "fuckHer");
 }
 
-function fuckher5b() {
-    let curtext = printList([], sexLines["fuckNow"][17]);
+function fuckHer5b() {
+    let curtext = printList([], sexLines["fuckNow"][18]);
     // s(girlname + " takes a deep breath.  Then she gasps.");
     preWet(curtext);
 }
 
-function fuckher6() {
+function fuckHer6() {
+    let curtext = [];
+    let listenerList = [];
     if (bladder < bladneed) {
-        fuckher6b()
+        curtext = printList(curtext, sexLines["fuckNow"][19]);
+        // s(girlname + " smiles seductively at you as she slowly climbs back on the bed.");
+        // s("She wastes no time with climbing back on top of you and you quickly push your dick in again.");
+        // s("She's moaning and bucking her hips in seconds - and you can feel yourself on the verge of shooting your load.");
+        // s("Suddenly " + girlname + " cries out and you feel her pussy grip your shaft hard. You can't hold out one second longer. Her orgasmic spasms are massaging your penis, and she's absolutely the sexiest thing you've ever seen in the throas of her ecstasy.");
+        // s("You both lie there in bed together, catching your breath.");
+        // s("You run your hand over her tight belly, maybe you should've let her hold it after all.");
+        // s("Maybe next time.");
+        listenerList.push([[gameSex, "Continue..."], "gameSex"]);
     } else {
-        s(girlname + " pulls you back into her like a possessed woman and you start pumping quickly.");
-        s("She's moaning and bucking her hips in seconds - and you can feel yourself on the verge of shooting your load.");
-        if (bladder < bladcumlose)
-            s("Suddenly " + girlname + " cries out and you feel her pussy grip your shaft hard.  You can't hold out one second longer.  " +
-                "Her orgasmic spasms are massaging your penis, she's fighting an overwhelming impulse to pee just for you, " +
-                "and she's absolutely the sexiest thing you've ever seen in the throes of her ecstasy.");
-        else
-            s("Suddenly " + girlname + " cries out and you feel her pussy grip your shaft hard.  She momentarily loses control and a hot jet of pee squirts out." +
-                "<br>You can't hold out one second longer.  Her orgasmic spasms are massaging your penis, she's fighting an overwhelming impulse to pee just for you," +
-                " and she's absolutely the sexiest thing you've ever seen in the throes of her ecstasy.");
-        s("It's over.");
-        s("You both lie there for about 20 seconds as you catch your breath and the contractions subside.");
+        curtext = printList(curtext, sexLines["fuckNow"][20]);
+        // s(girlname + " pulls you back into her like a possessed woman and you start pumping quickly.");
+        // s("She's moaning and bucking her hips in seconds - and you can feel yourself on the verge of shooting your load.");
         if (bladder >= bladcumlose)
-            s("You feel the spurt of pee she released slowly trickle down and form a wet spot on the bed.");
-
-        c("fuckher7", "Continue");
+            curtext = printList(curtext, sexLines["fuckNow"][21]);
+        // if (bladder < bladcumlose)
+        //     s("Suddenly " + girlname + " cries out and you feel her pussy grip your shaft hard.  You can't hold out one second longer.  " +
+        //         "Her orgasmic spasms are massaging your penis, she's fighting an overwhelming impulse to pee just for you, " +
+        //         "and she's absolutely the sexiest thing you've ever seen in the throes of her ecstasy.");
+        // else
+        //     s("Suddenly " + girlname + " cries out and you feel her pussy grip your shaft hard.  She momentarily loses control and a hot jet of pee squirts out." +
+        //         "<br>You can't hold out one second longer.  Her orgasmic spasms are massaging your penis, she's fighting an overwhelming impulse to pee just for you," +
+        //         " and she's absolutely the sexiest thing you've ever seen in the throes of her ecstasy.");
+        curtext = printList(curtext, sexLines["fuckNow"][22]);
+        if (bladder >= bladcumlose)
+            curtext = printList(curtext, sexLines["fuckNow"][23]);
+        curtext = printList(curtext, sexLines["fuckNow"][24]);
+        // s("It's over.");
+        // s("You both lie there for about 20 seconds as you catch your breath and the contractions subside.");
+        // if (bladder >= bladcumlose)
+        //     s("You feel the spurt of pee she released slowly trickle down and form a wet spot on the bed.");
+        listenerList.push([[fuckHer7, "Continue..."], "fuckHer"]);
     }
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
-function fuckher6b() {
-    s(girlname + " smiles seductively at you as she slowly climbs back on the bed.");
-    s("She wastes no time with climbing back on top of you and you quickly push your dick in again.");
-    s("She's moaning and bucking her hips in seconds - and you can feel yourself on the verge of shooting your load.");
-    s("Suddenly " + girlname + " cries out and you feel her pussy grip your shaft hard. You can't hold out one second longer. Her orgasmic spasms are massaging your penis, and she's absolutely the sexiest thing you've ever seen in the throas of her ecstasy.");
-    s("You both lie there in bed together, catching your breath.");
-    s("You run your hand over her tight belly, maybe you should've let her hold it after all.");
-    s("Maybe next time.");
-    c("gameover", "Continue...");
-}
-
-function fuckher7() {
-    s("You hug her close to your body, but she gasps and struggles... 20 seconds was as long as she could take.");
-    s(girltalk + "It's coming out - I can't stop it!");
-
+function fuckHer7() {
+    let curtext = printList([], sexLines["fuckNow"][18]);
+    sayText(curtext);
+    // s("You hug her close to your body, but she gasps and struggles... 20 seconds was as long as she could take.");
+    // s(girltalk + "It's coming out - I can't stop it!");
+    // s("You quickly release her and she bounces out of bed, both hands pressed into her crotch.  You know the only thing holding in her pee now is her finger jammed into her pee hole.");
+    // s("She doesn't have far to go - the bathroom is steps from the bed.");
+    // s("She doesn't stop to close the door, and her pee begins flowing in a waterfall even before she sits on the toilet.  Her legs are open towards you and she's bent slightly forward, letting her firm breasts hang down.");
+    // s("The hissing is loud, and even from the bed you can smell a slight fragrance from the hot pee she held just for you.");
+    // s("You stare at the stream as it cascades from her crotch for nearly a minute, and you start to feel yourself getting hard again....");
     timeheld = thetime - lastpeetime;
-
-    s("You quickly release her and she bounces out of bed, both hands pressed into her crotch.  You know the only thing holding in her pee now is her finger jammed into her pee hole.");
-    s("She doesn't have far to go - the bathroom is steps from the bed.");
-    s("She doesn't stop to close the door, and her pee begins flowing in a waterfall even before she sits on the toilet.  Her legs are open towards you and she's bent slightly forward, letting her firm breasts hang down.");
-    s("The hissing is loud, and even from the bed you can smell a slight fragrance from the hot pee she held just for you.");
-    s("You stare at the stream as it cascades from her crotch for nearly a minute, and you start to feel yourself getting hard again....");
+    cListenerGen([gameWon, "Continue..."], "gameWon");
     c("gamewon", "Continue...");
 }
