@@ -158,6 +158,7 @@ function movieArgue() {
     }
 }
 
+let seenmovie = 0;
 //TODO figure out duplicate continue's
 function preMoviePee(curtext=[]) {
     pushloc("domovie");

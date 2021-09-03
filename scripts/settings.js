@@ -464,47 +464,4 @@ function setgirl(hername) {
     //  Have to reset all preset strings.
     girltalk = "<b>" + girlname + ":&nbsp;</b>";
     girlgasp = "<b>" + girlname + " gasps:&nbsp;</b>";
-
-    bargoodresp = Array(
-        girlname + " looks you in the eyes and smiles as she talks.",
-        girlname + " leans towards you and smiles.",
-        girlname + " seems pleased with the conversation.",
-        "You feel " + girlname + "'s foot playfully brush your leg, and she smiles as she talks",
-        girlname + " touches your shoulder gently.",
-        girlname + " seems to be playing with the top button of her blouse as she talks."
-    );
-
-    barmedresp = Array(
-        girlname + " seems uninterested in the conversation.",
-        girlname + " twirls her hair around her finger as she talks.",
-        girlname + " leans back in her chair.",
-        girlname + " glances around the room.",
-        girlname + " fiddles with her napkin.",
-        girlname + " glances quickly at her watch."
-    );
-
-    barbadresp = Array(
-        girlname + " leans back in her chair and sighs.",
-        girlname + " frowns.",
-        girlname + " looks pointedly at her watch.",
-        girlname + " seems more interested in shredding her napkin into little strips that what you have to say.",
-        girlname + " appears engrossed in the program on the bar television ... which is an infomercial for Arizona real estate.",
-        girlname + " looks exasperated."
-    );
-
-    wetquote = Array("Suddenly, " + girlname + " squeals and then gasps!",
-        "Suddenly, " + girlname + " freezes in place and her face turns bright red.",
-        girlname + " gasps and grabs at her pussy.",
-        girlname + " squeals and doubles over.",
-        girlname + " suddenly gasps and her face turns red.",
-        girlname + " suddenly shudders and her face turns red.");
-
-    barquotes = Array(
-        "Nice girl you've got there.  Bet she'll pee herself if she holds a drop over " + bladlose + "ml, though.",
-        "She's cute, isn't she?  I bet if you found her a cocktail, she'd be a lot less inhibited about drinking.",
-        "Did you know that beer is a diuretic?",
-        "Say, you don't happen to know where a man could buy a set of wet panties around here, do you?",
-        "How about them Dodgers?",
-        "I've been thinking about starting a bladder buster night here on Mondays."
-    );
 }

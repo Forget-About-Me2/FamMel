@@ -1,0 +1,21 @@
+{
+  "theClub": [
+    [ "girlname giggles: But we've already been to the club, silly!"],
+    [ "You and girlname enter the Night Club."],
+    [ "You are with girlname in the Night Club."]
+  ],
+  "barGirlDesc": [
+    "The girl tending the bar is really good-looking.",
+    "You can't help but notice how good the bartender looks in her uniform.",
+    "The bar girl seems to be smiling at you, and she looks pretty hot.",
+    "The gorgeous bartender keeps stealing glances at you - you wonder if she's trying to tell you something.",
+    "The bar girl leans over the bar giving you an eyeful down her shirt.",
+    "The bar girl bites her lip as she locks eyes with you."],
+  "barGirlQuotes": [
+    "<b>BarGirl:</b> It's pretty crowded tonight, isn't it?",
+    "<b>BarGirl:</b> Do you come here often?",
+    "<b>BarGirl:</b> Wow!  Have you seen the line for the restrooms tonight?",
+    "<b>BarGirl:</b> Anything else I can do for you?",
+    "<b>BarGirl:</b> Man it's hot in here, isn't it?",
+    "<b>BarGirl:</b> Hey, handsome, did you come here alone?"]
+}

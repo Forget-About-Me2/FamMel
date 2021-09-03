@@ -51,16 +51,6 @@ let girlgasp = "<b>" + girlname + " gasps:&nbsp;</b>";
 // her apologies for asking to go
 var wanthold=["I know you asked me to wait, but...", "I know you told me not to go, but...", "I know you wanted me to hold it, but..." , "I know you asked me not to pee, but...", "I know you wanted me to control my bladder, but..." , "I know you didn't want me to go, but..."];
 
-// Description of her holding her pee just for you
-// var sheholds=[
-//     "She needs to pee badly, but she's holding it for you.",
-//     "Her bladder is bursting but she's controlling it because you asked her.",
-//     "She's desperate to pee, but she's holding it just a little longer at your request.",
-//     "Her bladder is terribly full, but she's holding it in to please you.",
-//     "She's holding her pee in just for you, and she really needs to go.",
-//     "She wants very much to pee, but she's holding it in like you asked."
-// ];
-
 //
 //  Her expressions when peeing in a strange place
 //  used by itscomingout()
@@ -102,56 +92,6 @@ var curseword=["Dammit!", "Jesus!", "Shit!" , "Fuckit!", "Goddamn!", "Fuckin' A!
 var bargirlnames=["Tiffany", "Brittney", "Vanessa" , "Maya", "Angelina", "Samantha", "Carly"];
 
 //
-// Movie Plots
-//
-// moviedesc - 0 : Anticipate
-//             1 : Strange
-//             2 : Scary
-//             3 : Sexy
-//             4 : Romantic
-//             5 : Sexy
-//             6 : Romantic
-//  This is "The Urge"
-// var moviedesc0=[
-//     "The movie has just started.",
-//     "On the big screen, the heroine is being introduced - she apparently has some kind of super powers which are only activated by an intense need to pee.",
-//     "The movie has gotten to a scary part where the heroine is being stalked, but her bladder is far from full.",
-//     "The movie has reached a point where the heroine, after finally filling her bladder and dispensing with her attackers, is making out with her lover.",
-//     "The movie has reached a romantic interlude where the heroine decides to rescue her lover ... though she apparently has to pee bad since she never went to the restroom!",
-//     "In the movie, the lover has been rescued, and they are making out again.  The heroine is heroically resisting her incredible urge to pee.",
-//     "The movie is reaching a conclusion and the heroine is running hand in hand with her lover towards the bathroom as the credits roll."];
-
-//  This is "Desperate Housewives, The Movie"
-// var moviedesc1=[
-//     "The movie is starting.",
-//     "On the screen, the main characters are being introduced - three young newlyweds - a blonde, brunette and redhead - with controlling husbands who tell them they're not allowed to pee while the husband is away at work.",
-//     "In the movie, the redhead is waiting at home in the late afternoon, desperate to pee.  Tension rapidly builds as her husband is stuck in traffic on the way home.  She's on the verge of losing control.",
-//     "On screen, the redhead's husband finally shows up and she is overjoyed to see him.  They end up passionately making out at the front door."
-//     "In the movie, the redhead is lovingly undressed and sat on the toilet by her husband, after which they share the romantic dinner she prepared while she was waiting for him to come home." ,
-//     "In the movie, the blonde and brunette both meet up unexpectedly while out walking their dogs and trying to get their minds off their bursting bladders.  They make small talk, and because their minds are otherwise occupied, they don't seem to be able to tear themselves away from the conversation.  Eventually, the secret comes out, and they are turned on so much they engage in some heavy petting on the excuse of helping to hold it in.",
-//     "In the movie, the two entangled and desperate women are found by their returning husbands, who rather than being angry, declare their gratitude for such devotion in the face of extreme bladder pressure.  The foursome goes out for a romantic candle-lit dinner after a discrete stop behind the bushes."];
-
-//  This is "Control Yourself"
-// var moviedesc2=[
-//     "The previews have just finished and the movie comes on.",
-//     "The movie's main character is introduced, a young and outgoing college girl whose one failing is her shyness when it comes to telling other people she needs to pee.",
-//     "Ominous music plays and tension rises as the film follows the slender youth into a 7-11 where she buys a huge soda <i>right before her two hour final exams</i>.",
-//     "On the big screen, the girl quickly downs the soda on the way to her test when she meets up with her boyfriend.  They adjourn behind a tree for a quickie and the camera is not afraid to follow them as they run their hands underneath each others clothes and build up a little sweat.",
-//     "The movie has reached a point where the girl must leave for her test, and her boyfriend comforts her fears of failure, promising to marry her if she passes.",
-//     "On the screen, after a very interesting stop motion sequence showing the test and the girl's increasingly desperate need to pee, the test is finally over and she speeds out of the room - of course running into her boyfriend again, who mistakes her desperate struggles for another type of desire.  They find a private restroom this time and clumsily rip each others clothes off.  The girl looks longingly at the toilet but says nothing." ,
-//     "As the credits roll, the girl finally works up the courage to admit she has to pee like hell, and they kiss passionately as she finally is able to sit on the toilet and empty her bladder."];
-
-//  This is 2 liters, 25 Hours
-// var moviedesc3=[
-//     "You settle into your cushy seat with her by your side and the lights dim.",
-//     "The main detective is being introduced to dramatic music.  She's a young chinese woman with mad kung-fu skills, out to prove herself in the police force.  At the beginning of the movie, she's in kung-fu focus training, which somehow involves trying to ignore a very full bladder while practicing forms.",
-//     "On the big screen, our heroine is staking out a gangster.  More specifically, she's gotten herself stuck in a closet in his bedroom and he seems to have come home with company.",
-//     "In the movie, the head gangster has entered the bedroom and he's making out with a bevy of gangsterettes while our heroine watches from the closet.  She is getting turned on big time watching it all and she's got to pee in a bad way ... her hand strays to caress her pussy under her short skirt.",
-//     "After a harrowing escape, our heroine comes home and is greeted by her dog, to whom she confesses her doubts and fears while seated on the toilet.  The dog is suitably sympathetic and lays its head in her lap.",
-//     "The movie continues into a strange sex scene where the heroine is making out with the gangster boss and keeps excusing herself to go pee.  Not only is he reluctant to let her go pee, but when she is finally allowed to pee, she immediately feels an even stronger urge to go again when she returns.  Still, they work their way up to a sweaty climax - her acting is excellent, or maybe not even acting - the bulge of her bladder is clearly visible on screen." ,
-//     "In the movie the heroine finally wakes up - it was all a dream.  She's in bed with her husband who hugs her tight and says she's been sleeping for nearly 25 hours.  He says he can't believe she didn't even get up to pee, and offers her a mason jar, which she fills, blissfully held in his arms."];
-
-//
 // You look around the club
 //
 var clubview=["You see nothing special.",
@@ -160,16 +100,6 @@ var clubview=["You see nothing special.",
     "You see a couple dancing.  As she twirls, her short skirt flies up revealing a pair of skimpy, translucent panties.",
     "You see a waitress having an urgent conversation with the bartender.  She's squirming and pressing her crotch into a bar stool while pointing repeatedly in the direction of the restrooms.",
     "You look down at the floor and see a glint of metal."];
-
-//
-// You look around the make-out spot
-//
-var makeview=["You see nothing special.",
-    "You see city lights below and sparkling stars above.",
-    "You see another car parked in the corner of the lot with its windows fogged up.",
-    "You see a darker patch of ground a couple of spaces over, with what looks like a tiny rivulet draining into the gutter.",
-    "You see a soaked pair of white cotton panties lying on the ground.",
-    "You look down and see a glint of metal."];
 
 
 //
@@ -190,39 +120,6 @@ var bargirlresp=["Thanks!  I made it ... do you think it's too sexy?",
     "Well I just started last week ... am I doing okay?",
     "Well, you're not too bad looking yourself."];
 
-var bargirlquotes=["It's pretty crowded tonight, isn't it?",
-    "Do you come here often?",
-    "Wow!  Have you seen the line for the restrooms tonight?",
-    "Anything else I can do for you?",
-    "Man it's hot in here, isn't it?",
-    "Hey, handsome, did you come here alone?"];
-
-var bargirldesc=["The girl tending the bar is really good-looking.",
-    "You can't help but notice how good the bartender looks in her uniform.",
-    "The bartender seems to be smiling at you, and she looks pretty hot.",
-    "The gorgeous bartender keeps stealing glances at you - you wonder if she's trying to tell you something.",
-    "The bartender leans over the bar giving you an eyefull down her shirt.",
-    "The bartender bites her lip as she locks eyes with you."];
-
-//
-//  She's trying to hold it despite availability of restroom
-//  ( used during Champagne pouring )
-//
-var wonderwhy=[
-    "I shouldn't be doing this!" ,
-    "This is <b>so</b> hard!" ,
-    "Why am I doing this???" ,
-    "This is crazy, but I love it!" ,
-    "I'm such a ditz!",
-    "I must be nuts."];
-
-var cantdo=["I can't even think straight!",
-    "I can't even walk right!" ,
-    "I can't stop moving or..." ,
-    "I'm out of control!" ,
-    "I've got to concentrate on the task at hand." ,
-    "I'm trembling all over."];
-
 //
 //  Descriptions of her posing for you
 //
@@ -231,56 +128,6 @@ var cantdo=["I can't even think straight!",
 var posenude=["shyly covers her breasts with one hand and her pussy with the other.  Her face is a bright red.", "turns her back to you and tries to hide her bare bottom with one hand while she looks back over her shoulder.  You see the curls of her pubic hair in the space between her legs.", "slowly turns toward you, her breasts pressed between her extended arms, and both hands firmly blocking your view of her crotch.", "shyly moves one of her hands to her hip and cups a breast with the other.  She holds one leg crossed just a little forward, squeezing the exposed slit of her pussy closed.", "turns slightly, spreads her legs and caresses her inner thigh with one hand while spreading the other across the opposite butt cheek.", "turns away and bends down to touch her toes, legs spread slightly.  Her glistening pussy and cute, tight anus are fully exposed to your camera."];
 
 var poseemer=["<i>She seems to be having trouble keeping her legs still for any length of time, and she's breathing hard with the effort to control her bladder.</i>", "<i>She keeps unconsciously moving her hand closer to her pussy from behind and then catching herself and moving it back.  Her expression is strained as she tries to hold her pee and hold still at the same time.</i>", "<i>You can see sweat on her face as she tries to fight the burning pressure in her bladder and stay posed until you take a picture.</i>", "<i>She's trembling with the effort to control her bladder using just her sphincters while holding the pose at the same time.</i>", "<i>Her hips won't stop moving as she tries to manage her overwhelming urge to pee without breaking the pose.</i>", "<i>She's gasping for breath as she fights the spasms and her whole body shakes with the effort to hold both the pose and the contents of her overfull bladder.</i>"];
-
-//
-// Descriptions of her filling the champagne glasses in various situations.
-//
-
-var fillchamp=[
-    "She bends over to fill the glasses, jamming one hand into her crotch.",
-    "She fills both glasses and you can see her hand shaking with the effort to control herself." ,
-    "She fills both glasses, the bottle rattling against their rims as she shudders in an effort of self control." ,
-    "She quickly sits on her heel and fills the glasses kneeling in front of you.",
-    "She jerks her ass back and forth violently as she bends over to fill both glasses.",
-    "She nearly drops the bottle and her whole body shudders violently as she fills both glasses."];
-
-var fillchampbad=["She's gasping for breath as she fills both glasses, sloppily spilling most of it onto the table top." ,
-    "She bends over to fill both glasses and stumbles backwards, spilling champagne onto the floor.",
-    "She kneels and presses her pussy into the corner of the coffee table as she fights for control while filling both glasses.",
-    "She jams the champagne bottle into her crotch and holds very still for a few seconds before splashing the drink in the direction of the glasses, spilling most of it onto the floor." ,
-    "She sits down heavily on the coffee table as she fills the glasses, shuddering and spilling most of it onto the floor.",
-    "She holds the bottle pressed to her crotch as she raises the glasses and tries to fill them, spilling most of it onto the floor."];
-
-//
-//  Interpreted descriptions of how she looks like she has to pee
-//
-// var interplose=[
-//     "She looks like she's losing control.",
-//     "She looks like she's going to blow any second.",
-//     "She looks like she's seconds away from peeing herself.",
-//     "She looks like she can't maintain bladder control any longer.",
-//     "She looks like she's going to pee any second.",
-//     "She looks like she can't hold it a second longer."
-// ];
-//
-// var interpemer=[
-//     "She looks like she's nearly wetting herself.",
-//     "She looks like she's about to lose bladder control.",
-//     "She looks super desperate to pee.",
-//     "She looks like she can't stand to wait very much longer to pee.",
-//     "She looks like she could lose control of her bladder any minute.",
-//     "She looks absolutely desperate for the toilet."
-// ];
-//
-// var interpneed=[
-//     "She looks uncomfortable - like she has to pee badly.",
-//     "She looks like she's trying to ignore a full bladder.",
-//     "She's acting like her bladder is uncomfortably full.",
-//     "She seems to be controlling her bladder.",
-//     "She seems distracted by the pressure in her bladder.",
-//     "She's looks like she might need to pee."
-// ];
-
 
 //
 //  She's about to lose control in the car.
@@ -304,41 +151,6 @@ var needquotes=["I've gotta pee pretty badly.","I need to visit the little girls
 
 var urgequotes=["I'm going to want to go and pee soon.","I think my bladder is getting full.","I might have to stop at the restoom before too long.","I guess I'll need to freshen up next.","I'd better go powder my nose soon.","I'd like to stop by the restroom in the next little bit."];
 
-
-//
-//  She's embarassed she couldn't hold it.
-//
-var embarquote=[
-    "I'm so embarassed.  I just couldn't hold it in.",
-    "I'm so sorry!  I just couldn't control it anymore.",
-    "I'm so embarassed!  It just started to come out and I couldn't stop it.",
-    "It's so embarassing.  I just couldn't control my bladder.",
-    "I'm so sorry!  I couldn't hold it any longer.",
-    "I'm so embarassed!  I couldn't control myself."];
-
-//
-// You lose control
-//
-var ywetquote=["Suddenly, you are overwhelmed by your bladder, you groan and then gasp!",
-    "Suddenly, you are overwhelmed by your overfilled bladder, you freeze in place and you can feel your face turning red",
-    "You feel your pee coming out, you gasp and grab your dick.",
-    "You lose control of your muscles, you groan and double over.",
-    "Suddenly. You lose control of your bladder, you gasp and you can feel your face turning red.",
-    "Suddenly the control on your sphincter slips, you shudder and you can feel your face turning red."
-];
-
-
-//
-//  You are her hero - now get out of the way before she wets herself
-//
-
-var sayhero=[
-    "You are my <b>hero</b>!",
-    "I thank you, my bladder thanks you, now get outta my way!",
-    "Thank <b>god</b>, I was dying!",
-    "You the <b>man<b>!",
-    "You've saved my life tonight!",
-    "Damn you're good!"];
 
 // //
 // // Walk descriptions
@@ -388,7 +200,7 @@ String.prototype.formatVars = function() {
     s = s.replaceAll(new RegExp("girlname",'gm'), girlname);
     s = s.replaceAll(new RegExp("girltalk", 'gm'), girltalk);
     s = s.replaceAll(new RegExp("girlgasp", 'gm'), girlgasp);
-    s = s.replaceAll(new RegExp("bladlose", 'gm'), bladlose);
+    s = s.replaceAll(new RegExp("bladlose", 'gm'), bladlose.toString());
     return s;
 }
 
@@ -775,7 +587,7 @@ function setupQuotes(){
     getjson("shepee", shePeeSetup);
     getjson("drinking", function (){
         drinklines = json;
-        formatAllVarsList(drinklines["champagne"]);
+        drinklines["champagne"] = formatAllVarsList(drinklines["champagne"]);
     });
     //TODO format this json better?
     getjson("appearance", function (){
@@ -791,6 +603,8 @@ function setupQuotes(){
     getjson("fuckHer", fuckHerSetup);
     getjson("objects", function () {
         objQuotes = json;
+        objQuotes["buyItem2"] = formatAllVarsList(objQuotes["buyItem2"]);
+
     });
     yNeedSetup();
 }

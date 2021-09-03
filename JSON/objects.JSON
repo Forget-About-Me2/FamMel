@@ -1,9 +1,12 @@
 {
   "buyItem": [
     "<form id=buy{0} name=buy{0} on>",
+    "<text id=preQuote></text>",
     "<p> You buy ",
     "<input class=buy type=number name={0}Am id={1}Am value=1 min=1 max=100> <text id=itemIndic>{2}</p>",
     "</p>For $ <text id=monAmount>{0}</text></p></form>",
+    "<text id=addQuote> </text>",
+    "<p id=extraList></p>",
     "<p><li class='cListener' id=buy>Continue...</li></p>"
   ],
   "buyItem2": [

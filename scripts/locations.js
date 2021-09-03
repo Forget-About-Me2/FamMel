@@ -3,6 +3,7 @@
 let locations = {
     "driveAround": driveAroundSetup(),
     "theBar" :theBarSetup(),
+    "theClub": theClubSetup(),
     "theTheatre": theatreSetup(),
     "makeOut": makeOutSetup()
 };
@@ -18,16 +19,16 @@ function locJsonSetup(){
 
 //Determines whether the wants to visit a location.
 function updateSuggestedLocation(){
-    if (shyness < 30 && attraction > 50 && !beenmakeout) {
+    if (shyness < 30 && attraction > 50 && !locations.makeOut.visited) {
         suggestedloc = "themakeout";
-    } else if (shyness < 50 && attraction > 100 && beenmakeout &&
-        beenbar && beenclub && seenmovie) {
+    } else if (shyness < 50 && attraction > 100 && locations.makeOut.visited &&
+        locations.theBar.visited && locations.theClub.visited && seenmovie) {
         suggestedloc = "thehome";
     } else if (shyness > 80 && attraction < 30 && !seenmovie) {
         suggestedloc = "themovie";
-    } else if (shyness < 60 && attraction > 30 && !beenclub) {
+    } else if (shyness < 60 && attraction > 30 && !locations.theClub.visited) {
         suggestedloc = "theclub";
-    } else if (bladder > bladneed && shyness < 50 && !beenbar) {
+    } else if (bladder > bladneed && shyness < 50 && !locations.theBar.visited) {
         suggestedloc = "thebar";
     }
 }
@@ -44,8 +45,6 @@ function printLocationMenu(){
         addListeners(locations[loc].visit, loc)
     })
 }
-
-
 
 function lookAround(loc){
     const findkey = randomchoice(locations[loc].keyChance);

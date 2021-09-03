@@ -31,12 +31,12 @@ function thebar(){
     if (locstack[0] === "driveout" && locations.theBar.visited && thetime < barclosingtime){
         curtext = printList(curtext, bar["theBar"][0]);
         sayText(curtext);
-        listenerList.push([[driveout, "Continue..."], "driveOut"]);
-        cListener([driveout, "Continue..."], "driveOut");
         if (haveItem("theBarKey")) {
             listenerList.push([[rebar, "But I found this key I have to return!"], "reBar"]);
             cListener([rebar, "But I found this key I have to return!"], "reBar");
         }
+        listenerList.push([[driveout, "Continue..."], "driveOut"]);
+        cListener([driveout, "Continue..."], "driveOut");
     } else if (!((thetime < barclosingtime) || locstack[0] === "thebar")) itsClosed("theBar", darkBar, "darkBar");
     else {
         if (locstack[0] !== "thebar"){
@@ -55,21 +55,21 @@ function thebar(){
             curtext = preventpee(curtext);
             sayText(curtext);
         } else {
-        listenerList = barTalk(curtext);
-        listenerList.push([[buybeer], "buybeer"]);
-        cListener([function () {buyItem("beer")}, "Buy a beer."], "buybeer");
-        if (!haveItem("theBarKey")){
-            listenerList.push([[function () {lookAround("theBar")}], "lookAround"]);
-            cListener(["", "Look around."], "lookAround");
-        }
-        curtext = standobjs([]);
-        addSayText(curtext);
-        if (yourbladder > yourbladurge){
-            listenerList.push([[youpee], "youpee"],);
-            cListener([youpee, "Go to the bathroom."], "youpee");
-        }
-        listenerList.push([[leavehm], "leavehm"]);
-        cListener([leavehm, "Leave the bar."], "leavehm");
+            listenerList = barTalk(curtext);
+            listenerList.push([[function () {buyItem("beer")}], "buybeer"]);
+            cListener([function () {buyItem("beer")}, "Buy beer."], "buybeer");
+            if (!haveItem("theBarKey")){
+                listenerList.push([[function () {lookAround("theBar")}], "lookAround"]);
+                cListener(["", "Look around."], "lookAround");
+            }
+            curtext = standobjs([]);
+            addSayText(curtext);
+            if (yourbladder > yourbladurge){
+                listenerList.push([[youpee], "youpee"],);
+                cListener([youpee, "Go to the bathroom."], "youpee");
+            }
+            listenerList.push([[leavehm], "leavehm"]);
+            cListener([leavehm, "Leave the bar."], "leavehm");
         }
     }
     addListenersList(listenerList);
@@ -84,6 +84,7 @@ function rebar(){
 
 let talkUnused; //Bar talk topics that have not been covered yet
 let curTopicI; //The current chosen index.
+//This generates the conversation returns the listeners and prints the curtext
 function barTalk(curtext){
     if (bartopic < 5){
         curTopicI = randomIndex(talkUnused);
@@ -118,48 +119,15 @@ function barResp(choice){
     cListenerGen([thebar, "Continue..."], "theBar");
 }
 
-//TODO turn this into a JSON
-function buybeer() {
-    let curtext = [];
-    if (randomchoice(3)) curtext = noteholding(curtext);
-    else if (randomchoice(5)) curtext = interpbladder(curtext);
-    curtext = displayyourneed(curtext);
-    if (bladder > bladlose) wetherself();
-    else if (yourbladder > yourbladlose) wetyourself();
-    else {
-        sayText(curtext);
-        let listenerList = [];
-        if (money >= 3) {
-            curtext.push("You buy a beer for $3.00.");
-            objects.beer.value++;
-            money -= 3;
-            const i = randomIndex(bar["barQuotes"]);
-            curtext.push(bar["barQuotes"][i]);
-            sayText(curtext);
-            curtext = [];
-            if (haveItem("wetPanties") && i === 3) {
-                listenerList.push([[sellPanties], "sellPanties"]);
-                cListener([sellPanties, "Sell wet panties to the bartender."], "sellPanties");
-            }
-        } else curtext.push("You don't have enough money!");
-        addSayText(curtext);
-        listenerList.push([[buybeer], "buybeer"]);
-        listenerList.push([[thebar], "theBar"]);
-        cListener([buybeer, "Buy another beer"], "buybeer");
-        cListener([thebar, "Continue..."], "theBar");
-        addListenersList(listenerList);
-    }
-}
-
 function sellPanties(){
     const price = 20 + Math.floor(Math.random() * 20);
     sayText(["BARTENDER: I'll give you $" + price + " for those."]);
     money += price;
     objects.wetPanties.value -= 1;
     let listenerList = [];
-    listenerList.push([[buybeer], "buybeer"]);
     listenerList.push([[thebar], "theBar"]);
-    cListener([buybeer, "Buy another beer"], "buybeer");
+    listenerList.push([[function () {buyItem("beer")}], "buybeer"]);
+    cListener([function () {buyItem("beer")}, "Buy more beer."], "buybeer");
     cListener([thebar, "Continue..."], "theBar");
     addListenersList(listenerList);
 }

@@ -169,6 +169,7 @@ const objects = {
     },
     "beer":{
         "bpname":"Beer",
+        price: 3,
         "value":0,
         "owned": "{0} bottle{1} of beer",
         "volume": 250,
@@ -311,7 +312,7 @@ function standobjs(curtext) {
 
 function buyItem(item){
     let html = printList([], objQuotes["buyItem"]);
-    let formatList = [[item],[]];
+    let formatList = [[item],[], []];
     let temp = [item, item];
     let obj = objects[item];
     let value = 1;
@@ -320,28 +321,45 @@ function buyItem(item){
     formatList.push(temp);
     formatList.push([price]);
     formatList.push([]);
+    formatList.push([]);
+    formatList.push([]);
     html = formatAll(html, formatList);
     setText(html);
     const itemElem = document.getElementById(item+"Am");
+    let listenerList = [];
+    if (item === "beer"){
+        const i = randomIndex(bar["barQuotes"]);
+        document.getElementById("addQuote").innerHTML = bar["barQuotes"][i];
+        if (haveItem("wetPanties") && i === 3) {
+            document.getElementById("extraList").innerHTML= "<li class='cListener' id=sellPanties>Sell wet panties to the bartender.</li>";
+            listenerList.push([[sellPanties, "Sell wet panties to the bartender."], "sellPanties"]);
+        }
+    } else if (item === "cocktail"){
+        document.getElementById("preQuote").innerText = pickrandom(club["barGirlDesc"]);
+        document.getElementById("addQuote").innerText = pickrandom(club["barGirlQuotes"])
+        document.getElementById("extraList").innerHTML= "<li class='cListener' id=flirtBar>Flirt with the bar girl.</li>";
+        listenerList.push([[flirtBarGirl, "Flirt with the bar girl."], "flirtBar"]);
+    }
     itemElem.addEventListener("input", function () {
-    value = itemElem.value;
-    price = value*obj.price;
-    const itemIndic = document.getElementById("itemIndic");
-    itemIndic.innerText = displaypos(obj, value, true);
-    const moneyElem = document.getElementById("monAmount");
-    if (price < 0)
-        moneyElem.innerText = "NaN";
-    else
-        moneyElem.innerText = price;
-});
+        value = itemElem.value;
+        price = value*obj.price;
+        const itemIndic = document.getElementById("itemIndic");
+        itemIndic.innerText = displaypos(obj, value, true);
+        const moneyElem = document.getElementById("monAmount");
+        if (price < 0)
+            moneyElem.innerText = "NaN";
+        else
+            moneyElem.innerText = price;
+    });
+    listenerList.push([[function(){
+        buyItem2(item, value, price);
+    }], "buy"]);
     let form = document.getElementById("buy"+item);
     form.onsubmit = function (event) {
         event.preventDefault();
         buyItem2(item, value, price);
     };
-    addListeners([function(){
-        buyItem2(item, value, price);
-    }], "buy");
+    addListenersList(listenerList);
 }
 
 function buyItem2(item, value, price){
