@@ -72,6 +72,22 @@
     "You can just imagine the relief she feels as she pees in the privacy of the toilet.",
     "You can barely suppress the impulse to hold on to her - to follow her to the toilet where she quickly sits and empties her bladder."
   ],
+  "pgirlsroom": [
+    [ "<b>You: </b> Can I watch? It would be <i>so</i> sexy!"],
+    [ "girltalk Really? Well.... okay. I guess there's nobody around.",
+      "She grabs you by the hand and heads for the ladies room."
+    ],
+    [ "girltalk I don't think so, buddy."],
+    [ "She confidently stalks into the deserted room, pulling you into one of the stalls."],
+    [ "The sight of the toilet seems to have increased her urgency."]
+  ],
+  "ptogether": [
+    [ "<b>You: </b> Don't go and leave me alone!"],
+    [ "girltalk Really? You want to come with me?",
+      "She grabs you by the hand and heads for the back of the club."
+    ],
+    [ "girltalk You're a big boy. You can take care of yourself."]
+  ],
   "girlname": [
     "{0} heads for the bathroom, leaving the door, leaving the door slightly ajar.",
     "{0} heads for the restroom and then realizes:",

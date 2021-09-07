@@ -17,5 +17,19 @@
     "<b>BarGirl:</b> Wow!  Have you seen the line for the restrooms tonight?",
     "<b>BarGirl:</b> Anything else I can do for you?",
     "<b>BarGirl:</b> Man it's hot in here, isn't it?",
-    "<b>BarGirl:</b> Hey, handsome, did you come here alone?"]
+    "<b>BarGirl:</b> Hey, handsome, did you come here alone?"],
+  "barGirlFlirt": [
+    "<b>YOU:</b> Wow, that outfit looks so good on you! Where'd you get it?",
+    "<b>YOU:</b> Hey!  Haven't I seen you before somewhere?  Nope - I'd definitely remember that well.",
+    "<b>YOU:</b> What a busy night!  When do you get off?",
+    "<b>YOU:</b> I'm sorry to stare - it's just that you're the most stunningly beautiful woman I've seen tonight.",
+    "<b>YOU:</b> Have you been working here long?  I think I'd remember a beautiful face like yours.",
+    "<b>YOU:</b> Damn, you're good looking."],
+  "barGirlResp": [
+    "<b>BarGirl:</b> Thanks!  I made it ... do you think it's too sexy?",
+    "<b>BarGirl:</b> I don't think we've met - my name's Cynthia.",
+    "<b>BarGirl:</b> I'm working here until closing, but I might get off sooner with a little help.",
+    "<b>BarGirl:</b> Gee - thanks!  Do you really mean it?  Look all you want!",
+    "<b>BarGirl:</b> Well I just started last week ... am I doing okay?",
+    "<b>BarGirl:</b> Well, you're not too bad looking yourself."]
 }

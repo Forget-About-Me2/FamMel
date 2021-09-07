@@ -92,38 +92,8 @@ var curseword=["Dammit!", "Jesus!", "Shit!" , "Fuckit!", "Goddamn!", "Fuckin' A!
 var bargirlnames=["Tiffany", "Brittney", "Vanessa" , "Maya", "Angelina", "Samantha", "Carly"];
 
 //
-// You look around the club
-//
-var clubview=["You see nothing special.",
-    "You see a couple making out in a dark corner.",
-    "You notice a gorgeous girl in a short and tight black dress pressing at her crotch under the table as she appears to be in rapt conversation with her date.",
-    "You see a couple dancing.  As she twirls, her short skirt flies up revealing a pair of skimpy, translucent panties.",
-    "You see a waitress having an urgent conversation with the bartender.  She's squirming and pressing her crotch into a bar stool while pointing repeatedly in the direction of the restrooms.",
-    "You look down at the floor and see a glint of metal."];
-
-
-//
-// Cocktail Bartender Quotes ( she's cute, isn't she? )
-//
-
-var bargirlflirt=["Wow, that outfit looks so good on you! Where'd you get it?",
-    "Hey!  Haven't I seen you before somewhere?  Nope - I'd definitely remember that well.",
-    "What a busy night!  When do you get off?",
-    "I'm sorry to stare - it's just that you're the most stunningly beautiful woman I've seen tonight.",
-    "Have you been working here long?  I think I'd remember a beautiful face like yours.",
-    "Damn, you're good looking."];
-
-var bargirlresp=["Thanks!  I made it ... do you think it's too sexy?",
-    "I don't think we've met - my name's Cynthia.",
-    "I'm working here until closing, but I might get off sooner with a little help.",
-    "Gee - thanks!  Do you really mean it?  Look all you want!",
-    "Well I just started last week ... am I doing okay?",
-    "Well, you're not too bad looking yourself."];
-
-//
 //  Descriptions of her posing for you
 //
-
 
 var posenude=["shyly covers her breasts with one hand and her pussy with the other.  Her face is a bright red.", "turns her back to you and tries to hide her bare bottom with one hand while she looks back over her shoulder.  You see the curls of her pubic hair in the space between her legs.", "slowly turns toward you, her breasts pressed between her extended arms, and both hands firmly blocking your view of her crotch.", "shyly moves one of her hands to her hip and cups a breast with the other.  She holds one leg crossed just a little forward, squeezing the exposed slit of her pussy closed.", "turns slightly, spreads her legs and caresses her inner thigh with one hand while spreading the other across the opposite butt cheek.", "turns away and bends down to touch her toes, legs spread slightly.  Her glistening pussy and cute, tight anus are fully exposed to your camera."];
 
@@ -718,6 +688,8 @@ function shePeeSetup(){
     peelines["peephone"] = temp;
     peelines["locked"]["cbar"] = replaceWCLC(peelines["locked"]["cbar"], peelines["locked"]["girltalk"], "girltalk");
     peelines["locked"]["cclub"] = replaceWCLC(peelines["locked"]["cclub"], peelines["locked"]["girltalk"], "girltalk");
+    peelines["pgirlsroom"] = formatAllVarsList(peelines["pgirlsroom"]);
+    peelines["ptogether"] = formatAllVarsList(peelines["ptogether"]);
 }
 
 

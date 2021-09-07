@@ -926,8 +926,8 @@ function peeoutside() {
 function peeoutside2() {
     console.log("test");
     let curtext = [];
-    if (pantycolor !== "none") curtext.push(appearance["clothes"][heroutfit]["peeoutsidequote"]);
-    else curtext.push(appearance["clothes"][heroutfit]["peeoutsidequotebare"].format([pantycolor]));
+    if (pantycolor !== "none") curtext.push(appearance["clothes"][heroutfit]["peeoutsidequote"].format([pantycolor]));
+    else curtext.push(appearance["clothes"][heroutfit]["peeoutsidequotebare"]);
     // if (pantycolor !== "none") s(peeoutsidequote);
     // else s(peeoutsidequotebare);
     curtext.push(needs["peeoutside"][7]);
@@ -1256,6 +1256,219 @@ function itscomingout(curtext) {
     // s(girlgasp + outpeectrl[randcounter]);
     // s(girltalk + outpeecome[randcounter]);
     return curtext;
+}
+
+function pgirlsroom() {
+    if (locstack[0] === "pgirlsroom") {
+        poploc();
+        eval(locstack[0] + "()");
+    } else {
+        let curtext = printList([], peelines["pgirlsroom"][0]);
+        let listenerList = [];
+        pushloc("pgirlsroom");
+        // s("<b>YOU:</b> Can I watch?  It would be <u>so</u> sexy!");
+        if (attraction >= pwatchthreshold) {
+            curtext = displayneed(curtext);
+            curtext = printList(curtext, peelines["pgirlsroom"][1]);
+            // s(girltalk + "Really?  Well.... okay.  I guess there's nobody around.");
+            // s("She grabs you by the hand and heads for the ladies room.");
+            curtext = displayneed(curtext);
+            listenerList.push([[pGirlsRoom2, "Follow her..."], "Follow"]);
+            listenerList.push([[indepee, "Change your mind..."], "changeMind"]);
+            sayText(curtext);
+            cListenerGenList(listenerList);
+        } else {
+            curtext = printList(curtext, peelines["pgirlsroom"][2]);
+            // s(girltalk + "I don't think so, buddy.");
+            indepee(curtext);
+        }
+    }
+}
+
+function pGirlsRoom2() {
+    let curtext = printList([], peelines["pgirlsroom"][3]);
+    // s("She looks right, looks left, and peeks in the door before quickly pulling you into a very cramped stall.");
+    if (bladder < bladlose - 10) bladder = bladlose - 10;
+    curtext = displayneed(curtext);
+    curtext = printList(curtext, peelines["pgirlsroom"][4]);
+    // s("The sight of the toilet seems to have increased her urgency.");
+    sayText(curtext);
+    cListenerGen([pTogether3, "Continue..."], "pTogether");
+}
+
+//TODO option for you to pee as well
+function ptogether() {
+    if (locstack[0] === "ptogether") {
+        poploc();
+        eval(locstack[0] + "()");
+    } else {
+        let curtext = printList([], peelines["ptogether"][0]);
+        pushloc("ptogether");
+        // s("<b>YOU:</b> Don't go and leave me alone!");
+        let listenerList = [];
+        if (attraction >= ptogetherthreshold) {
+            curtext = displayneed(curtext);
+            curtext = printList(curtext, peelines["ptogether"][1]);
+            // s(girltalk + "Really?  You want to come with me?");
+            // s("She grabs you by the hand and heads for the back of the club.");
+            curtext = displayneed(curtext);
+            listenerList.push([[pTogether2, "Follow her..."], "Follow"]);
+            listenerList.push([[indepee, "Change your mind..."], "changeMind"]);
+            sayText(curtext);
+            cListenerGenList(listenerList);
+        } else {
+            curtext = printList(curtext, peelines["ptogether"][2]);
+            // s(girltalk + "You're a big boy.  You can take care of yourself.");
+            indepee(curtext);
+        }
+    }
+}
+
+//TODO option to make out
+function ptogether2() {
+    s(girlname + " leads you back to the restrooms.");
+
+    if (!randomchoice(rrlockedthresh)) {
+        s("She looks right, looks left, and peeks in the door before quickly pulling you into a very cramped stall.");
+        if (bladder < bladlose - 10) bladder = bladlose - 10;
+        displayneed();
+        s("The sight of the toilet seems to have increased her urgency.");
+        c("ptogether3", "Continue...");
+    } else {
+        s("There's a long line for the womens restrooms.  You notice they're mostly young, dressed to the nines, and in various stages of extreme urinary urgency.  Your daydreams are interrupted quickly.");
+        s(girlname + " squeezes your hand: I can't hold it!  What are we gonna do?");
+        c("ptogether4", "Invite her into the mens room.");
+        c("ptogether5", "Take her out the nearby back door.");
+        c("ptogether6", "Stand around looking dumb.");
+    }
+}
+
+function ptogether3() {
+    if (pantycolor !== "none")
+        s(girlname + ptogetherquote);
+    else
+        s(girlname + ptogetherquotebare);
+    s("You try not to stare too much as the torrent cascades from between her thighs.  You hear the violent hissing and splashing of her pee, and the scent fills the tiny cubicle.  You want to touch her so badly.");
+    flushdrank();
+    sawherpee = 1;
+    c("ptogether3d", "Feel the stream.");
+    c("ptogether3c", "Kiss her thighs.");
+    c("ptogether3b", "You're too shy.");
+}
+
+function ptogether3b() {
+    s("As the torrent subsides, you offer her some tissue.");
+    s(girltalk + "Thanks - I've never had to go so bad in my life!");
+    s("<i>She seems relaxed, radiant ... and aroused.</i>");
+    c("goback", "Continue...");
+}
+
+function ptogether3c() {
+    s("You lay your head in her lap, the warmth of her thighs on your cheek.");
+    s("The hissing is louder down there, and you feel the small droplets of her pee spray landing on your upper lips.");
+    s("You can sense the heat from the stream, and the smell of her is overpowering.");
+    c("ptogether3b", "Continue...");
+}
+
+function ptogether3d() {
+    s("You caress her, running your hand down her back and along the line of her butt crack.");
+    s("Her crack is warm and soft, and as your fingers reach the edge of her pussy lips, you feel small droplets from the urine stream wetting your hand.");
+    s("You carefully put just one finger into the edge of her stream - it feels hot and wet.");
+    c("ptogether3b", "Continue...");
+}
+
+// You take her into the mens room
+function ptogether4() {
+    s("<b>YOU:</b> Quick!  In here!");
+    s("You pull her across the hall towards the men's room.");
+    s(girltalk + "But I can't go in there!");
+    c("ptogether4b", "I'm a guy, and I'm giving you permission!");
+    c(locstack[0], "Okay, then I guess you'll just have to hold it.");
+}
+
+function ptogether4b() {
+    s("She follows you into the mens room, and you carefully avoid any eye contact with the two dudes using the urinals.");
+    displayneed();
+    s("You find a reasonably clean stall and pull her in with you.");
+    c("ptogether3", "Continue...");
+}
+
+// You take her out back
+function ptogether5() {
+    s("<b>YOU:</b> Quick!  In here!");
+    s("You pull her towards the back door at the end of the hall.");
+    s(girltalk + "Where are we going?");
+    s("<b>YOU:</b> I know a place!");
+    displayneed();
+    s("You emerge together into a poorly lit parking lot.");
+    c("ptogether5a", "Tell " + girlname + " to pee behind the dumpster.");
+    c("ptogether5b", "Tell " + girlname + " you'll help her.");
+}
+
+function ptogether5a() {
+    s("<b>YOU:</b>  You can go behind that dumpster over there!");
+    s(girltalk + "<b>This</b> is your solution???");
+    displayneed();
+    s("You can see the struggle in her eyes as she makes up her mind what to do.");
+    s(girltalk + "Can you hold me so I don't fall over?");
+    c("ptogether5a2", "Okay...");
+    c(locstack[0], "Nevermind - let's go back inside.");
+}
+
+function ptogether5a2() {
+    s("You don't have to be asked twice.");
+    s("You take her hand and lead her behind the dumpster.  She seems nervous.");
+    displayneed();
+    if (pantycolor !== "none") s(ptogetheroutquote);
+    else s(ptogetheroutquotebare);
+    s("You steady her and the stream starts immediately, first as an incoherent spray which slightly wets her shoes, and quickly building into a powerful stream.");
+    s("By the time she finally cuts it off, the pee has pooled into a pond which is seeping under the dumpster.");
+    if (pantycolor !== "none")
+        s(finishtogethroutquote);
+    else
+        s(finishtogetheroutquotebare);
+    flushdrank();
+    sawherpee = 1;
+    c("goback", "Continue...");
+}
+
+function ptogether5b() {
+    s("<b>YOU:</b>  Here!  I'll help you.");
+    s("You push her up against the wall, in the shadows a little ways from the door.");
+    s(girltalk + "I can't...");
+    if (pantycolor !== "none") {
+        s(ptogetherdumpquote);
+        s("Her pussy is warm and pulsing underneath the thin fabric as she struggles to control her bladder.");
+        s("You pull the gusset aside and spread her lips with your fingers.");
+    } else {
+        s(ptogetherdumpquotebare);
+        s("Her pussy is warm and pulsing aginst your hand as she struggles to control her bladder.");
+        s("You carefully spread her lips between your fingers.");
+    }
+    c("ptogether5c", "Continue...");
+}
+
+function ptogether5c() {
+    s("<b>YOU:</b>  Go.  Let it all out.");
+    s("She protests, but not too strongly, and you feel her pussy tense just as the flow starts, running between your fingers and slightly wetting them before spattering onto the ground in front.");
+    if (pantycolor !== "none")
+        s(finishtogetherdumpquote);
+    else
+        s(finishtogetherdumpquotebare);
+    s("She gives you a long, hard kiss before you head back inside together.");
+    flushdrank();
+    sawherpee = 1;
+    c("goback", "Continue...");
+}
+
+// You stand around looking dumb.
+function ptogether6() {
+    s("<b>YOU:</b> Duhhhhh...");
+    displayneed();
+    s("She stamps her foot in impatience.");
+    s(girltalk + "You're no help!");
+    s("You head back to the dance floor together.");
+    c(locstack[0], "Continue...");
 }
 
 
