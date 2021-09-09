@@ -1325,22 +1325,28 @@ function ptogether() {
 }
 
 //TODO option to make out
-function ptogether2() {
-    s(girlname + " leads you back to the restrooms.");
-
+function pTogether2() {
+    let curtext = printList([], peelines["ptogether"][3]);
+    // s(girlname + " leads you back to the restrooms.");
+    let listenerList = [];
     if (!randomchoice(rrlockedthresh)) {
-        s("She looks right, looks left, and peeks in the door before quickly pulling you into a very cramped stall.");
+        curtext = printList(curtext, peelines["ptogether"][4]);
+        // s("She looks right, looks left, and peeks in the door before quickly pulling you into a very cramped stall.");
         if (bladder < bladlose - 10) bladder = bladlose - 10;
-        displayneed();
-        s("The sight of the toilet seems to have increased her urgency.");
-        c("ptogether3", "Continue...");
+        curtext = displayneed(curtext);
+        curtext = printList(curtext, peelines["ptogether"][5]);
+        // s("The sight of the toilet seems to have increased her urgency.");
+        listenerList.push([[pTogether3, "Continue..."], "peeTogether"]);
     } else {
-        s("There's a long line for the womens restrooms.  You notice they're mostly young, dressed to the nines, and in various stages of extreme urinary urgency.  Your daydreams are interrupted quickly.");
-        s(girlname + " squeezes your hand: I can't hold it!  What are we gonna do?");
-        c("ptogether4", "Invite her into the mens room.");
-        c("ptogether5", "Take her out the nearby back door.");
-        c("ptogether6", "Stand around looking dumb.");
+        curtext = printList(curtext, peelines["ptogether"][6]);
+        // s("There's a long line for the womens restrooms.  You notice they're mostly young, dressed to the nines, and in various stages of extreme urinary urgency.  Your daydreams are interrupted quickly.");
+        // s(girlname + " squeezes your hand: I can't hold it!  What are we gonna do?");
+        listenerList.push([[pTogether4, "Invite her into the mens room"], "mensRoom"]);
+        listenerList.push([[pTogether5, "Take her out the nearby back door."], "outBack"]);
+        listenerList.push([[pTogether6, "Stand around looking dumb."], "giveUp"]);
     }
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
 function ptogether3() {

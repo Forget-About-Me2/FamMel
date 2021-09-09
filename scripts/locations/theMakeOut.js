@@ -279,7 +279,7 @@ function theHotTub() {
             }
             curtext = standobjs(curtext);
             if (yourbladder > yourbladurge)
-                listenerList.push([[ypeeintub, "Pee in the hot tub"], "ypeetub"]);
+                listenerList.push([[yPeeInTub, "Pee in the hot tub"], "ypeetub"]);
         }
         listenerList.push([[goback, "Get out of the tub."], "goBack"]);
         sayText(curtext);

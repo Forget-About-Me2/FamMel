@@ -263,58 +263,103 @@ function ypeein3(item, yneedtype){
 }
 
 //TODO better scene
-function ypeeintub() {
-    s("You relax your muscles while acting as if nothing happens.");
-    s("She doesn't notice that you're peeing right next to her.");
-    s("You can't help but get a bit aroused.");
+function yPeeInTub() {
+    sayText(ypeelines["peeTub"]);
+    // s("You relax your muscles while acting as if nothing happens.");
+    // s("She doesn't notice that you're peeing right next to her.");
+    // s("You can't help but get a bit aroused.");
     flushyourdrank();
-    c(locstack[0], "Continue");
+    cListenerGen([[theHotTub, "Continue..."], "theHotTub"]);
 }
 
-//TODO a Can I watch option
+//TODO Different lines when in car
 function ypeeoutside() {
+    let curtext = [];
     if (yourbladder < yourblademer)
-        s("<b>YOU:</b> Hang on I need a pee.");
+        curtext = printList(curtext, ypeelines["peeOutside"][0]);
+        // s("<b>YOU:</b> Hang on I need a pee.");
     else {
-        s("<b>YOU;</b> Hold up I really need to pee!");
-        s("You are messaging your crotch to help you hold it.");
+        curtext = printList(curtext, ypeelines["peeOutside"][1]);
+        // s("<b>YOU;</b> Hold up I really need to pee!");
+        // s("You are messaging your crotch to help you hold it.");
     }
-    if (locstack[0] === "themakeout") c("ypeeoutside2", "Continue...");
-    else c("ypeeoutside2b", "Continue...");
+    let listenerList = [];
+    if (attraction > 100 && shyness < 10 && randomchoice(7)){
+        curtext = printList(curtext, ypeelines["peeOutside"][2]);
+        listenerList.push([[ypeeOutsideWatch, "Of Course!"], "peeWatch"]);
+    } else {
+        listenerList.push([[yPeeOutside2, "Continue..."], "peeOutside"]);
+    }
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
-//In the car
-function ypeeoutside2() {
-    s("You step out of the car and lower your zipper. You check if no one is around before you pull your penis out.");
-    c("ypeeoutside3", "Continue...");
+//She didn't ask to watch
+function yPeeOutside2() {
+    let curtext = [];
+    let listenerList = [];
+    if (locstack[0] === "theMakeOut"){
+        curtext = printList(curtext, ypeelines["peeOutside"][3]);
+        listenerList.push([[yPeeOutsideCar, "Continue..."], "peeOutCar"]);
+    } else {
+        curtext = printList(curtext, ypeelines["peeOutside"][4]);
+        listenerList.push([[yPeeOutside3, "Continue..."], "peeOutside"]);
+    }
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
-function ypeeoutside2b() {
-    s("You lower your zipper and check if no one is around before you pull your penis out");
-    if (locstack[0] === "thebeach") c("ypeeoutside3c", "Continue...");
-    else c("ypeeoutside3b", "Continue...");
-}
-
-//TODO determine if she would watch and arousal
-function ypeeoutside3() {
-    s("You subtly turn towards the car so she could watch if she wanted to. The pee hisses out of your tip and runs in a stream under the car.");
+function yPeeOutsideCar() {
+    sayText(ypeelines["peeOutside"][8]);
+    // s("You subtly turn towards the car so she could watch if she wanted to. The pee hisses out of your tip and runs in a stream under the car.");
     flushyourdrank();
-    c(locstack[0], "Continue...");
+    cListenerGen([[theMakeOut, "Continue..."], "theMakeOut"]);
 }
 
-function ypeeoutside3b() {
-    s("You only turn away from her slightly, allowing her to watch if she wants to. The pee hisses out from of your tip and runs in a stream along the ground.");
-    s("As you zip back up you can't help but feel aroused.");
-    flushyourdrank();
-    c(locstack[0], "Continue...");
+//You're not in the car, either at the beach or on the walk. The text is located in the ypeeline json under the current location.
+function yPeeOutside3(){
+    let curtext = printList([], ypeelines["peeOutside"][9]);
+    curtext = printList(curtext, ypeelines[locstack[0]][0]);
+    curtext = printList(curtext, ypeelines["peeOutside"][10]);
+    curtext = callChoice(["curloc", "Continue..."], curtext);
+    sayText(curtext);
 }
 
-function ypeeoutside3c() {
-    s("You only turn away from her slightly, allowing her to watch if she wants to. The pee hisses out from of your tip, it soaks quickly into the sand turning it dark.");
-    s("As you zip back up you can't help but feel aroused.");
-    flushyourdrank();
-    c(locstack[0], "Continue...");
+//She asked to watch
+function ypeeOutsideWatch(){
+    let curtext = [];
+    let listenerList = [];
+    if (locstack[0] === "theMakeOut"){
+        curtext = printList(curtext, ypeelines["peeOutside"][5]);
+        curtext = displayyourneed(curtext);
+        curtext = printList(curtext, ypeelines["peeOutside"][6]);
+        listenerList.push([[yPeeOutsideWatchCar, "Continue..."], "peeOutCar"]);
+    } else {
+        curtext = printList(curtext, ypeelines["peeOutside"][7]);
+        curtext = displayyourneed(curtext);
+        curtext = printList(curtext, ypeelines["peeOutside"][6]);
+        listenerList.push([[yPeeOutsideWatch2, "Continue..."], "peeOut"]);
+    }
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
+
+function yPeeOutsideWatchCar() {
+    sayText(ypeelines["peeOutside"][11]);
+    // s("You subtly turn towards the car so she could watch if she wanted to. The pee hisses out of your tip and runs in a stream under the car.");
+    flushyourdrank();
+    cListenerGen([[theMakeOut, "Continue..."], "theMakeOut"]);
+}
+
+//You're not in the car, either at the beach or on the walk. The text is located in the ypeeline json under the current location.
+function yPeeOutsideWatch2(){
+    let curtext = printList([], ypeelines["peeOutside"][12]);
+    curtext = printList(curtext, ypeelines[locstack[0]][1]);
+    curtext = printList(curtext, ypeelines["peeOutside"][13]);
+    curtext = callChoice(["curloc", "Continue..."], curtext);
+    sayText(curtext);
+}
+
 
 //Here's where we decide if you wet yourself or if you just spurted.
 //TODO more original quotes (most are now stolen from her)

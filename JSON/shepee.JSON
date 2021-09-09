@@ -86,7 +86,14 @@
     [ "girltalk Really? You want to come with me?",
       "She grabs you by the hand and heads for the back of the club."
     ],
-    [ "girltalk You're a big boy. You can take care of yourself."]
+    [ "girltalk You're a big boy. You can take care of yourself."],
+    [ "girlname leads you back to the restrooms."],
+    [ "She looks right, looks left, and peeks in the door before quickly pulling you into a very cramped stall."],
+    [ "The sight of the toilet seems to have increased her urgency."],
+    [ "There's a long line for the women's restrooms. You notice they're mostly young, dressed to the nines, and in various stages of urinary urgency.",
+      "Your daydreams are quickly interrupted.",
+      "girlname squeezes your hand: \"I can't hold it! What are we gonna do?\""
+    ]
   ],
   "girlname": [
     "{0} heads for the bathroom, leaving the door, leaving the door slightly ajar.",

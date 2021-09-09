@@ -673,6 +673,7 @@ function yPeeSetup(){
     templist.forEach(item => result.push(LreplaceCheck(item, json["girltalk"], "girltalk")));
     json["beg"][0] = result;
     ypeelines = json;
+    ypeelines["peeOutside"]= formatAllVarsList(ypeelines["peeOutside"]);
 }
 
 function shePeeSetup(){
