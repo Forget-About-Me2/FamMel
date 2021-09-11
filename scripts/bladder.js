@@ -1259,29 +1259,23 @@ function itscomingout(curtext) {
 }
 
 function pgirlsroom() {
-    if (locstack[0] === "pgirlsroom") {
-        poploc();
-        eval(locstack[0] + "()");
+    let curtext = printList([], peelines["pgirlsroom"][0]);
+    let listenerList = [];
+    // s("<b>YOU:</b> Can I watch?  It would be <u>so</u> sexy!");
+    if (attraction >= pwatchthreshold) {
+        curtext = displayneed(curtext);
+        curtext = printList(curtext, peelines["pgirlsroom"][1]);
+        // s(girltalk + "Really?  Well.... okay.  I guess there's nobody around.");
+        // s("She grabs you by the hand and heads for the ladies room.");
+        curtext = displayneed(curtext);
+        listenerList.push([[pGirlsRoom2, "Follow her..."], "Follow"]);
+        listenerList.push([[indepee, "Change your mind..."], "changeMind"]);
+        sayText(curtext);
+        cListenerGenList(listenerList);
     } else {
-        let curtext = printList([], peelines["pgirlsroom"][0]);
-        let listenerList = [];
-        pushloc("pgirlsroom");
-        // s("<b>YOU:</b> Can I watch?  It would be <u>so</u> sexy!");
-        if (attraction >= pwatchthreshold) {
-            curtext = displayneed(curtext);
-            curtext = printList(curtext, peelines["pgirlsroom"][1]);
-            // s(girltalk + "Really?  Well.... okay.  I guess there's nobody around.");
-            // s("She grabs you by the hand and heads for the ladies room.");
-            curtext = displayneed(curtext);
-            listenerList.push([[pGirlsRoom2, "Follow her..."], "Follow"]);
-            listenerList.push([[indepee, "Change your mind..."], "changeMind"]);
-            sayText(curtext);
-            cListenerGenList(listenerList);
-        } else {
-            curtext = printList(curtext, peelines["pgirlsroom"][2]);
-            // s(girltalk + "I don't think so, buddy.");
-            indepee(curtext);
-        }
+        curtext = printList(curtext, peelines["pgirlsroom"][2]);
+        // s(girltalk + "I don't think so, buddy.");
+        indepee(curtext);
     }
 }
 
@@ -1298,33 +1292,29 @@ function pGirlsRoom2() {
 
 //TODO option for you to pee as well
 function ptogether() {
-    if (locstack[0] === "ptogether") {
-        poploc();
-        eval(locstack[0] + "()");
+    let curtext = printList([], peelines["ptogether"][0]);
+    pushloc("ptogether");
+    // s("<b>YOU:</b> Don't go and leave me alone!");
+    let listenerList = [];
+    if (attraction >= ptogetherthreshold) {
+        curtext = displayneed(curtext);
+        curtext = printList(curtext, peelines["ptogether"][1]);
+        // s(girltalk + "Really?  You want to come with me?");
+        // s("She grabs you by the hand and heads for the back of the club.");
+        curtext = displayneed(curtext);
+        listenerList.push([[pTogether2, "Follow her..."], "Follow"]);
+        listenerList.push([[indepee, "Change your mind..."], "changeMind"]);
+        sayText(curtext);
+        cListenerGenList(listenerList);
     } else {
-        let curtext = printList([], peelines["ptogether"][0]);
-        pushloc("ptogether");
-        // s("<b>YOU:</b> Don't go and leave me alone!");
-        let listenerList = [];
-        if (attraction >= ptogetherthreshold) {
-            curtext = displayneed(curtext);
-            curtext = printList(curtext, peelines["ptogether"][1]);
-            // s(girltalk + "Really?  You want to come with me?");
-            // s("She grabs you by the hand and heads for the back of the club.");
-            curtext = displayneed(curtext);
-            listenerList.push([[pTogether2, "Follow her..."], "Follow"]);
-            listenerList.push([[indepee, "Change your mind..."], "changeMind"]);
-            sayText(curtext);
-            cListenerGenList(listenerList);
-        } else {
-            curtext = printList(curtext, peelines["ptogether"][2]);
-            // s(girltalk + "You're a big boy.  You can take care of yourself.");
-            indepee(curtext);
-        }
+        curtext = printList(curtext, peelines["ptogether"][2]);
+        // s(girltalk + "You're a big boy.  You can take care of yourself.");
+        indepee(curtext);
     }
 }
 
 //TODO option to make out
+//TODO Actually check if she's desperate in the situation where the line's too long
 function pTogether2() {
     let curtext = printList([], peelines["ptogether"][3]);
     // s(girlname + " leads you back to the restrooms.");
@@ -1349,69 +1339,103 @@ function pTogether2() {
     cListenerGenList(listenerList);
 }
 
-function ptogether3() {
+function pTogether3() {
+    let curtext = [];
     if (pantycolor !== "none")
-        s(girlname + ptogetherquote);
+        curtext.push(girlname + appearance["clothes"][heroutfit]["ptogetherquote"]);
+        // s(girlname + ptogetherquote);
     else
-        s(girlname + ptogetherquotebare);
+        curtext.push(girlname + appearance["clothes"][heroutfit]["ptogetherquotebare"]);
+        // s(girlname + ptogetherquotebare);
+    curtext = printList(curtext, peelines["ptogether"][7]);
     s("You try not to stare too much as the torrent cascades from between her thighs.  You hear the violent hissing and splashing of her pee, and the scent fills the tiny cubicle.  You want to touch her so badly.");
     flushdrank();
     sawherpee = 1;
-    c("ptogether3d", "Feel the stream.");
-    c("ptogether3c", "Kiss her thighs.");
-    c("ptogether3b", "You're too shy.");
+    let listenerList = [
+        [[pTogether3b, "Feel the stream."], "feelStream"],
+        [[pTogether3c, "Kiss her thighs."], "kissThighs"],
+        [[pTogether3d, "You're too shy."], "tooShy"]
+    ];
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
-function ptogether3b() {
-    s("As the torrent subsides, you offer her some tissue.");
-    s(girltalk + "Thanks - I've never had to go so bad in my life!");
-    s("<i>She seems relaxed, radiant ... and aroused.</i>");
-    c("goback", "Continue...");
+function pTogether3b() {
+    sayText(peelines["ptogether"][8]);
+    // s("You caress her, running your hand down her back and along the line of her butt crack.");
+    // s("Her crack is warm and soft, and as your fingers reach the edge of her pussy lips, you feel small droplets from the urine stream wetting your hand.");
+    // s("You carefully put just one finger into the edge of her stream - it feels hot and wet.");
+    cListenerGen([pTogether3d, "Continue..."], "pTog");
 }
 
-function ptogether3c() {
-    s("You lay your head in her lap, the warmth of her thighs on your cheek.");
-    s("The hissing is louder down there, and you feel the small droplets of her pee spray landing on your upper lips.");
-    s("You can sense the heat from the stream, and the smell of her is overpowering.");
-    c("ptogether3b", "Continue...");
+function pTogether3c() {
+    sayText(peelines["ptogether"][9]);
+    // s("You lay your head in her lap, the warmth of her thighs on your cheek.");
+    // s("The hissing is louder down there, and you feel the small droplets of her pee spray landing on your upper lips.");
+    // s("You can sense the heat from the stream, and the smell of her is overpowering.");
+    cListenerGen([pTogether3d, "Continue..."], "pTog");
 }
 
-function ptogether3d() {
-    s("You caress her, running your hand down her back and along the line of her butt crack.");
-    s("Her crack is warm and soft, and as your fingers reach the edge of her pussy lips, you feel small droplets from the urine stream wetting your hand.");
-    s("You carefully put just one finger into the edge of her stream - it feels hot and wet.");
-    c("ptogether3b", "Continue...");
+function pTogether3d() {
+    sayText(peelines["ptogether"][10]);
+    // s("As the torrent subsides, you offer her some tissue.");
+    // s(girltalk + "Thanks - I've never had to go so bad in my life!");
+    // s("<i>She seems relaxed, radiant ... and aroused.</i>");
+    cListenerGen([[pTogether3e, "Continue..."], "goBack"]);
+}
+
+function pTogether3e(){
+    let curtext = [];
+    if (locstack[0] === "pmensroom") {
+        curtext = printList(curtext, peelines["ptogether"][19]);
+        poploc();
+    } else
+        curtext = printList(curtext, peelines["ptogether"][18]);
+    kissher(curtext);
 }
 
 // You take her into the mens room
-function ptogether4() {
-    s("<b>YOU:</b> Quick!  In here!");
-    s("You pull her across the hall towards the men's room.");
-    s(girltalk + "But I can't go in there!");
-    c("ptogether4b", "I'm a guy, and I'm giving you permission!");
-    c(locstack[0], "Okay, then I guess you'll just have to hold it.");
+function pTogether4() {
+    sayText(peelines["ptogether"][11]);
+    poploc();
+    pushloc("pmensroom");
+    // s("<b>YOU:</b> Quick!  In here!");
+    // s("You pull her across the hall towards the men's room.");
+    // s(girltalk + "But I can't go in there!");
+    cListener([pTogether4b, "I'm a guy, and I'm giving you permission!"], "permission");
+    addSayText(callChoice(["curloc", "Okay, then I guess you'll just have to hold it."], []));
+    addListeners([pTogether4b, "I'm a guy, and I'm giving you permission!"], "permission");
 }
 
-function ptogether4b() {
-    s("She follows you into the mens room, and you carefully avoid any eye contact with the two dudes using the urinals.");
-    displayneed();
-    s("You find a reasonably clean stall and pull her in with you.");
-    c("ptogether3", "Continue...");
+function pTogether4b() {
+    let curtext = printList([], peelines["ptogether"][12]);
+    // s("She follows you into the mens room, and you carefully avoid any eye contact with the two dudes using the urinals.");
+    curtext = displayneed(curtext);
+    curtext = printList(curtext, peelines["ptogether"][13]);
+    // s("You find a reasonably clean stall and pull her in with you.");
+    sayText(curtext);
+    cListenerGen([pTogether3, "Continue..."], "pTog");
 }
 
 // You take her out back
-function ptogether5() {
-    s("<b>YOU:</b> Quick!  In here!");
-    s("You pull her towards the back door at the end of the hall.");
-    s(girltalk + "Where are we going?");
-    s("<b>YOU:</b> I know a place!");
-    displayneed();
-    s("You emerge together into a poorly lit parking lot.");
-    c("ptogether5a", "Tell " + girlname + " to pee behind the dumpster.");
-    c("ptogether5b", "Tell " + girlname + " you'll help her.");
+function pTogether5() {
+    let curtext = printList([], peelines["ptogether"][14]);
+    // s("<b>YOU:</b> Quick!  In here!");
+    // s("You pull her towards the back door at the end of the hall.");
+    // s(girltalk + "Where are we going?");
+    // s("<b>YOU:</b> I know a place!");
+    curtext = displayneed(curtext);
+    curtext = printList(curtext, peelines["ptogether"][15]);
+    // s("You emerge together into a poorly lit parking lot.");
+    let listenerList = [
+        [[pTogether5a, "Tell " + girlname + " to pee behind the dumpster."], "tellHer"],
+        [[pTogether5b, "Help her."], "helpHer"]
+    ]
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
-function ptogether5a() {
+function pTogether5a() {
     s("<b>YOU:</b>  You can go behind that dumpster over there!");
     s(girltalk + "<b>This</b> is your solution???");
     displayneed();
@@ -1421,7 +1445,7 @@ function ptogether5a() {
     c(locstack[0], "Nevermind - let's go back inside.");
 }
 
-function ptogether5a2() {
+function pTogether5a2() {
     s("You don't have to be asked twice.");
     s("You take her hand and lead her behind the dumpster.  She seems nervous.");
     displayneed();
