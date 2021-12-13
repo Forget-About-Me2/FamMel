@@ -135,8 +135,7 @@ const objects = {
         "bpname":"Champagne",
         price: 50,
         "value": 0,
-        "owned": ["a half-empty bottle of champagne",
-            "{0} bottle{1} of champagne"],
+        "owned": "{0} {1} bottle{2} of champagne",
         "options": [
             "half-empty ",
             "empty "
@@ -223,6 +222,7 @@ const objects = {
         "bpname":"Cocktail",
         "owned": "{0} cocktail glass{1}",
         "value":0,
+        price: 9,
         "volume": 150,
         "shedrank": 0,
         "ydrank": 0,
@@ -335,8 +335,8 @@ function buyItem(item){
             listenerList.push([[sellPanties, "Sell wet panties to the bartender."], "sellPanties"]);
         }
     } else if (item === "cocktail"){
-        document.getElementById("preQuote").innerText = pickrandom(club["barGirlDesc"]);
-        document.getElementById("addQuote").innerText = pickrandom(club["barGirlQuotes"])
+        document.getElementById("preQuote").innerHTML = pickrandom(club["barGirlDesc"]);
+        document.getElementById("addQuote").innerHTML= pickrandom(club["barGirlQuotes"]);
         document.getElementById("extraList").innerHTML= "<li class='cListener' id=flirtBar>Flirt with the bar girl.</li>";
         listenerList.push([[flirtBarGirl, "Flirt with the bar girl."], "flirtBar"]);
     }
@@ -372,15 +372,15 @@ function buyItem2(item, value, price){
     //Check if you have the money to buy as many as you indicated.
     if (money < price){
         curtext = printList(curtext, objQuotes["buyItem2"][0]);
-        listenerList.push([[again, "Try again."], "buySoda"]);
+        listenerList.push([[again, "Try again."], "buyItem"]);
         choice = callChoice(["curloc", "Forget it."], choice);
     } else if (price < 0){
         curtext = printList(curtext, objQuotes["buyItem2"][1]);
-        listenerList.push([[again, "Try again."], "buySoda"]);
+        listenerList.push([[again, "Try again."], "buyItem"]);
         choice = callChoice(["curloc", "Forget it."], choice);
     } else if (value > 100){
         curtext = printList(curtext, objQuotes["buyItem2"][2]);
-        listenerList.push([[again, "Try again."], "buySoda"]);
+        listenerList.push([[again, "Try again."], "buyItem"]);
         choice = callChoice(["curloc", "Forget it."], choice);
     } else {
         if (!playOnly.includes(locstack[0]))
@@ -388,7 +388,7 @@ function buyItem2(item, value, price){
         else
             curtext = printList(curtext, objQuotes["buyItem2"][4]);
         money -= price;
-        objects.soda.value += value;
+        objects[item].value += value;
         choice = callChoice(["curloc", "Continue..."], choice);
     }
     sayText(curtext);
@@ -643,16 +643,41 @@ function selectitem(selecteditem){
 //Returns text saying how much you own of an item.
 function getOwned(selected) {
     let number = selected.value;
-    let description = ""
-    description += selected.owned;
+    let description = selected.owned
     let formatlist = [number.toString()];
     if (selected.bpname === "Champagne"){
-        if (selected.bottles[0] < 6) {
-            description = selected.owned[0];
-            if (number > 1)
-                description += "and " + selected[1];
-        } else
-            description = selected.owned[1];
+        if (selected.bottles[0] === 0){
+            let i = 0;
+            while (i < selected.bottles.length && selected.bottles[i] === 0) {
+                i++;
+            }
+            formatlist = [i.toString(), "empty"];
+            if (i > 1) formatlist.push("s");
+            else formatlist.push("");
+            description = description.format(formatlist);
+            if (i < selected.bottles.length) {
+                let full = true;
+                if (selected.bottles[i] < 6) {
+                    let inbetween = " and "
+                    if (i + 1 < selected.bottles.length) inbetween = ", ";
+                    else full = false;
+                    description += inbetween + selected.owned;
+                    description = description.format(["1", "half-empty", ""]);
+                } if (full) {
+                    description += "and " + selected.owned;
+                    formatlist = [(number - i).toString(), ""];
+                }
+
+            }
+        } else if(selected.bottles[0] < 6) {
+            description = description.format(["1", "half-empty", ""]);
+            if (selected.bottles.length > 1) {
+                description += "and " + selected.owned;
+                formatlist = [(number - 1).toString(), ""];
+            }
+        } else {
+            formatlist.push("");
+        }
     }
     if (number > 1){
         if (description.includes("glass")) formatlist.push("es");

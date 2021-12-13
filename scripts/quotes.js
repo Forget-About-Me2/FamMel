@@ -257,7 +257,7 @@ function printFormatDialogue(curtext, loc, index, begin, end, values){
 }
 
 //Adds a list to the curText. Note this is also used when addind a single list to an empty curtext list
-//Reason for this is that it actually creates a deepcopy of the list, otherwise everything change to curtext is stored
+//Reason for this is that it actually creates a deepcopy of the list, otherwise all changes to curtext is stored
 //In the previous list.
 function printList(curtext, list){
     list.forEach(item => curtext.push(item));
@@ -320,11 +320,9 @@ function c(choice, curtext) {
 
 // Cache a choice for a click listener
 // choice - array of length 2 with tag on index 0 and desc on index 1
-//   tag - function to activate using choice
-//   desc - description of choice to display.
-// loc - the name of the location used
-function cListener(choice, loc){
-    const html = "<p>" + cListenerString(choice, loc) + "</p>";
+// tag - the tag for the choice, for a page with choices all tags need to be unique or things will break
+function cListener(choice, tag){
+    const html = "<p>" + cListenerString(choice, tag) + "</p>";
     document.getElementById('textsp').innerHTML += html;
 }
 
@@ -356,7 +354,9 @@ function cListenerGen(choice, loc){
     addListeners(choice, loc);
 }
 
-//For a given list generates the element and lsiteners
+/*For a given list generates the element and listeners
+expected input: [[function, description], tag]
+*/
 function cListenerGenList(list){
     list.forEach(item => cListener(item[0], item[1]));
     addListenersList(list);

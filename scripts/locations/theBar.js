@@ -68,9 +68,9 @@ function thebar(){
                 listenerList.push([[youpee], "youpee"],);
                 cListener([youpee, "Go to the bathroom."], "youpee");
             }
-            listenerList.push([[leavehm], "leavehm"]);
-            cListener([leavehm, "Leave the bar."], "leavehm");
         }
+        listenerList.push([[leavehm], "leavehm"]);
+        cListener([leavehm, "Leave the bar."], "leavehm");
     }
     addListenersList(listenerList);
 }

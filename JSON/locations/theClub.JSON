@@ -2,8 +2,13 @@
   "theClub": [
     [ "girlname giggles: But we've already been to the club, silly!"],
     [ "You and girlname enter the Night Club."],
-    [ "You are with girlname in the Night Club."]
+    [ "You are with girlname in the Night Club."],
+    [ "girltalk Okay.  Let's dance.",
+      "You head out to the dancefloor to cut up the rug."
+    ]
   ],
+  "Dancing": "Your are dancing with girlname in your arms",
+  "leaveDance": "You pull girlname off the dancefloor.",
   "barGirlDesc": [
     "The girl tending the bar is really good-looking.",
     "You can't help but notice how good the bartender looks in her uniform.",

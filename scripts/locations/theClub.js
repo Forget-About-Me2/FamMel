@@ -31,7 +31,7 @@ function theClub() {
                 curtext = printList(curtext, club["theClub"][1]);
                 // s("You and " + girlname + " enter the Night Club.");
                 pushloc("theClub");
-                locations.theClub.value = 1;
+                locations.theClub.visited = 1;
             } else {
                 curtext = printList(curtext, club["theClub"][2]);
                 // s("You are with " + girlname + " in the Night Club.");
@@ -51,12 +51,9 @@ function theClub() {
                 if (!haveItem("theTheatreKey"))
                     listenerList.push([[function () {lookAround("theClub")}, "Look around."], "lookAround"]);
                 curtext = standobjs(curtext);
-                if (yourbladder > yourbladurge){
-                    listenerList.push([[youpee], "youpee"],);
-                    cListener([youpee, "Go to the bathroom."], "youpee");
-                }
-                listenerList.push([[leavehm], "leavehm"]);
-                cListener([leavehm, "Leave the Club."], "leavehm");
+                if (yourbladder > yourbladurge)
+                    listenerList.push([[youpee, "Go to the bathroom."], "youpee"]);
+                listenerList.push([[leavehm, "Leave the Club."], "leavehm"]);
             }
         } else itsClosed("theClub", darkClub, "darkClub");
     }
@@ -80,6 +77,58 @@ function reClub() {
     theClub();
 }
 
+function goDance(){
+    pushloc("doDance");
+    changevenueflag = 1;
+    let curtext = showneed();
+    curtext = displayyourneed(curtext);
+    let listenerList = [];
+    if (gottagoflag > 0) {
+        listenerList.push([[holdit, "Ask her to hold it."], "holdit"]);
+        listenerList.push([[allowpee, "Let her go."], "allowpee"]);
+    } else {
+        curtext = printList(curtext, club["theClub"][3]);
+        listenerList.push([[doDance, "Continue..."], "doDance"]);
+    }
+    sayText(curtext);
+    cListenerGenList(listenerList);
+}
+
+function doDance(){
+    let curtext = [club["Dancing"].formatVars()];
+    curtext = showneed(curtext);
+    curtext = displayyourneed(curtext);
+    if (randomchoice(3)) curtext = noteholding(curtext);
+    else if (randomchoice(5)) curtext = interpbladder(curtext);
+
+    if (bladder > bladlose) wetherself();
+    else if (yourbladder > yourbladlose) wetyourself();
+    else {
+        let listenerList = [];
+        if (gottagoflag > 0)
+            curtext = preventpee(curtext);
+        else{
+            listenerList.push([[doDance, "Keep Dancing."], "doDance"]);
+            listenerList.push([[kissher,  "Kiss her."], "kissHer"]);
+            listenerList.push([[feelup, "Feel her up."], "feelup"]);
+            if (yourbladder > yourbladurge)
+                listenerList.push([[youpee, "Go to the toilet."], "youpee"]);
+        }
+        listenerList.push([[leaveDance, "Leave the dancefloor."], "leaveDance"]);
+        sayText(curtext);
+        cListenerGenList(listenerList);
+    }
+}
+
+function leaveDance(){
+    let curtext = [club["leaveDance"].formatVars()];
+    // s("You pull " + girlname + " off the dancefloor.");
+    curtext = showneed(curtext);
+    sayText(curtext);
+    poploc();
+    cListener([theClub, "Continue..."], "club");
+}
+
 function darkClub() {
     if (locstack[0] !== "darkclub") {
         s("You and " + girlname + " enter the nightclub.  It's dark, silent and deserted.");
@@ -100,46 +149,46 @@ function darkClub() {
         c("leavehm", "Leave the club.");
     }
 }
+//
+// function godance() {
+//     pushloc("dodance");
+//     changevenueflag = 1;
+//     showneed();
+//     displayyourneed();
+//     if (gottagoflag > 0) {
+//         c("holdit", "Ask her to hold it.");
+//         c("allowpee", "Let her go.");
+//     } else {
+//         s(girltalk + "Okay.  Let's dance.");
+//         s("You head out to the dancefloor to cut up the rug.");
+//         c(locstack[0], "Continue...");
+//     }
+// }
 
-function godance() {
-    pushloc("dodance");
-    changevenueflag = 1;
-    showneed();
-    displayyourneed();
-    if (gottagoflag > 0) {
-        c("holdit", "Ask her to hold it.");
-        c("allowpee", "Let her go.");
-    } else {
-        s(girltalk + "Okay.  Let's dance.");
-        s("You head out to the dancefloor to cut up the rug.");
-        c(locstack[0], "Continue...");
-    }
-}
-
-function dodance() {
-    pushloc("dodance");
-    s("You are dancing with " + girlname + " in your arms.");
-    showneed();
-    displayyourneed();
-    if (randomchoice(3)) noteholding();
-    else if (randomchoice(5)) interpbladder();
-
-    if (bladder > bladlose) wetherself();
-    else if (yourbladder > yourbladlose) wetyourself();
-    else {
-        if (gottagoflag > 0) {
-            preventpee();
-        } else {
-            c(locstack[0], "Keep Dancing.");
-            c("kissher", "Kiss her.");
-            c("feelup", "Feel her up.");
-            standobjs();
-            if (yourbladder > yourbladurge)
-                c("youpee", "Go to the bathroom.");
-        }
-        c("goback", "Leave the dancefloor.");
-    }
-}
+// function dodance() {
+//     pushloc("dodance");
+//     s("You are dancing with " + girlname + " in your arms.");
+//     showneed();
+//     displayyourneed();
+//     if (randomchoice(3)) noteholding();
+//     else if (randomchoice(5)) interpbladder();
+//
+//     if (bladder > bladlose) wetherself();
+//     else if (yourbladder > yourbladlose) wetyourself();
+//     else {
+//         if (gottagoflag > 0) {
+//             preventpee();
+//         } else {
+//             c(locstack[0], "Keep Dancing.");
+//             c("kissher", "Kiss her.");
+//             c("feelup", "Feel her up.");
+//             standobjs();
+//             if (yourbladder > yourbladurge)
+//                 c("youpee", "Go to the bathroom.");
+//         }
+//         c("goback", "Leave the dancefloor.");
+//     }
+// }
 
 function pphotogame() {
     s("<b>YOU:</b> I know you really need to go, but can I take just a couple snapshots first?");

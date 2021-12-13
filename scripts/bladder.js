@@ -141,7 +141,7 @@ function flushdrank() {
 
 // Showneed calculates how she's going to indicate
 // her current level of need ( if at all ) based on her situation
-function showneed(curtext) {
+function showneed(curtext=[]) {
     //TODO turn quotes into JSON
 
     // Clear the gottagoflag.  It will be set by displaygottavoc().
@@ -265,7 +265,7 @@ function noteholding(curtext) {
 function interpbladder(curtext) {
     if (bladder > bladlose) curtext.push(pickrandom(needs["interplose"]));
     else if (bladder > blademer) curtext.push(pickrandom(needs["interpemer"]));
-    else if (bladder > bladneed) curtext.push(pickrandom(needs["interplose"]));
+    else if (bladder > bladneed) curtext.push(pickrandom(needs["interpneed"]));
     return curtext;
 }
 
@@ -450,7 +450,7 @@ function preventpee(curtext) {
     if (bladder < bladlose - 50)
         gottagoflag = 0;
 
-    if (locstack[0] === "dodance")
+    if (locstack[0] === "doDance")
         choices.push(2); //Pee together
     if (locstack[0] === "darkbar" || locstack[0] === "darkmovie" || locstack[0] === "darkclub")
         choices.push(3); //Watch
@@ -1293,23 +1293,27 @@ function pGirlsRoom2() {
 //TODO option for you to pee as well
 function ptogether() {
     let curtext = printList([], peelines["ptogether"][0]);
-    pushloc("ptogether");
-    // s("<b>YOU:</b> Don't go and leave me alone!");
-    let listenerList = [];
-    if (attraction >= ptogetherthreshold) {
-        curtext = displayneed(curtext);
-        curtext = printList(curtext, peelines["ptogether"][1]);
-        // s(girltalk + "Really?  You want to come with me?");
-        // s("She grabs you by the hand and heads for the back of the club.");
-        curtext = displayneed(curtext);
-        listenerList.push([[pTogether2, "Follow her..."], "Follow"]);
-        listenerList.push([[indepee, "Change your mind..."], "changeMind"]);
-        sayText(curtext);
-        cListenerGenList(listenerList);
+    if (locstack[0] === "ptogether"){
+        poploc();
+        eval(locstack[0] + "()");
     } else {
-        curtext = printList(curtext, peelines["ptogether"][2]);
-        // s(girltalk + "You're a big boy.  You can take care of yourself.");
-        indepee(curtext);
+        // s("<b>YOU:</b> Don't go and leave me alone!");
+        let listenerList = [];
+        if (attraction >= ptogetherthreshold) {
+            curtext = displayneed(curtext);
+            curtext = printList(curtext, peelines["ptogether"][1]);
+            // s(girltalk + "Really?  You want to come with me?");
+            // s("She grabs you by the hand and heads for the back of the club.");
+            curtext = displayneed(curtext);
+            listenerList.push([[pTogether2, "Follow her..."], "Follow"]);
+            listenerList.push([[indepee, "Change your mind..."], "changeMind"]);
+            sayText(curtext);
+            cListenerGenList(listenerList);
+        } else {
+            curtext = printList(curtext, peelines["ptogether"][2]);
+            // s(girltalk + "You're a big boy.  You can take care of yourself.");
+            indepee(curtext);
+        }
     }
 }
 
@@ -1436,48 +1440,67 @@ function pTogether5() {
 }
 
 function pTogether5a() {
-    s("<b>YOU:</b>  You can go behind that dumpster over there!");
-    s(girltalk + "<b>This</b> is your solution???");
-    displayneed();
-    s("You can see the struggle in her eyes as she makes up her mind what to do.");
-    s(girltalk + "Can you hold me so I don't fall over?");
-    c("ptogether5a2", "Okay...");
-    c(locstack[0], "Nevermind - let's go back inside.");
+    let curtext = printList([], peelines["ptogether"][16]);
+    // s("<b>YOU:</b>  You can go behind that dumpster over there!");
+    // s(girltalk + "<b>This</b> is your solution???");
+    curtext = displayneed(curtext);
+    curtext = printList(curtext, peelines["ptogether"][17]);
+    // s("You can see the struggle in her eyes as she makes up her mind what to do.");
+    // s(girltalk + "Can you hold me so I don't fall over?");
+    const listenerList = [
+        [[pTogether5a2, "Oh, Yes!"], "helpHer"],
+        [[ptogether, "Nevermind - let's go back inside."], "goBack"]
+    ]
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
 function pTogether5a2() {
-    s("You don't have to be asked twice.");
-    s("You take her hand and lead her behind the dumpster.  She seems nervous.");
-    displayneed();
-    if (pantycolor !== "none") s(ptogetheroutquote);
-    else s(ptogetheroutquotebare);
-    s("You steady her and the stream starts immediately, first as an incoherent spray which slightly wets her shoes, and quickly building into a powerful stream.");
-    s("By the time she finally cuts it off, the pee has pooled into a pond which is seeping under the dumpster.");
+    let curtext = printList([], peelines["ptogether"][20]);
+    // s("You don't have to be asked twice.");
+    // s("You take her hand and lead her behind the dumpster.  She seems nervous.");
+    curtext = displayneed(curtext);
     if (pantycolor !== "none")
-        s(finishtogethroutquote);
+        curtext.push(appearance["clothes"][heroutfit]["ptogetheroutquote"]);
+    else curtext.push(appearance["clothes"][heroutfit]["ptogetheroutquotebare"]);
+    curtext = printList(curtext, peelines["ptogether"][21]);
+    // s("You steady her and the stream starts immediately, first as an incoherent spray which slightly wets her shoes, and quickly building into a powerful stream.");
+    // s("By the time she finally cuts it off, the pee has pooled into a pond which is seeping under the dumpster.");
+    if (pantycolor !== "none")
+        curtext.push(appearance["clothes"][heroutfit]["finishtogetheroutquote"]);
+        // s(finishtogethroutquote);
     else
-        s(finishtogetheroutquotebare);
+        curtext.push(appearance["clothes"][heroutfit]["finishtogethroutquotebare"]);
+        // s(finishtogetheroutquotebare);
     flushdrank();
     sawherpee = 1;
-    c("goback", "Continue...");
+    sayText(curtext);
+    cListenerGen([pTogether5d, "Continue..."], "goback");
+    // c("goback", "Continue...");
 }
 
 function ptogether5b() {
-    s("<b>YOU:</b>  Here!  I'll help you.");
-    s("You push her up against the wall, in the shadows a little ways from the door.");
-    s(girltalk + "I can't...");
+    let curtext = printList([], peelines["ptogether"][22]);
+    // s("<b>YOU:</b>  Here!  I'll help you.");
+    // s("You push her up against the wall, in the shadows a little ways from the door.");
+    // s(girltalk + "I can't...");
     if (pantycolor !== "none") {
-        s(ptogetherdumpquote);
-        s("Her pussy is warm and pulsing underneath the thin fabric as she struggles to control her bladder.");
-        s("You pull the gusset aside and spread her lips with your fingers.");
+        curtext.push(appearance["clothes"][heroutfit]["ptogetherdumpquote"]);
+        curtext = printList(curtext, peelines["ptogether"][23]);
+        // s("Her pussy is warm and pulsing underneath the thin fabric as she struggles to control her bladder.");
+        // s("You pull the gusset aside and spread her lips with your fingers.");
     } else {
-        s(ptogetherdumpquotebare);
-        s("Her pussy is warm and pulsing aginst your hand as she struggles to control her bladder.");
-        s("You carefully spread her lips between your fingers.");
+        curtext.push(appearance["clothes"][heroutfit]["ptogetherdumpquotebare"]);
+        curtext = printList(curtext, peelines["ptogether"][24]);
+        // s("Her pussy is warm and pulsing aginst your hand as she struggles to control her bladder.");
+        // s("You carefully spread her lips between your fingers.");
     }
-    c("ptogether5c", "Continue...");
+    sayText(curtext);
+    cListenerGen([["pTogether5c", "Continue..."], "tellPee"]);
+    // c("ptogether5c", "Continue...");
 }
 
+//TODO continue here
 function ptogether5c() {
     s("<b>YOU:</b>  Go.  Let it all out.");
     s("She protests, but not too strongly, and you feel her pussy tense just as the flow starts, running between your fingers and slightly wetting them before spattering onto the ground in front.");
@@ -1487,12 +1510,19 @@ function ptogether5c() {
         s(finishtogetherdumpquotebare);
     s("She gives you a long, hard kiss before you head back inside together.");
     flushdrank();
+    attraction += 6;
+    shyness -= 6;
     sawherpee = 1;
     c("goback", "Continue...");
 }
 
+function pTogether5d(){
+    poploc();
+    kissher(["You quickly compose yourselves and head back out to the club, but first..."]);
+}
+
 // You stand around looking dumb.
-function ptogether6() {
+function pTogether6() {
     s("<b>YOU:</b> Duhhhhh...");
     displayneed();
     s("She stamps her foot in impatience.");
