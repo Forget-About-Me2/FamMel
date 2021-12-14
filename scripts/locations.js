@@ -80,6 +80,7 @@ function lookKey(loc){
 }
 
 function getKey(loc){
+    locations[loc].foundKey = 1;
     let curtext = [pickrandom(locJson["getKey"])];
     objects[loc+"Key"].value++;
     curtext = callChoice(["curloc", "Continue..."], curtext);

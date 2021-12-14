@@ -8,7 +8,8 @@ function theatreSetup(){
         "wantVisit": [theTheatre, "Go to see a movie as she suggested."],
         "group": 2,
         "visited": 0,
-        "keyChance": 1
+        "keyChance": 1,
+        foundKey: 0
     }
 }
 
@@ -27,7 +28,7 @@ function theatreJsonSetup(){
 function theTheatre(){
     let curtext = [];
     let listenerList = [];
-    if (locations.theatre.visited && locstack[0] === "driveout" && thetime < theaterclosingtime){
+    if (locations.theTheatre.visited && locstack[0] === "driveout" && thetime < theaterclosingtime){
         curtext = printList(curtext, theatre["theatre"][0]);
         sayText(curtext);
         listenerList.push([[driveout, "Continue..."], "driveOut"]);
@@ -38,7 +39,7 @@ function theTheatre(){
         if (locstack[0] !== "theTheatre") {
             curtext = printList(curtext, theatre["theatre"][1]);
             pushloc("theTheatre");
-            locations.theatre.visited = 1;
+            locations.theTheatre.visited = 1;
         } else
             curtext = printList(curtext, theatre["theatre"][2]);
         if (randomchoice(3)) curtext = noteholding(curtext);

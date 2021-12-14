@@ -7,7 +7,8 @@ function theBarSetup(){
         "wantVisit": [thebar, "Go to the bar like she asked."],
         "group": 4,
         "visited": 0,
-        "keyChance": 1
+        "keyChance": 1,
+        foundKey: 0
     }
 }
 
@@ -58,7 +59,7 @@ function thebar(){
             listenerList = barTalk(curtext);
             listenerList.push([[function () {buyItem("beer")}], "buybeer"]);
             cListener([function () {buyItem("beer")}, "Buy beer."], "buybeer");
-            if (!haveItem("theBarKey")){
+            if (!locations.theBar.foundKey){
                 listenerList.push([[function () {lookAround("theBar")}], "lookAround"]);
                 cListener(["", "Look around."], "lookAround");
             }
@@ -166,10 +167,15 @@ function stealbeer2(){
 
 function darkBar(){
    let curtext = [];
-   if (emerBreak || emerHold && bladder < 20)
+   if (emerBreak || emerHold && bladder < 20) {
        curtext = printList(curtext, bar["darkBar"][0]);
-   else if (emerHold)
+       emerHold = 0;
+       emerBreak = 0;
+   }
+   else if (emerHold) {
        curtext = printList(curtext, bar["darkBar"][1]);
+       emerHold = 0;
+   }
    else if (locstack[0] !== "darkBar") {
        curtext = printList(curtext, bar["darkBar"][2]);
        pushloc("darkBar");

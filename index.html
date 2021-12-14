@@ -230,7 +230,10 @@ CHANGES BY Forget_About_Me
 *You can now keep buying drinks in a row.
 
 ========
+
 0.5.0
+
+-The version numbers have been changed to better represent the current state of the game
 
 *Moving quotes to JSON
 *Settings are now saved between sessions
@@ -248,17 +251,18 @@ CHANGES BY Forget_About_Me
 *Added the option to always ask her to pee into something, without caring about her need
 *Added a gas station
 *Tweaked the insistent asking to pee:
-    * WaitCounter now takes into account bladder size. With a minimum amount
+    * WaitCounter now takes bladder size into account. With a minimum amount
     * WaitCounter is only ignored if she's genuinely within 2 ticks of wetting
 *When selling panties you now get the option to buy more beer.
 *Added more topics for talking in the bar.
 *Added dart game
 *There can now be a line for the bathroom in the theatre
 *the statusbar now just flashes temporary when an attribute changes instead of until the next button is pressed
-*The flashing of the statusbar now differentiates between positive(green) and negative(red) changed
+*The flashing of the statusbar now differentiates between positive(green) and negative(red) changes
 *During the movie, the only time attraction checks are used are at the beginning and the end.
-*Buying has been changed so you can now build up to 100 items at the same time, provided you have the money.
-    *Stealing is unchanged for now as payment for stealing.
+    *The reason is that the other scenes are a bit of a minigame where you have to choose the right option
+*Buying has been changed so you can now buy up to 100 items at the same time, provided you have the money.
+    *Stealing is unchanged for now, as it actually takes effort on the player's part.
 */
 
     //TODO potentially clean up if statements with multiple locations
@@ -373,7 +377,6 @@ CHANGES BY Forget_About_Me
 
     // Girl stats(Counter and Flags)
     let owedfavor = 0; // she owes you a favor
-    let pantycolor = "black";
     let flirtcounter = 0; // time since last flirt ( counts by 2 )
     let wetlegs = 0; // her legs are wet
     let wetherpanties = 0; // did she ever wet herself?

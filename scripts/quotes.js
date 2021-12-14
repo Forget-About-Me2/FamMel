@@ -28,6 +28,7 @@ let customgirlname = "Amanda";
 let basegirl = "Laura";
 let girltalk = "<b>" + girlname + ":&nbsp;</b>";
 let girlgasp = "<b>" + girlname + " gasps:&nbsp;</b>";
+let pantycolor = "black";
 
 //
 //  Feel up her thighs description when she has to go badly
@@ -260,7 +261,7 @@ function printFormatDialogue(curtext, loc, index, begin, end, values){
 //Reason for this is that it actually creates a deepcopy of the list, otherwise all changes to curtext is stored
 //In the previous list.
 function printList(curtext, list){
-    list.forEach(item => curtext.push(item));
+    list.forEach(item => curtext.push(item.formatVars()));
     return curtext;
 }
 

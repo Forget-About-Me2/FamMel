@@ -55,7 +55,7 @@ function theMakeOut() {
         } else {
             listenerList.push([[viewStars, "Suggest that you gaze at the stars."], "viewStars"]);
             listenerList.push([[theWalk, "Invite " + girlname + " to take a walk."], "theWalk"]);
-            if (!haveItem("theTheatreKey")) {
+            if (!locations.theTheatre.foundKey) {
                 listenerList.push([[function () {lookAround("theTheatre")}, "look around."], "lookAround"]);
             }
             curtext = standobjs(curtext);

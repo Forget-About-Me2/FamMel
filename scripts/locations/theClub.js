@@ -7,7 +7,8 @@ function theClubSetup(){
         wantVisit: [theClub, "Stop by the nightclub for her."],
         group: 3,
         visited: 0,
-        keyChance: 1
+        keyChance: 1,
+        foundKey: 0
     }
 }
 
@@ -48,7 +49,7 @@ function theClub() {
             else {
                 listenerList.push([[function () {buyItem("cocktail")}, "Buy  a drink."], "buyDrink"]);
                 listenerList.push([[goDance, "Ask her to dance."], "goDance"]);
-                if (!haveItem("theTheatreKey"))
+                if (!locations.theClub.foundKey)
                     listenerList.push([[function () {lookAround("theClub")}, "Look around."], "lookAround"]);
                 curtext = standobjs(curtext);
                 if (yourbladder > yourbladurge)
@@ -126,27 +127,50 @@ function leaveDance(){
     curtext = showneed(curtext);
     sayText(curtext);
     poploc();
-    cListener([theClub, "Continue..."], "club");
+    cListenerGen([theClub, "Continue..."], "club");
 }
 
 function darkClub() {
-    if (locstack[0] !== "darkclub") {
-        s("You and " + girlname + " enter the nightclub.  It's dark, silent and deserted.");
-        pushloc("darkclub");
+    let curtext = [];
+    if (emerBreak || emerHold && bladder < 20){
+        curtext = printList(curtext, club["emerBreak"]);
+        emerHold = 0;
+        emerBreak = 0;
+    } else if (emerHold) {
+        curtext.push(club["emerHold"].formatVars());
+        emerHold = 0;
+    }
+    else if (locstack[0] !== "darkClub") {
+        curtext.push(club["darkClubEnter"].formatVars());
+        // s("You and " + girlname + " enter the nightclub.  It's dark, silent and deserted.");
+        pushloc("darkClub");
     } else {
-        s("You are with " + girlname + " in the closed nightclub.");
+        curtext.push(club["darkClubBe"].formatVars());
+        // s("You are with " + girlname + " in the closed nightclub.");
     }
 
-    showneed();
-    displayyourneed();
+    curtext = showneed(curtext);
+    curtext = displayyourneed(curtext);
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
-    else if (gottagoflag > 0) preventpee();
+    else if (gottagoflag > 0) {
+        curtext = preventpee(curtext);
+        sayText(curtext);
+    }
     else {
-        standobjs();
-        if (!checkedherout) c("checkherout", "Check her out.");
-        c("youpee", "Go to the bathroom.");
-        c("leavehm", "Leave the club.");
+        let listenerList = [];
+        curtext = standobjs(curtext);
+        sayText(curtext);
+        listenerList.push([[kissher], "kissHer"]);
+        cListener([kissher, "Kiss her."], "kissHer");
+        listenerList.push([[feelup], "feelUp"]);
+        cListener([feelup, "Feel her up."], "feelUp");
+        if (!checkedherout)
+            listenerList.push([[checkherout, "Check her out."], "checkOut"]);
+        if (yourbladder > yourbladurge)
+            listenerList.push([[youpee, "Go to the bathroom."], "youPee"]);
+        listenerList.push([[leavehm, "Leave the club."], "LeaveHm"]);
+        cListenerGenList(listenerList);
     }
 }
 //

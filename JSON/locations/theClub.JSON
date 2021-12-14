@@ -9,6 +9,12 @@
   ],
   "Dancing": "Your are dancing with girlname in your arms",
   "leaveDance": "You pull girlname off the dancefloor.",
+  "darkClubEnter": "You and girlname enter the nightclub. It's dark and deserted.",
+  "darkClubBe": "You are with girlname in the closed nightclub.",
+  "emerBreak": ["girlname practically runs to the toilets through the dark room. Leaving you alone in the doorway."
+  , "As you imagine her rushing into a stall, desperately squirming, you close the door behind you."
+  ],
+  "emerHold": "You and girlname enter the club. She's openly squirming and you can't help but stare.",
   "barGirlDesc": [
     "The girl tending the bar is really good-looking.",
     "You can't help but notice how good the bartender looks in her uniform.",
