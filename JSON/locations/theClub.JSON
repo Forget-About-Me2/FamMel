@@ -15,6 +15,35 @@
   , "As you imagine her rushing into a stall, desperately squirming, you close the door behind you."
   ],
   "emerHold": "You and girlname enter the club. She's openly squirming and you can't help but stare.",
+  "photoGameConvince": "<b>You: </b> I know you really need to go, but can I take just a couple of snapshots first?",
+  "questPic": "girltalk What <u>kind</u> of pictures?",
+  "choices": {
+    "snapshots": "Just a couple snapshots of you on the stage there.",
+    "costume": "How about a few costume pics?",
+    "nudes": "Well - nobody's around, so I'd really love it if you would do a few nudes.",
+    "startGame": "I'd really like it if you'd wait...",
+    "indepee": "Alright - go ahead and pee first.",
+    "photoPose": "Ask her to pose.",
+    "photoChange": "Ask her to change.",
+    "photoNude": "Ask her to disrobe.",
+    "goback": "Photo session is over..."
+  },
+  "gameFail": "girltalk No way, dude. I'm outta here.",
+  "gameAccept": {
+    "snapshots":  "girltalk I'd really like it if you'd wait...",
+    "costume": "girltalk Okay.  But can I please go pee first?",
+    "nudes": "girltalk That's naughty.  Very naughty.  But can I please go pee first?"
+  },
+  "photoGameStart": [
+    "<b> You: </b> Thanks. You're very sexy.",
+    "You motion girlname up onto the nightclub stage.",
+    "She carefully ascends the stairs, and you find a switch that turns on some stage lights."
+  ],
+  "midPhotoGame":{
+    "common": "You're taking snapshots of girlname up on the nightclub stage.",
+    "nude": "She's completely nude.",
+    "costume": "She's wearing {0}."
+  },
   "barGirlDesc": [
     "The girl tending the bar is really good-looking.",
     "You can't help but notice how good the bartender looks in her uniform.",

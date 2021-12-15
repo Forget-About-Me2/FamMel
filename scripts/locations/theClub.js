@@ -215,88 +215,124 @@ function darkClub() {
 // }
 
 function pphotogame() {
-    s("<b>YOU:</b> I know you really need to go, but can I take just a couple snapshots first?");
-    displayneed();
-    s(girltalk + "What <u>kind</u> of pictures?");
-    c("photogame2", "Just a couple snapshots of you up on the stage there.");
-    c("photogame2c", "How about a few costume pics?");
-    c("photogame2n", "Well - nobody's around, so I'd really love it if you would do a few nudes.");
+    let curtext = [club["photoGameConvince"]];
+    // s("<b>YOU:</b> I know you really need to go, but can I take just a couple snapshots first?");
+    curtext = displayneed(curtext);
+    curtext.push(club["questPic"].formatVars());
+    // s(girltalk + "What <u>kind</u> of pictures?");
+    sayText(curtext);
+    cListenerGenList([
+        [function () {photoConvince("snapshots")}, club["choices"]["snapshots"], "snapshots"],
+        [function () {photoConvince("costume")}, club["choices"]["costume"], "costume"],
+        [function () {photoConvince("nudes")}, club["choices"]["nudes"], "nudes"]
+    ])
+    // c("photogame2", "Just a couple snapshots of you up on the stage there.");
+    // c("photogame2c", "How about a few costume pics?");
+    // c("photogame2n", "Well - nobody's around, so I'd really love it if you would do a few nudes.");
 }
 
-function photogame2() {
-    if (attraction >= photogamethreshold) {
-        displayneed();
-        s(girltalk + "Okay.  But can I please go pee first?");
-        displayneed();
-        photolevel = 0;
-        c("photogame", "I'd really like it if you'd wait...");
-        c("indepee", "Alright - go ahead and pee.");
+
+function photoConvince(choice) {
+    let curtext = [];
+    if (attraction >= photoGameThresholds[choice]) {
+        curtext = displayneed(curtext);
+        curtext.push(club["gameAccept"][choice].formatVars());
+        // s(girltalk + "Okay.  But can I please go pee first?");
+        curtext = displayneed(curtext);
+        photoChoice = choice;
+        sayText(curtext);
+        cListenerGenList([
+            [[photoGame, club["choices"]["startGame"]], "photogame"],
+            [[indepee, club["choices"]["indepee"]], "indepee"]
+        ]);
     } else {
-        s(girltalk + "No way, dude.  I'm outta here.");
-        indepee();
+        curtext.push(club["gameFail"]);
+        attraction -= 2;
+        // s(girltalk + "No way, dude.  I'm outta here.");
+        indepee(curtext);
     }
 }
+//
+// function photogame2c() {
+//     if (attraction >= photogamecthreshold) {
+//         displayneed();
+//         s(girltalk + "Well, okay.  It would be neat to play dressup.  But can I please go pee first?");
+//         displayneed();
+//         photolevel = 1;
+//         c("photogame", "I'd really like it if you'd wait...");
+//         c("indepee", "Alright - go ahead and pee first.");
+//     } else {
+//         s(girltalk + "No way, dude.  I'm outta here.");
+//         indepee();
+//     }
+// }
+//
+// function photogame2n() {
+//     if (attraction >= photogamenthreshold) {
+//         displayneed();
+//         s(girltalk + "That's naughty.  Very naughty.  But can I please go pee first?");
+//         displayneed();
+//         photolevel = 2;
+//         c("photogame", "I'd really like it if you'd wait...");
+//         c("indepee", "Alright - go ahead and pee first.");
+//     } else {
+//         s(girltalk + "No way, dude.  I'm outta here.");
+//         indepee();
+//     }
+// }
 
-function photogame2c() {
-    if (attraction >= photogamecthreshold) {
-        displayneed();
-        s(girltalk + "Well, okay.  It would be neat to play dressup.  But can I please go pee first?");
-        displayneed();
-        photolevel = 1;
-        c("photogame", "I'd really like it if you'd wait...");
-        c("indepee", "Alright - go ahead and pee first.");
-    } else {
-        s(girltalk + "No way, dude.  I'm outta here.");
-        indepee();
-    }
-}
 
-function photogame2n() {
-    if (attraction >= photogamenthreshold) {
-        displayneed();
-        s(girltalk + "That's naughty.  Very naughty.  But can I please go pee first?");
-        displayneed();
-        photolevel = 2;
-        c("photogame", "I'd really like it if you'd wait...");
-        c("indepee", "Alright - go ahead and pee first.");
-    } else {
-        s(girltalk + "No way, dude.  I'm outta here.");
-        indepee();
-    }
-}
-
-//TODO show your need
-//TODO fix wetherself when naked
-//TODO not running to the bathroom if she wet herself
+let wetPhoto = 0;
 function photogame() {
-    if (locstack[0] !== "photogame") {
+    let curtext = [];
+    if (wetPhoto) {
+        wetPhoto = 0;
+        go("goback");
+    } else if (locstack[0] !== "photogame") {
         pushloc("photogame");
-        displayholdquip();
+        curtext = displayholdquip(curtext);
         posectr = 0;
         askholditcounter++;
-        s("<b>YOU:</b> Thanks.  You're very sexy.");
-        s("You motion " + girlname + " up onto the nightclub stage.");
-        s("She carefully ascends the stairs, and you find a switch that turns on some stage lights.");
+        curtext = printList(curtext, club["photoGameStart"]);
+        // s("<b>YOU:</b> Thanks.  You're very sexy.");
+        // s("You motion " + girlname + " up onto the nightclub stage.");
+        // s("She carefully ascends the stairs, and you find a switch that turns on some stage lights.");
     } else {
-        s("You're taking snapshots of " + girlname + " up on the nightclub stage.");
-        if (photolevel === 3) s("She's completely nude.");
-        if (photolevel === 1) s("She's wearing " + poseoutfit[outfitctr] + ".");
+        curtext.push(club["midPhotoGame"]["common"].formatVars());
+        // s("You're taking snapshots of " + girlname + " up on the nightclub stage.");
+        if (photolevel === 3)
+            curtext.push(club["midPhotoGame"]["nude"]);
+            // s("She's completely nude.");
+        if (photolevel === 1)
+            curtext.push(club["midPhotoGame"]["costume"].format(appearance["clothes"][heroutfit][outfitctr]));
+            // s("She's wearing " + poseoutfit[outfitctr] + ".");
         if (bladder > blademer) {
-            interpbladder();
-            noteholding();
+            curtext = interpbladder(curtext);
+            curtext = noteholding(curtext);
         }
     }
-    showneed();
-    if (bladder > bladlose) wetherself();
+    curtext = displayneed(curtext);
+    curtext = displayyourneed(curtext);
+    if (bladder > bladlose) {
+        wetPhoto = 1;
+        wetherself();
+    }
     else if (yourbladder > yourbladlose) wetyourself();
     else {
-        if (posectr <= posemax) c("photopose", "Ask her to pose.");
-        if (photolevel === 1 && outfitctr < outfitmax) c("photochange", "Ask her to change.");
-        if (photolevel === 2) c("photonude", "Ask her to disrobe.");
-        c("goback", "Photo session is over...");
+        sayText(curtext);
+        let listenerList = [];
+        if (posectr <= posemax)
+            listenerList.push([[photoPose, club["choices"]["photoPose"]], "photoPose"]);
+        if (photolevel === 1 && outfitctr < outfitmax)
+            listenerList.push([[photoChange, club["choices"]["photoChange"]], "photoChange"]);
+        if (photolevel === 2)
+            listenerList.push([[photoNude, club["choices"]["photoNude"]], "photoNude"]);
+        listenerList.push([[goback, club["choices"]["goback"]], "goback"]);
+        cListenerGenList(listenerList);
     }
 }
 
+//TODO continue here
 function photopose() {
     s("<b>YOU:</b> How about striking a pose?");
     if (photolevel === 3)

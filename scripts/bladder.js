@@ -60,9 +60,11 @@ const ptogetherthreshold = 100; // She'll take you with her to the bathroom.
 const pnorestroomthreshold = 110; // She'll pee outside of the restroom.
 const pwatchthreshold = 90; // You can watch her pee in a closed place.
 const drinkinggamethreshold = 90; // She'll play your silly drinking game.
-const photogamethreshold = 90; // She'll play your silly photo game
-const photogamecthreshold = 100; // She'll play your silly photo game in costume
-const photogamenthreshold = 110; // She'll play your silly photo game nude
+const photoGameThresholds = {
+  snapshots: 90, // She'll play your silly photo game
+  costume: 100, // She'll play your silly photo game in costume
+  nudes: 110  // She'll play your silly photo game nude
+};
 const hottubthresh = 90; //  She'll strip and go into the hot tub
 const holditneedthresh = 30; // She'll hold it for need
 const holditemerthresh = 60; // She'll hold it for emergency
