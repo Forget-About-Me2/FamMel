@@ -26,7 +26,8 @@
     "photoPose": "Ask her to pose.",
     "photoChange": "Ask her to change.",
     "photoNude": "Ask her to disrobe.",
-    "goback": "Photo session is over..."
+    "goback": "Photo session is over...",
+    "takePhoto": "Take a photo..."
   },
   "gameFail": "girltalk No way, dude. I'm outta here.",
   "gameAccept": {
@@ -43,6 +44,40 @@
     "common": "You're taking snapshots of girlname up on the nightclub stage.",
     "nude": "She's completely nude.",
     "costume": "She's wearing {0}."
+  },
+  "askPose": "<b> You: </b> How about striking a pose?",
+  "poseNude": [
+    "girlname shyly covers her breasts with one hand and her pussy with the other.  Her face is a bright red.",
+    "girlname turns her back to you and tries to hide her bare bottom with one hand while she looks back over her shoulder.  You see the curls of her pubic hair in the space between her legs.",
+    "girlname slowly turns toward you, her breasts pressed between her extended arms, and both hands firmly blocking your view of her crotch.",
+    "girlname shyly moves one of her hands to her hip and cups a breast with the other.  She holds one leg crossed just a little forward, squeezing the exposed slit of her pussy closed.",
+    "girlname turns slightly, spreads her legs and caresses her inner thigh with one hand while spreading the other across the opposite butt cheek.",
+    "girlname turns away and bends down to touch her toes, legs spread slightly.  Her glistening pussy and cute, tight anus are fully exposed to your camera."
+  ],
+  "poseEmer": [
+    "<i>She seems to be having trouble keeping her legs still for any length of time, and she's breathing hard with the effort to control her bladder.</i>",
+    "<i>She keeps unconsciously moving her hand closer to her pussy from behind and then catching herself and moving it back.  Her expression is strained as she tries to hold her pee and hold still at the same time.</i>",
+    "<i>You can see sweat on her face as she tries to fight the burning pressure in her bladder and stay posed until you take a picture.</i>",
+    "<i>She's trembling with the effort to control her bladder using just her sphincters while holding the pose at the same time.</i>",
+    "<i>Her hips won't stop moving as she tries to manage her overwhelming urge to pee without breaking the pose.</i>",
+    "<i>She's gasping for breath as she fights the spasms and her whole body shakes with the effort to hold both the pose and the contents of her overfull bladder.</i>"
+  ],
+  "photoChange": {
+    "common": "<b>You: </b> How about changing into a costume?",
+    "emer": "girlname is almost doubled over as she takes little baby steps back to the closet and returns with a {0}.",
+    "normal": "girlname walks back to the closet and returns with a {0}."
+  },
+  "photoNude": {
+    "common": "<b>You: </b> Okay - so you can take off your clothes.",
+    "emerStart": [
+      "<i>You can see her face filled with a look of concentration as she waits for an opportune moment to continue.</i>",
+      "She then shyly unclasps her bra, revealing her breasts briefly before turning her back to you.  Her thighs are rubbing together."
+    ],
+    "emerNoPanty": "She quickly crosses her legs and squeezes tightly - she was not wearing any panties.",
+    "emerPanty": "She hesitates and looks to you for confirmation before spreading her legs slightly, giving her pussy a firm press, and quickly slipping her panties off then tightly crossing her legs.",
+    "normNoPanty": "She's not wearing any panties.",
+    "normPanty": "She hesitates and looks to you for confirmation before slipping her panties off and placing them on the floor next to her.",
+    "stage": "She's standing on stage completely nude."
   },
   "barGirlDesc": [
     "The girl tending the bar is really good-looking.",

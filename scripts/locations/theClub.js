@@ -56,7 +56,10 @@ function theClub() {
                     listenerList.push([[youpee, "Go to the bathroom."], "youpee"]);
                 listenerList.push([[leavehm, "Leave the Club."], "leavehm"]);
             }
-        } else itsClosed("theClub", darkClub, "darkClub");
+        } else {
+            itsClosed("theClub", darkClub, "darkClub");
+            return;
+        }
     }
     sayText(curtext);
     cListenerGenList(listenerList);
@@ -161,10 +164,8 @@ function darkClub() {
         let listenerList = [];
         curtext = standobjs(curtext);
         sayText(curtext);
-        listenerList.push([[kissher], "kissHer"]);
-        cListener([kissher, "Kiss her."], "kissHer");
-        listenerList.push([[feelup], "feelUp"]);
-        cListener([feelup, "Feel her up."], "feelUp");
+        listenerList.push([[kissher, "Kiss her."], "kissHer"]);
+        listenerList.push([[feelup, "Feel her up."], "feelUp"]);
         if (!checkedherout)
             listenerList.push([[checkherout, "Check her out."], "checkOut"]);
         if (yourbladder > yourbladurge)
@@ -283,7 +284,8 @@ function photoConvince(choice) {
 
 
 let wetPhoto = 0;
-function photogame() {
+let isNude = 0;
+function photoGame() {
     let curtext = [];
     if (wetPhoto) {
         wetPhoto = 0;
@@ -300,10 +302,10 @@ function photogame() {
     } else {
         curtext.push(club["midPhotoGame"]["common"].formatVars());
         // s("You're taking snapshots of " + girlname + " up on the nightclub stage.");
-        if (photolevel === 3)
+        if (photoChoice === "nudes" && isNude)
             curtext.push(club["midPhotoGame"]["nude"]);
             // s("She's completely nude.");
-        if (photolevel === 1)
+        if (photolevel === "costumes")
             curtext.push(club["midPhotoGame"]["costume"].format(appearance["clothes"][heroutfit][outfitctr]));
             // s("She's wearing " + poseoutfit[outfitctr] + ".");
         if (bladder > blademer) {
@@ -323,65 +325,80 @@ function photogame() {
         let listenerList = [];
         if (posectr <= posemax)
             listenerList.push([[photoPose, club["choices"]["photoPose"]], "photoPose"]);
-        if (photolevel === 1 && outfitctr < outfitmax)
+        if (photoChoice === "costume" && outfitctr < outfitmax)
             listenerList.push([[photoChange, club["choices"]["photoChange"]], "photoChange"]);
-        if (photolevel === 2)
+        if (photoChoice === "nudes" && !isNude)
             listenerList.push([[photoNude, club["choices"]["photoNude"]], "photoNude"]);
         listenerList.push([[goback, club["choices"]["goback"]], "goback"]);
         cListenerGenList(listenerList);
     }
 }
 
-//TODO continue here
-function photopose() {
-    s("<b>YOU:</b> How about striking a pose?");
-    if (photolevel === 3)
-        s(girlname + " " + posenude[posectr]);
+function photoPose() {
+    let curtext = [club["askPose"]];
+    // s("<b>YOU:</b> How about striking a pose?");
+    if (photoChoice === "nudes")
+        curtext.push(club["poseNude"][posectr].formatVars());
     else
-        s(girlname + " " + posenorm[posectr]);
+        curtext.push(appearance["clothes"][heroutfit]["posenorm"][posectr].formatVars());
     posectr++;
     if (bladder > blademer) {
-        s(poseemer[randcounter]);
-        incrandom();
+        curtext.push(pickrandom(club["poseEmer"]));
+        // s(poseemer[randcounter]);
+        // incrandom();
     }
-    c(locstack[0], "Take a photo...");
+    sayText(curtext);
+    cListenerGen([photoGame, club["choices"]["takePhoto"]], "takePhoto");
 }
 
-function photochange() {
-    s("<b>YOU:</b> How about changing into a costume?");
+function photoChange() {
+    let curtext = [club["photoChange"]["common"]];
+    // s("<b>YOU:</b> How about changing into a costume?");
     if (bladder > blademer) {
-        s(girlname + " is almost doubled over as she takes little baby steps back to the closet and returns with a " + poseoutfit[outfitctr]);
-        s(donemer[outfitctr]);
+        curtext.push(club["photoChange"]["emer"].formatVars().format([appearance["clothes"][heroutfit]["poseoutfit"][outfitctr]]));
+        // s(girlname + " is almost doubled over as she takes little baby steps back to the closet and returns with a " + poseoutfit[outfitctr]);
+        curtext.push(appearance["clothes"][heroutfit]["donemer"][outfitctr]);
+        // s(donemer[outfitctr]);
     } else {
-        s(girlname + " walks back to the closet and returns with a" + poseoutfit[outfitctr]);
-        s(donoutfit[outfitctr]);
+        curtext.push(club["photoChange"]["normal"].formatVars().format([appearance["clothes"][heroutfit]["poseoutfit"][outfitctr]]));
+        // s(girlname + " walks back to the closet and returns with a" + poseoutfit[outfitctr]);
+        curtext = printList(curtext, appearance["clothes"][heroutfit]["donoutfit"][outfitctr]);
+        // s(donoutfit[outfitctr]);
     }
     outfitctr++;
-    c(locstack[0], "Continue...");
+    sayText(curtext);
+    cListenerGen([photoGame, "Continue..."], "Cont");
 }
 
-function photonude() {
-    s("<b>YOU:</b> Okay - so you can take off your clothes.");
+function photoNude() {
+    let curtext = [club["photoNude"]["common"]];
+    // s("<b>YOU:</b> Okay - so you can take off your clothes.");
     if (bladder > blademer) {
-        s(girlname + undressquoteemer);
-        s("<i>You can see her face filled with a look of concentration as she waits for an opportune moment to continue.</i>");
-        s("She then shyly unclasps her bra, revealing her breasts briefly before turning her back to you.  Her thighs are rubbing together.");
+        curtext.push(girlname + appearance["clothes"][heroutfit]["undressquoteemer"]);
+        curtext = printList(curtext, club["photoNude"]["emerStart"]);
+        // s("<i>You can see her face filled with a look of concentration as she waits for an opportune moment to continue.</i>");
+        // s("She then shyly unclasps her bra, revealing her breasts briefly before turning her back to you.  Her thighs are rubbing together.");
         if (pantycolor === "none") {
-            s("She quickly crosses her legs and squeezes tightly - she was not wearing any panties.");
+            curtext.push(club["photoNude"]["emerNoPanty"]);
+            // s("She quickly crosses her legs and squeezes tightly - she was not wearing any panties.");
         } else {
-            s("She hesitates and looks to you for confirmation before spreading her legs slightly, giving her pussy a firm press, and quickly slipping her panties off then tightly crossing her legs.");
+            curtext.push(club["photoNude"]["emerPanty"]);
+            // s("She hesitates and looks to you for confirmation before spreading her legs slightly, giving her pussy a firm press, and quickly slipping her panties off then tightly crossing her legs.");
         }
     } else {
-        s(girlname + undressquote);
+        curtext.push(girlname + appearance["clothes"][heroutfit]["undressquote"]);
         if (pantycolor === "none") {
-            s("She's not wearing any panties.");
+            curtext.push(club["photoNude"]["normNoPanty"]);
+            // s("She's not wearing any panties.");
         } else {
-            s("She hesitates and looks to you for confirmation before slipping her panties off and placing them on the floor next to her.");
+            curtext.push(club["photoNude"]["normPanty"]);
+            // s("She hesitates and looks to you for confirmation before slipping her panties off and placing them on the floor next to her.");
         }
     }
-    s("She's standing on stage completely nude.");
-    incrandom();
-    photolevel = 3;
-    c(locstack[0], "Continue...");
+    curtext.push(club["photoNude"]["stage"]);
+    // s("She's standing on stage completely nude.");
+    isNude = 1;
+    sayText(curtext);
+    cListenerGen([photoGame, "Continue..."], "Cont");
 }
 

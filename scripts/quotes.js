@@ -1,7 +1,6 @@
 //TODO make a more general function for handling curtext
 
 const jsonlocs = ["options", "start", "yourhome", "herhome"]; //List of locations that have a corresponding json file
-let jsonvars = {}; //Dictiornary list of variables that might need to be inserted in the string found in the json
 let calledjsons = {}; //Dictionary list of all location that have already been queried, this saves them being queried multiple times meaning less requests for the server
 
 
@@ -29,25 +28,6 @@ let basegirl = "Laura";
 let girltalk = "<b>" + girlname + ":&nbsp;</b>";
 let girlgasp = "<b>" + girlname + " gasps:&nbsp;</b>";
 let pantycolor = "black";
-
-//
-//  Feel up her thighs description when she has to go badly
-//
-// var feelthigh=["You feel her thigh muscles contracting and relaxing as she tries to hold back her pee.",
-//     "You feel her tensing and relaxing her thighs as she fights the urge to urinate.",
-//     "You feel goosebumps suddenly form on her sweaty skin as a spasm sends shivers up her leg.",
-//     "You feel her exhausted sphincters spasming under your fingers.",
-//     "You feel her thighs trembling with the effort to control her bladder.",
-//     "Her hot, damp thighs feel slippery and they tremble with the effort of controlling her urge to pee."];
-
-// var okayforyou=[
-//     "Okay, since you're asking so nicely.  I'll hold it a little longer.",
-//     "Well... okay. I'll control myself if it makes you happy.",
-//     "Alright - I'll hold it in for you a little bit longer.",
-//     "If you insist - I'll try to hold it a little more.",
-//     "Okay.  I'll wait a bit more if that's what you want.",
-//     "Fine.  I'll wait a just little longer if you'd like me to."
-// ];
 
 // her apologies for asking to go
 var wanthold=["I know you asked me to wait, but...", "I know you told me not to go, but...", "I know you wanted me to hold it, but..." , "I know you asked me not to pee, but...", "I know you wanted me to control my bladder, but..." , "I know you didn't want me to go, but..."];
@@ -96,9 +76,21 @@ var bargirlnames=["Tiffany", "Brittney", "Vanessa" , "Maya", "Angelina", "Samant
 //  Descriptions of her posing for you
 //
 
-var posenude=["shyly covers her breasts with one hand and her pussy with the other.  Her face is a bright red.", "turns her back to you and tries to hide her bare bottom with one hand while she looks back over her shoulder.  You see the curls of her pubic hair in the space between her legs.", "slowly turns toward you, her breasts pressed between her extended arms, and both hands firmly blocking your view of her crotch.", "shyly moves one of her hands to her hip and cups a breast with the other.  She holds one leg crossed just a little forward, squeezing the exposed slit of her pussy closed.", "turns slightly, spreads her legs and caresses her inner thigh with one hand while spreading the other across the opposite butt cheek.", "turns away and bends down to touch her toes, legs spread slightly.  Her glistening pussy and cute, tight anus are fully exposed to your camera."];
-
-var poseemer=["<i>She seems to be having trouble keeping her legs still for any length of time, and she's breathing hard with the effort to control her bladder.</i>", "<i>She keeps unconsciously moving her hand closer to her pussy from behind and then catching herself and moving it back.  Her expression is strained as she tries to hold her pee and hold still at the same time.</i>", "<i>You can see sweat on her face as she tries to fight the burning pressure in her bladder and stay posed until you take a picture.</i>", "<i>She's trembling with the effort to control her bladder using just her sphincters while holding the pose at the same time.</i>", "<i>Her hips won't stop moving as she tries to manage her overwhelming urge to pee without breaking the pose.</i>", "<i>She's gasping for breath as she fights the spasms and her whole body shakes with the effort to hold both the pose and the contents of her overfull bladder.</i>"];
+// var posenude=[
+//     "shyly covers her breasts with one hand and her pussy with the other.  Her face is a bright red.",
+//     "turns her back to you and tries to hide her bare bottom with one hand while she looks back over her shoulder.  You see the curls of her pubic hair in the space between her legs.",
+//     "slowly turns toward you, her breasts pressed between her extended arms, and both hands firmly blocking your view of her crotch.",
+//     "shyly moves one of her hands to her hip and cups a breast with the other.  She holds one leg crossed just a little forward, squeezing the exposed slit of her pussy closed.",
+//     "turns slightly, spreads her legs and caresses her inner thigh with one hand while spreading the other across the opposite butt cheek.",
+//     "turns away and bends down to touch her toes, legs spread slightly.  Her glistening pussy and cute, tight anus are fully exposed to your camera."];
+//
+// var poseemer=[
+//     "<i>She seems to be having trouble keeping her legs still for any length of time, and she's breathing hard with the effort to control her bladder.</i>",
+//     "<i>She keeps unconsciously moving her hand closer to her pussy from behind and then catching herself and moving it back.  Her expression is strained as she tries to hold her pee and hold still at the same time.</i>",
+//     "<i>You can see sweat on her face as she tries to fight the burning pressure in her bladder and stay posed until you take a picture.</i>",
+//     "<i>She's trembling with the effort to control her bladder using just her sphincters while holding the pose at the same time.</i>",
+//     "<i>Her hips won't stop moving as she tries to manage her overwhelming urge to pee without breaking the pose.</i>",
+//     "<i>She's gasping for breath as she fights the spasms and her whole body shakes with the effort to hold both the pose and the contents of her overfull bladder.</i>"];
 
 //
 //  She's about to lose control in the car.
