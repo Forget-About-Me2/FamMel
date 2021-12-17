@@ -267,7 +267,7 @@ function haveSex(location){
             listenerList.push([[function () {fuckTry(location)}, "Fuck her"], "fuckTry"]);
     }
     if (location === "theBed")
-        listenerList.push([[gameOver, "Say goodnight"], "gameOVer"]);
+        listenerList.push([[gameOver, "Say goodnight"], "gameOver"]);
     else
         listenerList.push([[function (){leaveSex(location)}, sexLines[location]["leave"]], "leaveSex"]);
     sayText(curtext);

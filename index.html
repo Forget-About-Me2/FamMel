@@ -480,27 +480,12 @@ CHANGES BY Forget_About_Me
 
     //TODO this probably can be done more efficient
     function goback() {
-        if (locstack[0] === "beachsex") {
-            s("You both slowly get up from the sand and dust yourselves off.");
-            s("You put yourself back together and help " + girlname + " make herself presentable.");
-            showneed();
-            resetclothes();
-            if (rstmoves === 1) {
-                resetmoves();
-            }
-            poploc();
-            c(locstack[0], "Continue... ");
-        } else if (locstack[0] === "thebeach") {
-            s("You and " + girlname + " dust yourselves off and hike back up to the road.");
-            showneed();
-            poploc();
-            c(locstack[0], "Continue... ");
-        } else if (locstack[0] === "photogame") {
-            if (photolevel === 3) {
+        if (locstack[0] === "photogame") {
+            if (isNude) {
                 if (bladder > blademer)
                     s("Desperate to get to a restroom, but also somewhat shy,");
                 s(girlname + " quickly puts her clothes back on and hops off the stage.");
-            } else if (photolevel === 3) {
+            } else if (isNude) {
                 if (bladder > blademer)
                     s("Desperate to get to a restroom, but also running somewhat on autopilot,");
                 s(girlname + " quickly changes back into her clothes and hops off the stage.");

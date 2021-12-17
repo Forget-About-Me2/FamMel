@@ -334,7 +334,7 @@ function theBeach() {
                 if (attraction > 100 && shyness < 10)
                     listenerList.push([[function () {haveSex("theBeach")}, "Make out with her."], "sexTub"]);
             }
-            listenerList.push([[goback, "Leave the beach."], "goBack"]);
+            listenerList.push([[leaveBeach, "Leave the beach."], "goBack"]);
         }
     }
     sayText(curtext);
@@ -477,5 +477,14 @@ function beachSwim5() {
     }
     sayText(curtext);
     cListenerGen([theBeach, "Continue..."], "theBeach");
+}
+
+function leaveBeach(){
+    let curtext = [makeOut["leaveBeach"].formatVars()];
+    curtext = showneed(curtext);
+    curtext = displayyourneed(curtext);
+    sayText(curtext);
+    poploc();
+    cListenerGen([theWalk, "Continue..."], "theWalk");
 }
 
