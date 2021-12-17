@@ -140,7 +140,7 @@ function theWalk() {
     if (darkYard)
         curtext.push(pickrandom(makeOut["walkDesc"][1]));
     else
-        curtext.push(pickrandom(makeOut["walkDesk"][2]));
+        curtext.push(pickrandom(makeOut["walkDesc"][0]));
     walkcounter++;
     let listenerList = [];
     if (bladder > bladlose) wetherself();
