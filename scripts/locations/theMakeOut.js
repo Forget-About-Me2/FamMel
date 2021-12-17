@@ -159,10 +159,19 @@ function theWalk() {
             curtext = standobjs(curtext);
             listenerList.push([[theWalk, "Keep walking..."], "theWalk"]);
         }
-        listenerList.push([[goback, "Walk back to the car."]]);
+        listenerList.push([[exitWalk, "Walk back to the car."], "exitWalk"]);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
+}
+
+function exitWalk(){
+    let curtext = makeOut["exitWalk"].formatVars();
+    curtext = displayneed(curtext);
+    curtext = displayyourneed(curtext);
+    poploc();
+    sayText(curtext);
+    cListenerGen([theMakeOut, "Continue..."], "theMakeOut");
 }
 
 function examineGate() {

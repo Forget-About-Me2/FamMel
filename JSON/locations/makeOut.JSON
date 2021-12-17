@@ -87,5 +87,6 @@
       "girltalk Is there someplace you can put these?"
     ]
   ],
-  "leaveBeach": "You and girlname dust yourselves off and hike back up to the road."
+  "leaveBeach": "You and girlname dust yourselves off and hike back up to the road.",
+  "exitWalk": "You take girlname's hand and hoof it quickly back to your parked car."
 }

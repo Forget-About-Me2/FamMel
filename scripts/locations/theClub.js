@@ -253,35 +253,6 @@ function photoConvince(choice) {
         indepee(curtext);
     }
 }
-//
-// function photogame2c() {
-//     if (attraction >= photogamecthreshold) {
-//         displayneed();
-//         s(girltalk + "Well, okay.  It would be neat to play dressup.  But can I please go pee first?");
-//         displayneed();
-//         photolevel = 1;
-//         c("photogame", "I'd really like it if you'd wait...");
-//         c("indepee", "Alright - go ahead and pee first.");
-//     } else {
-//         s(girltalk + "No way, dude.  I'm outta here.");
-//         indepee();
-//     }
-// }
-//
-// function photogame2n() {
-//     if (attraction >= photogamenthreshold) {
-//         displayneed();
-//         s(girltalk + "That's naughty.  Very naughty.  But can I please go pee first?");
-//         displayneed();
-//         photolevel = 2;
-//         c("photogame", "I'd really like it if you'd wait...");
-//         c("indepee", "Alright - go ahead and pee first.");
-//     } else {
-//         s(girltalk + "No way, dude.  I'm outta here.");
-//         indepee();
-//     }
-// }
-
 
 let wetPhoto = 0;
 let isNude = 0;
@@ -400,5 +371,26 @@ function photoNude() {
     isNude = 1;
     sayText(curtext);
     cListenerGen([photoGame, "Continue..."], "Cont");
+}
+
+function photoFinish(){
+    let curtext = [];
+    if (isNude){
+        if (bladder > blademer)
+            curtext.push(club["photoFinish"]["nudeDesp"]);
+        curtext.push(club["photoFinish"]["nude"]);
+    } else if (photoChoice==="costume"){
+        if (bladder > blademer)
+            curtext.push(club["photoFinish"]["costumeDesp"]);
+        curtext.push(club["photoFinish"]["costume"]);
+    } else curtext.push(club["photoFinish"]["normal"]);
+    curtext = displayneed(curtext);
+    curtext = displayyourneed(curtext);
+    poploc();
+    sayText(curtext);
+    if (bladder > bladneed)
+        cListenerGen([indepee, "Continue..."], "indepee");
+    else
+        cListenerGen([darkClub, "Continue..."], "darkClub");
 }
 

@@ -312,18 +312,6 @@ CHANGES BY Forget_About_Me
     let arousal = 0;
     let kisscounter = 0;
     let feelcounter = 0;
-    let xskirt = 0;
-    let xtop = 0;
-    let xbra = 0;
-    let xpanties = 0;
-    let kneck = 0;
-    let kthigh = 0;
-    let kpussy = 0;
-    let kbreast = 0;
-    let tthigh = 0;
-    let tpussy = 0;
-    let tbreast = 0;
-    let tass = 0;
     let fuckingnow = 0; // You are in the middle of fucking.
     let multiplemoves = 1;
     let rstmoves = 0; //Whether the sex moves reset after a make-out session
@@ -452,8 +440,6 @@ CHANGES BY Forget_About_Me
     let undressquoteemer;
     let ptogetherdumpquote;
     let ptogetherdumpquotebare;
-    let finishtogetherdumpquote;
-    let finishtogetherdumpquotebare;
 
     let sextoskirtquoteemer;
     let swimstripquote;
@@ -480,27 +466,7 @@ CHANGES BY Forget_About_Me
 
     //TODO this probably can be done more efficient
     function goback() {
-        if (locstack[0] === "photogame") {
-            if (isNude) {
-                if (bladder > blademer)
-                    s("Desperate to get to a restroom, but also somewhat shy,");
-                s(girlname + " quickly puts her clothes back on and hops off the stage.");
-            } else if (isNude) {
-                if (bladder > blademer)
-                    s("Desperate to get to a restroom, but also running somewhat on autopilot,");
-                s(girlname + " quickly changes back into her clothes and hops off the stage.");
-            } else {
-                s(girlname + " hops down off the stage.");
-            }
-            showneed();
-            poploc();
-            c("indepee", "Continue... ");
-        } else if (locstack[0] === "thewalk") {
-            s("You take " + girlname + "'s hand and hoof it quickly back to your parked car.");
-            showneed();
-            poploc();
-            c(locstack[0], "Continue... ");
-        } else if (locstack[0] === "theyard") {
+        if (locstack[0] === "theyard") {
             s("You stealthily creep back out of the gate, with " + girlname + " in tow.");
             showneed();
             poploc();
