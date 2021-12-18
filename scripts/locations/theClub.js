@@ -174,46 +174,6 @@ function darkClub() {
         cListenerGenList(listenerList);
     }
 }
-//
-// function godance() {
-//     pushloc("dodance");
-//     changevenueflag = 1;
-//     showneed();
-//     displayyourneed();
-//     if (gottagoflag > 0) {
-//         c("holdit", "Ask her to hold it.");
-//         c("allowpee", "Let her go.");
-//     } else {
-//         s(girltalk + "Okay.  Let's dance.");
-//         s("You head out to the dancefloor to cut up the rug.");
-//         c(locstack[0], "Continue...");
-//     }
-// }
-
-// function dodance() {
-//     pushloc("dodance");
-//     s("You are dancing with " + girlname + " in your arms.");
-//     showneed();
-//     displayyourneed();
-//     if (randomchoice(3)) noteholding();
-//     else if (randomchoice(5)) interpbladder();
-//
-//     if (bladder > bladlose) wetherself();
-//     else if (yourbladder > yourbladlose) wetyourself();
-//     else {
-//         if (gottagoflag > 0) {
-//             preventpee();
-//         } else {
-//             c(locstack[0], "Keep Dancing.");
-//             c("kissher", "Kiss her.");
-//             c("feelup", "Feel her up.");
-//             standobjs();
-//             if (yourbladder > yourbladurge)
-//                 c("youpee", "Go to the bathroom.");
-//         }
-//         c("goback", "Leave the dancefloor.");
-//     }
-// }
 
 function pphotogame() {
     let curtext = [club["photoGameConvince"]];
@@ -276,7 +236,7 @@ function photoGame() {
         if (photoChoice === "nudes" && isNude)
             curtext.push(club["midPhotoGame"]["nude"]);
             // s("She's completely nude.");
-        if (photolevel === "costumes")
+        if (photoChoice === "costumes")
             curtext.push(club["midPhotoGame"]["costume"].format(appearance["clothes"][heroutfit][outfitctr]));
             // s("She's wearing " + poseoutfit[outfitctr] + ".");
         if (bladder > blademer) {
@@ -300,7 +260,7 @@ function photoGame() {
             listenerList.push([[photoChange, club["choices"]["photoChange"]], "photoChange"]);
         if (photoChoice === "nudes" && !isNude)
             listenerList.push([[photoNude, club["choices"]["photoNude"]], "photoNude"]);
-        listenerList.push([[goback, club["choices"]["goback"]], "goback"]);
+        listenerList.push([[photoFinish, club["choices"]["goback"]], "goback"]);
         cListenerGenList(listenerList);
     }
 }

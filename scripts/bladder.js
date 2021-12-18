@@ -1523,7 +1523,6 @@ function pTogether5c() {
     sayText(curtext);
     cListenerGen([doDance, "Continue..."], "doDance");
     poploc();
-    // c("goback", "Continue...");
 }
 
 function pTogether5d(){
@@ -1546,5 +1545,47 @@ function pTogether6() {
     cListenerGen([doDance, "Continue..."], "doDance");
 }
 
+//TODO let her choose.
+function pnorestroom() {
+    let curtext = printList([], theatre["noRest"][0]);
+    if (attraction >= pnorestroomthreshold) {
+        curtext = displayneed(curtext);
+        curtext = printList(curtext, theatre["noRest"][1]);
+        curtext = displayneed(curtext);
+        sayText(curtext);
+        let listenerList = [];
+        Object.keys(theatre["noToilet"]).forEach(option => {
+            const temp = function (){
+                noToiletPee(option);
+            }
+            listenerList.push([[temp, theatre["noToilet"][option]["text"]], option]);
+        });
+        listenerList.push([[indepee, "Change your mind..."], "indePee"]);
+        cListenerGenList(listenerList);
+    } else {
+        curtext = printList(curtext, theatre["noRest"][2]);
+        indepee(curtext);
+    }
+}
 
+function noToiletPee(choice){
+    let quotes = theatre["noToilet"][choice]["quotes"];
+    let curtext = printList([], quotes[0]);
+    curtext = displayneed(curtext);
+    curtext = printList(curtext, quotes[1]);
+    curtext = displayyourneed(curtext);
+    if (pantycolor === "none")
+        curtext.push(appearance["clothes"][heroutfit]["peeprepquotebare"]);
+    else
+        curtext.push(appearance["clothes"][heroutfit]["peeprepquotebare"]);
+    curtext = printList(curtext, quotes[2]);
+    sayText(curtext);
+    sawherpee = 1;
+    flushdrank();
+    cListenerGen([noToiletPee2, "Continue..."]);
+}
 
+function noToiletPee2(){
+    let curtext = printList([], theatre["noRest"][3]);
+    kissher(curtext);
+}

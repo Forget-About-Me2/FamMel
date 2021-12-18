@@ -228,10 +228,19 @@ function theYard() {
             if (!checkedherout) listenerList.push([[checkherout, "Check her out."], "checkHerOut"]);
             if (yourbladder > yourbladurge) listenerList.push([[ypeeoutside, "Pee outside."], "yPeeOutside"]);
         }
-        listenerList.push([[goback, "Leave the yard."], "goBack"]);
+        listenerList.push([[exitYard, "Leave the yard."], "goBack"]);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
+}
+
+function exitYard(){
+    let curtext = [makeOut["exitYard"].formatVars()];
+    curtext = displayneed(curtext);
+    curtext = displayyourneed(curtext);
+    sayText(curtext);
+    poploc();
+    cListenerGen([theWalk, "Continue..."], "theWalk");
 }
 
 function preHotTub() {
@@ -290,12 +299,20 @@ function theHotTub() {
             if (yourbladder > yourbladurge)
                 listenerList.push([[yPeeInTub, "Pee in the hot tub"], "ypeetub"]);
         }
-        listenerList.push([[goback, "Get out of the tub."], "goBack"]);
+        listenerList.push([[exitHotTub, "Get out of the tub."], "goBack"]);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
 }
 
+function exitHotTub(){
+    let curtext = printList([], makeOut["exitHotTub"]);
+    curtext = showneed(curtext);
+    curtext = displayyourneed(curtext);
+    sayText(curtext);
+    poploc();
+
+}
 
 function theBeach() {
     let curtext = [];

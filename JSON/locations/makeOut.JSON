@@ -88,5 +88,10 @@
     ]
   ],
   "leaveBeach": "You and girlname dust yourselves off and hike back up to the road.",
-  "exitWalk": "You take girlname's hand and hoof it quickly back to your parked car."
+  "exitWalk": "You take girlname's hand and hoof it quickly back to your parked car.",
+  "exitYard": "You stealthily creep back out of the gate, with girlname in tow.",
+  "exitHotTub": [
+    "You take girlname's hand and help her out of the hot tub, admiting the view in the dim starlight.",
+    "You can't help staring as she dries off as best as she can and dresses beside you in the warm evening air."
+  ]
 }

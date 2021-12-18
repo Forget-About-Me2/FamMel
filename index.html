@@ -463,39 +463,6 @@ CHANGES BY Forget_About_Me
         document.getElementById('textsp').innerHTML += t + "<p>";
     }
 
-
-    //TODO this probably can be done more efficient
-    function goback() {
-        if (locstack[0] === "theyard") {
-            s("You stealthily creep back out of the gate, with " + girlname + " in tow.");
-            showneed();
-            poploc();
-            c(locstack[0], "Continue... ");
-        } else if (locstack[0] === "ptogether") {
-            s("You quickly compose yourselves and head back out to the club, but first...");
-            poploc();
-            kissher();
-        } else if (locstack[0] === "pnorestroom") {
-            s(girlname + " sighs in relief, and seems very aroused.");
-            s(girltalk + "I feel <i>so</i> naughty!");
-            poploc();
-            kissher();
-        } else if (locstack[0] === "thehottub") {
-            s("You take " + girlname + "'s hand and help her out of the hot tub, admiring the view in the dim starlight.");
-            s("You can't help staring as she dries off as best she can and dresses beside you in the warm evening air.");
-            showneed();
-            poploc();
-            c(locstack[0], "Continue... ");
-        } else if (locstack[0] === "tubsex") {
-            s("You both sit there for a few seconds, trying to catch your breath.");
-            c(locstack[0], "Continue...");
-        } else {
-            poploc();
-            eval(locstack[0] + "()");
-        }
-
-    }
-
 /*
 
   -----------------------------------------------------------------

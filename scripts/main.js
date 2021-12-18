@@ -30,6 +30,11 @@ function objReset(){
     })
 }
 
+function goback() {
+    poploc();
+    eval(locstack[0] + "()");
+}
+
 //TODO this is called way too often
 //  Updates the information on the stats
 function displaystats() {
