@@ -4,6 +4,7 @@ let randcounter = 0; // text randomizer
 let playerbladder = 1; //Whether playerBladder has been enabled.
 let playerGame = 0; //Whether the playerBladder is enabled in the drinking game
 let statsBars; //JSON of the status bars depending on which setting has been chosen
+let endScreens; //JSON of the endScreens used at the end of the game.
 
 function range(start, end) {
     if(start === end) return [start];
@@ -321,4 +322,42 @@ function start() {
     //the start of the game is dependent on yneeds, to save loading time it is called as soon as you move from the main screen
     //And then the variables will be added when the game actually starts, but that's not necessary for the begin scene so this should be fine.
     getjson("yneeds", function () {yneeds = json});
+}
+
+function gameOver() {
+    setText(endScreens["gameOver"]);
+    // document.getElementById('textsp').innerHTML += "<p class='title'>Game Over, Dude! </p>"
+    //     + "<p style='text-align: center; padding-right: 10%; font-style: italic'>You struck out</p>";
+    // s("<br>&nbsp;<br>&nbsp;");
+    // s("<br>&nbsp;<br>&nbsp;");
+    // s("<br>&nbsp;<br>&nbsp;");
+    // s("<div style='text-align:right'><i>Hit Reload to start over...</i></div>");
+}
+
+//Basically you got her into bed but not desperate
+function gameSex(){
+
+}
+
+function gamewet() {
+    document.getElementById('textsp').innerHTML += "<p class='title'>Woot! </p>"
+        + "<p style='text-align: center; padding-right: 10%; font-style: italic'>you took her to bed while she was bursting</p>"
+        + "<p style='text-align: center; padding-right: 10%; font-style: italic'>and she held it for you until she wet the bed.</p>";
+    s("<br>&nbsp;<br>&nbsp;");
+    s("Final Stats:");
+    s("Time since last pee:" + timeheld + " minutes");
+    s("Bladder contained:" + bladder + " ml");
+    s("<br>&nbsp;<br>&nbsp;");
+    s("<div style='text-align:right'><i>Hit Reload to start over...</i></div>");
+}
+
+function gamewon() {
+    document.getElementById('textsp').innerHTML += "<p class='title'>You Won!! </p>"
+        + "<p style='text-align: center; padding-right: 10%; font-style: italic'>you took her to bed while she was bursting.</p>";
+    s("<br>&nbsp;<br>&nbsp;");
+    s("Final Stats:");
+    s("Time since last pee:" + timeheld + " minutes");
+    s("Bladder contained:" + bladder + " ml");
+    s("<br>&nbsp;<br>&nbsp;");
+    s("<div style='text-align:right'><i>Hit Reload to start over...</i></div>");
 }

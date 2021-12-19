@@ -1,4 +1,4 @@
-let theatre;
+let theatre; //Json with quotes for theatre
 let rrMovieLineThresh = 7; // Likelihood of line for restroom in the movie theatre.
 
 function theatreSetup(){

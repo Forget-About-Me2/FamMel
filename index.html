@@ -475,53 +475,6 @@ CHANGES BY Forget_About_Me
 
 */
 
-    //TODO put flag in proper place
-    let floorcounter = 0;
-    function theelevator() {
-        if (locstack[0] !== "theelevator") {
-            pushloc("theelevator");
-            s("You take " + girlname + " by the hand and go to wait in front of the elevator.");
-            displayneed();
-            displayyourneed();
-            //TODO put flag in proper place
-            elevatorwaitcounter = 0;
-            c(locstack[0], "Continue...");
-        } else {
-            if (floorcounter === 0) {
-                if (randomchoice(3)) {
-                    if (elevatorwaitcounter > 2 && bladder > blademer) {
-                        s("The elevator finally appears, and " + girlname + " rushes to enter as the door opens.  She suddenly steps back and stands still, trembling with the effort to conceal her desperation, as a pretty woman walks out.");
-                        s(girlname + " lunges into the elevator and mashes the 3rd floor button with one hand while openly holding herself with the other.");
-                    } else {
-                        s("The elevator appears, so you step inside with " + girlname + " and hit the button for the 3rd floor.");
-                    }
-                } else {
-                    s("The elevator has not yet arrived.");
-                    s("You wait patiently with " + girlname + ".");
-                    floorcounter = -1;
-                    elevatorwaitcounter++;
-                }
-            } else if (floorcounter === 3) {
-                s("The elevator finally reaches the 3rd floor.");
-                s("You and " + girlname + " walk across the hall to the door of her apartment.");
-                if (bladder > blademer && !herkeys)
-                    s(girltalk + "Good thing I haven't lost my keys, huh?");
-            } else {
-                s("You're in the elevator with " + girlname + ".");
-                noteholding();
-            }
-            showneed();
-            if (floorcounter >= 3) {
-                poploc();
-            } else {
-                floorcounter += 1;
-            }
-            if (bladder > bladlose) wetherself();
-            else if (yourbladder > yourbladlose) wetyourself();
-            else c(locstack[0], "Continue...");
-        }
-    }
-
     function givekeys() {
         herkeys = 0;
         s("You pull her keys from your pocket.");
@@ -552,73 +505,6 @@ CHANGES BY Forget_About_Me
         c(locstack[0], "Found them!");
     }
 
-    //TODO offer beer
-    function thehome() {
-        if (locstack[0] !== "thehome") {
-            kisscounter = 0;
-            feelcounter = 0;
-            pushloc("thehome");
-            s("You and " + girlname + " arrive at her place.");
-            s("It's a 3rd floor apartment in a nice complex.");
-
-            if (attraction > 100 && (beenbar || seenmovie) && beenclub && beenmakeout) {
-                showneed();
-                displayyourneed();
-                s("She invites you to come up for a drink...");
-                c("theelevator", "Go up with her.");
-                c("gameover", "Say goodnight.");
-            } else {
-                s(girltalk + "Good Night...  see you soon?");
-                locstack[0] = "gameover";
-                c("gameover", "Continue...");
-            }
-        } else if (herkeys) {
-            s(girlname + " searches through her purse for her keys.");
-            displayneed();
-            voccurse();
-            s(girltalk + "I can't find my keys!");
-            showneed();
-            displayyourneed();
-            c("givekeys", "Offer her her keys.");
-            c("lookforkeys", "Offer to look for her keys.");
-        } else {
-            s("You are with " + girlname + " at her home.");
-
-            if (kisscounter > maxkiss) {
-                s(girlname + " suddenly pulls away from you and sits straight up.");
-                s(girltalk + "You know, this just isn't working out.");
-                s(girltalk + "I'm afraid we're going to have to call it a night.");
-                c("gameover", "Continue...");
-            } else {
-                displaygottavoc();
-                displayneed();
-                displayyourneed();
-                //TODO figure out what the hell this is
-                if (champagnecounter > 5) {
-                    if (bladder > bladlose)
-                        s(girlname + " gasps: I'm going ... bathroom");
-                    else
-                        s("She invites you to come back to her bedroom.");
-                    c("thebedroom", "Follow her closely to her bedroom.");
-                    c("gameover", "Say goodnight.");
-                } else {
-                    if (gottagoflag) {
-                        c("allowpee", "Tell her she should go and pee.");
-                    }
-                    c("youpee", "Ask if you can use her bathroom.");
-                    c("kissher", "Kiss her on the lips.");
-                    if (champagne > 0) {
-                        c("champagnenow", "Offer her champagne.");
-                    }
-                    if (soda > 0) {
-                        c("sodanow", "Offer her soda.");
-                    }
-                    c("gameover", "Say goodnight.");
-                }
-            }
-        }
-    }
-
     function thebedroom() {
         pushloc("thebedroom");
         if (locstack[0] !== "thebedroom") {
@@ -641,44 +527,6 @@ CHANGES BY Forget_About_Me
         }
         c("thebed", "Kiss her.");
         c("gameover", "Say goodnight.");
-    }
-
-
-    function gameover() {
-        document.getElementById('textsp').innerHTML += "<p class='title'>Game Over, Dude! </p>"
-            + "<p style='text-align: center; padding-right: 10%; font-style: italic'>You struck out</p>";
-        s("<br>&nbsp;<br>&nbsp;");
-        s("<br>&nbsp;<br>&nbsp;");
-        s("<br>&nbsp;<br>&nbsp;");
-        s("<div style='text-align:right'><i>Hit Reload to start over...</i></div>");
-    }
-
-    //Basically you got her into bed but not desperate
-    function gameSex(){
-
-    }
-
-    function gamewet() {
-        document.getElementById('textsp').innerHTML += "<p class='title'>Woot! </p>"
-            + "<p style='text-align: center; padding-right: 10%; font-style: italic'>you took her to bed while she was bursting</p>"
-            + "<p style='text-align: center; padding-right: 10%; font-style: italic'>and she held it for you until she wet the bed.</p>";
-        s("<br>&nbsp;<br>&nbsp;");
-        s("Final Stats:");
-        s("Time since last pee:" + timeheld + " minutes");
-        s("Bladder contained:" + bladder + " ml");
-        s("<br>&nbsp;<br>&nbsp;");
-        s("<div style='text-align:right'><i>Hit Reload to start over...</i></div>");
-    }
-
-    function gamewon() {
-        document.getElementById('textsp').innerHTML += "<p class='title'>You Won!! </p>"
-            + "<p style='text-align: center; padding-right: 10%; font-style: italic'>you took her to bed while she was bursting.</p>";
-        s("<br>&nbsp;<br>&nbsp;");
-        s("Final Stats:");
-        s("Time since last pee:" + timeheld + " minutes");
-        s("Bladder contained:" + bladder + " ml");
-        s("<br>&nbsp;<br>&nbsp;");
-        s("<div style='text-align:right'><i>Hit Reload to start over...</i></div>");
     }
 
     function startChoices(){

@@ -5,7 +5,8 @@ let locations = {
     "theBar" :theBarSetup(),
     "theClub": theClubSetup(),
     "theTheatre": theatreSetup(),
-    "makeOut": makeOutSetup()
+    "makeOut": makeOutSetup(),
+    "theHome": herHomeSetup()
 };
 
 let locJson;
@@ -21,8 +22,7 @@ function locJsonSetup(){
 function updateSuggestedLocation(){
     if (shyness < 30 && attraction > 50 && !locations.makeOut.visited) {
         suggestedloc = "themakeout";
-    } else if (shyness < 50 && attraction > 100 && locations.makeOut.visited &&
-        locations.theBar.visited && locations.theClub.visited && seenmovie) {
+    } else if (homeConditions()) {
         suggestedloc = "thehome";
     } else if (shyness > 80 && attraction < 30 && !seenmovie) {
         suggestedloc = "themovie";
@@ -43,7 +43,7 @@ function printLocationMenu(){
     });
     Object.keys(locations).forEach(loc => {
         addListeners(locations[loc].visit, loc)
-    })
+    });
 }
 
 function lookAround(loc){

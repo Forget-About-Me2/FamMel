@@ -29,5 +29,21 @@
     ],
     "money": [],
     "choices": []
+    } ,
+  "theHome":{
+    "choices": {
+      "visit": "Go to girlname's place",
+      "wantVisit": "Accept girlname's invitation to go home with her.",
+      "elevator": "Go up with her.",
+      "goodNight": "Say goodnight."
+    },
+    "arrive": [
+      "You and girlname arrive at her place.",
+      "It's a 3rd floor apartment in a nice complex."
+    ],
+    "inviteUp": "She invites you to come up for a drink.",
+    "goodnight": "girltalk Good Night... See you soon?"
   }
+
+
 }
