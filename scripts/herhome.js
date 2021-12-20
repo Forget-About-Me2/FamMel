@@ -103,7 +103,7 @@ function takeHerHome(){
     let listenerList = [];
     if (homeConditions()){
         curtext.push(herHome["inviteUp"]);
-        listenerList.push([[theElevator, herHome["choices"]["elevator"]], "elevator"]);
+        listenerList.push([[elevatorWait, herHome["choices"]["elevator"]], "elevator"]);
     } else
         curtext.push(herHome["goodnight"].formatVars());
     listenerList.push([gameOver, herHome["choices"]["goodNight"]]);
@@ -112,48 +112,70 @@ function takeHerHome(){
 }
 
 let floorcounter = 0;
-//TODO continue here
-function theElevator() {
+function elevatorWait() {
+    let curtext = [];
+    let listenerList = [];
     if (locstack[0] !== "theElevator") {
         pushloc("theElevator");
-        s("You take " + girlname + " by the hand and go to wait in front of the elevator.");
-        displayneed();
-        displayyourneed();
-        elevatorwaitcounter = 0;
-        c(locstack[0], "Continue...");
+        curtext.push(herHome["goElevator"].formatVars());
+        // s("You take " + girlname + " by the hand and go to wait in front of the elevator.");
+        curtext = displayneed(curtext);
+        curtext = displayyourneed(curtext);
+        listenerList.push([[elevatorWait, "Continue..."], "elevatorWait"]);
+        // c(locstack[0], "Continue...");
     } else {
-        if (floorcounter === 0) {
             if (randomchoice(3)) {
                 if (elevatorwaitcounter > 2 && bladder > blademer) {
-                    s("The elevator finally appears, and " + girlname + " rushes to enter as the door opens.  She suddenly steps back and stands still, trembling with the effort to conceal her desperation, as a pretty woman walks out.");
-                    s(girlname + " lunges into the elevator and mashes the 3rd floor button with one hand while openly holding herself with the other.");
+                    curtext = printList(curtext, herHome["elevArriveEmer"]);
+                    // s("The elevator finally appears, and " + girlname + " rushes to enter as the door opens.  She suddenly steps back and stands still, trembling with the effort to conceal her desperation, as a pretty woman walks out.");
+                    // s(girlname + " lunges into the elevator and mashes the 3rd floor button with one hand while openly holding herself with the other.");
                 } else {
-                    s("The elevator appears, so you step inside with " + girlname + " and hit the button for the 3rd floor.");
+                    curtext.push(herHome["elevArrive"].formatVars());
+                    // s("The elevator appears, so you step inside with " + girlname + " and hit the button for the 3rd floor.");
                 }
+                listenerList.push([[theElevator, "Continue..."], "theElevator"]);
+                poploc();
             } else {
-                s("The elevator has not yet arrived.");
-                s("You wait patiently with " + girlname + ".");
-                floorcounter = -1;
+                // s("The elevator has not yet arrived.");
+                // s("You wait patiently with " + girlname + ".");
+                curtext = printList(curtext, herHome["elevWait"]);
+                listenerList.push([[elevatorWait, "Continue..."], "elevatorWait"]);
                 elevatorwaitcounter++;
             }
-        } else if (floorcounter === 3) {
-            s("The elevator finally reaches the 3rd floor.");
-            s("You and " + girlname + " walk across the hall to the door of her apartment.");
-            if (bladder > blademer && !herkeys)
-                s(girltalk + "Good thing I haven't lost my keys, huh?");
-        } else {
-            s("You're in the elevator with " + girlname + ".");
-            noteholding();
-        }
-        showneed();
-        if (floorcounter >= 3) {
-            poploc();
-        } else {
-            floorcounter += 1;
-        }
-        if (bladder > bladlose) wetherself();
-        else if (yourbladder > yourbladlose) wetyourself();
-        else c(locstack[0], "Continue...");
+    }
+    sayText(curtext);
+    cListenerGenList(listenerList);
+}
+
+function theElevator(){
+    let curtext = [];
+    let listenerList = [];
+    if (floorcounter === 3) {
+        curtext = printList(curtext, herHome["elev3rdFloor"])
+        // s("The elevator finally reaches the 3rd floor.");
+        // s("You and " + girlname + " walk across the hall to the door of her apartment.");
+        if (bladder > blademer && !haveItem("herKeys"))
+            curtext.push(herHome["sheHasKeys"].formatVars());
+            // s(girltalk + "Good thing I haven't lost my keys, huh?");
+        listenerList.push([[theHome, "Continue..."], "theHome"]);
+    } else {
+        curtext.push(herHome["inElev"].formatVars());
+        // s("You're in the elevator with " + girlname + ".");
+        curtext = noteholding(curtext);
+        listenerList.push([[theElevator, "Continue..."], "theElevator"]);
+    }
+    curtext =  showneed(curtext);
+    curtext = displayyourneed(curtext);
+    if (floorcounter >= 3) {
+        poploc();
+    } else  {
+        floorcounter += 1;
+    }
+    if (bladder > bladlose) wetherself();
+    else if (yourbladder > yourbladlose) wetyourself();
+    else {
+        sayText(curtext);
+        cListenerGenList(listenerList);
     }
 }
 

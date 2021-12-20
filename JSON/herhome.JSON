@@ -42,7 +42,23 @@
       "It's a 3rd floor apartment in a nice complex."
     ],
     "inviteUp": "She invites you to come up for a drink.",
-    "goodnight": "girltalk Good Night... See you soon?"
+    "goodnight": "girltalk Good Night... See you soon?",
+    "goElevator": "You take girlname by the hand and go to wait in front of the elevator.",
+    "elevArriveEmer": [
+      "The elevator finally appears, and girlname rushes to enter as the door opens. She suddenly steps back and stands still, trembling with the effort to conceal her desperation, as a pretty woman walks out.",
+      "girlname lunges into the elevator and mashes the 3rd floor button with one hand while openly holding herself with the other."
+    ],
+    "elevArrive": "The elevator appears, so you step inside with girlname and hit the button for the 3rd floor.",
+    "elevWait": [
+      "The elevator has not yet arrived.",
+      "You wait patiently with girlname."
+    ],
+    "elev3rdFloor": [
+      "The elevator finally reaches the 3rd floor.",
+      "You and girlname walk across the hall to the door of her apartment."
+    ],
+    "sheHasKeys": "girltalk Good thing I haven't lost my keys, huh?",
+    "inElev": "You're in the elevator with girlname."
   }
 
 
