@@ -145,6 +145,7 @@ const objects = {
         ],
         //Each bottle you buy is represented as a number indicating how much uses it has left
         "bottles": [],
+        "locations": ["theHome"],
         "description": "Some nice champagne, maybe you can share it with {0}? " +
             "If you give it at the right moment, she'll probably be more willing to take things further."
     },
@@ -257,7 +258,6 @@ const objects = {
     },
     "herKeys":{
         "bpname": "Set of Keys",
-        "locations": ["herhome"],
         "value":0,
         "description": "{0}'s keys which you stole earlier, maybe you should give them back?"
     },
@@ -775,7 +775,7 @@ function champagneNow() {
     backpackcnt.style.display = "none";
     let obj = objects.champagne;
     let curtext = [];
-    if (locstack[0] === "thehome"){
+    if (locstack[0] === "theHome"){
         curtext = printList(curtext, drinklines["champagne"][0]);
         if (!homeChampagne){
             curtext = printList(curtext, drinklines["champagne"][1]);

@@ -272,39 +272,40 @@ function lookForKeys() {
 
 //TODO offer beer
 function theHome() {
-    let curtext = [];
+    if (locstack[0] !== "theHome")
+        pushloc("theHome")
+    let curtext = [herHome["atHome"].formatVars()];
     let listerList = [];
-        s("You are with " + girlname + " at her home.");
-        if (kisscounter > maxkiss) {
-            s(girlname + " suddenly pulls away from you and sits straight up.");
-            s(girltalk + "You know, this just isn't working out.");
-            s(girltalk + "I'm afraid we're going to have to call it a night.");
-            c("gameover", "Continue...");
+    // s("You are with " + girlname + " at her home.");
+    if (kisscounter > maxkiss) {
+        curtext = printList(curtext, herHome["kissExceeded"]);
+        // s(girlname + " suddenly pulls away from you and sits straight up.");
+        // s(girltalk + "You know, this just isn't working out.");
+        // s(girltalk + "I'm afraid we're going to have to call it a night.");
+        listerList.push([[gameOver, "Continue..."], "gameOver"]);
+    } else {
+        curtext = displaygottavoc(curtext);
+        curtext = displayneed(curtext);
+        curtext = displayyourneed(curtext);
+        //TODO figure out what the hell this is
+        if (champagnecounter > 5) {
+            if (bladder > bladlose-25)
+                curtext = printList(curtext, herHome["champagneLose"]);
+                // s(girlname + " gasps: I'm going ... bathroom");
+            else
+                curtext.push(herHome["inviteBedroom"]);
+                // s("She invites you to come back to her bedroom.");
+            listerList.push([[theBedroom, herHome["choices"]["followHer"]], "theBedroom"]);
+            listerList.push([[gameOver, herHome["choices"]["goodNight"]], "gameOver"]);
         } else {
-            displaygottavoc();
-            displayneed();
-            displayyourneed();
-            //TODO figure out what the hell this is
-            if (champagnecounter > 5) {
-                if (bladder > bladlose)
-                    s(girlname + " gasps: I'm going ... bathroom");
-                else
-                    s("She invites you to come back to her bedroom.");
-                c("thebedroom", "Follow her closely to her bedroom.");
-                c("gameover", "Say goodnight.");
-            } else {
-                if (gottagoflag) {
-                    c("allowpee", "Tell her she should go and pee.");
-                }
-                c("youpee", "Ask if you can use her bathroom.");
-                c("kissher", "Kiss her on the lips.");
-                if (champagne > 0) {
-                    c("champagnenow", "Offer her champagne.");
-                }
-                if (soda > 0) {
-                    c("sodanow", "Offer her soda.");
-                }
-                c("gameover", "Say goodnight.");
-            }
+            if (gottagoflag)
+                listerList.push([[allowpee, herHome["choices"]["allowPee"]], "allowPee"]);
+            else if (yourbladder > yourbladurge)
+                listerList.push([[youpee, herHome["choices"]["askBathroom"]], "youPee"]);
+            listerList.push([[kissher, herHome["choices"]["kissHer"]], "kissHer"]);
+            listerList.push([[gameOver, herHome["choices"]["goodNight"]],"gameOver"]);
+        }
+        sayText(curtext);
+        cListenerGenList(listerList);
     }
 }

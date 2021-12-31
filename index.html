@@ -475,30 +475,6 @@ CHANGES BY Forget_About_Me
 
 */
 
-    function thebedroom() {
-        pushloc("thebedroom");
-        if (locstack[0] !== "thebedroom") {
-            s("You follow her closely back to her bedroom.");
-            locstack[0] = "thebedroom";
-            if (bladder > bladlose)
-                s("She presses her crotch into the bedpost.");
-            else
-                s("She looks at you romantically with a cute little smile.");
-        } else {
-            s("You are with " + girlname + " in her bedroom.");
-        }
-        showneed();
-        displayyourneed();
-        if (gottagoflag) {
-            c("allowpee", "Tell her she can go and pee.");
-        }
-        if (gottagoflag) {
-            c("holdit", "Ask her to hold it.");
-        }
-        c("thebed", "Kiss her.");
-        c("gameover", "Say goodnight.");
-    }
-
     function startChoices(){
         const listenerList = [
             [["start", "Play"], "start"],

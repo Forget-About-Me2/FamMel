@@ -41,7 +41,11 @@
       "keyGood": "Ummm.....",
       "keyBad": "Errr.....",
       "keysNotFound": "Haven't found anything yet.",
-      "foundThem": "Found them!"
+      "foundThem": "Found them!",
+      "followHer": "Follow her to her bedroom.",
+      "allowPee": "Tell her she should go and pee.",
+      "askBathroom": "Ask if you can use her bathroom",
+      "kissHer": "Kiss her on the lips"
     },
     "arrive": [
       "You and girlname arrive at her place.",
@@ -91,7 +95,19 @@
     "offersPurse": ["girlname offers you her purse",
       "You accept the purse, palming the keys in your pocket. Before rummaging through it"
     ],
-    "rummagePurse": "You palm the keys in your pocket, as you continue rummaging through her purse."
+    "rummagePurse": "You palm the keys in your pocket, as you continue rummaging through her purse.",
+    "atHome": "You are with girlname at her home.",
+    "kissExceeded": [
+      "girlname suddenly pulls away from you and sits straight up.",
+      "girltalk You know, this just isn't working out.",
+      "girltalk I'm afraid we're going to have to call it a night."
+    ],
+    "champagneLose": [
+      "girlgasp I'm going ... ",
+      "She waves vaguely behind her in the direction fo the hallway.",
+      "girltalk Bathroom!"
+    ],
+    "inviteBedroom": "She invites you to come back to her bedroom."
   }
 
 
