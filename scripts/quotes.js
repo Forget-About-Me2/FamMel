@@ -306,7 +306,7 @@ function callChoice(choice, curtext=[]){
 //   desc - description of choice to display.
 // curtext - a list of all current lines that will be printed during the scene
 function c(choice, curtext) {
-    const html = "<li><a href=\"javascript:go('" + choice[0] + "')\">" + choice[1] + "</a>"
+    const html = "<li><a href=\"javascript:go('" + choice[0] + "')\">" + choice[1].formatVars() + "</a>"
     curtext.push(html);
     return curtext;
 }
@@ -321,7 +321,7 @@ function cListener(choice, tag){
 
 //Gets the string html for the given choice
 function cListenerString(choice, loc){
-    return "<li class='cListener' id='"+loc+"'>"+choice[1]+"</li>";
+    return "<li class='cListener' id='"+loc+"'>"+choice[1].formatVars()+"</li>";
 }
 
 //Adds an element to a created click listener

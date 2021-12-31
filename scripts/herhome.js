@@ -2,14 +2,18 @@
 let herHome; //Json with quotes for herHome.
 
 function herHomeSetup() {
-    getjson("herhome", function () {
-        herHome = json["theHome"];
-    });
+    getjson("herhome", herHomeJsonSetup);
     return {
-        visit: [herhome, herHome["choices"]["visit"]],
-        wantVisit: [herhome, herHome["choices"]["wantVisit"]],
+        visit: [],
+        wantVisit: [],
         group: 4
     }
+}
+
+function herHomeJsonSetup(){
+    herHome = json["theHome"];
+    locations.theHome.visit = [herhome, herHome["choices"]["visit"]];
+    locations.theHome.wantVisit = [herhome, herHome["choices"]["wantVisit"]]
 }
 
 function homeConditions() {
@@ -108,7 +112,7 @@ function takeHerHome(){
         listenerList.push([[elevatorWait, herHome["choices"]["elevator"]], "elevator"]);
     } else
         curtext.push(herHome["goodnight"].formatVars());
-    listenerList.push([gameOver, herHome["choices"]["goodNight"]]);
+    listenerList.push([[gameOver, herHome["choices"]["goodNight"]], "gameOver"]);
     sayText(curtext);
     cListenerGenList(listenerList);
 }
