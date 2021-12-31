@@ -475,36 +475,6 @@ CHANGES BY Forget_About_Me
 
 */
 
-    function givekeys() {
-        herkeys = 0;
-        s("You pull her keys from your pocket.");
-        if (bladder >= blademer) {
-            displayneed();
-            s(girlname + " grabs the keys and opens the door.");
-            c(locstack[0], "Continue...");
-        } else {
-            s(girltalk + " Where'd you get those?");
-            c("keynevermind", "Ummm.....");
-            c("keynevermind", "Errr.....");
-            c("keynevermind", "Duhhh....");
-        }
-    }
-
-    function keynevermind() {
-        s(girltalk + " Oh, never mind.  Want to come in?");
-        s("She opens the door.");
-        c(locstack[0], "Continue...");
-    }
-
-    function lookforkeys() {
-        s(girlname + " offers you her purse.");
-        showneed();
-        s("You palm the keys in your pocket, take her purse and rummage through it.");
-        herkeys = 0;
-        c("lookforkeys", "Haven't found anything yet.");
-        c(locstack[0], "Found them!");
-    }
-
     function thebedroom() {
         pushloc("thebedroom");
         if (locstack[0] !== "thebedroom") {

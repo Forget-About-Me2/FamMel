@@ -30,12 +30,18 @@
     "money": [],
     "choices": []
     } ,
-  "theHome":{
+  "theHome": {
     "choices": {
       "visit": "Go to girlname's place",
       "wantVisit": "Accept girlname's invitation to go home with her.",
       "elevator": "Go up with her.",
-      "goodNight": "Say goodnight."
+      "goodNight": "Say goodnight.",
+      "keySlap": "Damn...",
+      "keyNvm": "Duhhh....",
+      "keyGood": "Ummm.....",
+      "keyBad": "Errr.....",
+      "keysNotFound": "Haven't found anything yet.",
+      "foundThem": "Found them!"
     },
     "arrive": [
       "You and girlname arrive at her place.",
@@ -58,7 +64,34 @@
       "You and girlname walk across the hall to the door of her apartment."
     ],
     "sheHasKeys": "girltalk Good thing I haven't lost my keys, huh?",
-    "inElev": "You're in the elevator with girlname."
+    "inElev": "You're in the elevator with girlname.",
+    "searchKeys": "girlname searches through her purse for her keys.",
+    "lostKeys": "girltalk I can't find my keys!",
+    "giveKeys": "Offer her her keys.",
+    "lookKeys": "Offer to look for her keys.",
+    "getKeys": "You pull her keys from your pocket.",
+    "giveKeysDesp": "girlname grabs the keys and opens the door.",
+    "giveKeysQuest": "girltalk Where'd you get those?!",
+    "keysNvm": [
+      "girltalk Oh, never mind. Want to come in?",
+      "She opens the door."
+    ],
+    "keysGood": [
+      "<b>You: </b> Oh, they fell out of your purse when we left the elevator and I grabbed them so you wouldn't lose them.",
+      "girlname beams at you.",
+      "\"Thank you! I wouldn't know what to do without you! Please, come inside with me.\""
+    ],
+    "keysBad": [
+      "girlgasp You stole them when I was in the bathroom. <em> How could you!</em>.",
+      "She raises her hand and slaps you.",
+      "<em>hard</em>",
+      "Your cheek throbs as she grabs the key out of your hand quickly entering her flat before slamming the door closed behind her.",
+      "Leaving you outside alone."
+    ],
+    "offersPurse": ["girlname offers you her purse",
+      "You accept the purse, palming the keys in your pocket. Before rummaging through it"
+    ],
+    "rummagePurse": "You palm the keys in your pocket, as you continue rummaging through her purse."
   }
 
 

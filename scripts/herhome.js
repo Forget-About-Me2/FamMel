@@ -1,7 +1,10 @@
 // All functions connected to her house. This is both pickup and endgame
 let herHome; //Json with quotes for herHome.
 
-function herHomeSetup(){
+function herHomeSetup() {
+    getjson("herhome", function () {
+        herHome = json["theHome"];
+    });
     return {
         visit: [herhome, herHome["choices"]["visit"]],
         wantVisit: [herhome, herHome["choices"]["wantVisit"]],
@@ -31,7 +34,6 @@ function pickup() {
     let curtext = [];
     if (locstack[0] !== "pickup") { // happens first time only.
         locationMSetup("herhome", "pickup");
-        herHome = locjson["theHome"];
         pushloc("pickup");
         curtext = printIntro(curtext, 0);
         curtext.push(girlname + appearance["clothes"][heroutfit]["firstmtgquote"]);
@@ -154,10 +156,12 @@ function theElevator(){
         curtext = printList(curtext, herHome["elev3rdFloor"])
         // s("The elevator finally reaches the 3rd floor.");
         // s("You and " + girlname + " walk across the hall to the door of her apartment.");
-        if (bladder > blademer && !haveItem("herKeys"))
+        if (bladder > blademer && !haveItem("herKeys")) {
             curtext.push(herHome["sheHasKeys"].formatVars());
             // s(girltalk + "Good thing I haven't lost my keys, huh?");
-        listenerList.push([[theHome, "Continue..."], "theHome"]);
+            listenerList.push([[theHome, "Continue..."], "theHome"]);
+        } else
+            listenerList.push([[stolenKeys, "Continue..."], "stolenKeys"]);
     } else {
         curtext.push(herHome["inElev"].formatVars());
         // s("You're in the elevator with " + girlname + ".");
@@ -179,38 +183,98 @@ function theElevator(){
     }
 }
 
+function stolenKeys(){
+    let curtext = [herHome["searchKeys"].formatVars()];
+    // s(girlname + " searches through her purse for her keys.");
+    curtext = displayneed(curtext);
+    curtext = voccurse(curtext);
+    curtext.push(herHome["lostKeys"].formatVars());
+    // s(girltalk + "I can't find my keys!");
+    curtext = showneed(curtext);
+    curtext = displayyourneed(curtext);
+    sayText(curtext);
+    cListenerGenList([
+        [[giveKeys, herHome["giveKeys"]], "giveKeys"],
+        [[lookForKeys, herHome["lookKeys"]], "lookKeys"]
+    ]);
+    // c("givekeys", "Offer her her keys.");
+    // c("lookforkeys", "Offer to look for her keys.");
+}
+
+function giveKeys() {
+    objects.herKeys.value=0;
+    let curtext = [herHome["getKeys"]];
+    let listenerList = [];
+    // s("You pull her keys from your pocket.");
+    if (bladder >= blademer) {
+        curtext = displayneed(curtext);
+        curtext.push(herHome["giveKeysDesp"].formatVars());
+        // s(girlname + " grabs the keys and opens the door.");
+        listenerList.push([[theHome, "Continue..."], "theHome"]);
+        // c(locstack[0], "Continue...");
+    } else {
+        curtext.push(herHome["giveKeysQuest"].formatVars());
+        // s(girltalk + " Where'd you get those?");
+        let excuses = [
+            [ [keyNevermind, herHome["choices"]["keyNvm"]], "keyNvm"],
+            [ [keyGoodExcuse, herHome["choices"]["keyGood"]], "keyGood"],
+            [ [keyBadExcuse, herHome["choices"]["keyBad"]], "keyBad"]
+        ];
+        randomize(excuses).forEach(item => listenerList.push(item));
+    }
+    sayText(curtext);
+    cListenerGenList(listenerList);
+}
+
+function keyNevermind() {
+    let curtext = printList([], herHome["keysNvm"])
+    sayText(curtext);
+    cListenerGen([theHome, "Continue..."], "theHome");
+}
+
+function keyGoodExcuse(){
+    let curtext = printList([], herHome["keysGood"]);
+    sayText(curtext);
+    attraction += 10;
+    cListenerGen([theHome, "Continue..."], "theHome");
+}
+
+function keyBadExcuse(){
+    let curtext = printList([], herHome["keysBad"]);
+    sayText(curtext);
+    attraction = 0;
+    cListenerGen([gameOver, herHome["choices"]["keySlap"]], "gameOver");
+}
+
+function lookForKeys() {
+    let curtext = [];
+    if (locstack[0] !== "lookForKeys"){
+        pushloc("lookForKeys");
+        curtext = printList(curtext, herHome["offersPurse"]);
+        curtext = showneed(curtext);
+    } else {
+        curtext = showneed(curtext);
+        curtext.push(herHome["rummagePurse"]);
+    }
+    // s(girlname + " offers you her purse.");
+    // showneed();
+    // s("You palm the keys in your pocket, take her purse and rummage through it.");
+    objects.herKeys.value = 0;
+    sayText(curtext);
+    cListenerGenList([
+        [[lookForKeys, herHome["choices"]["keysNotFound"]],"lookForKeys"],
+        [[function () {
+            poploc();
+            theHome();
+        }, herHome["choices"]["foundThem"]], "theHome"]
+    ]);
+}
+
 //TODO offer beer
 function theHome() {
-    if (locstack[0] !== "theHome") {
-        kisscounter = 0;
-        feelcounter = 0;
-        pushloc("theHome");
-        s("You and " + girlname + " arrive at her place.");
-        s("It's a 3rd floor apartment in a nice complex.");
-
-        if (homeConditions()) {
-            showneed();
-            displayyourneed();
-            s("She invites you to come up for a drink...");
-            c("theelevator", "Go up with her.");
-            c("gameover", "Say goodnight.");
-        } else {
-            s(girltalk + "Good Night...  see you soon?");
-            locstack[0] = "gameover";
-            c("gameover", "Continue...");
-        }
-    } else if (herkeys) {
-        s(girlname + " searches through her purse for her keys.");
-        displayneed();
-        voccurse();
-        s(girltalk + "I can't find my keys!");
-        showneed();
-        displayyourneed();
-        c("givekeys", "Offer her her keys.");
-        c("lookforkeys", "Offer to look for her keys.");
-    } else {
+    let curtext = [];
+    let listerList = [];
         s("You are with " + girlname + " at her home.");
-
         if (kisscounter > maxkiss) {
             s(girlname + " suddenly pulls away from you and sits straight up.");
             s(girltalk + "You know, this just isn't working out.");
@@ -242,6 +306,5 @@ function theHome() {
                 }
                 c("gameover", "Say goodnight.");
             }
-        }
     }
 }

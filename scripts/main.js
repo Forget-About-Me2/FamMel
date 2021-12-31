@@ -281,6 +281,25 @@ function randomIndex(list){
     return Math.floor(number);
 }
 
+//Randomizes the given list
+function randomize(list){
+    let deepCopy = deepCopy(list);
+    let result = [];
+    while(deepCopy){
+        let temp = randomIndex(list);
+        result.push(deepCopy[temp]);
+        deepCopy.splice(temp, 1);
+    }
+    return result;
+}
+
+//Returns a deepCopy of the given list
+function deepCopy(list){
+    let result = [];
+    list.forEach(item => result.push(item));
+    return result;
+}
+
 //This setups the game when you click start
 //Main reason we have a seperate function is because we need have to wait for yneeds to be assigned for the first scene
 //as it's called in there and this is the cleanest solution I can think of

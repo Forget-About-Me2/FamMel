@@ -384,7 +384,7 @@ async function getjson(fileID, callback){
     const file = "JSON/" + fileID + ".JSON";
     const response= await fetch(file);
     json = await response.json();
-    callback();
+    return callback();
 }
 
 //This requests a json file from the webserver using the location tag
