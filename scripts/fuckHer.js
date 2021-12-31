@@ -420,27 +420,31 @@ function fuckTry(location) {
 }
 
 function theBedroom() {
-    pushloc("thebedroom");
-    if (locstack[0] !== "thebedroom") {
-        s("You follow her closely back to her bedroom.");
-        locstack[0] = "thebedroom";
-        if (bladder > bladlose)
-            s("She presses her crotch into the bedpost.");
+    let curtext = [];
+    if (locstack[0] !== "theBedroom") {
+        pushloc("theBedroom");
+        curtext.push(sexLines["followBed"]);
+        // s("You follow her closely back to her bedroom.");
+        if (bladder > bladlose-25)
+            curtext.push(sexLines["bedroomDesp"]);
+            // s("She presses her crotch into the bedpost.");
         else
-            s("She looks at you romantically with a cute little smile.");
-    } else {
-        s("You are with " + girlname + " in her bedroom.");
-    }
-    showneed();
-    displayyourneed();
+            curtext.push(sexLines["bedroomNorm"]);
+            // s("She looks at you romantically with a cute little smile.");
+    } else
+        curtext.push(sexLines["areBedroom"]);
+        // s("You are with " + girlname + " in her bedroom.");
+    curtext = showneed(curtext);
+    curtext = displayyourneed(curtext);
+    let listenerList = [];
     if (gottagoflag) {
-        c("allowpee", "Tell her she can go and pee.");
+        listenerList.push([[allowpee, sexLines["choices"]["allowPee"]], "allowPee"]);
+        listenerList.push([[holdit, sexLines["choices"]["holdIt"]], "holdIt"])
     }
-    if (gottagoflag) {
-        c("holdit", "Ask her to hold it.");
-    }
-    c("thebed", "Kiss her.");
-    c("gameover", "Say goodnight.");
+    listenerList.push([[function() {haveSex("theBedroom")}, sexLines["choices"]["theBed"]], "haveSex"]);
+    listenerList.push([[gameOver, herHome["choices"]["goodNight"]], "gameOver"]);
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
 
