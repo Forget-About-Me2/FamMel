@@ -323,6 +323,36 @@ function under18() {
     s("Sorry.");
 }
 
+//Carry out what is needed to set up a pop up once it opens.
+function openPopUp(){
+    const popUp = document.getElementById("pop-up");
+    popUp.style.display= "flex";
+    btn = document.getElementById("close-pop-up");
+    btn.onclick = function(){
+        popUp.style.display = "none";
+    }
+    window.onclick = function(event){
+        if (event.target === popUp)
+            popUp.style.display = "none";
+    }
+}
+
+function changeLog(){
+    let result;
+    $.ajax(
+        { url: "CHANGELOG.md",
+            type: 'get',
+            dataType: 'html',
+            async: false,
+            success: function(data) { result = data; }
+        }
+    );
+    const converter = new showdown.Converter();
+    document.getElementById("pop-up-title").innerText = "Changelog";
+    document.getElementById("pop-up-text").innerHTML = converter.makeHtml(result);
+    openPopUp();
+}
+
 // Introduction page.
 function start() {
 // See random number generator from the date

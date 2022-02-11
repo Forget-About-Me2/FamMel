@@ -183,7 +183,7 @@ function displayyourneed(curtext) {
 
 function ypeein(item){
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("backpack-cnt");
+    const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
     const list = yneeds[item];
     let curtext = [];

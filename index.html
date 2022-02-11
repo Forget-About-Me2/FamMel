@@ -24,22 +24,26 @@
     <script src="scripts/locations.js"></script>
     <script src="scripts/games/darts.js"></script>
     <script src="scripts/fuckHer.js"></script>
+    <script src="scripts/debugFunctions.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
     <title>Melissa Explains it All</title>
 </head>
 <body>
 <!--TODO fix text flicker when start is loaded with picture-->
 <link rel="stylesheet" type="text/css" href="style.css">
 <div class="fullscreen">
-    <div id="backpack-cnt">
-        <div id="backpackcontent">
-            <span id="closebackpack">&times;</span>
-            <p>This is your backpack</p>
-            <div id="item-text">
-
+    <div id="pop-up">
+        <div id="pop-up-content">
+            <span id="close-pop-up">&times;</span>
+            <span id="pop-up-title" class="title">backpack</span>
+            <hr>
+            <div id="pop-up-text">
+                <p>This is your backpack</p>
+                <div id="item-text"></div>
+                <div class="btn-group" id="backpackitems"></div>
             </div>
-            <div class="btn-group" id="backpackitems">
-            </div>
+        </div>
         </div>
     </div>
     <div id="titlebar">
@@ -97,174 +101,7 @@
     </div>
 </div>
 <script>
-    /*
 
-   Since last release ( 3.0 )
-
-    RECENT REQUESTS ( actual requests ):
-1)  Different clothing for different girls
-2)  More than 1 girl at the same time
-3)  When she wets herself, starts losing slowly, a squirt, a wet patch, a bigger patch, then loses entirely.
-4)  Player also has bladder & pee need.
-
-    RECENT CHANGES:
-
-1)  Ability to make a custom girl
-2)  Elevator hijinx - she can wet herself, and sometimes
-    somebody comes out of the elevator.
-3)  New outfit: jeans and black tee - both tight.
-4)  Records empty champagne bottle
-5)  Bladder size reduces when she holds it too long.
-6)  Enhanced debug mode
-7)  Flirting with the lady bartender in the club -> jelousy
-8)  Began modification for solo activities and started solo bargirl scene.
-8A)  Somewhat Enhanced solo bargirl scene.
-9)  Made wetting the bed a non-losing option.
-10) Added possibility to take her keys or cellphone when you let her go pee.
-11) Added lost keys functionality to apartment
-12)  Massively Enhanced solo bargirl scene.
-
-    STUFF TO FIX:
-
-    STUFF TO ADD:
-
-1) Bladder Buster night randomly available in the bar.  Bathroom
-   continuously locked rather than just randomly locked.
-2) She tries to pee in a glass under the table in the bar if she has to go bad.
-3) You ask her to take a camera into the bathroom with her.
-4) You can abandon the date:
-    - You excuse yourself to go to the restroom?
-    After which:
-        - hole in the wall to see inside the ladies room with a line
-        - pick up an escort
-        - should there be a lady bartender?
-5) You "find" objects of power:
-    - magic bladder gun?
-    - diuretic pills?
-    - remote control?
-6) More games - truth or dare?
-7) She left her keys in your car...
-8) Flesh out the stuff you see while you're driving
-9) Solo Hotel:
-   - Front office girl is stuck and has to pee
-   - Room service girl brings & shares champagne
-   - Escort in-call
-
-
-=========================
-FIXES BY OLRAST
-
-3.2.1
-
-* Setting custom girl bladder capacity works now
-* When using a custom girl with JPG pictures, pictures of the girl she's based on are displayed
-
-3.2.2
-
-* Fixed image flicker
-
-3.2.3
-
-* Removed tracking code (injected by a hosting site?)
-
-============================
-CHANGES BY Forget_About_Me
-
-4.0
-
-*fixed some game-breaking bugs with rarer scenes
-*General bug fixes
-*changed the html so now the game is in the full browser screen instead of only part of it.
-*You can now kiss and feel her up in the dark bar
-*Added a make-out option to the hot tub
-*Clothes now get reset when leaving a make-out session(beach and hot-tub)
-*fixed some typos
-*Added the option to be able to repeat actions during a make-out/sex session
-*Added the option to have actions reset between make-out/sex sessions
-*In the theatre you can now ask her which movie she wants to watch
-*Tweaked the success of actions during the movie a bit.
-*Implemented PlayerBladder - needs better scenes
-
-=====================
-
-4.1
-
-*Added possibilities for you to pee when the bathroom is unavailable
-*Tweaked how the bladders fill a tiny bit. Not noticeable for players.
-*fixed a bug where you didn't lose control during the drinking game
-*Slight code cleanup
-*She no longer takes the vase/shot glass to the bathroom with her when you are in the car/outside
-*At the end of the drinking game you no longer automatically go to the bathroom
-*She no longer asks for the bar if you have already been there
-*When you're alone she will no longer ask you to hold her purse
-*You can now set a custom capacity for your bladder
-*increased the amount of money you have, since you now also need to buy for yourself
-*You can now only go to the bathroom if you actually need to go
-*You can now pee in the tub
-*You now can't have sex with her if she is still wearing bottoms
-*You no longer can change the options mid-game
-*Fixed a bug that caused a line to be said twice
-*You no longer automatically lose attraction if you ask her to hold it and she's not desperate
-*Started organizing the clutter that happens when you have a lot of items
-*You can now drink with her
-*You can ask her how she is doing when she's holding it for you
-*Added an option to change how much money you have
-
-==================
-
-4.2
-
-*Tweaked the chance of spurting instead of fully wetting
-*Fixed a game breaking bug in the drinking game
-*Changed the chance she'll hold it if you ask when she's desperate
-*Code cleanup
-*Fixed the bug were bladder-limits weren't updated when choosing a preset girl
-*Fixed that you still drink soda even if you're tummy is full
-*Fixed the bug where she only asks for the bar, all the time
-*First start on splitting the code into multiple files
-*Changed the way stats are handled to be a bit more elegant
-*Replaced all deprecated code
-*Changed lost attraction if you make her drink while desperate
-*Fixed that the wrong dialogue appears when you lose control during the drinking game
-*Changed end scenes for the drinking game
-*You can now keep buying drinks in a row.
-
-========
-
-0.5.0
-
--The version numbers have been changed to better represent the current state of the game
-
-*Moving quotes to JSON
-*Settings are now saved between sessions
-*Fixed the loop with a certain end-scene of the drinking game
-*Changed the way pictures are added
-*Changed with how much cocktails increase max-tummy
-*Tweaked chance of finding key to hopefully be a bit more favourable
-*Fixed bug that reset the flirt counter when trying to leave
-*Fixed preventpee being called if she doesn't have to go during pickup
-*Fixed that you and her use the same counter for a locked bathroom
-*Changed volume of water bottles and beer to 250ml to be slightly more realistic
-*Added option to turn off playerBladder
-*Added a backpack which works as an inventory
-*Removed debug mode
-*Added the option to always ask her to pee into something, without caring about her need
-*Added a gas station
-*Tweaked the insistent asking to pee:
-    * WaitCounter now takes bladder size into account. With a minimum amount
-    * WaitCounter is only ignored if she's genuinely within 2 ticks of wetting
-*When selling panties you now get the option to buy more beer.
-*Added more topics for talking in the bar.
-*Added dart game
-*There can now be a line for the bathroom in the theatre
-*the statusbar now just flashes temporary when an attribute changes instead of until the next button is pressed
-*The flashing of the statusbar now differentiates between positive(green) and negative(red) changes
-*During the movie, the only time attraction checks are used are at the beginning and the end.
-    *The reason is that the other scenes are a bit of a minigame where you have to choose the right option
-*Buying has been changed so you can now buy up to 100 items at the same time, provided you have the money.
-    *Stealing is unchanged for now, as it actually takes effort on the player's part.
-*Some bugs for the photoGame have been fixed
-*/
 
     //TODO potentially clean up if statements with multiple locations
     //TODO fix replacing whole arrays if not needed
@@ -479,10 +316,7 @@ CHANGES BY Forget_About_Me
         const listenerList = [
             [["start", "Play"], "start"],
             [["under18", "Leave"], "leave"],
-            [[function () {
-                Object.keys(objects).forEach(key => objects[key].value = 2);
-                go("start");
-            }, "All Items (starts the game with all items)"], "allItems"]
+            [[changeLog, "Changelog"], "changeLog", false]
         ];
         let html = "";
         listenerList.forEach(item => html += cListenerString(item[0], item[1]));

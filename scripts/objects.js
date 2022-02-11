@@ -310,6 +310,36 @@ function standobjs(curtext) {
     return curtext;
 }
 
+let btn;
+let previousbtn;
+let itemtext;
+function backpack(){
+    if (!objQuotes){
+        getjson("objects", function () {
+            objQuotes = json;
+            objQuotes["buyItem2"] = formatAllVarsList(objQuotes["buyItem2"]);
+            backpack();
+        });
+        return;
+    }
+    const popUpCnt = document.getElementById("pop-up-text");
+    document.getElementById("pop-up-title").innerText = "backpack";
+    popUpCnt.innerHTML = "";
+    objQuotes["backpack"].forEach(item => popUpCnt.innerHTML += item);
+    let itemlist = createItemButtonList();
+    let items = "";
+    const backpackitem = document.getElementById("backpackitems");
+    if (itemlist.length !== 0) {
+        itemlist.forEach(item => items += item);
+        backpackitem.innerHTML = items;
+    } else {
+        backpackitem.innerHTML = "<b>Your backpack is empty :(</b>";
+    }
+    openPopUp();
+    itemtext= document.getElementById("item-text");
+    itemtext.innerHTML = "";
+}
+
 function buyItem(item){
     let html = printList([], objQuotes["buyItem"]);
     let formatList = [[item],[], []];
@@ -521,7 +551,7 @@ function takeHerItem(item){
 
 function giveHer(item){
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("backpack-cnt");
+    const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
     let obj = objects[item];
     obj.value -= 1;
@@ -583,33 +613,6 @@ function createItemButtonList(){
         }
     }
     return itemlist;
-}
-
-let btn;
-let previousbtn;
-let itemtext;
-function backpack(){
-    let itemlist = createItemButtonList();
-    let items = "";
-    const backpackitem = document.getElementById("backpackitems");
-    if (itemlist.length !== 0) {
-        itemlist.forEach(item => items += item);
-        backpackitem.innerHTML = items;
-    } else {
-        backpackitem.innerHTML = "<b>Your backpack is empty :(</b>";
-    }
-    const backpackcnt = document.getElementById("backpack-cnt");
-    backpackcnt.style.display= "flex";
-    btn = document.getElementById("closebackpack");
-    btn.onclick = function(){
-        backpackcnt.style.display = "none";
-    }
-    window.onclick = function(event){
-        if (event.target === backpackcnt)
-            backpackcnt.style.display = "none";
-    }
-    itemtext= document.getElementById("item-text");
-    itemtext.innerHTML = "";
 }
 
 //When an item is selected in the backpack print the info and related functions
@@ -690,7 +693,7 @@ function getOwned(selected) {
 //TODO combine the if statements from dink/beer/cocktail/soda
 function drinknow(item) {
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("backpack-cnt");
+    const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
     let curtext = [];
     if (((tummy > maxtummy && (item !== "beer"|| tummy > maxbeer)) && item !== "cocktail")||
@@ -735,7 +738,7 @@ function drinknow(item) {
 
 function ydrinknow(item){
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("backpack-cnt");
+    const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
     let drink = objects[item];
     let curtext = [];
@@ -771,7 +774,7 @@ function ydrinknow(item){
 let homeChampagne = 0; //Flag whether champagne has been drunk at her home before (aka whether she needs to get the glasses)
 //TODO turn into JSON
 function champagneNow() {
-    const backpackcnt = document.getElementById("backpack-cnt");
+    const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
     let obj = objects.champagne;
     let curtext = [];
@@ -829,7 +832,7 @@ function champagneNow() {
 
 function drinktogether(item){
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("backpack-cnt");
+    const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
     let curtext = [];
     if (((tummy > maxtummy && (item !== "beer"|| tummy > maxbeer)) && item !== "cocktail")||

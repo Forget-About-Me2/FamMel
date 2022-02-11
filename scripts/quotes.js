@@ -326,8 +326,11 @@ function cListenerString(choice, loc){
 
 //Adds an element to a created click listener
 //This is done separately because if the list contains more listeners things break
-function addListeners(choice, loc){
-    let func = goWrapper(choice[0]);
+function addListeners(choice, loc, go=true){
+    let func;
+    if (go)
+        func = goWrapper(choice[0]);
+    else func = choice[0]
     document.getElementById(loc).addEventListener("click", func);
 }
 
@@ -338,7 +341,12 @@ function goWrapper(func){
 
 //For a given list adds a listener to all created click listeners
 function addListenersList(list){
-    list.forEach(item => addListeners(item[0], item[1]));
+    list.forEach(item => {
+        if (item.length === 3)
+            addListeners(item[0], item[1], item[2]);
+        else
+            addListeners(item[0], item[1])
+    });
 }
 
 //For the given choice creates both the element and the listener

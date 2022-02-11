@@ -176,7 +176,7 @@ text {
     transform: scale(1.5);
 }
 
-#backpack-cnt{
+#pop-up{
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -189,23 +189,35 @@ text {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-#backpackcontent{
+#pop-up-text{
+    overflow-y: auto;
+    height: 90%;
+    margin-top: 1em;
+}
+
+#pop-up-content{
+    border-radius: 1em;
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+    height: 80%;
 }
 
-#closebackpack {
+#pop-up-title{
+
+}
+
+#close-pop-up {
     color: #aaaaaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
 
-#closebackpack:hover,
-#closebackpack:focus {
+#close-pop-up:hover,
+#close-pop-up:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;

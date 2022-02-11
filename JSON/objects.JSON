@@ -15,5 +15,11 @@
     ["Whoa, give the poor employee a break, there is no way you need more than a 100 of them..."],
     ["You pay before going back to girlname."],
     ["You pay and move away from the counter."]
+  ],
+  "backpack": [
+    "<p>This is your backpack</p>",
+    "<div id=\"item-text\"></div>",
+    "<div class=\"btn-group\" id=\"backpackitems\">",
+    "</div>"
   ]
 }
