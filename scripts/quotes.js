@@ -20,6 +20,7 @@ let general; //This stores all general quotes from JSON call
 let darts; //This stores the json quotes for the darts game
 let sexLines; //This stores the json quotes related to fucking scenes
 let objQuotes; //This stores the json quotes related to objects.
+let credits; //This stores the json for the credits
 
 
 let girlname = "Laura";

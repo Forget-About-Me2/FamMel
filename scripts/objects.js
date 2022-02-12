@@ -310,7 +310,6 @@ function standobjs(curtext) {
     return curtext;
 }
 
-let btn;
 let previousbtn;
 let itemtext;
 function backpack(){

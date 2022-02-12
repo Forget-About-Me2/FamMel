@@ -323,19 +323,7 @@ function under18() {
     s("Sorry.");
 }
 
-//Carry out what is needed to set up a pop up once it opens.
-function openPopUp(){
-    const popUp = document.getElementById("pop-up");
-    popUp.style.display= "flex";
-    btn = document.getElementById("close-pop-up");
-    btn.onclick = function(){
-        popUp.style.display = "none";
-    }
-    window.onclick = function(event){
-        if (event.target === popUp)
-            popUp.style.display = "none";
-    }
-}
+
 
 function changeLog(){
     let result;
@@ -353,13 +341,23 @@ function changeLog(){
     openPopUp();
 }
 
+function handleDisclaimer(){
+    credits = json;
+    document.getElementById("pop-up-title").innerText = "Disclaimer";
+    const textElem = document.getElementById("pop-up-text");
+    textElem.innerHTML = "";
+    credits["disclaimer"].forEach(line => textElem.innerHTML += line);
+    openPopUpTemp();
+}
+
 // Introduction page.
 function start() {
+    getjson("credits", handleDisclaimer);
 // See random number generator from the date
     const now = new Date();
     const seed = now.getSeconds();
     anim8();
-    randcounter = Math.floor(Math.random(seed) * 5);
+    randcounter = Math.floor(Math.random() * 5);
     pstorycounter = Math.floor(Math.random() * 5);
     incrandom();
     setup();
