@@ -341,8 +341,29 @@ function changeLog(){
     openPopUp();
 }
 
+function showCredits(){
+    if (!credits){
+        getjson("credits", function (){
+            credits = json;
+            showCredits();
+        });
+        return
+    }
+    document.getElementById("pop-up-title").innerText = "Credits";
+    const textElem = document.getElementById("pop-up-text");
+    textElem.innerHTML = "";
+    credits["page"].forEach(line => textElem.innerHTML += line);
+    openPopUp();
+}
+
 function handleDisclaimer(){
-    credits = json;
+    if (!credits){
+        getjson("credits", function (){
+            credits = json;
+            handleDisclaimer();
+        });
+        return
+    }
     document.getElementById("pop-up-title").innerText = "Disclaimer";
     const textElem = document.getElementById("pop-up-text");
     textElem.innerHTML = "";
@@ -352,7 +373,7 @@ function handleDisclaimer(){
 
 // Introduction page.
 function start() {
-    getjson("credits", handleDisclaimer);
+    handleDisclaimer();
 // See random number generator from the date
     const now = new Date();
     const seed = now.getSeconds();
@@ -373,20 +394,15 @@ function start() {
 
 function gameOver() {
     setText(endScreens["gameOver"]);
-    // document.getElementById('textsp').innerHTML += "<p class='title'>Game Over, Dude! </p>"
-    //     + "<p style='text-align: center; padding-right: 10%; font-style: italic'>You struck out</p>";
-    // s("<br>&nbsp;<br>&nbsp;");
-    // s("<br>&nbsp;<br>&nbsp;");
-    // s("<br>&nbsp;<br>&nbsp;");
-    // s("<div style='text-align:right'><i>Hit Reload to start over...</i></div>");
 }
 
 //Basically you got her into bed but not desperate
 function gameSex(){
-
+ //TODO
 }
 
 function gamewet() {
+    //TODO check and maybe fix
     document.getElementById('textsp').innerHTML += "<p class='title'>Woot! </p>"
         + "<p style='text-align: center; padding-right: 10%; font-style: italic'>you took her to bed while she was bursting</p>"
         + "<p style='text-align: center; padding-right: 10%; font-style: italic'>and she held it for you until she wet the bed.</p>";
@@ -399,6 +415,7 @@ function gamewet() {
 }
 
 function gamewon() {
+    //TODO check and maybe fix
     document.getElementById('textsp').innerHTML += "<p class='title'>You Won!! </p>"
         + "<p style='text-align: center; padding-right: 10%; font-style: italic'>you took her to bed while she was bursting.</p>";
     s("<br>&nbsp;<br>&nbsp;");

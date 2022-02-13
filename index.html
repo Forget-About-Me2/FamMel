@@ -48,7 +48,7 @@
         </div>
     </div>
     <div id="titlebar">
-        <div id="credits">Game Engine 3.2a by drw</div>
+        <div id="engine">Base Game by drw</div>
         <div id="version">VER 4.2: June 24, 2020</div>
     </div>
     <br>
@@ -63,7 +63,7 @@
             <p style="text-align: center">This game contains mature content.</p>
             <!--            TODO change class-->
             <ul id="choices" class="choices-start"></ul>
-            <pre style="padding-top: 10vh;padding-left:30vw;"><br>  ((<br>  -))<br>  /\) <br> ( |)<br>   \ \<br>   _/ )<br>  //-/<br>  ||<br>  d/<br></pre>
+            <pre style="padding-top: 13vh;padding-left:30vw;"><br>  ((<br>  -))<br>  /\) <br> ( |)<br>   \ \<br>   _/ )<br>  //-/<br>  ||<br>  d/<br></pre>
             <br><br><p style="text-align: center"> Follow this project on github:</p>
             <p style="text-align: center"><a href="https://github.com/FamTroder/FamMel"><img src="icons/GitHub-Mark-32px.png" ></a></p>
         </div>
@@ -315,7 +315,8 @@
         const listenerList = [
             [["start", "Play"], "start"],
             [["under18", "Leave"], "leave"],
-            [[changeLog, "Changelog"], "changeLog", false]
+            [[changeLog, "Changelog"], "changeLog", false],
+            [[showCredits, "Credits"], "creditss", false]
         ];
         let html = "";
         listenerList.forEach(item => html += cListenerString(item[0], item[1]));

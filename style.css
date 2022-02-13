@@ -14,6 +14,15 @@ a {
     color: #000088;
 }
 
+.noLinkShow {
+    text-decoration: none;
+    color: black;
+}
+
+.noLinkShow:hover {
+    color: #888800;
+}
+
 text {
     text-decoration: none;
 }
@@ -25,7 +34,7 @@ text {
     top:  0;
 }
 
-#credits {
+#engine {
     padding-left: 20px;
     padding-top: 2px;
     font-size: 18px;
