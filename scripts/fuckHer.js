@@ -235,28 +235,28 @@ function haveSex(location){
 
     //The only quote here that is location dependent is if her arousal is through the roof.
     if (choice === 4)
-        curtext.push(pickrandom(sexLines[location]["arousal"]));
+        curtext.push(pickrandom(sexLines[location]["arousal"]).formatVars());
     else
-        curtext.push(pickrandom(sexLines["arousal"][choice]));
+        curtext.push(pickrandom(sexLines["arousal"][choice]).formatVars());
     curtext.push("What will you do?");
-    listenerList.push([[kissher, "Kiss her on the mouth."], "kissHer"]);
+    listenerList.push([[function () {kissher([], location)}, "Kiss her on the mouth."], "kissHer"]);
+    Object.keys(sexActions.actions).forEach(action => {
+        const actObj = sexActions.actions[action]
+        if (typeof actObj !== "function" && !Array.isArray(actObj) && !sexActions.getPerformed(action) && !(location === "theTub" && sexActions.noTubUse(action))){
+            let preReq = true;
+            actObj.needOff.forEach(item => preReq = preReq && !sexActions.isOn(item));
+            if (preReq)
+                listenerList.push([[function () {
+                    performAction(action, location);
+                }, actObj.choiceLine], action]);
+        }
+    });
     Object.keys(sexActions.clothes).forEach(item => {
         if (sexActions.isOn(item)) {
             listenerList.push([[function () {
                 takeOff(item, location);
             }, appearance["clothes"][heroutfit]["sextakeoff" + item]], item]);
         }});
-
-    Object.keys(sexActions.actions).forEach(action => {
-        if (!sexActions.getPerformed(action) && !(location === "theTub" && sexActions.noTubUse(action))){
-            let preReq = true;
-            sexActions.actions[action].needOff.forEach(item => preReq = preReq && !sexActions.isOn(item));
-            if (preReq)
-                listenerList.push([[function () {
-                    performAction(action, location);
-                }, sexActions.actions[action].choiceLine], "action"]);
-        }
-    });
     if (arousal > 120 && !sexActions.isOn("skirt") && !sexActions.isOn("panties")) {
         if (location === "theBed")
             if (arousal >= 140)
@@ -311,6 +311,8 @@ function takeOff(item, location){
                 curtext.push(temp)
             curtext = printList(curtext, sexLines["clothes"][item][i][0]);
             failTakeOff = clothesInfo[2] === "fail";
+            if (item === "panties")
+                curtext.push(appearance["clothes"][heroutfit]["sexPantiesTOSkirt"]);
             if (clothesInfo[1] === "lose") {
                 if (bladder > bladlose)
                     curtext = printList(curtext, sexLines["clothes"][item][i][1]);
@@ -329,8 +331,8 @@ function takeOff(item, location){
     }
     if (!failTakeOff)
         sexActions.takeOff(item);
-    curtext = callChoice([location, "Continue..."], curtext);
     sayText(curtext);
+    cListenerGen([function () {haveSex(location)}, "Continue..."], "haveSex");
 }
 
 function performAction(action, location){
@@ -338,20 +340,20 @@ function performAction(action, location){
     let processed = false;
     let curtext = [];
     for (let i = 0; !processed; i++){
-        let arousal = info.clothesArousal[i];
-        if (Array.isArray(arousal[0])){
+        let arousalInfo = info.clothesArousal[i];
+        if (Array.isArray(arousalInfo[0])){
             let met = true;
-            arousal[0].forEach(item => {
+            arousalInfo[0].forEach(item => {
                 if (item.contains("not")){
                     let temp = item.splice(3);
                     met = met && !sexActions.isOn(temp);
                 } else
                     met = met && sexActions.isOn(item);
             });
-        } if (arousal[0]=== "none"){
-            arousal += arousal[i];
+        } if (arousalInfo[0]=== "none"){
+            arousal += arousalInfo[1];
             curtext = printList(curtext, sexLines["actions"][action][i][0]);
-            if (arousal[2] === "emer") {
+            if (arousalInfo[2] === "emer") {
                 if (bladder > blademer)
                     curtext = printList(curtext, sexLines["actions"][action][i][1]);
                 else {
@@ -359,7 +361,7 @@ function performAction(action, location){
                         curtext = printList(curtext, sexLines["actions"][action][i][3]);
                     curtext = printList(curtext, sexLines["actions"][action][i][2]);
                 }
-            } else if (arousal[2] === "lose"){
+            } else if (arousalInfo[2] === "lose"){
                 if (bladder > bladlose)
                     curtext = printList(curtext, sexLines["actions"][action][i][1]);
                 else
@@ -368,22 +370,22 @@ function performAction(action, location){
             if (action === "kPussy" && bladder > bladlose)
                 curtext = printList(curtext, sexLines["actions"][action][i][4]);
             processed = true;
-        } else if(sexActions.isOn(arousal[0])){
-            arousal += arousal[i];
+        } else if(sexActions.isOn(arousalInfo[0])){
+            arousal += arousalInfo[1];
             let temp;
             if (info.clothesArousal.length > 2)
-                temp = appearance["clothes"]["sex"+action+arousal[0]];
+                temp = appearance["clothes"]["sex"+action+arousalInfo[0]];
             else
                 temp = appearance["clothes"]["sex"+action];
             if (typeof temp !== "undefined")
                 curtext.push(temp)
             curtext = printList(curtext, sexLines["actions"][action][i][0]);
-            if (arousal[2] === "emer") {
+            if (arousalInfo[2] === "emer") {
                 if (bladder > blademer)
                     curtext = printList(curtext, sexLines["actions"][action][i][1]);
                 else if (action !== "kPussy" || wetherpanties)
                     curtext = printList(curtext, sexLines["actions"][action][i][2]);
-            } else if (arousal[2] === "lose"){
+            } else if (arousalInfo[2] === "lose"){
                 if (bladder > bladlose)
                     curtext = printList(curtext, sexLines["actions"][action][i][1]);
                 else {
@@ -397,8 +399,8 @@ function performAction(action, location){
     }
     if (multiplemoves === 0)
         sexActions.setPerformed(action);
-    curtext = callChoice([location, "Continue..."], curtext);
     sayText(curtext);
+    cListenerGen([function () {haveSex(location)}, "Continue..."], "haveSex");
 }
 
 function leaveSex(location){
@@ -441,7 +443,7 @@ function theBedroom() {
         listenerList.push([[allowpee, sexLines["choices"]["allowPee"]], "allowPee"]);
         listenerList.push([[holdit, sexLines["choices"]["holdIt"]], "holdIt"])
     }
-    listenerList.push([[function() {haveSex("theBedroom")}, sexLines["choices"]["theBed"]], "haveSex"]);
+    listenerList.push([[function() {haveSex("theBed")}, sexLines["choices"]["theBed"]], "haveSex"]);
     listenerList.push([[gameOver, herHome["choices"]["goodNight"]], "gameOver"]);
     sayText(curtext);
     cListenerGenList(listenerList);

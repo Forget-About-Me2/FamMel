@@ -283,10 +283,10 @@ function randomIndex(list){
 
 //Randomizes the given list
 function randomize(list){
-    let deepCopy = deepCopy(list);
+    let deepCopy = getDeepCopy(list);
     let result = [];
-    while(deepCopy){
-        let temp = randomIndex(list);
+    while(deepCopy.length !== 0){
+        let temp = randomIndex(deepCopy);
         result.push(deepCopy[temp]);
         deepCopy.splice(temp, 1);
     }
@@ -294,7 +294,7 @@ function randomize(list){
 }
 
 //Returns a deepCopy of the given list
-function deepCopy(list){
+function getDeepCopy(list){
     let result = [];
     list.forEach(item => result.push(item));
     return result;
@@ -357,18 +357,20 @@ function showCredits(){
 }
 
 function handleDisclaimer(){
-    if (!credits){
-        getjson("credits", function (){
-            credits = json;
-            handleDisclaimer();
-        });
-        return
+    if (!localStorage.disclaimer || localStorage.disclaimer === "true") {
+        if (!credits) {
+            getjson("credits", function () {
+                credits = json;
+                handleDisclaimer();
+            });
+            return
+        }
+        document.getElementById("pop-up-title").innerText = "Disclaimer";
+        const textElem = document.getElementById("pop-up-text");
+        textElem.innerHTML = "";
+        credits["disclaimer"].forEach(line => textElem.innerHTML += line);
+        openPopUpTemp();
     }
-    document.getElementById("pop-up-title").innerText = "Disclaimer";
-    const textElem = document.getElementById("pop-up-text");
-    textElem.innerHTML = "";
-    credits["disclaimer"].forEach(line => textElem.innerHTML += line);
-    openPopUpTemp();
 }
 
 // Introduction page.

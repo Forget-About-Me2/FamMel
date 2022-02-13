@@ -22,7 +22,6 @@ function homeConditions() {
 }
 
 function herhome() {
-    //TODO switch?
     //This chooses the appropriate function to continue in the location herhome
     if (locstack[0] === "yourhome")
         getjson("appearance", function (){

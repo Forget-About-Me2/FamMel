@@ -110,7 +110,7 @@ function setLocal(varName, value){
 function options() {
     //When this function is called the var json will be set to the json used for options
 
-    let vars = new Array(28).fill([""]); //This array is used to format the html with values
+    let vars = new Array(31).fill([""]); //This array is used to format the html with values
     let checked = []; //This is a list to keep track of which options are checked
 
     let cusgirl=[customgirlname];
@@ -141,7 +141,10 @@ function options() {
     if (rstmoves) checked.push(23);
     else checked.push(24);
 
-    vars[25] = [money];
+    if (!localStorage.disclaimer || localStorage.disclaimer === "true") checked.push(26)
+    else checked.push(27);
+
+    vars[28] = [money];
 
     checked.forEach(i => vars[i] = ["checked"]);
     let curtext = formatAll(settings.html, vars);
@@ -256,6 +259,13 @@ function setRstMoves(choice){
     }
 }
 
+function setDisclaimer(choice){
+    if (choice)
+        setLocal("disclaimer", "true");
+    else
+        setLocal("disclaimer", "false");
+}
+
 
 function setcustgirlname() {
     customgirlname = document.getElementById('thegirl').value;
@@ -330,6 +340,8 @@ function setPlayGame(choice){
     else
         setLocal("playerGame", "false");
 }
+
+
 
 function hidescreen() {
     enablehide = 1;

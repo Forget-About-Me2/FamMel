@@ -624,7 +624,7 @@ function selectitem(selecteditem){
         previousbtn.removeAttribute("style");
     let tobeprinted = "<p class='title'>"+ clickedObj.bpname +"</p>";
     if(clickedObj.owned)
-        tobeprinted += "<b><i>You have " + getOwned(clickedObj) + "</i></b><br><br>";
+        tobeprinted += "<b><i>You have " + getAmountOwned(clickedObj) + "</i></b><br><br>";
     tobeprinted += clickedObj.description.format([girlname]);
     if (!noItemLoc.includes(locstack[0]) && locstack.length !== 0 && clickedObj.hasOwnProperty("functions")){
         if (!(clickedObj.hasOwnProperty("locations") && clickedObj.locations.includes(locstack[0]))){
@@ -636,14 +636,15 @@ function selectitem(selecteditem){
                 if (clickedObj.hasOwnProperty("togfunctions") && !playOnly.includes(locstack[0]) && clickedObj.value > 1)
                     printAllChoicesList([], clickedObj.togfunctions).forEach(item => tobeprinted += item);
             }
-        }
+        } else
+            printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
     }
     itemtext.innerHTML= tobeprinted;
     previousbtn = clickedbtn;
 }
 
 //Returns text saying how much you own of an item.
-function getOwned(selected) {
+function getAmountOwned(selected) {
     let number = selected.value;
     let description = selected.owned
     let formatlist = [number.toString()];

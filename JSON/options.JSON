@@ -25,6 +25,9 @@
     "<b>Reset Sex Moves Upon Stopping:</b>",
     "<input type=radio value=On name=rstmoves id=rstmoveson {0} onclick=setRstMoves(1)> On &nbsp;&nbsp;",
     "<input type=radio value=Off name=rstmoves id=rstmovesoff {0} onclick=setRstMoves(0)> Off<p>",
+    "<b>Show disclaimer. (Turning this off means that you won't see the disclaimer everytime you launch the game)</b>",
+    "<input type=radio value=On name=disclaimer id=disclaimeron {0} onclick=setDisclaimer(1)>On &nbsp;&nbsp;",
+    "<input type=radio value=Off name=disclaimer id=disclaimeroff {0} onclick=setDisclaimer(0)> Off<p>",
     "<b>Your Start Balance:</b> $ <input type=text value={0} name=yourmoney id=yourmoney onchange=setyourmoney();><br><br>",
     "<button type=\"button\" id=\"bladOpt\">Bladder Settings</button>",
     "</form><p>"

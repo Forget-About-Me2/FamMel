@@ -113,7 +113,7 @@ function feelup() {
     sayText(curtext);
 }
 
-function kissher(curtext=[]) {
+function kissher(curtext=[], sexLoc) {
     kisscounter += 1;
     curtext = printList(curtext, kissing["diag"][0]);
     if (attraction < 10 || (flirtcounter > 1 && attraction < 20)) {
@@ -169,6 +169,12 @@ function kissher(curtext=[]) {
         }
     }
     arousal += 2;
-    curtext = callChoice(["curloc", "Continue..."], curtext);
+    let listenerList = [];
+    //If sexLoc is defined then this kiss is happening in the middle of a sexual encounter and therefore handled accordingly
+    if (!sexLoc) curtext = callChoice(["curloc", "Continue..."], curtext);
+    else {
+        listenerList.push([[function () {haveSex(sexLoc)}, "Continue..."], "haveSex"]);
+    }
     sayText(curtext);
+    cListenerGenList(listenerList);
 }
