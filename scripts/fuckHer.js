@@ -25,7 +25,9 @@ let sexActions = {
               ["none", "lose", "succ"]
             ],
             init: objInit,
-            reset: objReset,
+            reset: function () {
+
+            },
         },
         panties:{
             on: 1,
@@ -36,8 +38,11 @@ let sexActions = {
             init: objInit,
             reset: objReset,
         },
+        clothNames: ["skirt", "top", "bra", "panties"],
         init: objInit,
-        reset: objReset
+        reset: function (){
+            this.clothNames.forEach(item => this[item].on = 1);
+        }
     },
     actions:{
         kNeck: {
@@ -66,7 +71,7 @@ let sexActions = {
         },
         kPussy: {
             performed: 0,
-            needOff: ["skirt"],
+            needOff: [],
             clothesArousal: [
                 ["skirt", 0, "emer"],
                 ["panties", 8, "lose"],
@@ -94,7 +99,7 @@ let sexActions = {
             performed: 0,
             needOff: ["skirt"],
             clothesArousal: [
-                ["skirt", 2, "none"],
+                ["skirt", 3, "none"],
                 ["none", 10, "emer"],
             ],
             noTub: 0,
@@ -104,9 +109,10 @@ let sexActions = {
         },
         tPussy: {
             performed: 0,
-            needOff: ["skirt"],
+            needOff: [],
             clothesArousal: [
-                [["skirt", "notpanties"], 4, "none"],
+                [["skirt", "notpanties"], 6, "none"],
+                [["skirt", "panties"], 4, "none"],
                 ["panties", 12, "lose"],
                 ["none", 20, "lose"]
             ],
@@ -142,7 +148,16 @@ let sexActions = {
             reset: objReset,
         },
         init: objInit,
-        reset: objReset
+        reset: objReset,
+        actionList: function (){
+            let result = [];
+            Object.keys(this).forEach(item => {
+                if (typeof this[item] === "object" && item !== "initVal")
+                    result.push(item);
+            }
+            );
+            return result;
+        }
     },
     fuckingNow: 0,
     init: objInit,
@@ -240,9 +255,9 @@ function haveSex(location){
         curtext.push(pickrandom(sexLines["arousal"][choice]).formatVars());
     curtext.push("What will you do?");
     listenerList.push([[function () {kissher([], location)}, "Kiss her on the mouth."], "kissHer"]);
-    Object.keys(sexActions.actions).forEach(action => {
+    sexActions.actions.actionList().forEach(action => {
         const actObj = sexActions.actions[action]
-        if (typeof actObj !== "function" && !Array.isArray(actObj) && !sexActions.getPerformed(action) && !(location === "theTub" && sexActions.noTubUse(action))){
+        if (!sexActions.getPerformed(action) && !(location === "theTub" && sexActions.noTubUse(action))){
             let preReq = true;
             actObj.needOff.forEach(item => preReq = preReq && !sexActions.isOn(item));
             if (preReq)
@@ -251,7 +266,7 @@ function haveSex(location){
                 }, actObj.choiceLine], action]);
         }
     });
-    Object.keys(sexActions.clothes).forEach(item => {
+    sexActions.clothes.clothNames.forEach(item => {
         if (sexActions.isOn(item)) {
             listenerList.push([[function () {
                 takeOff(item, location);
@@ -281,12 +296,12 @@ function takeOff(item, location){
     let failTakeOff = false;
     let curtext = [];
     if (item === "skirt" && bladder > blademer)
-        curtext.push(appearance["clothes"][heroutfit]["sextoskirtquoteemer"]);
+        curtext.push(appearance["clothes"][heroutfit]["sextoskirtquoteemer"].formatVars());
     for (let i = 0; !processed; i++){
         let clothesInfo = info.takeOffInfo[i];
         if (clothesInfo[0] === "none"){
             let temp;
-            temp = appearance["clothes"]["sex"+item+clothesInfo[0]];
+            temp = appearance["clothes"][heroutfit]["sex"+item+clothesInfo[0].formatVars()];
             if (typeof temp !== "undefined")
                 curtext.push(temp);
             if (item === "panties" && bladder > bladlose)
@@ -304,15 +319,15 @@ function takeOff(item, location){
                     curtext = printList(curtext, sexLines["clothes"][item][i][2]);
             }
             processed = true;
-        } else if (clothesInfo[0] === item){
+        } else if (sexActions.isOn(item)){
             let temp;
-            temp = appearance["clothes"]["sex"+item+clothesInfo[0]];
+            temp = appearance["clothes"][heroutfit]["sex"+item+clothesInfo[0]].formatVars();
             if (typeof temp !== "undefined")
                 curtext.push(temp)
             curtext = printList(curtext, sexLines["clothes"][item][i][0]);
             failTakeOff = clothesInfo[2] === "fail";
             if (item === "panties")
-                curtext.push(appearance["clothes"][heroutfit]["sexPantiesTOSkirt"]);
+                curtext.push(appearance["clothes"][heroutfit]["sexPantiesTOSkirt"].formatVars());
             if (clothesInfo[1] === "lose") {
                 if (bladder > bladlose)
                     curtext = printList(curtext, sexLines["clothes"][item][i][1]);
@@ -343,15 +358,38 @@ function performAction(action, location){
         let arousalInfo = info.clothesArousal[i];
         if (Array.isArray(arousalInfo[0])){
             let met = true;
+            let sumName = ""; //The name used to query clothing related quotes later on
             arousalInfo[0].forEach(item => {
-                if (item.contains("not")){
-                    let temp = item.splice(3);
+                if (item.includes("not")){
+                    let temp = item.substring(3);
                     met = met && !sexActions.isOn(temp);
-                } else
+                } else {
                     met = met && sexActions.isOn(item);
+                }
+                sumName += item;
             });
-        } if (arousalInfo[0]=== "none"){
+            if (met){
+                arousal += arousalInfo[1];
+                processed = true;
+                let temp;
+                if (info.clothesArousal.length > 2)
+                    temp = appearance["clothes"][heroutfit]["sex"+action+sumName];
+                else
+                    temp = appearance["clothes"][heroutfit]["sex"+action];
+                if (typeof temp !== "undefined")
+                    curtext.push(temp)
+            }
+        }else if (arousalInfo[0] === "none" || sexActions.isOn(arousalInfo[0])){
             arousal += arousalInfo[1];
+            if (arousalInfo[0] !== "none"){
+                let temp;
+                if (info.clothesArousal.length > 2)
+                    temp = appearance["clothes"][heroutfit]["sex"+action+arousalInfo[0]];
+                else
+                    temp = appearance["clothes"][heroutfit]["sex"+action];
+                if (typeof temp !== "undefined")
+                    curtext.push(temp)
+            }
             curtext = printList(curtext, sexLines["actions"][action][i][0]);
             if (arousalInfo[2] === "emer") {
                 if (bladder > blademer)
@@ -365,35 +403,12 @@ function performAction(action, location){
                 if (bladder > bladlose)
                     curtext = printList(curtext, sexLines["actions"][action][i][1]);
                 else
+                    if (action === "kPussy" && wetherpanties && arousalInfo[0]==="none")
+                        curtext = printList(curtext, sexLines["actions"][action][i][3]);
                     curtext = printList(curtext, sexLines["actions"][action][i][2]);
             }
             if (action === "kPussy" && bladder > bladlose)
                 curtext = printList(curtext, sexLines["actions"][action][i][4]);
-            processed = true;
-        } else if(sexActions.isOn(arousalInfo[0])){
-            arousal += arousalInfo[1];
-            let temp;
-            if (info.clothesArousal.length > 2)
-                temp = appearance["clothes"]["sex"+action+arousalInfo[0]];
-            else
-                temp = appearance["clothes"]["sex"+action];
-            if (typeof temp !== "undefined")
-                curtext.push(temp)
-            curtext = printList(curtext, sexLines["actions"][action][i][0]);
-            if (arousalInfo[2] === "emer") {
-                if (bladder > blademer)
-                    curtext = printList(curtext, sexLines["actions"][action][i][1]);
-                else if (action !== "kPussy" || wetherpanties)
-                    curtext = printList(curtext, sexLines["actions"][action][i][2]);
-            } else if (arousalInfo[2] === "lose"){
-                if (bladder > bladlose)
-                    curtext = printList(curtext, sexLines["actions"][action][i][1]);
-                else {
-                    curtext = printList(curtext, sexLines["actions"][action][i][2]);
-                    if (action === "kPussy" && wetherpanties)
-                        curtext = printList(curtext, sexLines["actions"][action][i][3]);
-                }
-            }
             processed = true;
         }
     }

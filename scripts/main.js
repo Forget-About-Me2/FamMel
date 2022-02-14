@@ -24,11 +24,12 @@ function objInit(){
 
 function objReset(){
     Object.keys(this).forEach(prop => {
-        if (typeof this[prop] !== "object" || prop === "initVal")
-            this[prop] = this.initVal[prop];
-        else
+        if (typeof this[prop] === "object" && !Array.isArray(this[prop]) && prop !== "initVal")
             this[prop].reset();
-    })
+        else
+            this[prop] = this.initVal[prop];
+    });
+    this.init();
 }
 
 function goback() {
