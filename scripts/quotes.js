@@ -33,6 +33,12 @@ let pantycolor = "black";
 // her apologies for asking to go
 var wanthold=["I know you asked me to wait, but...", "I know you told me not to go, but...", "I know you wanted me to hold it, but..." , "I know you asked me not to pee, but...", "I know you wanted me to control my bladder, but..." , "I know you didn't want me to go, but..."];
 
+//Formatting Parameters
+// Formatting : flags if string has been placed.
+let imageprev;  // Previous image
+const imagedesc = '"Picture of girl"';
+let comma = 0; // used in formatting posessions.
+
 //
 //  Her expressions when peeing in a strange place
 //  used by itscomingout()
@@ -69,31 +75,6 @@ const outpeectrl=[
 var curseword=["Dammit!", "Jesus!", "Shit!" , "Fuckit!", "Goddamn!", "Fuckin' A!", "Fuck!"];
 
 //
-//  Names of bar girls and escorts
-//
-var bargirlnames=["Tiffany", "Brittney", "Vanessa" , "Maya", "Angelina", "Samantha", "Carly"];
-
-//
-//  Descriptions of her posing for you
-//
-
-// var posenude=[
-//     "shyly covers her breasts with one hand and her pussy with the other.  Her face is a bright red.",
-//     "turns her back to you and tries to hide her bare bottom with one hand while she looks back over her shoulder.  You see the curls of her pubic hair in the space between her legs.",
-//     "slowly turns toward you, her breasts pressed between her extended arms, and both hands firmly blocking your view of her crotch.",
-//     "shyly moves one of her hands to her hip and cups a breast with the other.  She holds one leg crossed just a little forward, squeezing the exposed slit of her pussy closed.",
-//     "turns slightly, spreads her legs and caresses her inner thigh with one hand while spreading the other across the opposite butt cheek.",
-//     "turns away and bends down to touch her toes, legs spread slightly.  Her glistening pussy and cute, tight anus are fully exposed to your camera."];
-//
-// var poseemer=[
-//     "<i>She seems to be having trouble keeping her legs still for any length of time, and she's breathing hard with the effort to control her bladder.</i>",
-//     "<i>She keeps unconsciously moving her hand closer to her pussy from behind and then catching herself and moving it back.  Her expression is strained as she tries to hold her pee and hold still at the same time.</i>",
-//     "<i>You can see sweat on her face as she tries to fight the burning pressure in her bladder and stay posed until you take a picture.</i>",
-//     "<i>She's trembling with the effort to control her bladder using just her sphincters while holding the pose at the same time.</i>",
-//     "<i>Her hips won't stop moving as she tries to manage her overwhelming urge to pee without breaking the pose.</i>",
-//     "<i>She's gasping for breath as she fights the spasms and her whole body shakes with the effort to hold both the pose and the contents of her overfull bladder.</i>"];
-
-//
 //  She's about to lose control in the car.
 //
 var carlosequotes=["I don't care where, but I need to get out of the car <b>NOW</b>!","I'm gonna wet my panties if you don't stop and let me out!","I can't wait anymore, just stop and let me out <b>NOW</b>!","I can't hold it anymore - just stop here or I'll wet in the car!","I <i>can't</i> wait any longer, you've gotta let stop and let me out!","I really really have to pee somewhere!  Anywhere!"];
@@ -115,16 +96,6 @@ var needquotes=["I've gotta pee pretty badly.","I need to visit the little girls
 
 var urgequotes=["I'm going to want to go and pee soon.","I think my bladder is getting full.","I might have to stop at the restoom before too long.","I guess I'll need to freshen up next.","I'd better go powder my nose soon.","I'd like to stop by the restroom in the next little bit."];
 
-
-// //
-// // Walk descriptions
-// //
-// var walkdesc=["You walk hand in hand past dark houses.",
-//     "The sidewalk is a little bit cracked here.",
-//     "You pass a deserted bus stop.",
-//     "You walk past a vacant lot, overgrown with weeds.",
-//     "You walk past a small city park.",
-//     "You see a tall wooden fence, and a gate sitting slightly ajar."];
 
 //
 // Leaving

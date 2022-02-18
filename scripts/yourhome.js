@@ -1,5 +1,9 @@
 //This contains everything you can do from your home before you pick-up your date
 
+let onphone = 0; // Flag for being on the phone with her
+let shopping = 0;// Flag for being in the shop
+
+
 //TODO different scene if you're desperate and go pee at your house
 //TODO you can actually wet yourself in the house
 //TODO decide whether you can always go to the bathroom(maybe like a certain percentage filled)
@@ -9,7 +13,6 @@ function yourhome() {
     if (didintro === 0) {
         locationMSetup("yourhome", "yourhome");
         didintro = 1;
-        slopen = 0;
         curtext = printIntro(curtext, 0);
     } else {
         if (locstack[0] !== "yourhome" || onphone || shopping){

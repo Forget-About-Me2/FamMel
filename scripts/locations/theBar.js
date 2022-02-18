@@ -1,4 +1,5 @@
 let bar;
+let bartopic = 0; // Topics of discussion at the bar.
 
 function theBarSetup(){
     getjson("locations/theBar", barJsonSetup);

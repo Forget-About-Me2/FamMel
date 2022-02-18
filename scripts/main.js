@@ -12,6 +12,42 @@ let tummy = 100;
 let bladder = 300;
 let shyness = 90;
 
+const clubclosingtime = 7 * 60; // 2:00AM
+const theaterclosingtime = 3 * 60; // 10:00PM last showing
+const barclosingtime = 6 * 60; // 1:00AM
+
+let lastmoney = money;
+let lastattraction = attraction;
+let lastshyness = shyness;
+
+let hour = 7;
+let minute = 0;
+let meridian = "PM";
+const timespeed = 2;
+let thetime = 0;
+
+//Counter Parameters
+const maxkiss = 7; // maximum number of kisses that have effect.
+const maxfeel = 7; // maximum number of feel-ups that have effect
+
+//  Location handling stack
+//  initialized at the start.
+const locstack = []; //The first element in the Array is the current location
+
+let didintro = 0; // Flag for having done introduction
+let flirtedflag = 0; // Actually a counter.  Keeps track of flirting.
+const maxflirts = 2; // Maximum flirt points per venue
+let haveherpurse = 0; // You're holding her purse
+let late = 0; //You are late to pick her up
+let noflirtflag = 0; // Suppress flirty options
+
+// Girl stats(Counter and Flags)
+let owedfavor = 0; // she owes you a favor
+let flirtcounter = 0; // time since last flirt ( counts by 2 )
+let changevenueflag = 0; // you are changing venue - makes her easily ask to pee.
+let checkedherout = 0; // Flags that you just checked her out.
+
+
 function range(start, end) {
     if(start === end) return [start];
     return [start, ...range(start + 1, end)];
@@ -244,7 +280,6 @@ nextloc is the INTENDED destination.  Meaning you set it
    when you choose to head somewhere.
 
 */
-//TODO probably delete these functions
 function pushloc(newloc) {
     if (newloc !== locstack[0]) {
         locstack.unshift(newloc);
@@ -258,11 +293,9 @@ function poploc() {
 }
 
 //  increment the random number counter.
+const randmax = 5; // Maximum value of random counter
 function incrandom() {
-    const now = new Date();
-    const seed = now.getSeconds();
-    //TODO figure out random + seed
-    randcounter += Math.floor(Math.random(seed) * 2) + 1;
+    randcounter += Math.floor(Math.random() * 2) + 1;
     if (randcounter > randmax) randcounter -= (randmax + 1);
 }
 
@@ -324,14 +357,6 @@ function gamestart(){
 }
 
 
-// Croaks on exit.
-//TODO why the fuck is this even a thing? if we keep this make it more fun though
-function under18() {
-    s("Sorry.");
-}
-
-
-
 function changeLog(){
     let result;
     $.ajax(
@@ -388,7 +413,6 @@ function start() {
     const seed = now.getSeconds();
     anim8();
     randcounter = Math.floor(Math.random() * 5);
-    pstorycounter = Math.floor(Math.random() * 5);
     incrandom();
     setup();
     pushloc("yourhome");

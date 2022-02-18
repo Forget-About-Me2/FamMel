@@ -1,6 +1,10 @@
 let theatre; //Json with quotes for theatre
 let rrMovieLineThresh = 7; // Likelihood of line for restroom in the movie theatre.
 
+let moviecounter = 0; // Keep track of location in movie
+let moviechoice; //  Which movie are we showing
+let askedfavourite = 0; //asked her which movie to watch
+
 function theatreSetup(){
     getjson("locations/theatre", theatreJsonSetup);
     return {

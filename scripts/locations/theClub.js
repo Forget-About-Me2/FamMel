@@ -1,4 +1,5 @@
 let club;
+let externalflirt = 0; // You flirted with somebody else
 
 function theClubSetup(){
     getjson("locations/theClub", clubJsonSetup);
@@ -216,6 +217,12 @@ function photoConvince(choice) {
 
 let wetPhoto = 0;
 let isNude = 0;
+
+let posectr = 0; // keep track of which pose is next/last.
+const posemax = 5; // Maximum value of pose counter
+
+let outfitctr = 0; // keep track of the outfit being worn.
+const outfitmax = 5; // maximum count of outfits
 function photoGame() {
     let curtext = [];
     if (wetPhoto) {

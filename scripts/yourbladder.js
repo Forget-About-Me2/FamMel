@@ -30,6 +30,8 @@ let ydrankbeers;
 
 let ydrankbeer = 0; //Did you drink beer? changes capacities and rates.
 
+let yrrlockedflag = 0; //Restroom was locked last time you went
+
 //Initializes the bladder values for you
 function initYUrge(urge){
     yminurge = urge * minperc/100;

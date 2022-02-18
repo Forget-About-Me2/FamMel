@@ -1,6 +1,24 @@
 //TODD proper integration
 let settings; //The json for the settings.
 
+// Stats parameters
+let enableimages = 0; // 0 = Disable image loading
+let enableascii = 1; // 0 = Disable ascii art display
+let enablehide = 0; // 1 = Hide screen
+
+let showstats = 1; // 1 = Show her bladder state, etc.
+// Girl Selection Parameters
+let photoChoice; //How she's dressed for photogame
+
+let favoritemovie = "theurge";
+let suggestedloc = "thebar";
+
+let heroutfit = "jeans";  //  Her clothing choice for the date
+                          //  Possible values: skirt, jeans
+
+let multiplemoves = 1; //Whether sex moves can be repeated during a make-out session
+let rstmoves = 0; //Whether the sex moves reset after a make-out session
+
 function setup(){
     getjson("options", function (){
         settings=json;
@@ -226,7 +244,7 @@ function setImagesShow(value){
         case 2:
             enableascii = 0;
             enableimages = 1;
-            displaypix(imagename);
+            displaypix("pixurge");
             setLocal("images", "images");
             break;
     }
@@ -351,10 +369,10 @@ function hidescreen() {
 function setjpgimgs() {
     enableimages = 1;
     enableascii = 0;
-    document.getElementById('thepic').innerHTML = "<img src=" + imagename + " alt=" + imagedesc + " class='pic'>";
+    displaypix("pixurge");
 }
 
-
+//TODO check if these functions can be cleaned up
 function setbasegirl(hername) {
     basegirl = hername;
     setLocal("basegirl", basegirl);
@@ -366,7 +384,6 @@ function setbasegirl(hername) {
             htmlcall.innerHTML = customgirlname +
                 " is a statuesque blonde.";
         }
-        stareather = stareather_jennifer;
         favoritemovie = "theurge";
     }
 
@@ -376,7 +393,6 @@ function setbasegirl(hername) {
             htmlcall.innerHTML = customgirlname +
                 " is a cute girl-next-door type.";
         }
-        stareather = stareather_laura;
         favoritemovie = "thedesp";
     }
 
@@ -386,7 +402,6 @@ function setbasegirl(hername) {
             htmlcall.innerHTML = customgirlname +
                 " is a petite and slim Asian girl.";
         }
-        stareather = stareather_karen;
         favoritemovie = "thectrl";
     }
 
@@ -396,7 +411,6 @@ function setbasegirl(hername) {
             htmlcall.innerHTML = customgirlname +
                 " is an innocent red headed college girl.";
         }
-        stareather = stareather_melissa;
         favoritemovie = "thelitr";
     }
     initUrge(urge);
@@ -432,7 +446,6 @@ function updategirldesc() {
 
 }
 
-//TODO these array updates are atrocious
 function setgirl(hername) {
     setLocal("girlname", hername);
     girlname = hername;
@@ -440,25 +453,21 @@ function setgirl(hername) {
     if (girlname === "Jennifer") {
         basegirl = girlname;
         bladurge = 300;
-        stareather = stareather_jennifer;
         favoritemovie = "theurge";
         setLocal("custom", "false");
     } else if (girlname === "Laura") {
         basegirl = girlname;
         bladurge = 250;
-        stareather = stareather_laura;
         favoritemovie = "thedesp";
         setLocal("custom", "false");
     } else if (girlname === "Karen") {
         basegirl = girlname;
         bladurge = 200;
-        stareather = stareather_karen;
         favoritemovie = "thectrl";
         setLocal("custom", "false");
     } else if (girlname === "Melissa") {
         basegirl = girlname;
         bladurge = 350;
-        stareather = stareather_melissa;
         favoritemovie = "thelitr";
         setLocal("custom", "false");
     } else {
@@ -467,10 +476,6 @@ function setgirl(hername) {
         setLocal("custom", "true");
     }
     initUrge(bladurge);
-    if (basegirl === "Laura") stareather = stareather_laura;
-    else if (basegirl === "Karen") stareather = stareather_karen;
-    else if (basegirl === "Melissa") stareather = stareather_melissa;
-    else stareather = stareather_jennifer;
 
 
     //  Have to reset all preset strings.

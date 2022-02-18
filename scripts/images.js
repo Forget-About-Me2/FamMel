@@ -28,7 +28,7 @@ let picset = 0;
 // displaypix will set the current picture to be displayed
 //TODO figure out why need is called before urge
 function displaypix(picname) {
-    imgssrc = imgs[basegirl][picname];
+    const imgssrc = imgs[basegirl][picname];
     if (enableimages && imgssrc !== imageprev && !enablehide && !picset) {
         document.getElementById('thepic').innerHTML = "<img src=" + imgssrc + " alt=" + imagedesc + " class='pic'>";
     }
@@ -46,7 +46,6 @@ function explainimgs() {
 function picsetup(){
 //Set up html
     if(localStorage.imgs) {
-        //TODO check if this is the right place for the import
         importimgs();
     }
     createSelect();

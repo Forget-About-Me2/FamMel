@@ -1,5 +1,7 @@
 // All functions connected to her house. This is both pickup and endgame
 let herHome; //Json with quotes for herHome.
+let prepeed = 0; // did she pee before you picked her up
+let elevatorwaitcounter = 0;
 
 function herHomeSetup() {
     getjson("herhome", herHomeJsonSetup);

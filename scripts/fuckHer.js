@@ -1,3 +1,12 @@
+// Fucking Parameters
+let arousal = 0;
+let kisscounter = 0;
+let feelcounter = 0;
+let fuckingnow = 0; // You are in the middle of fucking.
+
+let champagnecounter = 0; // Number of glasses of champagne served.
+let drankChamp = 0; // Time since last champagne glass was drunk.
+
 //This object is used to keep track of everything related to the sexActions
 let sexActions = {
     clothes:{

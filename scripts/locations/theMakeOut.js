@@ -1,4 +1,6 @@
 let makeOut; //This stores the JSON quotes regarding the makeOut
+let askedswim = 0; // She's asked about a swim
+let walkcounter = 0; // How far have you walked
 
 function makeOutSetup(){
     getjson("locations/makeOut", makeOutJson);
@@ -313,6 +315,7 @@ function exitHotTub(){
     poploc();
 
 }
+
 
 function theBeach() {
     let curtext = [];
