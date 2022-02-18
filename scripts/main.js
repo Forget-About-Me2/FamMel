@@ -6,6 +6,12 @@ let playerGame = 0; //Whether the playerBladder is enabled in the drinking game
 let statsBars; //JSON of the status bars depending on which setting has been chosen
 let endScreens; //JSON of the endScreens used at the end of the game.
 
+let money = 200;
+let attraction = 10;
+let tummy = 100;
+let bladder = 300;
+let shyness = 90;
+
 function range(start, end) {
     if(start === end) return [start];
     return [start, ...range(start + 1, end)];
@@ -399,32 +405,26 @@ function gameOver() {
     setText(endScreens["gameOver"]);
 }
 
+//TODO maybe combine the game ending function into one
 //Basically you got her into bed but not desperate
-function gameSex(){
- //TODO
+function gameSexBoth(){
+    let curtext = printList([], endScreens["gameSexBoth"]);
+    curtext = printList(curtext, endScreens["stats"]);
+    setText(curtext);
 }
 
-function gamewet() {
-    //TODO check and maybe fix
-    document.getElementById('textsp').innerHTML += "<p class='title'>Woot! </p>"
-        + "<p style='text-align: center; padding-right: 10%; font-style: italic'>you took her to bed while she was bursting</p>"
-        + "<p style='text-align: center; padding-right: 10%; font-style: italic'>and she held it for you until she wet the bed.</p>";
-    s("<br>&nbsp;<br>&nbsp;");
-    s("Final Stats:");
-    s("Time since last pee:" + timeheld + " minutes");
-    s("Bladder contained:" + bladder + " ml");
-    s("<br>&nbsp;<br>&nbsp;");
-    s("<div style='text-align:right'><i>Hit Reload to start over...</i></div>");
+function gameSexYou(){
+//TODO
+}
+
+function gameWet() {
+    let curtext = printList([], endScreens["gameWet"]);
+    curtext = printList(curtext, endScreens["stats"]);
+    setText(curtext);
 }
 
 function gamewon() {
-    //TODO check and maybe fix
-    document.getElementById('textsp').innerHTML += "<p class='title'>You Won!! </p>"
-        + "<p style='text-align: center; padding-right: 10%; font-style: italic'>you took her to bed while she was bursting.</p>";
-    s("<br>&nbsp;<br>&nbsp;");
-    s("Final Stats:");
-    s("Time since last pee:" + timeheld + " minutes");
-    s("Bladder contained:" + bladder + " ml");
-    s("<br>&nbsp;<br>&nbsp;");
-    s("<div style='text-align:right'><i>Hit Reload to start over...</i></div>");
+    let curtext = printList([], endScreens["gameWon"]);
+    curtext = printList(curtext, endScreens["stats"]);
+    setText(curtext);
 }

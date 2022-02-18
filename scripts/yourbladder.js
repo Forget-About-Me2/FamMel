@@ -52,7 +52,7 @@ function flushyourdrank() {
     if (bladDec) {
         if (yourbladder >= yourbladlose) updateyoururge(yourbladurge * 9 / 10);
         else if (yourbladder >= yourblademer && bladDespDec) updateyoururge(yourbladurge * 9.5 / 10);
-        //bladder decays based on breaking can only once an hour
+        //bladder decays based on breaking the seal can only happen once an hour
         else if (seal && ydrankbeer > 15 && ybeerdecCounter > 30) {
             updateyoururge(yourbladurge * 9.5 / 10);
             ybeerdecCounter = 0;

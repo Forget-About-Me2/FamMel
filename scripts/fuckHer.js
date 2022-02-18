@@ -74,7 +74,6 @@ let sexActions = {
             needOff: [],
             clothesArousal: [
                 ["skirt", 0, "emer"],
-                ["panties", 8, "lose"],
                 ["none", 20, "emer"]
             ],
             noTub: 1,
@@ -319,11 +318,11 @@ function takeOff(item, location){
                     curtext = printList(curtext, sexLines["clothes"][item][i][2]);
             }
             processed = true;
-        } else if (sexActions.isOn(item)){
+        } else if (sexActions.isOn(clothesInfo[0])){
             let temp;
-            temp = appearance["clothes"][heroutfit]["sex"+item+clothesInfo[0]].formatVars();
+            temp = appearance["clothes"][heroutfit]["sex"+item+clothesInfo[0]];
             if (typeof temp !== "undefined")
-                curtext.push(temp)
+                curtext.push(temp.formatVars())
             curtext = printList(curtext, sexLines["clothes"][item][i][0]);
             failTakeOff = clothesInfo[2] === "fail";
             if (item === "panties")
@@ -526,7 +525,7 @@ function bothCum() {
         curtext = printList(curtext, sexLines["fuckNow"][9]);
         // s("You run your hand over her tight belly, but you don't feel much of a bulge from her bladder.  She seems in no hurry to get up.  Sex without desperation is still sex.");
     sayText(curtext)
-    cListenerGen([gameSex, "Continue..."], "gameSex");
+    cListenerGen([gameSexBoth, "Continue..."], "gameSex");
 }
 
 function fuckHer2b() {
@@ -614,7 +613,7 @@ function fuckHer6() {
         // s("You both lie there in bed together, catching your breath.");
         // s("You run your hand over her tight belly, maybe you should've let her hold it after all.");
         // s("Maybe next time.");
-        listenerList.push([[gameSex, "Continue..."], "gameSex"]);
+        listenerList.push([[gameSexBoth, "Continue..."], "gameSex"]);
     } else {
         curtext = printList(curtext, sexLines["fuckNow"][20]);
         // s(girlname + " pulls you back into her like a possessed woman and you start pumping quickly.");

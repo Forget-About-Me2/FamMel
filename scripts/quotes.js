@@ -166,6 +166,8 @@ String.prototype.formatVars = function() {
     s = s.replaceAll(new RegExp("girlgasp", 'gm'), girlgasp);
     s = s.replaceAll(new RegExp("bladlose", 'gm'), bladlose.toString());
     s = s.replaceAll(new RegExp("pantyColor", 'gm'), pantycolor);
+    s = s.replaceAll(new RegExp("timeheld", 'gm'),timeheld.toString());
+    s = s.replaceAll(new RegExp("bladderAm", 'gm'), bladder.toString());
     return s;
 }
 

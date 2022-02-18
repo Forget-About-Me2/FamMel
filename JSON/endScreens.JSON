@@ -4,5 +4,31 @@
     "<p style='text-align: center; padding-right: 10%; font-style: italic'>You struck out</p>",
     "<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;",
     "<div style='text-align:right'><i>Hit Reload to start over...</i></div>"
+  ],
+  "gameSexBoth": [
+    "<p class='title'>Good Job!</p>",
+    "<p style='text-align: center; padding-right: 10%; font-style: italic'>You had sex with her and made her cum too.</p>",
+    "<p style='text-align: center; padding-right: 10%; font-style: italic'>Sure she wasn't desperate while you did so, but you can still count this as a win!</p>",
+    "<p style='text-align: center; padding-right: 10%; font-style: italic'>Maybe you can convince her to hold it next time?"
+  ],
+  "gameWet": [
+    "<p class='title'>Woot! </p>",
+    "<p style='text-align: center; padding-right: 10%; font-style: italic'>you took her to bed while she was bursting</p>",
+    "<p style='text-align: center; padding-right: 10%; font-style: italic'>and she held it for you until she wet the bed.</p>"
+  ],
+  "gameWon": [
+    "<p class='title'>You Won!! </p>",
+    "<p style='text-align: center; padding-right: 10%; font-style: italic'>you took her to bed while she was bursting.</p>"
+  ],
+  "gameSexYou":[
+
+  ],
+  "stats": [
+    "<p><br>&nbsp;<br>&nbsp;</p>",
+    "<p>Final Stats:</p>",
+    "<p>Time since last pee: timeheld minutes</p>",
+    "<p>Bladder contained: bladderAm ml</p>",
+    "<p><br>&nbsp;<br>&nbsp;</p>",
+    "<p><div style='text-align:right'><i>Hit Reload to start over...</i></div></p>"
   ]
 }
