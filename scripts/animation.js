@@ -27,20 +27,20 @@ const asciiart = ["<br>    )))  <br>    . .  <br>     -   <br>   / | \\ <br>   \
     "<br><br>    )))  <br>    - -  <br>     o   <br>   | | | <br>   \\   / <br>     X   <br>    /|\\  <br>   <>|<> <br>   d o b <br>"];
 
 
-var artno = 0; // ascii art counter
-var directartno = 0; // actual art index
-var maxart = 31; // maximum ascii art count
+let artno = 0; // ascii art counter
+let directartno = 0; // actual art index
+const maxart = 31; // maximum ascii art count
 
-var asciiloops=["AAABAAACAAADAAAEAAABAAADAAACAAAE" ,  // bladder < urge
-    "AFABAAACAAADAGAEAAABAGADAAACAFAE" ,  // bladder < need
-    "AFGBAIACAAADFGAEAHABAGFDAAACAFGE" ,  // bladder < emer
-    "AFGBJIACAKADFGAEAHABJGFDAKACLFGE" ,  // bladder < lose
+const asciiloops = ["AAABAAACAAADAAAEAAABAAADAAACAAAE",  // bladder < urge
+    "AFABAAACAAADAGAEAAABAGADAAACAFAE",  // bladder < need
+    "AFGBAIACAAADFGAEAHABAGFDAAACAFGE",  // bladder < emer
+    "AFGBJIACAKADFGAEAHABJGFDAKACLFGE",  // bladder < lose
     "ALJKFGAJKJKLHIFGHIHIKJLJAKJLJGIL"];  // bladder >= lose
 
 
-var peeingloop="MNOPMNOPMNOPMNOPMNOPMNOPMNOPMNOP";
+const peeingloop = "MNOPMNOPMNOPMNOPMNOPMNOPMNOPMNOP";
 
-var alphadecode="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const alphadecode = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 // Animate loop
 // A self calling function ( only call it to start ) that controlls the

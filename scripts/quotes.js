@@ -22,7 +22,6 @@ let sexLines; //This stores the json quotes related to fucking scenes
 let objQuotes; //This stores the json quotes related to objects.
 let credits; //This stores the json for the credits
 
-
 let girlname = "Laura";
 let customgirlname = "Amanda";
 let basegirl = "Laura";
@@ -30,94 +29,11 @@ let girltalk = "<b>" + girlname + ":&nbsp;</b>";
 let girlgasp = "<b>" + girlname + " gasps:&nbsp;</b>";
 let pantycolor = "black";
 
-// her apologies for asking to go
-var wanthold=["I know you asked me to wait, but...", "I know you told me not to go, but...", "I know you wanted me to hold it, but..." , "I know you asked me not to pee, but...", "I know you wanted me to control my bladder, but..." , "I know you didn't want me to go, but..."];
-
 //Formatting Parameters
 // Formatting : flags if string has been placed.
 let imageprev;  // Previous image
 const imagedesc = '"Picture of girl"';
-let comma = 0; // used in formatting posessions.
-
-//
-//  Her expressions when peeing in a strange place
-//  used by itscomingout()
-//
-
-const outpeelook=[
-    "No!  Don't look!",
-    "Ugh!  Don't watch me!",
-    "Wait!  Don't look at me.",
-    "Oh No!  Please don't look!",
-    "Oh No! You can't look!",
-    "Please don't stare!"
-];
-const outpeehide=[
-    "Please help me hide!",
-    "Please don't let anyone watch!",
-    "Can you watch out for people coming?",
-    "Can you help me hide?",
-    "Please don't let anyone look!",
-    "Don't let anybody see me!"
-];
-const outpeectrl=[
-    "Ungh! I can't hold it anymore!",
-    "Oh God!  I can't control it!",
-    "Urgh!  I can't stop it.",
-    "Oh! I can't wait any more!",
-    "Fuck!",
-    "Dammit!"
-];
-
-//
-//  She curses
-//
-var curseword=["Dammit!", "Jesus!", "Shit!" , "Fuckit!", "Goddamn!", "Fuckin' A!", "Fuck!"];
-
-//
-//  She's about to lose control in the car.
-//
-var carlosequotes=["I don't care where, but I need to get out of the car <b>NOW</b>!","I'm gonna wet my panties if you don't stop and let me out!","I can't wait anymore, just stop and let me out <b>NOW</b>!","I can't hold it anymore - just stop here or I'll wet in the car!","I <i>can't</i> wait any longer, you've gotta let stop and let me out!","I really really have to pee somewhere!  Anywhere!"];
-
-var caremerquotes=["You've just <i>got</i> to find me somewhere to stop soon so I can use the restroom.","I <i>really</i> need to visit the little girls room - are you sure you don't see somewhere we can stop?","I've gotta stop by the next place you see that might have a toilet.","I need to take a leak before I have an accident in my panties - can you please stop the next place you see?","I'm getting <i>desperate</i> for a restroom - just stop at the next gas station or whatever you see.","I <b>have</b> to go to the bathroom - isn't there <i>anything</i> with a restroom on this street?"];
-
-var carneedquotes=["I've got to go pretty bad, so if you know a place with a restroom, could we stop?","I need to visit the little girls room.  Do you think we'll get there soon?","I have to go pee soon.  Are we there yet?","I've gotta stop by the toilet, my bladder is bursting.  We're gonna be there soon, right?","I need to go powder my nose when we get where we're going.  It's not much longer, right?","I have to take a bio break when we get there.  It's not that far, right?"];
-
-var carurgequotes=["I'm going to want to go and pee soon.","I think my bladder is getting full.","I might have to stop at the restoom before too long.","I guess I'll need to freshen up next.","I'd better go powder my nose soon.","I'd like to stop by the restroom in the next little bit."];
-
-//
-//  She's about to lose control and she's not in the car
-//
-var losequotes=["I need to find somewhere to pee <b>NOW</b>!","I'm gonna wet my panties if I don't get to a restroom!","I can't wait anymore, I need to pee <b>NOW</b>!","I can't hold it anymore - I must get to the restroom!","I <i>have</i> to get to the bathroom!","I really <i><b>really</b></i> have to pee somewhere!  <i>Anywhere!</i>"];
-
-var emerquotes=["I've <i>got</i> to get to a bathroom soon.","I <i>really</i> need to visit the little girls room.","I've gotta get to a toilet or I'm going to wet myself.","I need to take a leak before I have an accident in my panties.","I'm getting <i>desperate</i> for a restroom.","I <b>have</b> to go to the bathroom.  <i>Now</i>."];
-
-var needquotes=["I've gotta pee pretty badly.","I need to visit the little girls room.","I have to go pee now.","I've gotta stop by the toilet, my bladder is bursting.","I need to go powder my nose.","I have to take a bio break."];
-
-var urgequotes=["I'm going to want to go and pee soon.","I think my bladder is getting full.","I might have to stop at the restoom before too long.","I guess I'll need to freshen up next.","I'd better go powder my nose soon.","I'd like to stop by the restroom in the next little bit."];
-
-
-//
-// Leaving
-//
-var outtahere= [
-    "Let's hit the road!",
-    "We're outta here!",
-    "Let's get going!",
-    "Let's get a move on!",
-    "We're on our way!",
-    "Let's make like a tree and get outta here!"
-];
-
-// Your fingers smell of her pee.
-var smellpee=[
-    "They smell of sex ... and her sweet urine.",
-    "They smell musky, with the clean scent of fresh pee.",
-    "They smell strongly of her urine.",
-    "They are sticky with the scent of her sex, and her pee.",
-    "They are coated with the scent of her pee.",
-    "The smell reminds you of a toilet filled with golden urine, just before it's flushed."
-];
+let comma = 0; // used in formatting possessions.
 
 String.prototype.format = String.prototype.f = function() {
     let s = this,
@@ -616,7 +532,7 @@ function needSetup(){
 //Girl curses
 //TODO implement curses in json
 function voccurse(curtext) {
-    curtext.push(girltalk + " " + pickrandom(curseword));
+    curtext.push(girltalk + " " + pickrandom(general["curseWord"]));
     return curtext;
 }
 

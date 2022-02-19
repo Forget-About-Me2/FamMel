@@ -386,6 +386,81 @@
     "She's holding her pee in just for you, and she really needs to go.",
     "She wants very much to pee, but she's holding it in like you asked."
   ],
+  "wantHold": [
+      "girltalk I know you asked me to wait, but...",
+      "girltalk I know you told me not to go, but...",
+      "girltalk I know you wanted me to hold it, but...",
+      "girltalk I know you asked me not to pee, but...",
+      "girltalk I know you wanted me to control my bladder, but..." ,
+      "girltalk I know you didn't want me to go, but..."
+  ],
+  "appolNeed": [
+    "girlname looks embarrassed.",
+    "girltalk Jesus, I'm sorry."
+  ],
+  "carLose": [
+    "girltalk I don't care where, but I need to get out of the car <b>NOW</b>!",
+    "girltalk I'm gonna wet my panties if you don't stop and let me out!",
+    "girltalk I can't wait anymore, just stop and let me out <b>NOW</b>!",
+    "girltalk I can't hold it anymore - just stop here or I'll wet in the car!",
+    "girltalk I <i>can't</i> wait any longer, you've gotta let stop and let me out!",
+    "girltalk I really really have to pee somewhere!  Anywhere!"
+  ],
+  "carEmer": [
+    "girltalk You've just <i>got</i> to find me somewhere to stop soon so I can use the restroom.",
+    "girltalk I <i>really</i> need to visit the little girls room - are you sure you don't see somewhere we can stop?",
+    "girltalk I've gotta stop by the next place you see that might have a toilet.",
+    "girltalk I need to take a leak before I have an accident in my panties - can you please stop the next place you see?",
+    "girltalk I'm getting <i>desperate</i> for a restroom - just stop at the next gas station or whatever you see.",
+    "girltalk I <b>have</b> to go to the bathroom - isn't there <i>anything</i> with a restroom on this street?"
+  ],
+  "carNeed": [
+    "girltalk I've got to go pretty bad, so if you know a place with a restroom, could we stop?",
+    "girltalk I need to visit the little girls room.  Do you think we'll get there soon?",
+    "girltalk I have to go pee soon.  Are we there yet?",
+    "girltalk I've gotta stop by the toilet, my bladder is bursting.  We're gonna be there soon, right?",
+    "girltalk I need to go powder my nose when we get where we're going.  It's not much longer, right?",
+    "girltalk I have to take a bio break when we get there.  It's not that far, right?"
+  ],
+  "carUrge": [
+    "girltalk I'm going to want to go and pee soon.",
+    "girltalk I think my bladder is getting full.",
+    "girltalk I might have to stop at the restoom before too long.",
+    "girltalk I guess I'll need to freshen up next.",
+    "girltalk I'd better go powder my nose soon.",
+    "girltalk I'd like to stop by the restroom in the next little bit."
+  ],
+  "loseQuote":[
+    "girltalk I need to find somewhere to pee <b>NOW</b>!",
+    "girltalk I'm gonna wet my panties if I don't get to a restroom!",
+    "girltalk I can't wait anymore, I need to pee <b>NOW</b>!",
+    "girltalk I can't hold it anymore - I must get to the restroom!",
+    "girltalk I <i>have</i> to get to the bathroom!",
+    "girltalk I really <i><b>really</b></i> have to pee somewhere!  <i>Anywhere!</i>"
+  ],
+  "emerQuote":[
+    "girltalk I've <i>got</i> to get to a bathroom soon.",
+    "girltalk I <i>really</i> need to visit the little girls room.",
+    "girltalk I've gotta get to a toilet or I'm going to wet myself.",
+    "girltalk I need to take a leak before I have an accident in my panties.",
+    "girltalk I'm getting <i>desperate</i> for a restroom.",
+    "girltalk I <b>have</b> to go to the bathroom.  <i>Now</i>."
+  ],
+  "needQuote":[
+    "girltalk I've gotta pee pretty badly.",
+    "girltalk I need to visit the little girls room.",
+    "girltalk I have to go pee now.","I've gotta stop by the toilet, my bladder is bursting.",
+    "girltalk I need to go powder my nose.",
+    "girltalk I have to take a bio break."
+  ],
+  "urgeQuote": [
+    "girltalk I'm going to want to go and pee soon.",
+    "girltalk I think my bladder is getting full.",
+    "girltalk I might have to stop at the restoom before too long.",
+    "girltalk I guess I'll need to freshen up next.",
+    "girltalk I'd better go powder my nose soon.",
+    "girltalk I'd like to stop by the restroom in the next little bit."
+  ],
   "payholdit": [
     "<b>YOU:</b> I'll pay you if you can hold it for a while.",
     "girltalk3"
@@ -704,7 +779,6 @@
     "{0} I've <b>really</b> got to pee, but I'll drink it if that's what you want me to do.",
     "{0} I've <b>really</b> got to go powder my nose, but I'll drink it if that's what you want me to do.",
     "{0} My bladder's bursting, but I'll drink it for you."
-
   ],
   "choices": [
     ["curloc", "Continue..."],

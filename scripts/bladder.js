@@ -175,6 +175,7 @@ function showneed(curtext=[]) {
     // If she's within 2 turns of wetting and not too shy, she will vocalize
     // no matter what.
     let tuminc = calcTuminc(); //Gets the current tuminc, used to calculate if she's within the 2 turns
+    //TODO use this calculation globally, instead of a fixed constant
     if (bladder >= (bladlose - 2 * tuminc) && shyness < 90) {
         if (externalflirt) curtext = voccurse(curtext);
         curtext = displaygottavoc(curtext);
@@ -226,34 +227,32 @@ function showneed(curtext=[]) {
 function displaygottavoc(curtext, index) {
     let textchoice = [];
     if (askholditcounter > 0 && waitcounter < 3 && bladder > bladurge && randomchoice(3)) {
-        textchoice.push(girltalk + "" + wanthold[randcounter]);
+        textchoice.push(pickrandom(needs["wantHold"]).formatVars());
     }
 
     if (bladder >= bladneed && !brokeice) {
-        textchoice.push(girlname + " looks embarassed.");
-        textchoice.push(girltalk + "Jesus, I'm sorry.");
+        textchoice = printList(curtext, needs["appolNeed"]);
     }
 
     if (locstack[0] === "driveout") {
         if (bladder >= bladlose - 10) {
-            textchoice.push(girltalk + "" + carlosequotes[randcounter]);
+            textchoice.push(pickrandom(needs["carLose"]).formatVars());
         } else if (bladder >= blademer) {
-            textchoice.push(girltalk + "" + caremerquotes[randcounter]);
+            textchoice.push(pickrandom(needs["carEmer"]).formatVars());
         } else if (bladder >= bladneed) {
-            textchoice.push(girltalk + "" + carneedquotes[randcounter]);
+            textchoice.push(pickrandom(needs["carNeed"]).formatVars());
         } else if (bladder >= bladurge) {
-            textchoice.push(girltalk + "" + carurgequotes[randcounter]);
-        } else {
+            textchoice.push(pickrandom(needs["carUrge"]).formatVars());
         }
     } else {
         if (bladder >= bladlose - 10) {
-            textchoice.push(girltalk + "" + losequotes[randcounter]);
+            textchoice.push(pickrandom(needs["loseQuote"]).formatVars());
         } else if (bladder >= blademer) {
-            textchoice.push(girltalk + "" + emerquotes[randcounter]);
+            textchoice.push(pickrandom(needs["emerQuote"]).formatVars());
         } else if (bladder >= bladneed) {
-            textchoice.push(girltalk + "" + needquotes[randcounter]);
+            textchoice.push(pickrandom(needs["needQuote"]).formatVars());
         } else if (bladder >= bladurge) {
-            textchoice.push(girltalk + "" + urgequotes[randcounter]);
+            textchoice.push(pickrandom(needs["urgeQuote"]).formatVars());
         }
     }
     if (bladder >= bladneed) gottagoflag = 1;
