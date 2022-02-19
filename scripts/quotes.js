@@ -35,7 +35,7 @@ let imageprev;  // Previous image
 const imagedesc = '"Picture of girl"';
 let comma = 0; // used in formatting possessions.
 
-String.prototype.format = String.prototype.f = function() {
+String.prototype.format = function() {
     let s = this,
         i = arguments[0].length;
     const args = arguments[0]
@@ -110,7 +110,7 @@ function addGirlGasp(quotes){
 }
 
 function printIntro(curtext, index){
-    locjson.intro[index].forEach(item => curtext.push(item));
+    locjson["intro"][index].forEach(item => curtext.push(item));
     return curtext;
 }
 
@@ -472,8 +472,8 @@ function setupQuotes(){
 }
 
 function flirtSetup(){
-    flirtquotes = json.flirt;
-    let rawresp = json.respons;
+    flirtquotes = json["flirt"];
+    let rawresp = json["respons"];
     flirtresps = {};
     for (let [key, value] of Object.entries(rawresp)){
         if (key === "bad"){
@@ -482,7 +482,7 @@ function flirtSetup(){
             flirtresps[key] = addGirlname(value);
         }
     }
-    feelUp = json.feel;
+    feelUp = json["feel"];
     feelUp["resp"] = formatAllVars(feelUp["resp"]);
     feelUp["bad"] = formatAllVars(feelUp["bad"]);
     kissing = json.kiss;

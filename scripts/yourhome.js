@@ -63,7 +63,7 @@ function gostore() {
 }
 
 function buy(number){
-    const item = locjson.buying[number];
+    const item = locjson["buying"][number];
     const price = Number(item[1]);
     let curtext = [];
     let obj = objects[item[2]];

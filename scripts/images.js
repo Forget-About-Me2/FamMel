@@ -39,7 +39,7 @@ function displaypix(picname) {
 //TODO show picture of first thing that's called
 function explainimgs() {
     setjpgimgs();
-    setText(settings.picsetup);
+    setText(settings["picsetup"]);
     picsetup();
 }
 

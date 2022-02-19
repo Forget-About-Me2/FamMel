@@ -1,4 +1,4 @@
-//TODD proper integration
+//TODO proper integration
 let settings; //The json for the settings.
 
 // Stats parameters
@@ -183,7 +183,7 @@ function customgirl() {
     vars[9] = [customgirlname];
     vars[10] = [customurge];
 
-    setText(formatAll(settings.cusgirl, vars));
+    setText(formatAll(settings["cusgirl"], vars));
     setbasegirl(basegirl);
 }
 
@@ -220,7 +220,7 @@ function bladOpt() {
     else checked.push(20);
 
     checked.forEach(i => vars[i] = ["checked"]);
-    let curtext = formatAll(settings.bladder, vars);
+    let curtext = formatAll(settings["bladder"], vars);
     setText(curtext);
 }
 
@@ -363,7 +363,6 @@ function setPlayGame(choice){
 
 function hidescreen() {
     enablehide = 1;
-    s("<a href=javascript:go(" + locstack[0] + ")>.</a>");
 }
 
 function setjpgimgs() {

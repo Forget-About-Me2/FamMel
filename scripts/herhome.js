@@ -310,7 +310,7 @@ function theHome() {
             listerList.push([[kissher, herHome["choices"]["kissHer"]], "kissHer"]);
             listerList.push([[gameOver, herHome["choices"]["goodNight"]],"gameOver"]);
         }
-        sayText(curtext);
-        cListenerGenList(listerList);
     }
+    sayText(curtext);
+    cListenerGenList(listerList);
 }

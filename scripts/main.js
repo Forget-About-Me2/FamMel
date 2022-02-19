@@ -93,7 +93,7 @@ function displaystats() {
     document.getElementById("blad").innerText = bladder;
     document.getElementById("time").innerText = hour + ":" + textminutes + " " + meridian;
     if(playerbladder) {
-        document.getElementById("ytum").innerText = yourtummy;
+        document.getElementById("ytum").innerText = yourtummy.toString();
         document.getElementById("yblad").innerText = yourbladder;
     }
     if (!showstats) {
@@ -409,8 +409,6 @@ function handleDisclaimer(){
 function start() {
     handleDisclaimer();
 // See random number generator from the date
-    const now = new Date();
-    const seed = now.getSeconds();
     anim8();
     randcounter = Math.floor(Math.random() * 5);
     incrandom();
@@ -447,7 +445,7 @@ function gameWet() {
     setText(curtext);
 }
 
-function gamewon() {
+function gameWon() {
     let curtext = printList([], endScreens["gameWon"]);
     curtext = printList(curtext, endScreens["stats"]);
     setText(curtext);

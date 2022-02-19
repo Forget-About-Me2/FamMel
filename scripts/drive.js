@@ -20,7 +20,6 @@ function leavehm() {
     } else {
         flirtedflag = 0;
         curtext.push("<b>YOU</b> " + pickrandom(drive["leavehm"]["outtahere"]));
-        s("<b>YOU:</b> " + outtahere[randcounter]);
         incrandom();
         curtext.push(girltalk + "Yeah! " + pickrandom(drive["leavehm"]["outtahere"]));
         curtext = displayneed(curtext);
