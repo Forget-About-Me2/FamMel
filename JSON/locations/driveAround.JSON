@@ -2,5 +2,26 @@
   "driveAround": [
     ["You are driving around with girlname in the passenger seat."],
     ["You see a sign indicating that a gas station is coming up."]
-  ]
+  ],
+  "nextStop": [
+    "<b>You:</b> I'll definitely stop at the next place I see.",
+    "girltalk Thanks!"
+  ],
+  "driveTell": [
+    "You shift uncomfortably in your seat, trying to focus on the road.",
+    "<b>You: I'm bursting for a pee.",
+    "girltalk Then you better stop somewhere so you can go."
+  ],
+  "drivePee": "girltalk Do you have anything you can pee in? A cup or something?",
+  "station": [
+    "You approach the station, only to see that it's under construction.",
+    "Unfortunately, you can't stop here."
+  ],
+  "choices": {
+    "youCanNotHold": "I can't wait.",
+    "youNextStop": "I'll stop at the next place I see.",
+    "yPeeShot": "Yes, I have a shot glass!",
+    "yPeeVase": "Yes, I have a vase!",
+    "yHaveNothing": "No, I got nothing!"
+  }
 }

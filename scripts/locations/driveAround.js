@@ -41,7 +41,6 @@ function driveAround(){
             listenerList.push([[drivetell], "drivetell"]);
             cListener([drivetell, "Tell her you need to go."], "drivetell");
         }
-        // c("drivetell", "Tell her you need to go.");
         if (gottagoflag > 0) {
             curtext = preventpee(curtext);
         } else curtext = standobjs(curtext);
@@ -55,35 +54,45 @@ function driveAround(){
     }
 }
 
-//TODO refactor
 function nextstop() {
-    s("<b>YOU:</b> I'll definitely stop at the next place I see.");
-    s(girltalk + "Thanks!");
-    displayneed();
-    c(locstack[0], "Continue...");
+    let curtext = printList([], driveRound["nextStop"]);
+    curtext = displayneed(curtext);
+    sayText(curtext);
+    cListenerGen([driveout, "Continue..."], "driveAround");
 }
 
 function drivetell() {
-    s("You shift uncomfortably in your seat, trying to focus on the road.");
-    s("YOU: I'm bursting for a pee.");
-    s(girltalk + "Then you better stop somewhere so you can go.");
-    c("drivepee", "I can't wait.");
-    c(locstack[0], "I'll stop at the next place I see.");
+    let curtext = printList([], driveRound["driveTell"]);
+    curtext = displayyourneed(curtext);
+    sayText(curtext);
+    cListenerGenList ([
+        [[drivePee, driveRound["choices"]["youCanNotHold"]], "drivePee"],
+        [[driveout, driveRound["choices"]["youNextStop"]], "driveOut"]
+    ]);
 }
 
-function drivepee() {
-    s(girltalk + "Do you have anything you can pee in? A cup or something?");
-    if (shotglass > 0) c("ypeeshot", "Pee in the shot glass.");
+//TODO maybe have an attraction cut for this?
+function drivePee() {
+    let curtext = [driveRound["drivePee"]];
+    let listenerList = []
+    if (haveItem("shotglass"))
+        listenerList.push([[function () {
+            ypeein("shotglass");
+        }, driveRound["choices"]["yPeeShot"]], "yPeeShot"]);
     //TODO figure out how towels would work for you
     // if ( ptowels > 0 ) c("peetowels" , "Pee in the roll of paper towels.");
-    if (vase > 0) c("ypeevase", "Pee in the vase.");
-    c(locstack[0], "No, I got nothing!")
+    if (haveItem("vase"))
+        listenerList.push([[function () {
+        ypeein("vase");
+    }, driveRound["choices"]["yPeeVase"]], "yPeeVase"]);
+    listenerList.push([[driveout, driveRound["choices"]["yHaveNothing"]], "yHaveNothing"]);
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
 function station(){
-    //TODO create
-    let curtext = ["You approach the station, only to see that it's under construction.",
-    "Unfortunately, you can't stop here."];
+    //TODO create properly
+    let curtext = printList([], driveRound["station"]);
     curtext = callChoice(["curloc", "Continue ..."], curtext);
     sayText(curtext);
 }

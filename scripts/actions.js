@@ -9,7 +9,7 @@ function flirt_l() {
         incrandom();
         attraction += 2;
     } else
-        //TODO have there be more quotes/respondive choice based on length of array
+        //TODO have there be more quotes/responsive choice based on length of array
         curtext.push(flirtresps["neutral"][0])
     flirtcounter += 3;
     flirtedflag += 1;

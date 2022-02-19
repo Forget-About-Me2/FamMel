@@ -8,7 +8,6 @@
   -----------------------------------------------------------------
 
 */
-//TODO find differences between some
 //TODO potentially find a better way to deal with this
 const asciiart = ["<br>    )))  <br>    . .  <br>     -   <br>   / | \\ <br>   \\   / <br>     |   <br>    / \\  <br>    | |  <br>    | |  <br>    d b  <br>",
     "<br>    )))  <br>    . ,  <br>     -   <br>   / | \\ <br>   \\   / <br>     |   <br>    / \\  <br>    | |  <br>    | |  <br>    d b  <br>",
