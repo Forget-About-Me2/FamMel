@@ -120,6 +120,7 @@ function doDance(){
                 listenerList.push([[youpee, "Go to the toilet."], "youpee"]);
         }
         listenerList.push([[leaveDance, "Leave the dancefloor."], "leaveDance"]);
+        curtext = standobjs(curtext);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
