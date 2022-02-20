@@ -6,7 +6,7 @@ The game has been given a slightly updated look, though still needs some work.
 
 ~ Troder
 
-* Moving quotes to JSON
+* Moving quotes to JSON, this means that the game now needs to be run through a webserver in order to work
 * Settings are now saved between sessions
 * Fixed the loop with a certain end-scene of the drinking game
 * Changed the way pictures are added
