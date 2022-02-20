@@ -91,8 +91,8 @@ function getKey(loc){
 function itsClosed(locname, fun, curloc) {
     let theloc;
     if (locname === "theBar") theloc = "bar";
-    if (locname === "theClub") theloc = "night club";
-    if (locname === "makeOut") theloc = "movie theater";
+    else if (locname === "theClub") theloc = "night club";
+    else  theloc = "movie theater";
     let curtext = []
     let list = new Array(locJson["itsClosed"][0].length).fill([theloc]);
     let temp = formatAll(locJson["itsClosed"][0], list);
