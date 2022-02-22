@@ -437,11 +437,8 @@ function leaveSex(location){
 
 function fuckTry(location) {
     let curtext = printList([], sexLines["fuckTry"]);
-    // s("You try to put it in, but she pushes you away");
-    // s(girltalk + " Not here.  Later.");
     sayText(curtext);
     cListenerGen([function(){leaveSex(location)}, "Continue..."], "leaveSex");
-    // c("goback", "Continue...");
 }
 
 function theBedroom() {

@@ -1,3 +1,14 @@
+#version 0.5.1
+* Fixed bug where it showed undefined when visiting closed venues
+* Added options to flirt while dancing
+* Fixed typo in the girlname for appearence, which broke both the bar game and checking her out when using Melissa as a basegirl
+* Fixed that at some places you or her having an accident can break the game.
+* Fixed a bug with you peeing outside in the yard.
+* Fixed that your bladder doesn't actually empty when peeing outside while she's watching.
+* Fixed the game breaking when you pee in the hot tub
+* Fixed game breaking when leaving the hot tub
+* Fixed game breaking when going back to the car.
+
 # Version 0.5.0 
 From this version on the version numbers have been changed to better represent the current state of the game.
 This version involves the beginning of an improved game engine, but this is still a work in process. 

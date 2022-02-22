@@ -267,11 +267,8 @@ function ypeein3(item, yneedtype){
 //TODO better scene
 function yPeeInTub() {
     sayText(ypeelines["peeTub"]);
-    // s("You relax your muscles while acting as if nothing happens.");
-    // s("She doesn't notice that you're peeing right next to her.");
-    // s("You can't help but get a bit aroused.");
     flushyourdrank();
-    cListenerGen([[theHotTub, "Continue..."], "theHotTub"]);
+    cListenerGen([theHotTub, "Continue..."], "theHotTub");
 }
 
 //TODO Different lines when in car
@@ -279,11 +276,8 @@ function ypeeoutside() {
     let curtext = [];
     if (yourbladder < yourblademer)
         curtext = printList(curtext, ypeelines["peeOutside"][0]);
-        // s("<b>YOU:</b> Hang on I need a pee.");
     else {
         curtext = printList(curtext, ypeelines["peeOutside"][1]);
-        // s("<b>YOU;</b> Hold up I really need to pee!");
-        // s("You are messaging your crotch to help you hold it.");
     }
     let listenerList = [];
     if (attraction > 100 && shyness < 10 && randomchoice(7)){
@@ -318,9 +312,10 @@ function yPeeOutsideCar() {
     cListenerGen([[theMakeOut, "Continue..."], "theMakeOut"]);
 }
 
-//You're not in the car, either at the beach or on the walk. The text is located in the ypeeline json under the current location.
+//You're not in the car, either at the beach, dark yard, or on the walk. The text is located in the ypeeline json under the current location.
 function yPeeOutside3(){
     let curtext = printList([], ypeelines["peeOutside"][9]);
+    //TODO have different quotes for theWalk and theYard
     curtext = printList(curtext, ypeelines[locstack[0]][0]);
     curtext = printList(curtext, ypeelines["peeOutside"][10]);
     curtext = callChoice(["curloc", "Continue..."], curtext);
@@ -333,12 +328,10 @@ function ypeeOutsideWatch(){
     let listenerList = [];
     if (locstack[0] === "theMakeOut"){
         curtext = printList(curtext, ypeelines["peeOutside"][5]);
-        curtext = displayyourneed(curtext);
         curtext = printList(curtext, ypeelines["peeOutside"][6]);
         listenerList.push([[yPeeOutsideWatchCar, "Continue..."], "peeOutCar"]);
     } else {
         curtext = printList(curtext, ypeelines["peeOutside"][7]);
-        curtext = displayyourneed(curtext);
         curtext = printList(curtext, ypeelines["peeOutside"][6]);
         listenerList.push([[yPeeOutsideWatch2, "Continue..."], "peeOut"]);
     }
@@ -348,7 +341,6 @@ function ypeeOutsideWatch(){
 
 function yPeeOutsideWatchCar() {
     sayText(ypeelines["peeOutside"][11]);
-    // s("You subtly turn towards the car so she could watch if she wanted to. The pee hisses out of your tip and runs in a stream under the car.");
     flushyourdrank();
     cListenerGen([[theMakeOut, "Continue..."], "theMakeOut"]);
 }
@@ -359,6 +351,7 @@ function yPeeOutsideWatch2(){
     curtext = printList(curtext, ypeelines[locstack[0]][1]);
     curtext = printList(curtext, ypeelines["peeOutside"][13]);
     curtext = callChoice(["curloc", "Continue..."], curtext);
+    flushyourdrank();
     sayText(curtext);
 }
 

@@ -65,9 +65,10 @@ function theMakeOut() {
                 listenerList.push([[ypeeoutside, "Pee outside."], "ypeeOutside"])
         }
         listenerList.push([[leavehm, "Drive off."], "leaveHm"]);
+        sayText(curtext);
+        cListenerGenList(listenerList);
     }
-    sayText(curtext);
-    cListenerGenList(listenerList);
+
 }
 
 function failMakeOut() {
@@ -168,7 +169,7 @@ function theWalk() {
 }
 
 function exitWalk(){
-    let curtext = makeOut["exitWalk"].formatVars();
+    let curtext = [makeOut["exitWalk"].formatVars()];
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);
     poploc();
@@ -313,6 +314,7 @@ function exitHotTub(){
     curtext = displayyourneed(curtext);
     sayText(curtext);
     poploc();
+    cListenerGen([theYard, "Continue..."], "theYard");
 
 }
 
