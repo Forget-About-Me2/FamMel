@@ -672,7 +672,7 @@ function convinceher(curtext) {
 function bribeask() {
     let curtext = []
     curtext = printList(curtext, needs["bribeask"]);
-    if (randomchoice(bribeaskthresh) && (
+    if (!Math.floor(Math.random() * askholditcounter) && (
         (bladder >= bladlose && attraction > holditlosethresh) ||
         (bladder >= blademer && attraction > holditemerthresh) ||
         (bladder >= bladneed && attraction > holditneedthresh))) {

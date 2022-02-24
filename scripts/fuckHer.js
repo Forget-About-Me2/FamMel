@@ -221,7 +221,7 @@ function haveSex(location){
         kisscounter = 0;
         arousal = 0;
         pushloc("haveSex");
-        if (location === "theTub"){
+        if (location === "theHotTub"){
             sexActions.naked();
             curtext = printList(curtext, sexQuotes["intro"][0][0]);
         } else {
@@ -265,7 +265,7 @@ function haveSex(location){
     listenerList.push([[function () {kissher([], location)}, "Kiss her on the mouth."], "kissHer"]);
     sexActions.actions.actionList().forEach(action => {
         const actObj = sexActions.actions[action]
-        if (!sexActions.getPerformed(action) && !(location === "theTub" && sexActions.noTubUse(action))){
+        if (!sexActions.getPerformed(action) && !(location === "theHotTub" && sexActions.noTubUse(action))){
             let preReq = true;
             actObj.needOff.forEach(item => preReq = preReq && !sexActions.isOn(item));
             if (preReq)

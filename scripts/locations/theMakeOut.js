@@ -273,14 +273,9 @@ function theHotTub() {
     let curtext = []
     if (locstack[0] !== "theHotTub") {
         curtext = printList(curtext, makeOut["theYard"][5]);
-        // s("You and " + girlname + " quickly strip off your clothes in the cover of the dark yard.");
-        // s("You slip into the warm water of the hot tub, and watch as " + girlname + ", now completely nude, steps in to join you.");
-        // s("She looks so sexy in the starlight, her pussy masked in darkness and her erect nipples silhouetted against the dim sky.");
-        // s("Though it is dark, your eyes caress the shadows of her tight curves as they slowly submerge next to you.");
         pushloc("theHotTub");
     } else {
         curtext = printList(curtext, makeOut["theYard"][6]);
-        // s("You and " + girlname + " are in the hot tub.");
     }
 
     curtext = showneed(curtext);
@@ -296,7 +291,7 @@ function theHotTub() {
             listenerList.push([[kissher, "Kiss her."], "kissHer"]);
             listenerList.push([[feelup, "Feel her up."], "FeelUp"]);
             if (attraction >= 130 && shyness <= 0) {
-                listenerList.push([[function () {haveSex("theTub")}, "Make out with her."], "sexTub"]);
+                listenerList.push([[function () {haveSex("theHotTub")}, "Make out with her."], "sexTub"]);
             }
             curtext = standobjs(curtext);
             if (yourbladder > yourbladurge)

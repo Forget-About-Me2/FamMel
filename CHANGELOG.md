@@ -5,9 +5,13 @@
 * Fixed that at some places you or her having an accident can break the game.
 * Fixed a bug with you peeing outside in the yard.
 * Fixed that your bladder doesn't actually empty when peeing outside while she's watching.
-* Fixed the game breaking when you pee in the hot tub
-* Fixed game breaking when leaving the hot tub
+* Fixed the game breaking when you pee in the hot tub.
+* Fixed game breaking when leaving the hot tub.
 * Fixed game breaking when going back to the car.
+* Fixed the game breaking when leaving a make-out session in the hot tub.
+* Fixed the champagne counter becoming negative, and therefore not triggering the event it should.
+* Fixed her saying you already asked her to hold it 0 times
+* Fixed that the game displayed the scene where you stole the keys while you haven't
 
 # Version 0.5.0 
 From this version on the version numbers have been changed to better represent the current state of the game.
