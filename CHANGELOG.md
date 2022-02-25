@@ -11,7 +11,10 @@
 * Fixed the game breaking when leaving a make-out session in the hot tub.
 * Fixed the champagne counter becoming negative, and therefore not triggering the event it should.
 * Fixed her saying you already asked her to hold it 0 times
-* Fixed that the game displayed the scene where you stole the keys while you haven't
+* Fixed that the game displayed the scene where you stole the keys while you haven't.
+* Fixed the duplicate text when you leave a venue, and she asks to go.
+* Fixed that you can leave the bar when you or her are having an accident
+* Fixed that when buying an item it adds the wrong amount to the inventory
 
 # Version 0.5.0 
 From this version on the version numbers have been changed to better represent the current state of the game.

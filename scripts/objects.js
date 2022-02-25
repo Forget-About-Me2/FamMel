@@ -370,7 +370,7 @@ function buyItem(item){
         listenerList.push([[flirtBarGirl, "Flirt with the bar girl."], "flirtBar"]);
     }
     itemElem.addEventListener("input", function () {
-        value = itemElem.value;
+        value = parseInt(itemElem.value);
         price = value*obj.price;
         const itemIndic = document.getElementById("itemIndic");
         itemIndic.innerText = displaypos(obj, value, true);

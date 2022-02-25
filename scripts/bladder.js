@@ -264,10 +264,8 @@ function displaygottavoc(curtext, index) {
         } else {
             textchoice.forEach(text => {curtext.splice(index, 0, text); index++});
         }
-    } else {
-        textchoice.forEach(text => curtext.push(text));
     }
-    return curtext;
+    return textchoice;
 }
 
 // Publish a note about her holding it for you.
