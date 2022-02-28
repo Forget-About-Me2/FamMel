@@ -358,7 +358,7 @@ function buyItem(item){
     let listenerList = [];
     if (item === "beer"){
         const i = randomIndex(bar["barQuotes"]);
-        document.getElementById("addQuote").innerHTML = bar["barQuotes"][i];
+        document.getElementById("addQuote").innerHTML = bar["barQuotes"][i].formatVars();
         if (haveItem("wetPanties") && i === 3) {
             document.getElementById("extraList").innerHTML= "<li class='cListener' id=sellPanties>Sell wet panties to the bartender.</li>";
             listenerList.push([[sellPanties, "Sell wet panties to the bartender."], "sellPanties"]);

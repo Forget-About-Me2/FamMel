@@ -40,7 +40,7 @@ String.prototype.format = function() {
         i = arguments[0].length;
     const args = arguments[0]
     while (i--) {
-        s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), args[i]);
+        s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), args[i].toString());
     }
     return s;
 };
@@ -66,7 +66,7 @@ function formatString(expr, arguments){
 function formatAll(exprList, values){
     let result = [];
     for(let i=0;i<exprList.length; i++){
-        result.push(formatString(exprList[i], values[i]));
+        result.push(formatString(exprList[i], [values[i]]));
     }
     return result;
 }
@@ -257,7 +257,7 @@ function cListenerGenList(list){
 //print the given lines list on the screen
 function sayText(lines){
     let result = "";
-    lines.forEach(item => result += "<p>" + item + "</p>");
+    lines.forEach(item => result += "<p>" + item.formatVars() + "</p>");
     document.getElementById('textsp').innerHTML = result;
 }
 

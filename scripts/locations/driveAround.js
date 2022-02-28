@@ -10,7 +10,6 @@ function driveAroundSetup(){
 }
 
 function driveJsonSetup(){
-    json["driveAround"] = formatAllVarsList(json["driveAround"]);
     driveRound = json;
 }
 

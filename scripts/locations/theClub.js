@@ -15,7 +15,6 @@ function theClubSetup(){
 
 function clubJsonSetup(){
     club = json;
-    club["theClub"] = formatAllVarsList(club["theClub"]);
 }
 
 function theClub() {

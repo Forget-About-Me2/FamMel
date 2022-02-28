@@ -14,11 +14,6 @@ function makeOutSetup(){
 
 function makeOutJson(){
     makeOut = json;
-    makeOut["theMakeOut"] = formatAllVarsList(makeOut["theMakeOut"]);
-    makeOut["viewStars"] = formatAllVarsList(makeOut["viewStars"]);
-    makeOut["theWalk"] = formatAllVarsList(makeOut["theWalk"]);
-    makeOut["theYard"] = formatAllVarsList(makeOut["theYard"]);
-    makeOut["theBeach"] = formatAllVarsList(makeOut["theBeach"]);
 }
 
 function theMakeOut() {
@@ -27,12 +22,9 @@ function theMakeOut() {
     if (locstack[0] !== "theMakeOut") {
         if (attraction > gomakeoutthresh) {
             curtext = printList(curtext, makeOut["theMakeOut"][0]);
-            // s("You and " + girlname + " drive up to the make-out spot.  It's dark and deserted, but has a beautiful view of the stars.");
             pushloc("theMakeOut");
         } else {
             curtext = printList(curtext, makeOut["theMakeOut"][1]);
-            // s("You start to drive out to the makeout spot, up a winding hilly road.");
-            // s(girltalk + "Hey! Where are we going?");
             sayText(curtext);
             listenerList.push([[failMakeOut, "There's this nice secluded spot I know..."], "failMakeOut"]);
             listenerList.push([[driveout, "Ummmm... Actually I'm not sure."]]);
@@ -41,7 +33,6 @@ function theMakeOut() {
         }
     } else {
         curtext = printList(curtext, makeOut["theMakeOut"][2]);
-        // s("You and " + girlname + " are at the make-out spot.");
         if (randomchoice(3)) curtext = noteholding(curtext);
         else if (randomchoice(5)) curtext = interpbladder(curtext);
     }

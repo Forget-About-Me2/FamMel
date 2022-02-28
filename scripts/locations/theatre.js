@@ -19,14 +19,10 @@ function theatreSetup(){
 
 function theatreJsonSetup(){
     theatre = json;
-    theatre["theatre"] = formatAllVarsList(theatre["theatre"]);
-    theatre["darkTheatre"] = formatAllVarsList(theatre["darkTheatre"]);
-    theatre["noRest"] = formatAllVarsList(theatre["noRest"]);
-    theatre["watchMovie"] = formatAllVarsList(theatre["watchMovie"]);
-    Object.keys(theatre["noToilet"]).forEach(key => {
-        const item = theatre["noToilet"][key];
-        item["quotes"] = formatAllVarsList(item["quotes"]);
-    });
+    // Object.keys(theatre["noToilet"]).forEach(key => {
+    //     const item = theatre["noToilet"][key];
+    //     item["quotes"] = formatAllVarsList(item["quotes"]);
+    // });
 }
 
 function theTheatre(){

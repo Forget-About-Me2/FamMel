@@ -14,15 +14,6 @@ function theBarSetup(){
 }
 
 function barJsonSetup(){
-    json["theBar"] = formatAllVarsList(json["theBar"]);
-    json["barResp"] = formatAllVarsList(json["barResp"]);
-    json["barQuotes"] = formatAllVars(json["barQuotes"]);
-    json["darkBar"] = formatAllVarsList(json["darkBar"]);
-    json["drinkingGame"] = formatAllVarsList(json["drinkingGame"]);
-    json["postGame"] = formatAllVarsList(json["postGame"]);
-    json["postGameHer"] = formatAllVarsList(json["postGameHer"]);
-    json["postGameYou"] = formatAllVarsList(json["postGameYou"]);
-    json["holdYourself"] = formatAllVarsList(json["holdYourself"]);
     bar = json;
     talkUnused = bar["barTalk"];
 }
@@ -119,7 +110,7 @@ function barTalk(curtext){
 }
 
 function barResp(choice){
-    let curtext = [pickrandom(bar["barResp"][choice-1])];
+    let curtext = [pickrandom(bar["barResp"][choice-1]).formatVars()];
     if (choice === 1 && randomchoice(7))
         curtext.push(pickrandom(appearance["girls"][basegirl]["stareather"][heroutfit]));
     attraction += 6 - 3*choice;
@@ -251,10 +242,6 @@ function pdrinkinggame() {
 
 function pDrinkingGame2() {
     let curtext = printList([], bar["drinkingGame"][3]);
-    // s("You both head off to the restrooms to empty your bladders.");
-    // s("Standing in front of the urinal, you imagine her sitting and peeing on the other side of the wall as you drain your bladder of every last drop.");
-    // s("You hear the muffled flush of a toilet from the ladies room and walk back out to meet her coming out of the restroom.");
-    // s("She seems really relieved, and a bit aroused.");
     flushyourdrank();
     flushdrank();
     yourbladder = 0;
@@ -265,9 +252,6 @@ function pDrinkingGame2() {
 function pDrinkingGame3() {
     pushloc("drinkinggame");
     let curtext = printList([], bar["drinkingGame"][4]);
-    // s("<b>YOU:</b> Okay.  All better now?");
-    // s("<b>YOU:</b> Here's the rules: we both drink shots of beer until one of us can't hold it.  There's no holding, no tickling, and you have to drain the glass in one go.  Any questions?");
-    // s(girltalk + "Okay.  But you're going <i>DOWN</i>!");
     sayText(curtext);
     cListenerGen([drinkinggame, "Continue..."], "pdrinking");
 }
@@ -328,37 +312,25 @@ function postgame() {
     let quoteList = bar["postGame"+loser];
     if ((shespurted && loser === "Her")||youSpurted && loser === "You")
         curtext = printList(curtext, quoteList[0]);
-        // s("<b>YOU:</b>You lost it, didn't you? You spurted!");
-        // s("<b>YOU:</b>What were we playing for again?");
     else
         curtext = printList(curtext, quoteList[1]);
-        // s("<b>YOU:</b> Ha!  You lose!  What were we playing for again?");
     curtext = printList(curtext, quoteList[2]);
-    // s("<b>" + girlname + " laughs:</b>  We didn't really think of that, did we?  How about a kiss?");
     if (bladder > blademer && yourbladder > yourblademer) {
         situation = "both";
-        // s("You reach out to take her in your arms... hoping to squeeze her really tight.");
-        // s(girltalk + "But I gotta pee <b>FIRST</b>.");
-        // s("You both head off to the restrooms to relieve yourselves and clean up.");
         curtext = printList(curtext, quoteList[3]);
         flushdrank();
         flushyourdrank();
     } else if(bladder > blademer){
         situation = "you";
         curtext = printList(curtext, quoteList[4]);
-        // s("You reach out to take her in your arms... hoping to squeeze her really tight.");
-        // s(girltalk + "But I gotta pee <b>FIRST</b>.");
-        // s("She heads towards the bathroom, you stay behind waiting for her to come back.");
         flushdrank();
     } else {
         if (yourbladder > yourblademer) {
             situation = "you";
             curtext = printList(curtext, quoteList[5]);
-            // s("She reaches towards you, and you want to stay, but you simply have to head off to the restrooms to relieve yourself.");
             flushyourdrank();
         } else {
             curtext = printList(curtext, quoteList[6]);
-            // s("She reaches towards you and you pull her on your lap, kissing her soundly while cupping a feel.");
             attraction += 5;
             shyness -= 7;
             notdesperate = 1;
