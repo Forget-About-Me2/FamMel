@@ -49,7 +49,7 @@
      [
        "You urgently reach your hand to her.",
        "<b>You:</b> Give me the glass, it's coming out!",
-       "girlname0",
+       "girlname quickly hands you the glass.",
        "You push it in place before allowing your muscles to relax."
      ],
      ["You calmly position your dick in place before relaxing your muscles"],
@@ -81,9 +81,9 @@
        ["You quickly whip your dick out, not really caring that she can see it."]
      ],
      [
-       "girlname1",
+       "You reach out to girlname.",
        "<b>You:</b> I can't hold it! Quick give me the vase!",
-       "girlname2",
+       "girlname gives you the vase.",
        "You quickly put it between your legs before releasing your bladder."
      ],
      ["You calmly position your dick in place before relaxing your muscles"],
@@ -151,11 +151,6 @@
       ]
    ],
    "spurtquote": "You manage to get your control back but you still let out a little bit.",
-   "girlname": [
-     "{0} quickly hands you the glass.",
-     "You reach out to {0}.",
-     "{0} gives you the vase."
-   ],
    "choices": [
      ["ypeeshot2", "Continue..."],
      ["ypeeshot3", "Continue..."],

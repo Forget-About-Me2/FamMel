@@ -468,7 +468,6 @@ function setupQuotes(){
         objQuotes["buyItem2"] = formatAllVarsList(objQuotes["buyItem2"]);
 
     });
-    yNeedSetup();
 }
 
 function flirtSetup(){
@@ -534,14 +533,6 @@ function needSetup(){
 function voccurse(curtext) {
     curtext.push(girltalk + " " + pickrandom(general["curseWord"]));
     return curtext;
-}
-
-
-function yNeedSetup(){
-    yneeds["girlname"] = addGirlname(yneeds["girlname"]);
-    yneeds["shotglass"] = replaceWCLCI(yneeds["shotglass"], yneeds["girlname"], "girlname");
-    yneeds["vase"] = replaceWCLCI(yneeds["vase"], yneeds["girlname"], "girlname");
-
 }
 
 function yPeeSetup(){

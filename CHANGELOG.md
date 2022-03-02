@@ -13,10 +13,12 @@
 * Fixed her saying you already asked her to hold it 0 times
 * Fixed that the game displayed the scene where you stole the keys while you haven't.
 * Fixed the duplicate text when you leave a venue, and she asks to go.
-* Fixed that you can leave the bar when you or her are having an accident
-* Fixed that when buying an item it adds the wrong amount to the inventory
-* Fixed the dart game being formatted wrong
-* Fixed the wrong name sometimes showing up after reloading the game with a custom girl
+* Fixed that you can leave the bar when you or her are having an accident.
+* Fixed that when buying an item it adds the wrong amount to the inventory.
+* Fixed the dart game being formatted wrong.
+* Fixed the wrong name sometimes showing up after reloading the game with a custom girl.
+* Fixed broken quite when you pee into the champagne glass in the car.
+* Fixed the wrong scene playing when you ask to use her toilet.
 
 # Version 0.5.0 
 From this version on the version numbers have been changed to better represent the current state of the game.

@@ -80,7 +80,7 @@ function youpee() {
     if (locstack[0] === "yourhome") {
         curtext = printList(curtext, ypeelines["yourhome"]);
         peed = 1
-    } else if (locstack[0] === "thehome" ||
+    } else if (locstack[0] === "theHome" ||
         locstack[0] === "thebedroom" || locstack[0] === "pickup" || locstack[0] === "fuckher6") {
         if(locstack[0] !== "fuckher6") {
             curtext = printList(curtext, ypeelines["thehome"][0]);
@@ -382,32 +382,22 @@ function wetyourself2(curtext) {
     if (!curtext)
         curtext = [];
     curtext = printList(curtext, yneeds["wetyourself"][0]);
-    // s("You are helpless as your bladder uncontrollably empties itself.");
-    // s("Surely she can hear the hissing.");
     flushyourdrank();
     curtext = callChoice(["curloc", "Continue ..."], curtext);
     sayText(curtext);
 }
 
 //You're in the make out spot
-//TODO test
 function wetyourself2m() {
-    console.log("test");
     let curtext = yneeds["wetyourself"][1];
-    // s("You frantically look around, wanting to safe your car seat. You fumble with the seat belt, then wrench the door open and jump out of the car.");
     wetyourself2(curtext);
 }
 
 //You're in the hottub
-//TODO test
 function wetyourself2t() {
-    console.log("test");
     let curtext = yneeds["wetyourself"][2];
     sayText(curtext);
     flushyourdrank();
-    // s("You stiffen and let out a shaky breath.");
-    // s("You sigh and slump back in the tub, letting the relieve course through you.");
-    // s("When you are finally empty you open your eyes to meet hers");
     cListenerGen([wetyourself3t, "Continue ..."], "wetyourself");
 }
 
@@ -422,21 +412,14 @@ function wetyourself2c() {
 
 function wetyourself3c() {
     let curtext = yneeds["wetyourself"][4];
-    // s("YOU: I'm sorry about that. I really couldn't wait.");
-    // s("You uncomfortably shift in the squishy wet seat.");
     curtext = callChoice(["curloc", "Continue ..."], curtext);
     sayText(curtext);
 }
 
 
 //In the tub
-//TODO test
 function wetyourself3t() {
-    console.log("test");
     let curtext = yneeds["wetyourself"][5];
-/*    s("YOU: I'm <u>so</u> sorry... I just couldn't hold it.");
-    s("The faint scent of your urine rises from the water.");
-    s("YOU: I peed in the tub.");*/
     curtext = callChoice(["curloc", "Continue ..."], curtext);
     sayText(curtext);
 }
@@ -448,7 +431,6 @@ function spurtedyourself(curtext) {
     yspurtthresh -= 0.1 * yspurtthresh;
     youSpurted = 1;
     curtext.push(yneeds["spurtquote"]);
-    // s("You manage to get your control back but you still let out a little bit.");
     curtext = callChoice(["curloc", "Continue ..."], curtext);
     sayText(curtext);
 }
