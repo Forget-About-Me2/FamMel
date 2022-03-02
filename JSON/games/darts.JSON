@@ -18,12 +18,12 @@
   "points": {
     "you": [
       "You go first and play [{0}].",
-      "getting a total of {0} points.",
+      "Getting a total of {0} points.",
       "Leaving you at {0} points."
     ],
     "her": [
       "girlname goes after you and plays [{0}]",
-      "getting a total of {0} points",
+      "Getting a total of {0} points",
       "Leaving her at {0} points"
     ]
 }

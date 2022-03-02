@@ -203,10 +203,12 @@ function go(tag) {
             ybeerdecCounter++;
         }
 
-        drankChamp++;
-        if (drankChamp > 10){
-            champagnecounter--;
-            drankChamp = 0;
+        if (champagnecounter > 0) {
+            drankChamp++;
+            if (drankChamp > 10) {
+                champagnecounter--;
+                drankChamp = 0;
+            }
         }
 
         thetime += timespeed;

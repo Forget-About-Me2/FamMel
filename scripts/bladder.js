@@ -264,10 +264,8 @@ function displaygottavoc(curtext, index) {
         } else {
             textchoice.forEach(text => {curtext.splice(index, 0, text); index++});
         }
-    } else {
-        textchoice.forEach(text => curtext.push(text));
     }
-    return curtext;
+    return textchoice;
 }
 
 // Publish a note about her holding it for you.
@@ -672,7 +670,7 @@ function convinceher(curtext) {
 function bribeask() {
     let curtext = []
     curtext = printList(curtext, needs["bribeask"]);
-    if (randomchoice(bribeaskthresh) && (
+    if (!Math.floor(Math.random() * askholditcounter) && (
         (bladder >= bladlose && attraction > holditlosethresh) ||
         (bladder >= blademer && attraction > holditemerthresh) ||
         (bladder >= bladneed && attraction > holditneedthresh))) {

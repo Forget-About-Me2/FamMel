@@ -178,7 +178,7 @@ function dartRound(dartPoints){
             listenerList.push([[round], "dartRound"]);
             cListener([round, "Play the next round"], "dartRound");
         }
-        curText = callChoice(["curloc", "Continue..."], []);
+        curText = callChoice(["curloc", "Stop playing"], []);
         addSayText(curText);
         addListenersList(listenerList);
     }

@@ -1,3 +1,25 @@
+#version 0.5.1
+* Fixed bug where it showed undefined when visiting closed venues
+* Added options to flirt while dancing
+* Fixed typo in the girlname for appearence, which broke both the bar game and checking her out when using Melissa as a basegirl
+* Fixed that at some places you or her having an accident can break the game.
+* Fixed a bug with you peeing outside in the yard.
+* Fixed that your bladder doesn't actually empty when peeing outside while she's watching.
+* Fixed the game breaking when you pee in the hot tub.
+* Fixed game breaking when leaving the hot tub.
+* Fixed game breaking when going back to the car.
+* Fixed the game breaking when leaving a make-out session in the hot tub.
+* Fixed the champagne counter becoming negative, and therefore not triggering the event it should.
+* Fixed her saying you already asked her to hold it 0 times
+* Fixed that the game displayed the scene where you stole the keys while you haven't.
+* Fixed the duplicate text when you leave a venue, and she asks to go.
+* Fixed that you can leave the bar when you or her are having an accident.
+* Fixed that when buying an item it adds the wrong amount to the inventory.
+* Fixed the dart game being formatted wrong.
+* Fixed the wrong name sometimes showing up after reloading the game with a custom girl.
+* Fixed broken quite when you pee into the champagne glass in the car.
+* Fixed the wrong scene playing when you ask to use her toilet.
+
 # Version 0.5.0 
 From this version on the version numbers have been changed to better represent the current state of the game.
 This version involves the beginning of an improved game engine, but this is still a work in process. 

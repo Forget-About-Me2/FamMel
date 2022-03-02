@@ -159,17 +159,14 @@ function theElevator(){
     let listenerList = [];
     if (floorcounter === 3) {
         curtext = printList(curtext, herHome["elev3rdFloor"])
-        // s("The elevator finally reaches the 3rd floor.");
-        // s("You and " + girlname + " walk across the hall to the door of her apartment.");
-        if (bladder > blademer && !haveItem("herKeys")) {
-            curtext.push(herHome["sheHasKeys"].formatVars());
-            // s(girltalk + "Good thing I haven't lost my keys, huh?");
+        if (!haveItem("herKeys")) {
+            if (bladder > blademer)
+                curtext.push(herHome["sheHasKeys"].formatVars());
             listenerList.push([[theHome, "Continue..."], "theHome"]);
         } else
             listenerList.push([[stolenKeys, "Continue..."], "stolenKeys"]);
     } else {
         curtext.push(herHome["inElev"].formatVars());
-        // s("You're in the elevator with " + girlname + ".");
         curtext = noteholding(curtext);
         listenerList.push([[theElevator, "Continue..."], "theElevator"]);
     }
@@ -190,11 +187,9 @@ function theElevator(){
 
 function stolenKeys(){
     let curtext = [herHome["searchKeys"].formatVars()];
-    // s(girlname + " searches through her purse for her keys.");
     curtext = displayneed(curtext);
     curtext = voccurse(curtext);
     curtext.push(herHome["lostKeys"].formatVars());
-    // s(girltalk + "I can't find my keys!");
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
     sayText(curtext);
@@ -202,24 +197,18 @@ function stolenKeys(){
         [[giveKeys, herHome["giveKeys"]], "giveKeys"],
         [[lookForKeys, herHome["lookKeys"]], "lookKeys"]
     ]);
-    // c("givekeys", "Offer her her keys.");
-    // c("lookforkeys", "Offer to look for her keys.");
 }
 
 function giveKeys() {
     objects.herKeys.value=0;
     let curtext = [herHome["getKeys"]];
     let listenerList = [];
-    // s("You pull her keys from your pocket.");
     if (bladder >= blademer) {
         curtext = displayneed(curtext);
         curtext.push(herHome["giveKeysDesp"].formatVars());
-        // s(girlname + " grabs the keys and opens the door.");
         listenerList.push([[theHome, "Continue..."], "theHome"]);
-        // c(locstack[0], "Continue...");
     } else {
         curtext.push(herHome["giveKeysQuest"].formatVars());
-        // s(girltalk + " Where'd you get those?");
         let excuses = [
             [ [keyNevermind, herHome["choices"]["keyNvm"]], "keyNvm"],
             [ [keyGoodExcuse, herHome["choices"]["keyGood"]], "keyGood"],
@@ -281,12 +270,8 @@ function theHome() {
         pushloc("theHome")
     let curtext = [herHome["atHome"].formatVars()];
     let listerList = [];
-    // s("You are with " + girlname + " at her home.");
     if (kisscounter > maxkiss) {
         curtext = printList(curtext, herHome["kissExceeded"]);
-        // s(girlname + " suddenly pulls away from you and sits straight up.");
-        // s(girltalk + "You know, this just isn't working out.");
-        // s(girltalk + "I'm afraid we're going to have to call it a night.");
         listerList.push([[gameOver, "Continue..."], "gameOver"]);
     } else {
         curtext = displaygottavoc(curtext);
@@ -296,10 +281,8 @@ function theHome() {
         if (champagnecounter > 5) {
             if (bladder > bladlose-25)
                 curtext = printList(curtext, herHome["champagneLose"]);
-                // s(girlname + " gasps: I'm going ... bathroom");
             else
                 curtext.push(herHome["inviteBedroom"]);
-                // s("She invites you to come back to her bedroom.");
             listerList.push([[theBedroom, herHome["choices"]["followHer"]], "theBedroom"]);
             listerList.push([[gameOver, herHome["choices"]["goodNight"]], "gameOver"]);
         } else {

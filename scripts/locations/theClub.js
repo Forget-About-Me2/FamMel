@@ -15,7 +15,6 @@ function theClubSetup(){
 
 function clubJsonSetup(){
     club = json;
-    club["theClub"] = formatAllVarsList(club["theClub"]);
 }
 
 function theClub() {
@@ -43,8 +42,14 @@ function theClub() {
 
             curtext = displayyourneed(curtext);
             curtext = showneed(curtext);
-            if (bladder > bladlose) wetherself();
-            else if (yourbladder > yourbladlose) wetyourself();
+            if (bladder > bladlose) {
+                wetherself();
+                return;
+            }
+            else if (yourbladder > yourbladlose) {
+                wetyourself();
+                return;
+            }
             else if (gottagoflag > 0)
                 curtext = preventpee(curtext);
             else {
@@ -57,13 +62,13 @@ function theClub() {
                     listenerList.push([[youpee, "Go to the bathroom."], "youpee"]);
                 listenerList.push([[leavehm, "Leave the Club."], "leavehm"]);
             }
+            sayText(curtext);
+            cListenerGenList(listenerList);
         } else {
             itsClosed("theClub", darkClub, "darkClub");
-            return;
         }
     }
-    sayText(curtext);
-    cListenerGenList(listenerList);
+
 }
 
 function flirtBarGirl() {
@@ -120,6 +125,7 @@ function doDance(){
                 listenerList.push([[youpee, "Go to the toilet."], "youpee"]);
         }
         listenerList.push([[leaveDance, "Leave the dancefloor."], "leaveDance"]);
+        curtext = standobjs(curtext);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
@@ -127,7 +133,6 @@ function doDance(){
 
 function leaveDance(){
     let curtext = [club["leaveDance"].formatVars()];
-    // s("You pull " + girlname + " off the dancefloor.");
     curtext = showneed(curtext);
     sayText(curtext);
     poploc();
@@ -146,11 +151,9 @@ function darkClub() {
     }
     else if (locstack[0] !== "darkClub") {
         curtext.push(club["darkClubEnter"].formatVars());
-        // s("You and " + girlname + " enter the nightclub.  It's dark, silent and deserted.");
         pushloc("darkClub");
     } else {
         curtext.push(club["darkClubBe"].formatVars());
-        // s("You are with " + girlname + " in the closed nightclub.");
     }
 
     curtext = showneed(curtext);
@@ -178,19 +181,14 @@ function darkClub() {
 
 function pphotogame() {
     let curtext = [club["photoGameConvince"]];
-    // s("<b>YOU:</b> I know you really need to go, but can I take just a couple snapshots first?");
     curtext = displayneed(curtext);
     curtext.push(club["questPic"].formatVars());
-    // s(girltalk + "What <u>kind</u> of pictures?");
     sayText(curtext);
     cListenerGenList([
         [function () {photoConvince("snapshots")}, club["choices"]["snapshots"], "snapshots"],
         [function () {photoConvince("costume")}, club["choices"]["costume"], "costume"],
         [function () {photoConvince("nudes")}, club["choices"]["nudes"], "nudes"]
     ])
-    // c("photogame2", "Just a couple snapshots of you up on the stage there.");
-    // c("photogame2c", "How about a few costume pics?");
-    // c("photogame2n", "Well - nobody's around, so I'd really love it if you would do a few nudes.");
 }
 
 

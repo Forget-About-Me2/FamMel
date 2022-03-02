@@ -14,11 +14,6 @@ function makeOutSetup(){
 
 function makeOutJson(){
     makeOut = json;
-    makeOut["theMakeOut"] = formatAllVarsList(makeOut["theMakeOut"]);
-    makeOut["viewStars"] = formatAllVarsList(makeOut["viewStars"]);
-    makeOut["theWalk"] = formatAllVarsList(makeOut["theWalk"]);
-    makeOut["theYard"] = formatAllVarsList(makeOut["theYard"]);
-    makeOut["theBeach"] = formatAllVarsList(makeOut["theBeach"]);
 }
 
 function theMakeOut() {
@@ -27,12 +22,9 @@ function theMakeOut() {
     if (locstack[0] !== "theMakeOut") {
         if (attraction > gomakeoutthresh) {
             curtext = printList(curtext, makeOut["theMakeOut"][0]);
-            // s("You and " + girlname + " drive up to the make-out spot.  It's dark and deserted, but has a beautiful view of the stars.");
             pushloc("theMakeOut");
         } else {
             curtext = printList(curtext, makeOut["theMakeOut"][1]);
-            // s("You start to drive out to the makeout spot, up a winding hilly road.");
-            // s(girltalk + "Hey! Where are we going?");
             sayText(curtext);
             listenerList.push([[failMakeOut, "There's this nice secluded spot I know..."], "failMakeOut"]);
             listenerList.push([[driveout, "Ummmm... Actually I'm not sure."]]);
@@ -41,7 +33,6 @@ function theMakeOut() {
         }
     } else {
         curtext = printList(curtext, makeOut["theMakeOut"][2]);
-        // s("You and " + girlname + " are at the make-out spot.");
         if (randomchoice(3)) curtext = noteholding(curtext);
         else if (randomchoice(5)) curtext = interpbladder(curtext);
     }
@@ -65,9 +56,10 @@ function theMakeOut() {
                 listenerList.push([[ypeeoutside, "Pee outside."], "ypeeOutside"])
         }
         listenerList.push([[leavehm, "Drive off."], "leaveHm"]);
+        sayText(curtext);
+        cListenerGenList(listenerList);
     }
-    sayText(curtext);
-    cListenerGenList(listenerList);
+
 }
 
 function failMakeOut() {
@@ -168,7 +160,7 @@ function theWalk() {
 }
 
 function exitWalk(){
-    let curtext = makeOut["exitWalk"].formatVars();
+    let curtext = [makeOut["exitWalk"].formatVars()];
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);
     poploc();
@@ -272,14 +264,9 @@ function theHotTub() {
     let curtext = []
     if (locstack[0] !== "theHotTub") {
         curtext = printList(curtext, makeOut["theYard"][5]);
-        // s("You and " + girlname + " quickly strip off your clothes in the cover of the dark yard.");
-        // s("You slip into the warm water of the hot tub, and watch as " + girlname + ", now completely nude, steps in to join you.");
-        // s("She looks so sexy in the starlight, her pussy masked in darkness and her erect nipples silhouetted against the dim sky.");
-        // s("Though it is dark, your eyes caress the shadows of her tight curves as they slowly submerge next to you.");
         pushloc("theHotTub");
     } else {
         curtext = printList(curtext, makeOut["theYard"][6]);
-        // s("You and " + girlname + " are in the hot tub.");
     }
 
     curtext = showneed(curtext);
@@ -295,7 +282,7 @@ function theHotTub() {
             listenerList.push([[kissher, "Kiss her."], "kissHer"]);
             listenerList.push([[feelup, "Feel her up."], "FeelUp"]);
             if (attraction >= 130 && shyness <= 0) {
-                listenerList.push([[function () {haveSex("theTub")}, "Make out with her."], "sexTub"]);
+                listenerList.push([[function () {haveSex("theHotTub")}, "Make out with her."], "sexTub"]);
             }
             curtext = standobjs(curtext);
             if (yourbladder > yourbladurge)
@@ -313,6 +300,7 @@ function exitHotTub(){
     curtext = displayyourneed(curtext);
     sayText(curtext);
     poploc();
+    cListenerGen([theYard, "Continue..."], "theYard");
 
 }
 
