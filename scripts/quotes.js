@@ -35,6 +35,9 @@ let imageprev;  // Previous image
 const imagedesc = '"Picture of girl"';
 let comma = 0; // used in formatting possessions.
 
+//Formats a given string with the given list of values.
+//Overwrites the wildcards with the given values in the list.
+//Wildcards are of the format {i} where i is the index of which the corresponding value is in the given list.
 String.prototype.format = function() {
     let s = this,
         i = arguments[0].length;
@@ -64,6 +67,16 @@ function formatString(expr, arguments){
 
 //formats all Strings in exprList with the corresponding value in values
 function formatAll(exprList, values){
+    let result = [];
+    for(let i=0;i<exprList.length; i++){
+        result.push(formatString(exprList[i], values[i]));
+    }
+    return result;
+}
+
+//Formats all Strings in exprList with the corresponding single value in values while wrapping each value in a list
+//For each argument format expects a list of values that need to be formatted. Even if there only is one value
+function wrapAndFormatAll(exprList, values){
     let result = [];
     for(let i=0;i<exprList.length; i++){
         result.push(formatString(exprList[i], [values[i]]));

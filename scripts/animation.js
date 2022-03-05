@@ -57,10 +57,10 @@ function anim8() {
             pixfname = "pixnorm";
         } else if (bladder < bladneed) {
             directartno = alphadecode.indexOf(asciiloops[1].charAt(artno));
-            pixfname = "pixneed";
+            pixfname = "pixurge";
         } else if (bladder < blademer) {
             directartno = alphadecode.indexOf(asciiloops[2].charAt(artno));
-            pixfname = "pixurge";
+            pixfname = "pixneed";
         } else if (bladder < bladlose) {
             directartno = alphadecode.indexOf(asciiloops[3].charAt(artno));
             pixfname = "pixemer";

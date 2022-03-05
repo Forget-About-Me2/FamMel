@@ -1,3 +1,6 @@
+#version 0.5.2
+* Fixed buying items being broken.
+
 #version 0.5.1
 * Fixed bug where it showed undefined when visiting closed venues
 * Added options to flirt while dancing
