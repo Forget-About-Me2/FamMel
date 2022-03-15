@@ -1,34 +1,36 @@
 {
   "pickup": {
-    "intro": [
-      ["girlname0"],
-      ["girltalk0"],
-      ["You also see the bulge of her overfull bladder."],
-      ["girltalk1",
-      "girltalk2"],
-      ["She seems pretty upset."],
-      ["girltalk3"],
-      ["girlname1"],
-      ["girlname2"],
-      ["girltalk4"],
-      ["girlname3"]
+    "goOver": "You get in your car and drive over to girlname's place.",
+    "earlyComment": "girltalk Oh! You're early! I wasn't expecting you to show up on time!",
+    "bladderBulgeDesc": [
+      "You also see the bulge of her overfull bladder.",
+      "You notice her stomach is swollen where her bladder is."
     ],
-    "girlname": [
-      "You get in your car and drive over to {0}'s place.",
-      "{0} whispers shyly: I've been been bursting my bladder waiting for you.",
-      "{0} whispers shyly: I'm so glad you're finally here - I've <i>really</i> got to pee!",
-      "You're at {0}'s place to pick her up."
+    "lateComment": [
+      "girltalk Where have you been?!",
+      "girltalk You're late!"
     ],
-    "always": [],
-    "girltalk": [
-      "{0}Oh! You're early! I wasn't expecting you to show up on time!",
-      "{0}Where have you been?",
-      "{0}You're late.",
-      "{0}I know you asked me to wait, but I couldn't hold it - I <b>had</b> to pee.",
-      "{0}I waited to pee just like you asked"
+    "upsetDesc": [
+      "She seems pretty upset.",
+      "She frowns angrily at you.",
+      "<b>You:</b> I'm sorry."
     ],
-    "money": [],
-    "choices": []
+    "prePeed": "girltalk I know you asked me to wait, but I couldn't hold it - I <b>had</b> to pee.",
+    "lateHold":[
+      "girlname whispers shyly: I'm so glad you're finally here - I've <i>really</i> got to pee!"
+    ],
+    "arriveHold": [
+      "girlname whispers shyly: I've been been bursting my bladder waiting for you."
+    ],
+    "askedHold": [
+      "girltalk I waited to pee like you asked.",
+      "girltalk I've been holding my bladder like you wanted."
+    ],
+    "pickupMsg": "You're at girlname's place to pick her up.",
+    "choices": {
+      "askToilet": "Ask if you can use her toilet.",
+      "letsGo": "Say let's get going."
+    }
     } ,
   "theHome": {
     "choices": {

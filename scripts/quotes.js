@@ -308,6 +308,10 @@ async function getjsonT(tag){
     eval(tag+"()");
 }
 
+//Assign locjson of the given location when there are multiple locations in the json file.
+function getMLocations(tag, subtag){
+    locjson = JSON.parse(JSON.stringify(calledjsons[tag][subtag]));
+}
 
 //TODO handle formatting differently, probably have a list of indexes that need to be replaced instead
 //This sets up all variables that this location uses.

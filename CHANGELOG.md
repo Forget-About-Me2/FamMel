@@ -1,5 +1,6 @@
 #version 0.5.2
 * Fixed buying items being broken.
+* Fixed you being stuck when finishing a movie after closing time.
 
 #version 0.5.1
 * Fixed bug where it showed undefined when visiting closed venues
