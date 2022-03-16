@@ -1,6 +1,11 @@
 #version 0.5.2
 * Fixed buying items being broken.
 * Fixed you being stuck when finishing a movie after closing time.
+* Fixed flirt options not properly randomizing
+* Fixed the game breaking when you tried to go to a locked bathroom
+* Fixed missing dialogue when she mentions needing to go.
+* Fixed some quotes
+* Gave the waiting for elevator scene more variety, so it looks like you actually did something if you click continue.
 
 #version 0.5.1
 * Fixed bug where it showed undefined when visiting closed venues

@@ -128,31 +128,28 @@ function elevatorWait() {
     if (locstack[0] !== "theElevator") {
         pushloc("theElevator");
         curtext.push(herHome["goElevator"].formatVars());
-        // s("You take " + girlname + " by the hand and go to wait in front of the elevator.");
-        curtext = displayneed(curtext);
-        curtext = displayyourneed(curtext);
         listenerList.push([[elevatorWait, "Continue..."], "elevatorWait"]);
-        // c(locstack[0], "Continue...");
     } else {
             if (randomchoice(3)) {
                 if (elevatorwaitcounter > 2 && bladder > blademer) {
                     curtext = printList(curtext, herHome["elevArriveEmer"]);
-                    // s("The elevator finally appears, and " + girlname + " rushes to enter as the door opens.  She suddenly steps back and stands still, trembling with the effort to conceal her desperation, as a pretty woman walks out.");
-                    // s(girlname + " lunges into the elevator and mashes the 3rd floor button with one hand while openly holding herself with the other.");
                 } else {
                     curtext.push(herHome["elevArrive"].formatVars());
-                    // s("The elevator appears, so you step inside with " + girlname + " and hit the button for the 3rd floor.");
                 }
                 listenerList.push([[theElevator, "Continue..."], "theElevator"]);
                 poploc();
             } else {
-                // s("The elevator has not yet arrived.");
-                // s("You wait patiently with " + girlname + ".");
                 curtext = printList(curtext, herHome["elevWait"]);
+                if (bladder > blademer)
+                    curtext.push(pickrandom(herHome["elevWaitEmerQuote"]).formatVars());
+                else
+                    curtext.push(pickrandom(herHome["elevWaitQuote"]).formatVars());
                 listenerList.push([[elevatorWait, "Continue..."], "elevatorWait"]);
                 elevatorwaitcounter++;
             }
     }
+    curtext = displayneed(curtext);
+    curtext = displayyourneed(curtext);
     sayText(curtext);
     cListenerGenList(listenerList);
 }

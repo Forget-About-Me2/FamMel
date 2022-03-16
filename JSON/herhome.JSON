@@ -65,6 +65,16 @@
       "The elevator has not yet arrived.",
       "You wait patiently with girlname."
     ],
+    "elevWaitQuote": [
+      "girltalk It should be here any moment.",
+      "girltalk I've had a really great night so far. This is the best date I've had in years!",
+      "girltalk I wish I had some champagne at my flat. That would make this night <i>perfect</i>. "
+    ],
+    "elevWaitEmerQuote": [
+      "girltalk God Dammit, why is it taking so long?!",
+      "girltalk I don't know if I can wait for this.",
+      "girtalk This fucking elevator is so slow!"
+    ],
     "elev3rdFloor": [
       "The elevator finally reaches the 3rd floor.",
       "You and girlname walk across the hall to the door of her apartment."

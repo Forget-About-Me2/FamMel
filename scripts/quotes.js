@@ -606,7 +606,7 @@ function handleFlirt(curtext){
     result.push([flirtquotes[low][randcounter]]);
     choice.push("flirt_l");
     incrandom();
-    if (Math.floor(Math.random() * 7) === 0 || locstack[0] !== "callher"){
+    if (Math.floor(Math.random() * 7) === 0 && locstack[0] !== "callher"){
         choice.push("flirt_h");
         result.push([flirtquotes["high"][randcounter]]);
     } else {
