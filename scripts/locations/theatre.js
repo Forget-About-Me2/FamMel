@@ -19,10 +19,6 @@ function theatreSetup(){
 
 function theatreJsonSetup(){
     theatre = json;
-    // Object.keys(theatre["noToilet"]).forEach(key => {
-    //     const item = theatre["noToilet"][key];
-    //     item["quotes"] = formatAllVarsList(item["quotes"]);
-    // });
 }
 
 function theTheatre(){
@@ -35,7 +31,7 @@ function theTheatre(){
         if (haveItem("theTheatreKey")) {
             listenerList.push([[reTheatre, "But I found this key I have to return!"], "reTheatre"]);
         }
-    } else if ((thetime < theaterclosingtime) || locstack[0] === "themovie"){
+    } else if ((thetime < theaterclosingtime) || locstack[0] === "theTheatre"){
         if (locstack[0] !== "theTheatre") {
             curtext = printList(curtext, theatre["theatre"][1]);
             pushloc("theTheatre");

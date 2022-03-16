@@ -38,55 +38,56 @@ function herhome() {
 function pickup() {
     let curtext = [];
     if (locstack[0] !== "pickup") { // happens first time only.
-        locationMSetup("herhome", "pickup");
+        getMLocations("herhome", "pickup");
         pushloc("pickup");
-        curtext = printIntro(curtext, 0);
+        curtext.push(locjson["goOver"].formatVars());
         curtext.push(girlname + appearance["clothes"][heroutfit]["firstmtgquote"]);
         if (pantycolor !== "none") {
             //TODO make this more graceful
-            curtext.push(appearance["clothes"][heroutfit]["firstmtgtightquote"].format([pantycolor]));
+            curtext.push(appearance["clothes"][heroutfit]["firstmtgtightquote"].formatVars());
         }else
             curtext.push(appearance["clothes"][heroutfit]["firstmtgtightquotebare"]);
         if (thetime < 55) {
-            curtext = printIntro(curtext, 1);
+            curtext.push(locjson["earlyComment"].formatVars());
         } else if (!askholditcounter && bladder >= bladneed) {
             flushdrank(); // You did not ask her to wait.
         }
         if (bladder > blademer)
-            curtext = printIntro(curtext, 2);
+            curtext.push(pickrandom(locjson["bladderBulgeDesc"]));
         if (thetime > 75 || (bladder > bladneed && thetime > 60)) {
-            curtext = printIntro(curtext, 3);
+            curtext = printList(curtext, locjson["lateComment"]);
             curtext =  showneed(curtext);
-            curtext = printIntro(curtext, 4);
+            curtext.push(pickrandom(locjson["upsetDesc"]));
             attraction -= 5;
             shyness -= 10;
         }
         curtext = displayneed(curtext);
         if (prepeed) {
-            curtext = printIntro(curtext, 5);
+            curtext.push(locjson["prePeed"].formatVars());
             curtext = displaygottavoc(curtext);
         } else if (bladder > bladneed && askholditcounter) {
             if (thetime > 60)
-                curtext = printIntro(curtext, 6);
+                curtext.push(pickrandom(locjson["lateHold"]).formatVars());
             else
-                curtext = printIntro(curtext, 7);
+                curtext.push(pickrandom(locjson["arriveHold"]).formatVars());
             curtext = displayneed(curtext);
             askholditcounter = 0;
             waitcounter = 0;
             gottagoflag = 1;
         } else if (askholditcounter) {
-            curtext = printIntro(curtext, 8);
+            curtext.push(pickrandom(locjson["askedHold"]).formatVars());
             curtext = showneed(curtext);
             askholditcounter = 0;
             waitcounter = 0;
         }
     } else {
-        curtext = printIntro(curtext, 9);
+        curtext.push(locjson["pickupMsg"].formatVars());
         curtext = showneed(curtext);
     }
     curtext = displayyourneed(curtext);
     sayText(curtext);
     curtext = [];
+    let listenerList = [];
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
@@ -95,11 +96,13 @@ function pickup() {
         } else {
             curtext = standobjs(curtext);
             if (yourbladder > yourbladurge)
-                curtext = c(["youpee", "Ask if you can use her toilet."], curtext);
+                listenerList.push([[youpee, locjson["choices"]["askToilet"]], "youpee"]);
         }
-        curtext = c(["leavehm", "Say let's get going."], curtext);
+        listenerList.push([[leavehm, locjson["choices"]["letsGo"]], "leavehm"]);
     }
     addSayText(curtext);
+    cListenerGenList(listenerList);
+
 }
 
 function takeHerHome(){
@@ -125,31 +128,28 @@ function elevatorWait() {
     if (locstack[0] !== "theElevator") {
         pushloc("theElevator");
         curtext.push(herHome["goElevator"].formatVars());
-        // s("You take " + girlname + " by the hand and go to wait in front of the elevator.");
-        curtext = displayneed(curtext);
-        curtext = displayyourneed(curtext);
         listenerList.push([[elevatorWait, "Continue..."], "elevatorWait"]);
-        // c(locstack[0], "Continue...");
     } else {
             if (randomchoice(3)) {
                 if (elevatorwaitcounter > 2 && bladder > blademer) {
                     curtext = printList(curtext, herHome["elevArriveEmer"]);
-                    // s("The elevator finally appears, and " + girlname + " rushes to enter as the door opens.  She suddenly steps back and stands still, trembling with the effort to conceal her desperation, as a pretty woman walks out.");
-                    // s(girlname + " lunges into the elevator and mashes the 3rd floor button with one hand while openly holding herself with the other.");
                 } else {
                     curtext.push(herHome["elevArrive"].formatVars());
-                    // s("The elevator appears, so you step inside with " + girlname + " and hit the button for the 3rd floor.");
                 }
                 listenerList.push([[theElevator, "Continue..."], "theElevator"]);
                 poploc();
             } else {
-                // s("The elevator has not yet arrived.");
-                // s("You wait patiently with " + girlname + ".");
                 curtext = printList(curtext, herHome["elevWait"]);
+                if (bladder > blademer)
+                    curtext.push(pickrandom(herHome["elevWaitEmerQuote"]).formatVars());
+                else
+                    curtext.push(pickrandom(herHome["elevWaitQuote"]).formatVars());
                 listenerList.push([[elevatorWait, "Continue..."], "elevatorWait"]);
                 elevatorwaitcounter++;
             }
     }
+    curtext = displayneed(curtext);
+    curtext = displayyourneed(curtext);
     sayText(curtext);
     cListenerGenList(listenerList);
 }

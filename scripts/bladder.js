@@ -257,15 +257,15 @@ function displaygottavoc(curtext, index) {
     }
     if (bladder >= bladneed) gottagoflag = 1;
     if (bladder >= bladurge) brokeice = 1;
-    incrandom();
     if(index){
         if (textchoice.length === 1){
             curtext.splice(index, 0, textchoice[0]);
         } else {
             textchoice.forEach(text => {curtext.splice(index, 0, text); index++});
         }
-    }
-    return textchoice;
+    } else
+        curtext = printList(curtext, textchoice);
+    return curtext;
 }
 
 // Publish a note about her holding it for you.

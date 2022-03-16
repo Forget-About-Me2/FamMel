@@ -120,9 +120,9 @@ function youbathroomlocked(curtext) {
     const locked = ypeelines["locked"];
     //Description of the situation
     if (locstack[0] === "thebar")
-        curtext.push(locked["bar"]);
+        curtext = printList(curtext, locked["bar"]);
     else {
-        curtext.push(locked["club"]);
+        curtext = printList(curtext, locked["club"]);
     }
     //Description of your reaction, based on how badly you have to go
     if (yourbladder > yourblademer)

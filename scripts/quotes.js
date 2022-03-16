@@ -35,6 +35,9 @@ let imageprev;  // Previous image
 const imagedesc = '"Picture of girl"';
 let comma = 0; // used in formatting possessions.
 
+//Formats a given string with the given list of values.
+//Overwrites the wildcards with the given values in the list.
+//Wildcards are of the format {i} where i is the index of which the corresponding value is in the given list.
 String.prototype.format = function() {
     let s = this,
         i = arguments[0].length;
@@ -64,6 +67,16 @@ function formatString(expr, arguments){
 
 //formats all Strings in exprList with the corresponding value in values
 function formatAll(exprList, values){
+    let result = [];
+    for(let i=0;i<exprList.length; i++){
+        result.push(formatString(exprList[i], values[i]));
+    }
+    return result;
+}
+
+//Formats all Strings in exprList with the corresponding single value in values while wrapping each value in a list
+//For each argument format expects a list of values that need to be formatted. Even if there only is one value
+function wrapAndFormatAll(exprList, values){
     let result = [];
     for(let i=0;i<exprList.length; i++){
         result.push(formatString(exprList[i], [values[i]]));
@@ -295,6 +308,10 @@ async function getjsonT(tag){
     eval(tag+"()");
 }
 
+//Assign locjson of the given location when there are multiple locations in the json file.
+function getMLocations(tag, subtag){
+    locjson = JSON.parse(JSON.stringify(calledjsons[tag][subtag]));
+}
 
 //TODO handle formatting differently, probably have a list of indexes that need to be replaced instead
 //This sets up all variables that this location uses.
@@ -589,7 +606,7 @@ function handleFlirt(curtext){
     result.push([flirtquotes[low][randcounter]]);
     choice.push("flirt_l");
     incrandom();
-    if (Math.floor(Math.random() * 7) === 0 || locstack[0] !== "callher"){
+    if (Math.floor(Math.random() * 7) === 0 && locstack[0] !== "callher"){
         choice.push("flirt_h");
         result.push([flirtquotes["high"][randcounter]]);
     } else {

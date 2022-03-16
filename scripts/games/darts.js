@@ -152,7 +152,7 @@ function dartRound(dartPoints){
             if (res.length === 0)
                 res = tripleFinish(curPoints);
         }
-        curText = printList(curText, formatAll(darts["points"][player], res));
+        curText = printList(curText, wrapAndFormatAll(darts["points"][player], res));
         if (res[2] === 0){
             if (player === "you"){
                 curText.push("<b>You have won the game!</b>");
