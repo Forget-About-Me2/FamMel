@@ -1,3 +1,6 @@
+#version 0.5.3
+* Fixed the sex scenes breaking when she's bursting
+
 #version 0.5.2
 * Fixed buying items being broken.
 * Fixed you being stuck when finishing a movie after closing time.

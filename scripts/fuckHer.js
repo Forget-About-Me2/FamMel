@@ -83,6 +83,7 @@ let sexActions = {
             needOff: [],
             clothesArousal: [
                 ["skirt", 0, "emer"],
+                ["panties", 4, "lose"],
                 ["none", 20, "emer"]
             ],
             noTub: 1,
@@ -415,8 +416,9 @@ function performAction(action, location){
                         curtext = printList(curtext, sexLines["actions"][action][i][3]);
                     curtext = printList(curtext, sexLines["actions"][action][i][2]);
             }
-            if (action === "kPussy" && bladder > bladlose)
+            if (action === "kPussy" && bladder > bladlose && arousalInfo[0] === "none")
                 curtext = printList(curtext, sexLines["actions"][action][i][4]);
+
             processed = true;
         }
     }
@@ -594,5 +596,4 @@ function fuckHer7() {
     sayText(curtext);
     timeheld = thetime - lastpeetime;
     cListenerGen([gameWon, "Continue..."], "gameWon");
-    c("gamewon", "Continue...");
 }
