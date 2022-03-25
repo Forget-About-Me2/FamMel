@@ -483,12 +483,8 @@ function beachSwim4b() {
 
 function beachSwim5() {
     let curtext = printList([], makeOut["theBeach"][20]);
-    // s(girltalk + " maybe we should go back.  Could be sharks, you know!");
-    // s("You take her hand and lead her back to the beach where you dry off as well as you can and put your clothes back on.");
     if (pantycolor !== "none") {
         curtext = printList(curtext, makeOut["theBeach"][21]);
-        // s("She hands you her wet panties.");
-        // s(girltalk + "Is there someplace you can put these?");
         objects.wetPanties.value += 1;
         pantycolor = "none";
     }

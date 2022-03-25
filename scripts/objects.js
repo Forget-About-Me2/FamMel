@@ -726,7 +726,7 @@ function drinknow(item) {
             shyness -= drink.shyness;
         }
         if (drink.hasOwnProperty("tuminc")){
-            if (maxtummy < 1000) {
+            if (maxtummy < 1250) {
                 maxtummy += drink.tuminc;
                 maxbeer += drink.tuminc;
             }
@@ -761,7 +761,7 @@ function ydrinknow(item){
             ydrankbeer += drink.drankbeer;
         }
         if (drink.hasOwnProperty("tuminc")){
-            if (ymaxtummy < 1000) {
+            if (ymaxtummy < 1250) {
                 ymaxtummy += drink.tuminc;
                 ymaxbeer += drink.tuminc;
             }

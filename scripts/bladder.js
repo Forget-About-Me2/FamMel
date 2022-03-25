@@ -183,7 +183,7 @@ function showneed(curtext=[]) {
         // She's almost always going to ask to go if you're off somewhere
         if ((bladder >= blademer) ||
             (bladder >= bladneed && shyness < 70)) {
-            if (waitcounter === 0) {  // did you just ask her to wait?
+            if (waitcounter <= 2) {  // did you just ask her to wait?
                 curtext.push(girltalk + "Hey! Before we go...");
                 waitcounter = 4;
                 curtext = displaygottavoc(curtext);
@@ -231,7 +231,7 @@ function displaygottavoc(curtext, index) {
     }
 
     if (bladder >= bladneed && !brokeice) {
-        textchoice = printList(curtext, needs["appolNeed"]);
+        textchoice = printList(textchoice, needs["appolNeed"]);
     }
 
     if (locstack[0] === "driveout") {
@@ -1236,20 +1236,15 @@ function ptogether() {
 //TODO Actually check if she's desperate in the situation where the line's too long
 function pTogether2() {
     let curtext = printList([], peelines["ptogether"][3]);
-    // s(girlname + " leads you back to the restrooms.");
     let listenerList = [];
     if (!randomchoice(rrlockedthresh)) {
         curtext = printList(curtext, peelines["ptogether"][4]);
-        // s("She looks right, looks left, and peeks in the door before quickly pulling you into a very cramped stall.");
         if (bladder < bladlose - 10) bladder = bladlose - 10;
         curtext = displayneed(curtext);
         curtext = printList(curtext, peelines["ptogether"][5]);
-        // s("The sight of the toilet seems to have increased her urgency.");
         listenerList.push([[pTogether3, "Continue..."], "peeTogether"]);
     } else {
         curtext = printList(curtext, peelines["ptogether"][6]);
-        // s("There's a long line for the womens restrooms.  You notice they're mostly young, dressed to the nines, and in various stages of extreme urinary urgency.  Your daydreams are interrupted quickly.");
-        // s(girlname + " squeezes your hand: I can't hold it!  What are we gonna do?");
         listenerList.push([[pTogether4, "Invite her into the mens room"], "mensRoom"]);
         listenerList.push([[pTogether5, "Take her out the nearby back door."], "outBack"]);
         listenerList.push([[pTogether6, "Stand around looking dumb."], "giveUp"]);

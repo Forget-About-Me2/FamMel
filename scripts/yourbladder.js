@@ -309,7 +309,7 @@ function yPeeOutsideCar() {
     sayText(ypeelines["peeOutside"][8]);
     // s("You subtly turn towards the car so she could watch if she wanted to. The pee hisses out of your tip and runs in a stream under the car.");
     flushyourdrank();
-    cListenerGen([[theMakeOut, "Continue..."], "theMakeOut"]);
+    cListenerGen([theMakeOut, "Continue..."], "theMakeOut");
 }
 
 //You're not in the car, either at the beach, dark yard, or on the walk. The text is located in the ypeeline json under the current location.
@@ -342,7 +342,7 @@ function ypeeOutsideWatch(){
 function yPeeOutsideWatchCar() {
     sayText(ypeelines["peeOutside"][11]);
     flushyourdrank();
-    cListenerGen([[theMakeOut, "Continue..."], "theMakeOut"]);
+    cListenerGen([theMakeOut, "Continue..."], "theMakeOut");
 }
 
 //You're not in the car, either at the beach or on the walk. The text is located in the ypeeline json under the current location.

@@ -1,5 +1,7 @@
 #version 0.5.3
 * Fixed the sex scenes breaking when she's bursting
+* Fixed the game breaking when you pee outside at the car.
+* Fixed dialogue sometimes being printed twice when she asks to go.
 
 #version 0.5.2
 * Fixed buying items being broken.
