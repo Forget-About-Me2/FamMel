@@ -91,7 +91,7 @@ function barTalk(curtext){
         curTopicI = randomIndex(talkUnused);
         let curTopic = talkUnused[curTopicI];
         let order = [1,2,3]; //Used to determine the order of good,bad, med answers.
-        curtext.push(curTopic[0]);
+        curtext.push(girltalk+curTopic[0]);
         let listenerList = [];
         sayText(curtext);
         while (order.length !== 0){
