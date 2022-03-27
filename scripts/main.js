@@ -157,6 +157,7 @@ function valueChange(id, value){
 // time passage and so on.
 //    tag - name of function to go to next.
 function go(tag) {
+    allowItems = 0;
 
     if (tag !== "options" && tag !== "explainimgs" && tag !== "hidescreen" && tag !== "customgirl" && !enablehide) {
         showedneed = 0; // clear showed need - only active in the current window.
@@ -437,6 +438,7 @@ function gameSexBoth(){
     setText(curtext);
 }
 
+//It's just who who came. You selfish bastard
 function gameSexYou(){
 //TODO
 }

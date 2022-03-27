@@ -9,6 +9,7 @@ let shopping = 0;// Flag for being in the shop
 //TODO decide whether you can always go to the bathroom(maybe like a certain percentage filled)
 //TODO refactor
 function yourhome() {
+    allowItems = 1;
     let curtext = [];
     if (didintro === 0) {
         locationMSetup("yourhome", "yourhome");
@@ -39,6 +40,7 @@ function yourhome() {
 
 // Buy stuff at the store.
 function gostore() {
+    allowItems = 1;
     if (locstack[0] !== "gostore") {
         pushloc("gostore");
         shopping=1;

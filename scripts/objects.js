@@ -298,6 +298,8 @@ const drinkLoc = ["pickup", "driveout", "domovie",
     "thebar", "theclub", "themakeout", "thewalk", "thebeach", "theyard",
     "thehottub", "darkmovie", "photogame", "drinkinggame", "thehome"]
 
+let allowItems= 1; //Are you currently allowed to use items?
+
 //TODO add a mention need option
 // standobjs function allows one to use the normal objects.
 function standobjs(curtext) {
@@ -626,7 +628,7 @@ function selectitem(selecteditem){
     if(clickedObj.owned)
         tobeprinted += "<b><i>You have " + getAmountOwned(clickedObj) + "</i></b><br><br>";
     tobeprinted += clickedObj.description.format([girlname]);
-    if (!noItemLoc.includes(locstack[0]) && locstack.length !== 0 && clickedObj.hasOwnProperty("functions")){
+    if (!noItemLoc.includes(locstack[0]) && locstack.length !== 0 && clickedObj.hasOwnProperty("functions") && allowItems){
         if (!(clickedObj.hasOwnProperty("locations") && clickedObj.locations.includes(locstack[0]))){
             //If the girl isn't with you, you can't ask her to use a certain item
             if (!playOnly.includes(locstack[0]))
