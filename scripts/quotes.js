@@ -308,6 +308,15 @@ async function getjsonT(tag){
     eval(tag+"()");
 }
 
+//This requests a json file from the webserver using the location tag and then calls teh callback function.
+async function getjsonTF(tag, callback){
+    const file = "JSON/" + tag + ".JSON";
+    const response= await fetch(file);
+    json = await response.json();
+    calledjsons[tag] = json;
+    return callback();
+}
+
 //Assign locjson of the given location when there are multiple locations in the json file.
 function getMLocations(tag, subtag){
     locjson = JSON.parse(JSON.stringify(calledjsons[tag][subtag]));

@@ -382,7 +382,7 @@ function buyItem(item){
     });
     listenerList.push([[function(){
         buyItem2(item, value, price);
-    }], "buy"]);
+    }], "buy", false]);
     let form = document.getElementById("buy"+item);
     form.onsubmit = function (event) {
         event.preventDefault();
