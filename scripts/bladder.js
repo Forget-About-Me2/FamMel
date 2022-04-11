@@ -1082,7 +1082,7 @@ function wetherself3() {
     } if (haveItem("panties")) {
         listenerList.push([[function () {
             giveHer("panties");
-        }, "Offer her a clean pair of panties."], "panties"]);
+        }, "Offer her a clean pair of panties."], "oPanties"]);
     }
     sayText(curtext);
     listenerList.forEach(item => cListener(item[0], item[1]));
