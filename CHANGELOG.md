@@ -6,6 +6,8 @@
 * Fixed a double game tick happening in the beginning.
 * Fixed pacing when buying an item. (It takes 2 ticks now instead of 3)
 * Fixed giving her panties sometimes not working
+* Fixed typo in Jennifer's name breaking things if she is chosen.
+* Changed layout of the backpack to hopefully stop text to no longer appear outside the text-box
 
 #version 0.5.2
 * Fixed buying items being broken.

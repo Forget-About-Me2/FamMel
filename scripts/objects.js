@@ -566,7 +566,7 @@ function giveHer(item){
         if (haveItem("panties")) {
             listenerList.push([[function () {
                 giveHer("panties");
-            }, "Offer her a clean pair of panties."], "panties"]);
+            }, "Offer her a clean pair of panties."], "oPanties"]);
         }
     } else {
         if (bladder < blademer) {

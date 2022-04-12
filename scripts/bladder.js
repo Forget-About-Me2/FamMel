@@ -469,7 +469,7 @@ function preventpee(curtext) {
 
     if (locstack[0] === "doDance")
         choices.push(2); //Pee together
-    if (locstack[0] === "darkbar" || locstack[0] === "darkmovie" || locstack[0] === "darkclub")
+    if (locstack[0] === "darkBar" || locstack[0] === "darkTheatre" || locstack[0] === "darkClub")
         choices.push(3); //Watch
     if (locstack[0] === "darkTheatre")
         choices.push(4); //No restroom
@@ -1112,7 +1112,6 @@ function spurtedherself(curtext) {
 }
 
 function askspurted() {
-    console.log("test");
     let curtext = [needs["askspurted"][0]];
     curtext.push(pickrandom(needs["spurtquote"]));
     curtext.push(pickrandom(needs["spurtdenyquote"]));
