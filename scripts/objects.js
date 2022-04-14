@@ -384,7 +384,7 @@ function buyItem(item){
     });
     listenerList.push([[function(){
         buyItem2(item, value, price);
-    }], "buy"]);
+    }], "buy", false]);
     let form = document.getElementById("buy"+item);
     form.onsubmit = function (event) {
         event.preventDefault();
@@ -568,7 +568,7 @@ function giveHer(item){
         if (haveItem("panties")) {
             listenerList.push([[function () {
                 giveHer("panties");
-            }, "Offer her a clean pair of panties."], "panties"]);
+            }, "Offer her a clean pair of panties."], "oPanties"]);
         }
     } else {
         if (bladder < blademer) {

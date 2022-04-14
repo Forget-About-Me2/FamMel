@@ -355,7 +355,7 @@ function gamestart(){
         yourbladder = 0;
     }
     displaystats();
-    go("yourhome");
+    getjsonTF("yourhome", yourhome);
     setupQuotes();
 }
 
@@ -418,7 +418,7 @@ function start() {
     setup();
     pushloc("yourhome");
     locationSetup("start");
-    let curtext = locjson.always;
+    let curtext = locjson["always"];
     curtext = printAllChoices(curtext);
     sayText(curtext);
     //the start of the game is dependent on yneeds, to save loading time it is called as soon as you move from the main screen

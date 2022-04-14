@@ -3,6 +3,11 @@
 * Fixed the game breaking when you pee outside at the car.
 * Fixed dialogue sometimes being printed twice when she asks to go.
 * Fixed dialogue of her asking questions while you're in the bar.
+* Fixed a double game tick happening in the beginning.
+* Fixed pacing when buying an item. (It takes 2 ticks now instead of 3)
+* Fixed giving her panties sometimes not working
+* Fixed typo in Jennifer's name breaking things if she is chosen.
+* Changed layout of the backpack to hopefully stop text to no longer appear outside the text-box
 
 #version 0.5.2
 * Fixed buying items being broken.

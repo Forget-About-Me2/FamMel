@@ -469,7 +469,7 @@ function preventpee(curtext) {
 
     if (locstack[0] === "doDance")
         choices.push(2); //Pee together
-    if (locstack[0] === "darkbar" || locstack[0] === "darkmovie" || locstack[0] === "darkclub")
+    if (locstack[0] === "darkBar" || locstack[0] === "darkTheatre" || locstack[0] === "darkClub")
         choices.push(3); //Watch
     if (locstack[0] === "darkTheatre")
         choices.push(4); //No restroom
@@ -1082,7 +1082,7 @@ function wetherself3() {
     } if (haveItem("panties")) {
         listenerList.push([[function () {
             giveHer("panties");
-        }, "Offer her a clean pair of panties."], "panties"]);
+        }, "Offer her a clean pair of panties."], "oPanties"]);
     }
     sayText(curtext);
     listenerList.forEach(item => cListener(item[0], item[1]));
@@ -1112,7 +1112,6 @@ function spurtedherself(curtext) {
 }
 
 function askspurted() {
-    console.log("test");
     let curtext = [needs["askspurted"][0]];
     curtext.push(pickrandom(needs["spurtquote"]));
     curtext.push(pickrandom(needs["spurtdenyquote"]));
