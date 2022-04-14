@@ -22,6 +22,7 @@ function theatreJsonSetup(){
 }
 
 function theTheatre(){
+    allowItems = 1;
     let curtext = [];
     let listenerList = [];
     if (locations.theTheatre.visited && locstack[0] === "driveout" && thetime < theaterclosingtime){
@@ -180,6 +181,7 @@ function preMoviePee(curtext=[]) {
 
 //TODO you can go to the bathroom if you're desperate
 function domovie() {
+    allowItems = 1;
     let curtext = [];
     if (seenmovie === 0) {
         curtext = printList(curtext, theatre["watchMovie"][6]);
@@ -232,6 +234,7 @@ function domovie() {
 
 
 function movieRomance() {
+    allowItems = 1;
     let curtext = [];
     curtext = printList(curtext, theatre["movieRomance"][0]);
     if (moviecounter === 4 || moviecounter === 6 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 30)) {
@@ -249,6 +252,7 @@ function movieRomance() {
 }
 
 function movieSex() {
+    allowItems = 1;
     let curtext = [];
     curtext = printList(curtext, theatre["movieSex"][0]);
     if (moviecounter === 3 || moviecounter === 5 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 70)) {
@@ -266,6 +270,7 @@ function movieSex() {
 }
 
 function movieScary() {
+    allowItems = 1;
     let curtext = printList([], theatre["movieScary"][0]);
     if (moviecounter === 2 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 40)) {
         curtext = printList(curtext, theatre["movieScary"][1]);
@@ -282,6 +287,7 @@ function movieScary() {
 }
 
 function movieDoh() {
+    allowItems = 1;
     let curtext = printList([], theatre["movieDoh"][0]);
     if (moviecounter === 1 || ((moviecounter >= 7 || moviecounter === 0) && attraction > 50)) {
         curtext = printList(curtext, theatre["movieDoh"][1]);
@@ -299,6 +305,7 @@ function movieDoh() {
 
 //TODO fix thehold my purse
 function darkTheatre() {
+    allowItems = 1;
     let curtext = [];
     let listenerList = [];
     if (locstack[0] !== "darkTheatre") {

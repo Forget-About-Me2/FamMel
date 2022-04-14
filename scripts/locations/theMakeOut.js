@@ -17,6 +17,7 @@ function makeOutJson(){
 }
 
 function theMakeOut() {
+    allowItems = 1;
     let curtext = [];
     let listenerList = [];
     if (locstack[0] !== "theMakeOut") {
@@ -117,6 +118,7 @@ function viewStars() {
 }
 
 function theWalk() {
+    allowItems = 1;
     let curtext = [];
     if (locstack[0] !== "theWalk") {
         curtext = printList(curtext, makeOut["theWalk"][0]);
@@ -170,20 +172,15 @@ function exitWalk(){
 
 function examineGate() {
     let curtext = printList([], makeOut["theWalk"][2]);
-    // s("You slowly open the gate and peer behind.");
     let listenerList = [];
     if (walkcounter < 10) {
         curtext = printList(curtext, makeOut["theWalk"][3]);
-        // s("The yard beyond is dark, illuminated only by starlight.");
         if (shyness < 30 && attraction > 75) {
             curtext = printList(curtext, makeOut["theWalk"][4]);
-            // s(girltalk + "Hey!  Let's check it out.");
             listenerList.push([[theYard, "Take her into the dark yard."], "theYard"]);
         }
     } else {
         curtext = printList(curtext, makeOut["theWalk"][5]);
-        // s(girlname + " gasps: We've made it to the beach!");
-        // s("There's sand beyond the gate, and you can hear the calm waves breaking on the shore.");
         listenerList.push([[theBeach, "Visit the beach."], "theBeach"]);
     }
     listenerList.push([[theWalk, "Continue onward..."], "theWalk"]);
@@ -192,18 +189,16 @@ function examineGate() {
 }
 
 function theYard() {
+    allowItems = 1;
     let curtext = [];
     if (locstack[0] !== "theYard") {
         curtext = printList(curtext, makeOut["theYard"][0]);
-        // s("You and " + girlname + " quietly enter the yard.  The grass is soft and slightly damp under your feet.");
         pushloc("theYard");
     } else {
         curtext = printList(curtext, makeOut["theYard"][1]);
-        // s("You and " + girlname + " are in somebody's back yard.");
     }
 
     curtext = printList(curtext, makeOut["theYard"][2]);
-    // s("There is a hot tub here.");
 
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
@@ -261,6 +256,7 @@ function preHotTub() {
 //TODO she can pee in the hottub if she's not about to burst
 //TODO fix need dialogue
 function theHotTub() {
+    allowItems = 1;
     let curtext = []
     if (locstack[0] !== "theHotTub") {
         curtext = printList(curtext, makeOut["theYard"][5]);
@@ -304,8 +300,8 @@ function exitHotTub(){
 
 }
 
-
 function theBeach() {
+    allowItems = 1;
     let curtext = [];
     if (locstack[0] !== "theBeach") {
         curtext = printList(curtext, makeOut["theBeach"][0]);
@@ -458,25 +454,18 @@ function beachSwim3b() {
 
 function beachSwim4() {
     let curtext = printList([], makeOut["theBeach"][16]);
-    // s(girlname + " pauses for a moment, and over the sound of the surf, you can barely hear the hiss of her urine hitting the water.");
     flushdrank();
     if (pantycolor === "none")
         curtext = printList(curtext, makeOut["theBeach"][17]);
-        // s("She's right there beside you in the dark, naked and peeing into the water.");
     else
         curtext = printList(curtext, makeOut["theBeach"][18]);
-        // s("She's right there beside you in the dark, peeing through her wet panties into the water.");
     sayText(curtext);
     cListenerGen([beachSwim5, "Continue..."], "beachSwim");
 }
 
 function beachSwim4b() {
     let curtext = printList([], makeOut["theBeach"][19]);
-    // s(girlname + " pauses for a moment.");
-    // s("You run your hand up her smooth leg under the water.");
-    // s("The water is even warmer around her crotch.  Probing closer, you feel a jet of hot pee escaping from between her pussy lips, passing through your fingers and warming your leg.");
     flushdrank();
-    // s("You feel it slow, spurt a couple of times, and finally come to a stop.");
     sayText(curtext);
     cListenerGen([beachSwim5, "Continue..."], "beachSwim");
 }

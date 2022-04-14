@@ -8,6 +8,8 @@
 * Fixed giving her panties sometimes not working
 * Fixed typo in Jennifer's name breaking things if she is chosen.
 * Changed layout of the backpack to hopefully stop text to no longer appear outside the text-box
+* Fix that you can no longer use items to pee during the drinking game.
+* Added restrictions on when you can use items to prevent it being exploited
 
 #version 0.5.2
 * Fixed buying items being broken.

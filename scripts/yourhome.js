@@ -268,11 +268,8 @@ function ypredrink() {
 
 function cellphone() {
     let curtext = [calledjsons["yourhome"]["getcalled"]["getcalled"]]
-    // s("Your cellphone rings.");
     waitcounter += 3;
     curtext = printChoicesList(curtext, [0,1], calledjsons["yourhome"]["getcalled"]["choices"]);
-    // c("anscell", "Answer it.");
-    // c("ignorecell", "Ignore it.");
     sayText(curtext);
 }
 

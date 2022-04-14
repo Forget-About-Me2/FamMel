@@ -36,6 +36,7 @@ function herhome() {
 //TODO fix this scene
 //The dialogues is fucked if you asked her to hold it
 function pickup() {
+    allowItems = 1;
     let curtext = [];
     if (locstack[0] !== "pickup") { // happens first time only.
         getMLocations("herhome", "pickup");
@@ -123,6 +124,7 @@ function takeHerHome(){
 
 let floorcounter = 0;
 function elevatorWait() {
+    allowItems = 1;
     let curtext = [];
     let listenerList = [];
     if (locstack[0] !== "theElevator") {
@@ -264,8 +266,8 @@ function lookForKeys() {
     ]);
 }
 
-//TODO offer beer
 function theHome() {
+    allowItems = 1;
     if (locstack[0] !== "theHome")
         pushloc("theHome")
     let curtext = [herHome["atHome"].formatVars()];

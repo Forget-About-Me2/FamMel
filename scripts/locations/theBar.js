@@ -19,6 +19,7 @@ function barJsonSetup(){
 }
 
 function thebar(){
+    allowItems = 1;
     let curtext = [];
     let listenerList = [];
     if (locstack[0] === "driveout" && locations.theBar.visited && thetime < barclosingtime){
@@ -166,6 +167,7 @@ function stealbeer2(){
 }
 
 function darkBar(){
+    allowItems = 1;
    let curtext = [];
    if (emerBreak || emerHold && bladder < 20) {
        curtext = printList(curtext, bar["darkBar"][0]);
@@ -261,6 +263,7 @@ let loser;
 //TODO  choose what happenes when both lose at the same time
 //TODO have a chance to have it escalate
 function drinkinggame() {
+    allowItems = 1;
     let curtext = printList([], bar["drinkingGame"][5]);
     // s("You're playing a drinking game with " + girlname + ".");
     if (yourbladder >= yourbladlose) {

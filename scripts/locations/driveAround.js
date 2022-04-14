@@ -17,6 +17,7 @@ const gasChance = 3; //Chance you'll encounter a gas station
 let gasStation;
 
 function driveAround(){
+    allowItems = 1;
     let curtext = printList([], driveRound["driveAround"][0]);
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
@@ -61,6 +62,7 @@ function nextstop() {
 }
 
 function drivetell() {
+    allowItems = 1;
     let curtext = printList([], driveRound["driveTell"]);
     curtext = displayyourneed(curtext);
     sayText(curtext);
@@ -90,6 +92,7 @@ function drivePee() {
 }
 
 function station(){
+    allowItems = 1;
     //TODO create properly
     let curtext = printList([], driveRound["station"]);
     curtext = callChoice(["curloc", "Continue ..."], curtext);

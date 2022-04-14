@@ -18,6 +18,7 @@ function clubJsonSetup(){
 }
 
 function theClub() {
+    allowItems = 1;
     let curtext = [];
     let listenerList = []
     if (locations.theClub.visited && locstack[0] === "driveout" && thetime < clubclosingtime) {
@@ -26,8 +27,7 @@ function theClub() {
         if (haveItem("theClubKey"))
             listenerList.push([[reClub, "But I found this key I have to return!"], "reClub"]);
         listenerList.push([[driveout, "Continue..."], "driveOut"]);
-    } else {
-        if ((thetime < clubclosingtime) || locstack[0] === "theClub") {
+    } else if ((thetime < clubclosingtime) || locstack[0] === "theClub") {
             if (locstack[0] !== "theClub" && locstack[0] !== "doDance") {
                 curtext = printList(curtext, club["theClub"][1]);
                 // s("You and " + girlname + " enter the Night Club.");
@@ -62,14 +62,14 @@ function theClub() {
                     listenerList.push([[youpee, "Go to the bathroom."], "youpee"]);
                 listenerList.push([[leavehm, "Leave the Club."], "leavehm"]);
             }
-            sayText(curtext);
-            cListenerGenList(listenerList);
         } else {
             itsClosed("theClub", darkClub, "darkClub");
+            return;
         }
-    }
-
+        sayText(curtext);
+        cListenerGenList(listenerList);
 }
+
 
 function flirtBarGirl() {
     let curtext = [pickrandom(club["barGirlFlirt"])];
@@ -105,6 +105,7 @@ function goDance(){
 }
 
 function doDance(){
+    allowItems = 1;
     let curtext = [club["Dancing"].formatVars()];
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
@@ -140,6 +141,7 @@ function leaveDance(){
 }
 
 function darkClub() {
+    allowItems = 1;
     let curtext = [];
     if (emerBreak || emerHold && bladder < 20){
         curtext = printList(curtext, club["emerBreak"]);
