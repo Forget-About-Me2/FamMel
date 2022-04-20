@@ -12,6 +12,7 @@
 * Fixed the wrong scene playing after the drinking game in certain situations.
 * Fix that you can no longer use items to pee during the drinking game.
 * Added restrictions on when you can use items to prevent it being exploited
+* Fixed you being bursting and toilet being locked resulting in an error
 
 #version 0.5.2
 * Fixed buying items being broken.

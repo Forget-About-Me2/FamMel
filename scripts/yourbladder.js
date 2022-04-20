@@ -161,7 +161,7 @@ function youbathroomlocked(curtext) {
 
 //TODO make this more fancy
 function youbegtoilet(curtext) {
-    curtext.push(ypeelines["beg"][0]);
+    curtext = printList(curtext, ypeelines["beg"][0]);
     if (haveItem("shotglass")) curtext = callChoice(ypeelines["beg"][1][0], curtext);
     if (haveItem("vase")) curtext = callChoice(ypeelines["beg"][1][1], curtext);
     curtext = callChoice(ypeelines["beg"][1][2], curtext);
