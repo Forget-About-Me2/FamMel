@@ -222,19 +222,14 @@ function darkBar(){
 
 function pdrinkinggame() {
     let curtext = printList([], bar["drinkingGame"][0]);
-    // s("<b>YOU:</b> Why don't you go ahead and go.  But afterwards let's play a little drinking game.");
-    // s(girltalk + "What <u>kind</u> of drinking game?");
-    // s("<b>YOU:</b> We'll pace each other drinking beers.  First one to pee is the loser.");
     if (attraction >= drinkinggamethreshold) {
         curtext = displayneed(curtext);
         curtext = printList(curtext, bar["drinkingGame"][1]);
-        // s(girltalk + "Okay.  But let's go pee first.");
         curtext = displayneed(curtext);
         sayText(curtext);
         cListenerGen([pDrinkingGame2, "Continue..."], "pdrinking");
     } else {
         curtext = printList(curtext, bar["drinkingGame"][2]);
-        // s(girltalk + "No way, dude.  I'm outta here.");
         if (attraction < 50)
             attraction -= 2;
         indepee(curtext);
@@ -324,7 +319,7 @@ function postgame() {
         flushdrank();
         flushyourdrank();
     } else if(bladder > blademer){
-        situation = "you";
+        situation = "her";
         curtext = printList(curtext, quoteList[4]);
         flushdrank();
     } else {
@@ -347,13 +342,10 @@ function postGame2(situation){
     let curtext = [];
     if (situation === "none") {
         curtext = printList(curtext, bar["postGame"][0]);
-        // s("She smiles at you as she moves back to her own chair.");
 
     } else if(situation === "her"){
         //TODO move back to her own chair
         curtext = printList(curtext, bar["postGame"][1]);
-        // s("When she finally emerges from the bathroom she sits down in your lap.");
-        // s("She kissed you soundly, before whispering in your ear: <strong>I feel <i>so</i> naughty!</strong>");
         attraction += 5;
         shyness -= 7;
     } else if(situation === "you"){
@@ -361,21 +353,12 @@ function postGame2(situation){
         //Create a deepCopy of the dialogue that needs to be added so if you insert an element the bar variable itself won't be changed
         let temp = printList([], bar["postGame"][2]);
         if (loser === "her") temp.splice(2, 0, "<em>Yes, you won the game. But it had been a close one.</em>");
-        // s("You dash towards the urinal, already pulling your dick out of your boxers.");
-        // s("You don't bother holding back a moan as your bladder finally empties.");
-        // if(loser === "her") s("<em>Yes, you won the game. But it had been a close one.</em>");
-        // s("Suddenly the door to the men's room opens.");
-        // s("Surprised you turn your head to see " + girlname + " entering the room with a sultry smile");
-        // s("She moves over towards you and you can't help but jump a little as she grasps your still peeing dick");
-        // s("She captures your lips before whispering: <strong>That was really hot!</strong>");
         curtext = printList([], temp);
         attraction += 10;
         shyness -= 10;
     }
     else{
         curtext = printList(curtext, bar["postGame"][3]);
-        // s("You emerge from the restroom first, then " + girlname + " comes back, looking a little damp and very aroused.");
-        // s(girltalk + "I feel <i>so</i> naughty!");
         poploc();
         kissher(curtext);
         return;
