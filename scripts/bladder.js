@@ -864,29 +864,19 @@ function peeintub() {
     if (bladder > blademer) {
         curtext = displaygottavoc(curtext);
         curtext.push(needs["peeintub"][0]);
-        // s(girltalk + "Sure you're okay with it?");
         curtext = displayneed(curtext);
         curtext = printChoicesList(curtext, [16], needs["choices"]);
-        // c("peeintub2", "Continue...");
     } else {
         curtext.push(needs["peeintub"][1]);
-        // s(girltalk + "I'll just wait, thank you very much.");
         curtext = printChoicesList(curtext, [0], needs["choices"]);
-        // c(locstack[0], "Continue...");
     }
     sayText(curtext);
 }
 
 function peeintub2() {
-    console.log("test");
     let curtext = printListSelection([], needs["peeintub"], range(2, 5));
-    // s(girlgasp + "Ungh!  I can't hold it.");
-    // s("You nonchalantly move closer and slip your hand under her butt.  The strong stream of pee flows out between your fingers for nearly a minute, and you can detect the barest scent of urine rising from the hot water.  It feels strangely cool in the warm water of the tub.");
     flushdrank();
-    // s("The stream slows and finishes, and " + girlname + " lets out a sigh of relief.");
-    // s(girltalk + "That feels <i>so</i> much better.");
     curtext = printChoicesList(curtext, [0], needs["choices"]);
-    // c(locstack[0], "Continue...");
     sayText(curtext);
 }
 
