@@ -306,8 +306,7 @@ function incrandom() {
 //  1 corresponds to 10% likelihood.
 //  10 corresponds to 100% likelihood.
 function randomchoice(probability) {
-    let x = Math.floor(Math.random() * 10)
-    console.log(x);
+    let x = Math.floor(Math.random() * 10);
     if (x < probability)
         return 1;
     else

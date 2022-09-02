@@ -116,7 +116,7 @@ function doDance(){
         if (gottagoflag > 0)
             curtext = preventpee(curtext);
         else{
-            listenerList.push([[doDance, "Keep Dancing."], "doDance"]);
+            listenerList.push([[doDance, "Keep dancing."], "doDance"]);
             listenerList.push([[kissher,  "Kiss her."], "kissHer"]);
             listenerList.push([[feelup, "Feel her up."], "feelup"]);
             if (yourbladder > yourbladurge)

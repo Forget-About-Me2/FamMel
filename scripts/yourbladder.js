@@ -94,6 +94,7 @@ function youpee() {
     if ((locstack[0] === "thebar" && randomchoice(rrlockedthresh) ) ||
         ((locstack[0] === "theclub" || locstack[0] === "dodance") && randomchoice(rrlinethresh)) ||
         (locstack[0] === "themovie" && randomchoice(rrMovieLineThresh) || locstack[0] === "domovie" && randomchoice(rrMovieLineThresh))) {
+        allowItems = 1;
         curtext = youbathroomlocked(curtext);
     } else if (locstack[0] === "darkBar" || locstack[0] === "darkTheatre" || locstack[0] === "darkclub") {
         //TODO potentially cycle between quotes

@@ -32,6 +32,7 @@ function leavehm() {
 
 //TODO fix the go to the bar like she asked
 function driveout() {
+    allowItems = 1;
     let curtext = [];
     if (locstack[0] !== "driveout") {
         pushloc("driveout");

@@ -26,6 +26,7 @@ const objects = {
         "emerAttr": 2,
         "holdCount":2,
         "attr": 7,
+        banLocs: ["theHotTub"],
         "functions": [
             ['giveHer(&quot;roses&quot;)', "Give her a bouquet of roses"]
         ],
@@ -43,6 +44,7 @@ const objects = {
         price: 60,
         "value": 0,
         "owned": "{0} pair{1} of earrings",
+        banLocs: ["theHotTub"],
         "emerAttr": 4,
         "holdCount":4,
         "attr": 14,
@@ -69,7 +71,7 @@ const objects = {
         "yfunctions":[
             ["ypeein(&quot;vase&quot;)", "Pee into the vase."]
         ],
-        "banLocs": ["drinkinggame"],
+        "banLocs": ["drinkinggame", "theHotTub"],
         "quote": "peevasequote",
         "owned": "{0} vase{1}",
         "description": "You're not quite sure how you managed to fit this in your backpack," +
@@ -87,7 +89,7 @@ const objects = {
         "yfunctions":[
             ["ypeein(&quot;shotglass&quot;)", "Pee into the shot glass."]
         ],
-        "banLocs": ["drinkinggame"],
+        "banLocs": ["drinkinggame", "theHotTub"],
         "quote": "peeshotquote",
         "owned": "{0} shotglass{1}",
         "description":"You can't quite recall why you thought it was a good idea to bring this glass to your date. " +
@@ -107,7 +109,7 @@ const objects = {
         // "yfunctions":[
         //     ["ypeein(&quot;ptowels&quot;)", "Pee into the paper towels."]
         // ],
-        "banLocs": ["drinkinggame"],
+        "banLocs": ["drinkinggame", "theHotTub"],
         "quote": "peetowelquote",
         "giveQuotes":[[
             "girltalk Thanks",
@@ -166,7 +168,7 @@ const objects = {
         "yfunctions":[
             ["ypeein(&quot;champ-glass&quot;)", "Pee in the champagne glass."]
         ],
-        "banLocs": ["drinkinggame"],
+        "banLocs": ["drinkinggame", "theHotTub"],
         "quote": "peechampquote",
         "owned": "{0} champagne glass{1}",
         "description": "A standard champagne glass, can hold 180ml. Maybe use it to share some champagne with {0}"
@@ -634,7 +636,7 @@ function selectitem(selecteditem){
         tobeprinted += "<b><i>You have " + getAmountOwned(clickedObj) + "</i></b><br><br>";
     tobeprinted += clickedObj.description.format([girlname]);
     if (!noItemLoc.includes(locstack[0]) && locstack.length !== 0 && clickedObj.hasOwnProperty("functions") && allowItems){
-        if (!(clickedObj.hasOwnProperty("locations")) && (!(clickedObj.hasOwnProperty("banLocs") && clickedObj.banLocs.includes(locstack[0])))){
+        if (!clickedObj.hasOwnProperty("locations") && !(clickedObj.hasOwnProperty("banLocs") && clickedObj.banLocs.includes(locstack[0]))){
             //If the girl isn't with you, you can't ask her to use a certain item
             if (!playOnly.includes(locstack[0]))
                 printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
@@ -643,7 +645,7 @@ function selectitem(selecteditem){
                 if (clickedObj.hasOwnProperty("togfunctions") && !playOnly.includes(locstack[0]) && clickedObj.value > 1)
                     printAllChoicesList([], clickedObj.togfunctions).forEach(item => tobeprinted += item);
             }
-        } else if (clickedObj.hasOwnProperty("locations") || clickedObj.locations.includes(locstack[0]))
+        } else if (clickedObj.hasOwnProperty("locations") && clickedObj.locations.includes(locstack[0]))
             printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
     }
     itemtext.innerHTML= tobeprinted;

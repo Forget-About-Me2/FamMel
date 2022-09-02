@@ -87,6 +87,7 @@ function buy(number){
 //TODO you can't see her looking away on the phone
 //TODO show your need?
 function callher() {
+    allowItems = 1;
     let curtext = [];
     if (locstack[0] !== "callher") {
         flirtedflag = 0;

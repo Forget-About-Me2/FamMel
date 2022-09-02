@@ -157,6 +157,7 @@ function elevatorWait() {
 }
 
 function theElevator(){
+    allowItems = 1;
     let curtext = [];
     let listenerList = [];
     if (floorcounter === 3) {
