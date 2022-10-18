@@ -518,18 +518,12 @@ function flirtSetup(){
 function needSetup(){
     needs = json;
     needs["girltalk"] = addGirlTalk(needs["girltalk"]);
-    needs["girlname"] = addGirlname(needs["girlname"]);
     needs["girlgasp"] = addGirlGasp(needs["girlgasp"]);
-    needs["askpee"] = replaceWCLC(needs["askpee"],  needs["girlname"], "girlname");
     needs["askpee"] = replaceWCLC(needs["askpee"], needs["girltalk"], "girltalk");
-    needs["preventpee"] = replaceChoicesList(needs["preventpee"],  needs["girlname"], "girlname");
-    needs["pstory"] = replaceWCLC(needs["pstory"], needs["girlname"], "girlname");
     needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
     needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
     needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girltalk"], "girltalk");
     needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girlgasp"], "girlgasp");
-    needs["begtoilet"]["girlname"] = addGirlname(needs["begtoilet"]["girlname"]);
-    needs["begtoilet"]["dialogue"] = replaceWCLC(needs["begtoilet"]["dialogue"], needs["begtoilet"]["girlname"], "girlname");
     needs["briberoses"] = replaceWCLC(needs["briberoses"], needs["girltalk"],"girltalk");
     needs["bribefavor"] = replaceWCLC(needs["bribefavor"], needs["girltalk"],"girltalk");
     needs["payholdit"] = replaceWCLC(needs["payholdit"], needs["girltalk"],"girltalk");
@@ -538,16 +532,12 @@ function needSetup(){
     needs["allowpee"] = replaceWCLC(needs["allowpee"], needs["girltalk"],"girltalk");
     needs["holdpurse"] = replaceWCLC(needs["holdpurse"], needs["girltalk"], "girltalk");
     needs["vase"] = replaceWCLCI(needs["vase"], needs["girltalk"], "girltalk");
-    needs["vase"] = replaceWCLCI(needs["vase"], needs["girlname"], "girlname");
     needs["shotglass"] = replaceWCLCI(needs["shotglass"], needs["girltalk"], "girltalk");
-    needs["shotglass"] = replaceWCLCI(needs["shotglass"], needs["girlname"], "girlname");
     needs["ptowels"] = replaceWCLCI(needs["ptowels"], needs["girltalk"], "girltalk");
-    needs["ptowels"] = replaceWCLCI(needs["ptowels"], needs["girlname"], "girlname");
     needs["champ-glass"] = replaceWCLCI(needs["champ-glass"], needs["girltalk"], "girltalk");
     needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girltalk"], "girltalk");
     needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girlgasp"], "girlgasp");
     needs["wetquote"] = addGirlname(needs["wetquote"]);
-    needs["wetherself"] = replaceWCLC(needs["wetherself"], needs["girlname"], "girlname");
     needs["wetherself"] = replaceWCLC(needs["wetherself"], needs["girltalk"], "girltalk");
     needs["drinkquote"] = addGirlname(needs["drinkquote"]);
     needs["peeoutside"] = replaceWCLC(needs["peeoutside"], needs["girltalk"], "girltalk");

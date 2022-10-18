@@ -859,7 +859,6 @@ function peein3(item){
 }
 
 function peeintub() {
-    console.log("test");
     let curtext = [];
     if (bladder > blademer) {
         curtext = displaygottavoc(curtext);
@@ -1084,7 +1083,7 @@ function wetherself3() {
 // In the tub
 function wetherself3t() {
     console.log("test");
-    let curtext = printListSelection(curtext, needs["wetherself"] ,range(14, 16));
+    let curtext = printListSelection([], needs["wetherself"] ,range(14, 16));
     shyness += 10;
     if (shyness > 100) shyness = 100;
     curtext = printChoicesList(curtext, [0], needs["choices"]);

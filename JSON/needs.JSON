@@ -190,7 +190,7 @@
   ],
   "askpee": [
     "<b>YOU:</b> Do you need to pee?",
-    "girlname5",
+    "girlname blushes.",
     "girltalk33",
     "She seems to be considering the matter..."
   ],
@@ -212,20 +212,7 @@
   "pstory": [
     "<b>You:</b> have you ever waited too long?",
     "<b>You:</b> so... did you make it?",
-    "girlname6"
-  ],
-  "girlname": [
-    "Remind {0} you're paying her to hold it.",
-    "Tell {0} you'll pay her to hold it.",
-    "The pee hisses out and the glass is filled in no time. {0} bends over and jams her hand between her legs, gasping in the effort to stop the flow.",
-    "{0} puts herself back together, looking embarrassed.",
-    "The stream slows and finishes, and {0} lets out a sigh of relief.",
-    "{0} blushes.",
-    "{0} blushes and looks down at her feet.",
-    "{0} suddenly and frantically looks around.  She fumbles with her seat belt, then the wrenches open the door and jumps out of the car.",
-    "{0} suddenly stiffens and whispers: Oh no!",
-    "{0} suddenly and frantically looks around, pulling open the glove box and feeling under her chair.",
-    "{0} hands you the wet panties, soaked with her fragrant urine."
+    "girlname blushes and looks down at her feet."
   ],
   "holdit": {
     "dialogue": [
@@ -326,14 +313,11 @@
   },
   "begtoilet": {
     "dialogue": [
-      "girlname0",
+      "girlname looks intently into your eyes:",
       "I've absolutely got to go.  I <i>need</i> your vase again. <b>NOW!</b>",
       "I'm gonna pee myself!  I <i>need</i> that shot glass again. <b>NOW!</b>",
       "I just <b>can't</b> hold it - you don't have any more paper towels, do you?",
       "I'm <i>begging</i> you - find me somewhere to pee.  <b>NOW!</b>"
-    ],
-    "girlname": [
-      "{0} looks intently into your eyes:"
     ],
     "choices": [
       ["peeshot", "Offer her the shot glass."],
@@ -565,7 +549,7 @@
      "girltalk9"],
     ["girltalk10"],
     ["girltalk12"],
-    ["girlname2",
+    ["The pee hisses out and the glass is filled in no time. girlname bends over and jams her hand between her legs, gasping in the effort to stop the flow.",
     "girltalk13"],
     ["She sighs slightly as a small controlled stream leaves her.",
       "The stream stops, you can see that the glass is not fully filled. She mustn't have been very full",
@@ -599,7 +583,7 @@
     "She grabs the vase, wrenching it from your hands and nearly dropping it."],
     ["girltalk12"],
     ["The pee hisses out for nearly a minute, the vase is filled almost to the top.",
-    "girlname3"],
+    "girlname puts herself back together, looking embarrassed."],
     ["You see a stream of pee coming from her pussy.",
      "It isn't very strong, it is obvious she wasn't all that full.",
      "She did it just to please you!",
@@ -673,7 +657,7 @@
     "girltalk21",
     "girlgasp0",
     "You nonchalantly move closer and slip your hand under her butt.  The strong stream of pee flows out between your fingers for nearly a minute, and you can detect the barest scent of urine rising from the hot water.  It feels strangely cool in the warm water of the tub.",
-    "girlname4",
+    "The stream slows and finishes, and girlname lets out a sigh of relief.",
     "girltalk22"
   ],
   "peeoutside": [
@@ -705,17 +689,17 @@
   ],
   "wetherself": [
     "You hear the loud hissing as her bladder uncontrollably empties itself.",
-    "girlname7",
-    "girlname8",
+    "girlname suddenly and frantically looks around.  She fumbles with her seat belt, then the wrenches open the door and jumps out of the car.",
+    "girlname suddenly stiffens and whispers: Oh no!",
     "She sighs and slumps back in the tub, lost in her own little world for a minute or so.",
     "There's complete silence aside from her heavy breathing and some crickets in the distance.",
-    "girlname9",
+    "{0} suddenly and frantically looks around, pulling open the glove box and feeling under her chair.",
     "girltalk35",
     "She arches her back, lifting her ass off the chair and straining against her seatbelt.",
     "You hear the loud hissing as her bladder uncontrollably empties itself.",
     "girltalk36",
     "She settles unhappily into the squishy wet seat.",
-    "girlname10",
+    "girlname hands you the wet panties, soaked with her fragrant urine.",
     "girltalk37",
     "girltalk38",
     "girltalk39",

@@ -42,12 +42,19 @@ var Debug = function () {
         seenmovie = 1;
     }
 
+    //Fulls her stomach and sets it to max diuretic so she has to pee often
+    function quickFill(){
+        tummy += 3000;
+        drankbeer = 300;
+    }
+
     return {
         help: help,
         allItems: allItems,
         fullStats: fullStats,
         nightTime: nightTime,
-        getInvite: getInvite
+        getInvite: getInvite,
+        quickFill: quickFill
     }
 
 }();
