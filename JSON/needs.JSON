@@ -765,42 +765,15 @@
     "{0} I've <b>really</b> got to go powder my nose, but I'll drink it if that's what you want me to do.",
     "{0} My bladder's bursting, but I'll drink it for you."
   ],
-  "choices": [
-    ["curloc", "Continue..."],
-    ["indepee", "Continue..."],
-    ["payfails", "$10.00"],
-    ["payfails", "$20.00"],
-    ["payokay", "$50.00"],
-    ["holdpurse", "Sure, I'll take care of it!"],
-    ["lookinsidepurse", "Look inside her purse."],
-    ["indepee", "Be a gentleman"],
-    ["indepee", "Close the purse"],
-    ["lookinsidepurse", "Examine her purse again"],
-    ["peeshot2", "Continue..."],
-    ["peeshot3", "Continue..."],
-    ["peevase2", "Continue..."],
-    ["peevase3", "Continue..."],
-    ["peetowels2", "Continue..."],
-    ["peetowels3", "Continue..."],
-    ["peeintub2", "Continue..."],
-    ["peeoutside2", "Continue..."],
-    ["peeoutside2b", "Continue..."],
-    ["peeoutisde3", "Continue..."],
-    ["peeoutside3c", "Continue..."],
-    ["peeoutside3b", "Continue..."],
-    ["pstory", "Ask her if she's ever wet herself."],
-    ["pstory2", "Ask her what happened."],
-    ["wetherself2c", "Continue ..."],
-    ["wetherself2m", "Continue ..."],
-    ["wetherself2t", "Continue ..."],
-    ["wetherself2", "Continue ..."],
-    ["askspurted", "Ask her if she peed herself."],
-    ["checkspurted", "Check if she's wet."],
-    ["smellspurted", "Smell your fingers."],
-    ["comforther", "Apologize and comfort her"],
-    ["wetherself3", "Continue ..."],
-    ["wetherself3t", "Continue ..."],
-    ["wetherself3c", "Continue ..."],
-    ["scoldher", "Scold her for wetting herself"]
-  ]
+  "choices": {
+    "askWet": "Ask her if she's ever wet herself.",
+    "holdPurse": "Sure, I'll take care of it!",
+    "askSpurted": "Ask her if she peed herself.",
+    "checkSpurted": "Check if she's wet.",
+    "comfortHer": "Apologize and comfort her",
+    "lookInsidePurse": "Look inside her purse.",
+    "gentleman": "Be a gentleman",
+    "closePurse": "Close the purse"
+  }
+
 }

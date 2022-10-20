@@ -493,7 +493,7 @@ function briberoses() {
     curtext = printList(curtext, needs["briberoses"]);
     askholditcounter++;
     curtext = displayholdquip(curtext);
-    curtext = printChoicesList(curtext, [0],  needs["choices"]);
+    curtext = callChoice(["curloc", "Continue..."], curtext);
     objects.roses.value -= 1;
     sayText(curtext);
 }
@@ -503,7 +503,7 @@ function bribeearrings() {
     curtext = printList(curtext, needs["bribeearrings"]);
     askholditcounter++;
     curtext = displayholdquip(curtext);
-    curtext = printChoicesList(curtext, [0],  needs["choices"]);
+    curtext = callChoice(["curloc", "Continue..."], curtext);
     objects.earrings.value -= 1;
     sayText(curtext);
 }
@@ -511,10 +511,12 @@ function bribeearrings() {
 function holdpurse() {
     haveherpurse = 1;
     let curtext = [];
-    curtext.push(needs["holdpurse"][0]);
-    curtext.push(needs["holdpurse"][1]);
-    curtext = printChoicesList(curtext, [6,7], needs["choices"]);
-    sayText(curtext)
+    let listenerList = [
+        [[lookinsidepurse, needs["choices"]["lookInsidePurse"]], "lookInsidePurse"],
+        [[indepee, needs["choice"]["gentleman"]], "gentleman"]
+    ]
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
 function lookinsidepurse() {
@@ -543,8 +545,8 @@ function lookinsidepurse() {
             if ("funDesc" in item && !haveItem(key))
                 curtext = c(["takeHerItem(&quot;" + key + "&quot;)", "take " + item.funDesc], curtext);
     });
-    curtext = printChoicesList(curtext,[8], needs["choices"]);
     sayText(curtext);
+    cListener([indepee, needs["choices"]["closePurse"]], "closePurse");
 }
 
 //You steal the given item from her purse
@@ -552,8 +554,12 @@ function takeHerItem(item){
     let curtext = [];
     curtext.push(needs["holdpurse"][3].format([herpurse[item].funDesc]));
     objects[item].value += 1;
-    curtext = printChoicesList(curtext, [9,1], needs["choices"]);
+    let listenerList =[
+        [[lookinsidepurse, needs["choices"]["lookAgain"]], "lookAgain"],
+        [[indepee, "Continue..."], "indepee"]
+    ]
     sayText(curtext);
+    cListenerGenList(listenerList);
 
 }
 
