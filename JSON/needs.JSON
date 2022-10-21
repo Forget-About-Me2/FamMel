@@ -773,7 +773,9 @@
     "comfortHer": "Apologize and comfort her",
     "lookInsidePurse": "Look inside her purse.",
     "gentleman": "Be a gentleman",
-    "closePurse": "Close the purse"
+    "closePurse": "Close the purse",
+    "lookAgain": "Examine her purse again",
+    "askHappened": "Ask her what happened."
   }
 
 }

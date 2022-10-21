@@ -432,7 +432,6 @@ function displayneed(curtext) {
 //TODO make responses more realisitc
 //TODO don't take her purse in certian situations
 function askpee() {
-    console.log("text: askpee");
     let curtext = [needs["askpee"][0]];
     let listenerList = [];
     if (shyness > 60) curtext.push(needs["askpee"][1]);
@@ -455,7 +454,7 @@ function askpee() {
         curtext = interpbladder(curtext);
         curtext = callChoice(["curloc", "Continue..."], curtext);
     }
-    sayText(curtext);
+    addSayText(curtext);
     addListenersList(listenerList);
 }
 
@@ -530,7 +529,7 @@ function holdit() {
                     curtext = displayneed(curtext);
                 }
             }
-            curtext = callChoice(["curLoc", "Continue..."], curtext);
+            curtext = callChoice(["curloc", "Continue..."], curtext);
         }
     } else {
         if (locstack[0] === "gostore") {
@@ -720,18 +719,15 @@ function allowpee() {
     curtext.push(needs["allowpee"][1]);
     if (locstack[0] === "fuckher6" || locstack[0] === "thehome" || locstack[0] === "thebedroom" || locstack[0] === "darkbar"
         || locstack[0] === "pickup" || locstack[0] === "darkclub" || locstack[0] === "darkbar") {
-        sayText(curtext);
         listenerList.push([[indepee, "Continue..."], "indePee"]);
-        cListener([indepee, "Continue..."], "indePee");
     } else {
         curtext.push(needs["allowpee"][2]);
         attraction += 7;
-        sayText(curtext);
         listenerList.push([[indepee, "Continue..."], "indePee"]);
-        cListener([indepee, "Continue..."], "indePee");
-        listenerList.push([holdpurse, needs["choices"]["holdPurse"], "holdPurse"]);
+        listenerList.push([[holdpurse, needs["choices"]["holdPurse"]], "holdPurse"]);
     }
-    addListenersList(listenerList);
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
 function peephone() {
@@ -888,7 +884,7 @@ function peeintub() {
         listenerList.push([[peeintub2, "Continue..."], "peeinTub"]);
     } else {
         curtext.push(needs["peeintub"][1]);
-        curtext = callChoice(["curLoc", "Continue..."], curtext);
+        curtext = callChoice(["curloc", "Continue..."], curtext);
     }
     sayText(curtext);
     cListenerGenList(listenerList);
@@ -915,8 +911,8 @@ function peeoutside() {
                 curtext.push(needs["peeoutside"][1]);
             curtext = printListSelection(curtext, needs["peeoutside"], [2,3]);
             curtext = displayneed(curtext);
-            if (locstack[0] === "themakeout") listenerList.push([[peeoutside2, "Continue..."], peeoutside2]);
-            else listenerList.push([[peeoutside2b, "Continue..."], peeoutside2b]);
+            if (locstack[0] === "theMakeOut") listenerList.push([[peeoutside2, "Continue..."], "peeoutside2"]);
+            else listenerList.push([[peeoutside2b, "Continue..."], "peeoutside2b"]);
 
         } else {
             curtext = displaygottavoc(curtext);
@@ -953,7 +949,6 @@ function peeoutside2() {
 
 // Not in the car
 function peeoutside2b() {
-    console.log("test");
     let curtext = [];
     if (pantycolor !== "none") curtext.push(appearance["clothes"][heroutfit]["peeoutsidebquote"]);
     else curtext.push(appearance["clothes"][heroutfit]["peeoutsidebquotebare"]);
@@ -1114,6 +1109,7 @@ function wetherself3t() {
 }
 
 function spurtedherself(curtext, listenerList) {
+    console.log("test: spurtedherself");
     bladder -= 50;
     spurtthresh -= 0.1 * spurtthresh;
     shespurted = 1;
@@ -1125,6 +1121,7 @@ function spurtedherself(curtext, listenerList) {
 }
 
 function askspurted() {
+    console.log("askSpurted");
     let curtext = [needs["askspurted"][0]];
     curtext.push(pickrandom(needs["spurtquote"]));
     curtext.push(pickrandom(needs["spurtdenyquote"]));
@@ -1170,6 +1167,7 @@ function smellspurted() {
 
 //TODO make this more pleasurable/more BDSM like scolding?
 function scoldher() {
+    console.log("test: scoldHer");
     let curtext = printList([], needs["scoldher"]);
     attraction -= 20;
     sayText(curtext);

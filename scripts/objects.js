@@ -510,11 +510,11 @@ function bribeearrings() {
 
 function holdpurse() {
     haveherpurse = 1;
-    let curtext = [];
+    let curtext = printListSelection([], needs["holdpurse"], [0,1]);
     let listenerList = [
         [[lookinsidepurse, needs["choices"]["lookInsidePurse"]], "lookInsidePurse"],
-        [[indepee, needs["choice"]["gentleman"]], "gentleman"]
-    ]
+        [[indepee, needs["choices"]["gentleman"]], "gentleman"]
+    ];
     sayText(curtext);
     cListenerGenList(listenerList);
 }
