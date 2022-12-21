@@ -195,29 +195,36 @@ function ypeein(item){
         yneedtype = 2;
     else if (yourbladder>yourbladneed)
         yneedtype = 1;
-    //Prints a quote about how full you are and what you are planning to do.
-    curtext.push(list[0][yneedtype]);
-    //If she doesn't like you enough she'll act embarrassed and prevent you from doing this.
-    if (yneedtype === 0 && attraction > 100 ||
-        yneedtype === 1 && attraction > 70 ||
-        yneedtype === 2 && attraction > 30){
-        if (yneedtype === 2) {
-            // if your desperate print a quote about giving her the item so you can focus on your trousers
-            if (locstack[0] === "driveout")
-                //The quote is slightly different when you're driving
-                curtext = printList(curtext, list[1]);
-            else
-                curtext = printList(curtext, list[2]);
-
-        }
-        //Prints a description of undoing your pants, depending on how bad you have to go.
-        curtext = printList(curtext, list[3][yneedtype]);
-        curtext = callChoice(["ypeein2(&quot;" +item+ "&quot;," + yneedtype + ")", "Continue..."], curtext);
+    //When you're alone you don't have an interaction with her.
+    if (playOnly.includes(locstack[0])) {
+        //TODO you call out to her when desperate in one of the quotes.
+        curtext.push(list[0][3]);
+        curtext = callChoice(["ypeein2(&quot;" + item + "&quot;," + yneedtype + ")", "Continue..."], curtext);
     } else {
-        curtext.push("\"Are you out of your mind!?\" She hisses urgently. \"You can't do that! What if someone sees?!\"");
-        curtext.push("You sigh, but put away the " + objects[item].bpname.toLowerCase() + ".");
-        curtext = callChoice(["curloc", "Continue..."], curtext);
-        attraction -= Math.round(10 / (yneedtype + 1));
+        //Prints a quote about how full you are and what you are planning to do.
+        curtext.push(list[0][yneedtype]);
+        //If she doesn't like you enough she'll act embarrassed and prevent you from doing this.
+        if (yneedtype === 0 && attraction > 100 ||
+            yneedtype === 1 && attraction > 70 ||
+            yneedtype === 2 && attraction > 30){
+            if (yneedtype === 2) {
+                // if you're desperate print a quote about giving her the item so you can focus on your trousers
+                if (locstack[0] === "driveout")
+                    //The quote is slightly different when you're driving
+                    curtext = printList(curtext, list[1]);
+                else
+                    curtext = printList(curtext, list[2]);
+
+            }
+            //Prints a description of undoing your pants, depending on how bad you have to go.
+            curtext = printList(curtext, list[3][yneedtype]);
+            curtext = callChoice(["ypeein2(&quot;" +item+ "&quot;," + yneedtype + ")", "Continue..."], curtext);
+        } else {
+            curtext.push("\"Are you out of your mind!?\" She hisses urgently. \"You can't do that! What if someone sees?!\"");
+            curtext.push("You sigh, but put away the " + objects[item].bpname.toLowerCase() + ".");
+            curtext = callChoice(["curloc", "Continue..."], curtext);
+            attraction -= Math.round(10 / (yneedtype + 1));
+        }
     }
     sayText(curtext);
 }

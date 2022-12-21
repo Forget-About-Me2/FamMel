@@ -95,9 +95,11 @@
        ]]
    ],
    "champ-glass": [
-     ["<b>You:</b> I got a shot glass, would you like me to pee into this?",
-       "<b>You:</b> I need to pee, I got this shot glass I can pee into this.",
-       "<b>You:</b> Pff, I'm bursting for a piss. I gotta go in this shot glass."],
+     ["<b>You:</b> I got a champagne glass, would you like me to pee into this?",
+       "<b>You:</b> I need to pee, I got this champagne glass I can pee into this.",
+       "<b>You:</b> Pff, I'm bursting for a piss. I gotta go in this champagne glass.",
+       "Feeling a bit excited you pull out a champagne glass you can piss into."
+     ],
      [ "<b>YOU:</b> Here! Please hold this for a minute.",
        "You shove the glass in her hands so you can open your fly with the hand that is not holding the steering wheel."
      ],
@@ -116,7 +118,7 @@
      [
        "You urgently reach your hand to her.",
        "<b>You:</b> Give me the glass, it's coming out!",
-       "girlname0",
+       "girlname quickly hands you the glass.",
        "You push it in place before allowing your muscles to relax."
      ],
      ["You calmly position your dick in place before relaxing your muscles"],
