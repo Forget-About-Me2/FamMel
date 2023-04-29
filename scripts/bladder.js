@@ -459,35 +459,37 @@ function askpee() {
 }
 
 //TODO make her less demanding
-function preventpee(curtext) {
+function preventpee(listenerList = []) {
 
     // If she's not in obviously dire straits, your
-    // admonitions, whatever they are, will effectly
+    // admonitions, whatever they are, will effectively
     // have answered her request to pee.  So the flag
     // will be cleared.
 
-    let choices = [1, 9] // This keeps track of the options you can choose from so they can be printed at the end
+    listenerList.push([[holdit, needs["preventpee"]["holdIt"]], "holdIt"]);
+    listenerList.push([[indepee, needs["preventpee"]["indePee"]], "indePee"]);
 
     if (bladder < bladlose - 50)
         gottagoflag = 0;
 
     if (locstack[0] === "doDance")
-        choices.push(2); //Pee together
+        listenerList.push([[ptogether, needs["preventpee"]["pTogether"]], "pTogether"]);
     if (locstack[0] === "darkBar" || locstack[0] === "darkTheatre" || locstack[0] === "darkClub")
-        choices.push(3); //Watch
+        listenerList.push([[pgirlsroom, needs["preventpee"]["pGirlsRoom"]], "pGirlRoom"]);
     if (locstack[0] === "darkTheatre")
-        choices.push(4); //No restroom
+        listenerList.push([[pnorestroom, needs["preventpee"]["pNoRestroom"]], "pNoRestroom"]);
     if (locstack[0] === "darkBar")
-        choices.push(5); //pdrinkinggame
+        listenerList.push([[pdrinkinggame, needs["preventpee"]["pDrinkingGame"]], "pDrinkingGame"]);
     if (locstack[0] === "darkClub")
-        choices.push(6); //pphotegame
-    if (locstack[0] === "driveout" && !gasStation) {
-        choices.push(7); //nextstop
-    } else {
-        choices.push(8); //allowpee
-    }
+        listenerList.push([[pphotogame, needs["preventpee"]["pPhotoGame"]], "pPhotoGame"]);
+    if (locstack[0] === "driveout" && !gasStation)
+        listenerList.push([[nextstop, needs["preventpee"]["nextStop"]], "nextStop"]);
+    if (locstack[0] === "theMakeOut" || locstack[0] === "theBeach" || locstack[0] === "theYard" || locstack[0] === "theWalk")
+        listenerList.push([[peeoutside, needs["preventpee"]["pOutside"]], "pOutside"]);
+    else
+        listenerList.push([[allowpee, needs["preventpee"]["allowPee"]], "allowPee"]);
 
-    return printChoicesList(curtext, choices, needs["preventpee"]);
+    return listenerList;
 }
 
 //

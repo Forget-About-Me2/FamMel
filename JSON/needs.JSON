@@ -194,18 +194,18 @@
     "girltalk33",
     "She seems to be considering the matter..."
   ],
-  "preventpee": [
-    ["nopeesolodrink", "Suggest that she have another drink instead."],
-    ["holdit", "Ask her to hold it in."],
-    ["ptogether", "Ask her not to leave you alone."],
-    ["pgirlsroom", "Tell her it would be sexy if you could watch."],
-    ["pnorestroom", "Tell her she can go, but not in the restrooms."],
-    ["pdrinkinggame", "Tell her she can go, but afterwards you should play a drinking game."],
-    ["pphotogame", "Tell her she can go, but you want to take a couple pictures first."],
-    ["nextstop", "Tell her you'll stop the next place you see."],
-    ["allowpee", "Tell her she's better go, then."],
-    ["indepee", "Ignore her request to use the toilet."]
-  ],
+  "preventpee": {
+    "holdIt": "Ask her to hold it in.",
+    "pTogether": "Ask her not to leave you alone.",
+    "pGirlsRoom" : "Tell her it would be sexy if you could watch.",
+    "pNoRestroom": "Tell her she can go, but not in the restrooms.",
+    "pDrinkingGame" : "tell her she can go, but afterwards you should play a drinking game.",
+    "pOutside" : "Suggest that she pees on the ground",
+    "pPhotoGame" : "Tell her she can go, but you want to take a couple pictures first.",
+    "nextStop": "Tell her you'll stop at the next place you see.",
+    "allowPee" : "Tell her she'd better go then.",
+    "indePee": "Ignore her request to use the toilet."
+  },
   "askcanhold": [
     "<b>YOU:</b> How are you doing?  Can you still hold it?"
   ],
