@@ -44,6 +44,7 @@ function theMakeOut() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
+            // TODO preventpee change
             curtext = preventpee(curtext);
             listenerList.push([[peeoutside, "Suggest that she pees outside."], "peeOutside"]);
         } else {
@@ -143,6 +144,7 @@ function theWalk() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
+            // TODO preventpee change
             curtext = preventpee(curtext);
             listenerList.push([[peeoutside, "Suggest that she pees on the ground."]]);
         } else {
@@ -207,6 +209,7 @@ function theYard() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
+            // TODO preventpee change
             curtext = preventpee(curtext);
             listenerList.push([[peeoutside, "Suggest that she pee on the ground."], "peeOutside"]);
         } else {
@@ -272,6 +275,7 @@ function theHotTub() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
+            // TODO preventpee change
             curtext = preventpee(curtext);
             listenerList.push([[peeintub, "Suggest that she pees in the tub."], "peeInTub"]);
         } else {
@@ -336,6 +340,7 @@ function theBeach() {
         }
         else {
             if (gottagoflag > 0) {
+                // TODO preventpee change
                 curtext = preventpee(curtext);
                 listenerList.push([[peeoutside, "Suggest that she pees on the sand."], "peeOutside"]);
             } else {

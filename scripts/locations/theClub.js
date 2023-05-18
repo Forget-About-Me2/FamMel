@@ -48,6 +48,7 @@ function theClub() {
                 return;
             }
             else if (gottagoflag > 0)
+                // TODO preventpee change
                 curtext = preventpee(curtext);
             else {
                 listenerList.push([[function () {buyItem("cocktail")}, "Buy  a drink."], "buyDrink"]);
@@ -114,6 +115,7 @@ function doDance(){
     else {
         let listenerList = [];
         if (gottagoflag > 0)
+            // TODO preventpee change
             curtext = preventpee(curtext);
         else{
             listenerList.push([[doDance, "Keep dancing."], "doDance"]);
@@ -160,6 +162,7 @@ function darkClub() {
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else if (gottagoflag > 0) {
+        // TODO preventpee change
         curtext = preventpee(curtext);
         sayText(curtext);
     }

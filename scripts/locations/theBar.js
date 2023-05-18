@@ -47,6 +47,7 @@ function thebar(){
         else if (yourbladder > yourbladlose) wetyourself();
         else {
             if (gottagoflag > 0) {
+                // TODO preventpee change
                 curtext = preventpee(curtext);
                 sayText(curtext);
             } else {
@@ -190,6 +191,7 @@ function darkBar(){
    if (bladder > bladlose) wetherself();
    else if (yourbladder > yourbladlose) wetyourself();
    else if (gottagoflag > 0) {
+       // TODO preventpee change
        preventpee(curtext);
        sayText(curtext);
    }

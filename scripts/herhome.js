@@ -93,7 +93,7 @@ function pickup() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            curtext = preventpee(curtext);
+            listenerList = preventpee(listenerList);
         } else {
             curtext = standobjs(curtext);
             if (yourbladder > yourbladurge)

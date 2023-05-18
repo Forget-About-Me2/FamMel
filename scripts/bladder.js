@@ -445,16 +445,14 @@ function askpee() {
         curtext = interpbladder(curtext);
         curtext = showneed(curtext);
         listenerList.push([[pstory, needs["choices"]["askWet"]], "askWet"]);
-        sayText(curtext);
-        cListener([pstory, needs["choices"]["askWet"]], "askWet");
-        curtext = preventpee([]);
+        listenerList = preventpee(listenerList);
     } else {
         curtext.push(girltalk + pickrandom(needs["deny"]));
         curtext = displayneed(curtext);
         curtext = interpbladder(curtext);
         curtext = callChoice(["curloc", "Continue..."], curtext);
     }
-    addSayText(curtext);
+    sayText(curtext);
     addListenersList(listenerList);
 }
 

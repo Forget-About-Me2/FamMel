@@ -42,6 +42,7 @@ function driveAround(){
             cListener([drivetell, "Tell her you need to go."], "drivetell");
         }
         if (gottagoflag > 0) {
+            // TODO preventpee change
             curtext = preventpee(curtext);
         } else curtext = standobjs(curtext);
         if (gasStation) {
