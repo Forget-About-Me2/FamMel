@@ -42,8 +42,7 @@ function driveAround(){
             cListener([drivetell, "Tell her you need to go."], "drivetell");
         }
         if (gottagoflag > 0) {
-            // TODO preventpee change
-            curtext = preventpee(curtext);
+            listenerList = preventpee(listenerList);
         } else curtext = standobjs(curtext);
         if (gasStation) {
             listenerList.push([[station], "gasStation"]);
@@ -51,7 +50,7 @@ function driveAround(){
         }
         curtext = c([locstack[0], "Continue..."], curtext);
         addSayText(curtext);
-        addListenersList(listenerList);
+        cListenerGenList(listenerList);
     }
 }
 

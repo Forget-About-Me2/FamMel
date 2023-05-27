@@ -28,9 +28,9 @@ function theTheatre(){
     if (locations.theTheatre.visited && locstack[0] === "driveout" && thetime < theaterclosingtime){
         curtext = printList(curtext, theatre["theatre"][0]);
         sayText(curtext);
-        listenerList.push([[driveout, "Continue..."], "driveOut"]);
+        listenerList.push([[driveout, general["continue"]], "driveOut"]);
         if (haveItem("theTheatreKey")) {
-            listenerList.push([[reTheatre, "But I found this key I have to return!"], "reTheatre"]);
+            listenerList.push([[reTheatre, locjson["choices"]["returnKey"]], "reTheatre"]);
         }
     } else if ((thetime < theaterclosingtime) || locstack[0] === "theTheatre"){
         if (locstack[0] !== "theTheatre") {
@@ -45,16 +45,15 @@ function theTheatre(){
         if (bladder > bladlose) wetherself();
         else if (yourbladder > yourbladlose) wetyourself();
         else if (gottagoflag > 0){
-            // TODO preventpee change
-            curtext = preventpee(curtext);
+            listenerList = preventpee(curtext);
             sayText(curtext);
         } else {
-            listenerList.push([[function () {buyItem("soda")}, "Buy soda."], "buySoda"]);
-            listenerList.push([[askMovie, "Ask her which movie she wants to watch."], "askMovie"]);
-            listenerList.push([[chooseMovie, "Watch a movie."], "chooseMovie"]);
+            listenerList.push([[function () {buyItem("soda")}, objects["buyChoices"]["soda"]], "buySoda"]);
+            listenerList.push([[askMovie, theatre["askMovie"]], "askMovie"]);
+            listenerList.push([[chooseMovie, theatre["chooseMovie"]], "chooseMovie"]);
             if (yourbladder > yourbladurge)
-                listenerList.push([[youpee, "Go to the bathroom."], "youPee"]);
-            listenerList.push([[leavehm, "Leave the Movie Theatre."], "leaveHm"]);
+                listenerList.push([[youpee, theatre["youPee"]], "youPee"]);
+            listenerList.push([[leavehm, theatre["leaveHm"]], "leaveHm"]);
             curtext = standobjs(curtext);
             sayText(curtext);
         }
@@ -210,16 +209,15 @@ function domovie() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            // TODO preventpee change
-            curtext = preventpee(curtext);
+            listenerList = preventpee(listenerList);
         } else {
-            listenerList.push([[movieRomance, "Reach over and hold her hand."], "movieRomance"]);
-            listenerList.push([[movieSex, "Reach over and touch her thigh."], "movieSex"]);
-            listenerList.push([[movieScary, "Lean closer to her"], "movieScary"]);
-            listenerList.push([[movieDoh, "Look her in the eyes."], "movieDoh"]);
+            listenerList.push([[movieRomance, theatre["choices"]["movieRomance"]], "movieRomance"]);
+            listenerList.push([[movieSex, theatre["choices"]["movieSex"]], "movieSex"]);
+            listenerList.push([[movieScary, theatre["choices"]["movieScary"]], "movieScary"]);
+            listenerList.push([[movieDoh, theatre["choices"]["movieDoh"]], "movieDoh"]);
         }
         if (moviecounter < 7)
-            listenerList.push([[leavehm, "Leave the theatre."]]);
+            listenerList.push([[leavehm, theatre["choices"]["leaveHm"]]]);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
@@ -322,18 +320,17 @@ function darkTheatre() {
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else if (gottagoflag > 0) {
-        // TODO preventpee change
-        curtext = preventpee(curtext);
+        listenerList = preventpee(listenerList);
         sayText(curtext);
     } else {
         curtext = standobjs(curtext);
         sayText(curtext);
-        listenerList.push([[stealSoda, "Get a soda."], "stealSoda"]);
-        listenerList.push([[kissher, "Kiss her."], "kissHer"]);
-        listenerList.push([[feelup, "Feel her up."], "feelUp"]);
-        if (!checkedherout) listenerList.push([[checkherout, "Check her out."], "checkHerOut"]);
-        if (yourbladder > yourbladurge) listenerList.push([[youpee, "Go to the bathroom."], "youPee"]);
-        listenerList.push([[leavehm, "Leave the Theatre"], "leaveHm"]);
+        listenerList.push([[stealSoda, objects["stealChoices"]["soda"]], "stealSoda"]);
+        listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
+        listenerList.push([[feelup, general["feelUp"]], "feelUp"]);
+        if (!checkedherout) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);
+        if (yourbladder > yourbladurge) listenerList.push([[youpee, theatre["choices"]["youPee"]], "youPee"]);
+        listenerList.push([[leavehm, theatre["choices"]["leaveHm"]], "leaveHm"]);
     }
     cListenerGenList(listenerList);
 }

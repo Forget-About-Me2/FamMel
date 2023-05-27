@@ -300,7 +300,7 @@ const noItemLoc = ["start2", "beachsex", "tubsex", "pnorestroom", "thebed"]
 const playOnly = ["yourhome", "gostore", "callher"]
 
 //Locations where drinkitems can be used
-//This isn't used but it's a handy list, might be useful for later
+//This isn't used, but it's a handy list, might be useful for later
 const drinkLoc = ["pickup", "driveout", "domovie",
     "thebar", "theclub", "themakeout", "thewalk", "thebeach", "theyard",
     "thehottub", "darkmovie", "photogame", "drinkinggame", "thehome"]

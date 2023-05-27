@@ -21,5 +21,11 @@
     "<div id=\"item-text\"></div>",
     "<div class=\"btn-group\" id=\"backpackitems\">",
     "</div>"
-  ]
+  ],
+  "buyChoices": {
+    "soda": "Buy soda."
+  },
+  "stealChoices": {
+    "soda": "Get a soda."
+  }
 }

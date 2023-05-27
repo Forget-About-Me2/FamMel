@@ -8,6 +8,16 @@
     [ "You and girlname enter the movie theatre. It's dark, silent and deserted."],
     [ "You are with girlname in the closed movie theatre."]
   ],
+  "choices": {
+    "askMovie": "Ask her which movie she wants to watch.",
+    "chooseMovie": "Watch a movie.",
+    "youPee": "Go to the toilet.",
+    "leaveHm": "Leave the theatre.",
+    "movieRomance": "Reach over and hold her hand.",
+    "movieSex": "Reach over and touch her thigh.",
+    "movieScary": "Lean closer to her.",
+    "MovieDoh": "Look her in the eyes."
+  },
   "favouriteMovie": {
     "theurge": {
       "name": "The Urge",
