@@ -54,7 +54,7 @@
     "girltalk Oh! You're the best! I'll be right back!!"]
   ],
   "choices": {
-    "continue": "Continue...",
-    "returnKey": "But I found this key I have to return!"
+    "returnKey": "But I found this key I have to return!",
+    "lookAround": "Look around."
   }
 }

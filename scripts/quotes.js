@@ -223,7 +223,7 @@ function cListener(choice, tag){
     document.getElementById('textsp').innerHTML += html;
 }
 
-//Gets the string html for the given choice
+//Gets the string html for the given choice, formats it if neccesarry
 function cListenerString(choice, loc){
     return "<li class='cListener' id='"+loc+"'>"+choice[1].formatVars()+"</li>";
 }
@@ -259,8 +259,10 @@ function cListenerGen(choice, loc){
     addListeners(choice, loc);
 }
 
-/*For a given list generates the element and listeners
+/*
+For a given list generates the element and listeners
 expected input: [[function, description], tag]
+Description is formatted if needed.
 */
 function cListenerGenList(list){
     list.forEach(item => cListener(item[0], item[1]));

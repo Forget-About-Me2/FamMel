@@ -93,5 +93,24 @@
   "exitHotTub": [
     "You take girlname's hand and help her out of the hot tub, admiting the view in the dim starlight.",
     "You can't help staring as she dries off as best as she can and dresses beside you in the warm evening air."
-  ]
+  ],
+  "choices": {
+    "suggestPeeOutside": "Suggest that she pees outside.",
+    "viewStars": "Suggest that you gaze at the stars.",
+    "inviteWalk": "Invite girlname to take a walk.",
+    "youPeeOutside": "Pee outside.",
+    "leaveHm": "Drive off.",
+    "suggestPeeGround": "Suggest that she pees on the ground.",
+    "examineGate": "Investigate the open gate.",
+    "keepWalking": "Keep walking...",
+    "exitWalk": "Walk back to the car.",
+    "suggestPeeInTub":"Suggest that she pees in the tub.",
+    "makeOut": "Make out with her.",
+    "youPeeInTub": "Pee in the hot tub.",
+    "exitHotTub": "Get out of the tub.",
+    "beachSwim": "Sure, let's go for a swim!",
+    "denySwim": "Nah. We didn't bring swimsuits.",
+    "suggestPeeSand": "Suggest that she pees on the sand.",
+    "leaveBeach": "Leave the beach."
+  }
 }

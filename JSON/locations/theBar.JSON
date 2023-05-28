@@ -165,8 +165,15 @@
 "holdYourself": [
   [ "You surreptitiously sneak your hand down into your crotch and massage."],
   [ "girlname doesn't seem to notice"],
-  [ "girlname sees you and puls your hand back, away from your dick.",
+  [ "girlname sees you and pulls your hand back, away from your dick.",
     "girltalk Oi! No cheating!"
   ]
-]
+],
+  "stealBeer": "You climb behind the bar and find a clean glass.  Holding it under the tap, you carefully pull the lever and watch as the frothy amber liquid fills the glass.",
+  "stealMoreBeer": "You find another clean glass, and fill it up in a similar way as the previous one.",
+  "choices": {
+    "youPee": "Go to the toilet.",
+    "leaveHm": "Leave the bar.",
+    "playDarts": "Play a game of darts."
+  }
 }

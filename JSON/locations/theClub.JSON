@@ -27,7 +27,12 @@
     "photoChange": "Ask her to change.",
     "photoNude": "Ask her to disrobe.",
     "goback": "Photo session is over...",
-    "takePhoto": "Take a photo..."
+    "takePhoto": "Take a photo...",
+    "goDance": "Ask her to dance.",
+    "youPee": "Go to the toilet.",
+    "leaveHm": "Leave the club.",
+    "keepDancing": "Keep dancing.",
+    "leaveDance": "Leave the dance floor."
   },
   "gameFail": "girltalk No way, dude. I'm outta here.",
   "gameAccept": {

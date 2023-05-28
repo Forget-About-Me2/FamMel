@@ -26,11 +26,9 @@ function thebar(){
         curtext = printList(curtext, bar["theBar"][0]);
         sayText(curtext);
         if (haveItem("theBarKey")) {
-            listenerList.push([[rebar, "But I found this key I have to return!"], "reBar"]);
-            cListener([rebar, "But I found this key I have to return!"], "reBar");
+            listenerList.push([[rebar, locjson["choices"]["returnKey"]], "reBar"]);
         }
-        listenerList.push([[driveout, "Continue..."], "driveOut"]);
-        cListener([driveout, "Continue..."], "driveOut");
+        listenerList.push([[driveout, general["continue"]], "driveOut"]);
     } else if (!((thetime < barclosingtime) || locstack[0] === "thebar")) itsClosed("theBar", darkBar, "darkBar");
     else {
         if (locstack[0] !== "thebar"){
@@ -47,35 +45,28 @@ function thebar(){
         else if (yourbladder > yourbladlose) wetyourself();
         else {
             if (gottagoflag > 0) {
-                // TODO preventpee change
-                curtext = preventpee(curtext);
+                listenerList = preventpee(listenerList);
                 sayText(curtext);
             } else {
                 listenerList = barTalk(curtext);
                 listenerList.push([[function () {
                     buyItem("beer")
-                }], "buybeer"]);
-                cListener([function () {
-                    buyItem("beer")
-                }, "Buy beer."], "buybeer");
+                },objects["buyChoices"]["beer"] ], "buybeer"]);
                 if (!locations.theBar.foundKey) {
                     listenerList.push([[function () {
                         lookAround("theBar")
-                    }], "lookAround"]);
-                    cListener(["", "Look around."], "lookAround");
+                    }, locjson["choices"]["lookAround"]], "lookAround"]);
                 }
                 curtext = standobjs([]);
                 addSayText(curtext);
                 if (yourbladder > yourbladurge) {
-                    listenerList.push([[youpee], "youpee"],);
-                    cListener([youpee, "Go to the bathroom."], "youpee");
+                    listenerList.push([[youpee, bar["choices"]["youPee"]], "youpee"]);
                 }
             }
-            listenerList.push([[leavehm], "leavehm"]);
-            cListener([leavehm, "Leave the bar."], "leavehm");
+            listenerList.push([[leavehm, bar["choices"]["leaveHm"]], "leavehm"]);
         }
     }
-    addListenersList(listenerList);
+    cListenerGenList(listenerList);
 }
 
 //You use the key you found as excuse to go to the bar another time
@@ -127,7 +118,10 @@ function sellPanties(){
     sayText(["BARTENDER: I'll give you $" + price + " for those."]);
     money += price;
     objects.wetPanties.value -= 1;
-    let listenerList = [];
+    let listenerList = [
+        [[function () {buyItem("beer")}, objects["buyChoices"]["beer"]], "buybeer"],
+        [[thebar, general["continue"]], "theBar"]
+    ];
     listenerList.push([[thebar], "theBar"]);
     listenerList.push([[function () {buyItem("beer")}], "buybeer"]);
     cListener([function () {buyItem("beer")}, "Buy more beer."], "buybeer");
@@ -135,16 +129,16 @@ function sellPanties(){
     addListenersList(listenerList);
 }
 
-//TODO turn this into a JSON
 function stealbeer() {
     let curtext = [];
-    curtext.push("You climb behind the bar and find a clean glass.  Holding it under the tap, you carefully pull the lever and watch as the frothy amber liquid fills the glass.");
+    curtext.push(bar["stealBeer"]);
     objects.beer.value++;
     sayText(curtext);
-    cListener([stealbeer2, "Steal another beer"], "stealbeer");
-    cListener([darkBar, "Continue..."], "darkbar");
-    addListeners([stealbeer2, "Steal another beer"], "stealbeer");
-    addListeners([darkBar, "Continue..."], "darkbar");
+    let listenerList = [
+        [[stealbeer2, objects["stealChoices"]["moreBeer"]], "stealbeer"],
+        [[darkBar, general["continue"]], "darkbar"]
+    ]
+    cListenerGenList(listenerList);
 }
 
 //TODO put a limit on this/ Game update
@@ -157,13 +151,14 @@ function stealbeer2(){
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
-        curtext.push("You find another clean glass, and fill it up in a similar way as the previous one.");
+        curtext.push(bar["stealMoreBeer"]);
         objects.beer.value++;
         sayText(curtext);
-        cListener([stealbeer2, "Steal another beer"], "stealbeer");
-        cListener([darkBar, "Continue..."], "darkbar");
-        addListeners([stealbeer2, "Steal another beer"], "stealbeer");
-        addListeners([darkBar, "Continue..."], "darkbar");
+        let listenerList = [
+            [[stealbeer2, objects["stealChoices"]["moreBeer"]], "stealbeer"],
+            [[darkBar, general["continue"]], "darkbar"]
+        ]
+        cListenerGenList(listenerList);
     }
 }
 
@@ -188,38 +183,31 @@ function darkBar(){
    }
    curtext = showneed(curtext);
    curtext = displayyourneed(curtext);
+   let listenerList = []
    if (bladder > bladlose) wetherself();
    else if (yourbladder > yourbladlose) wetyourself();
    else if (gottagoflag > 0) {
-       // TODO preventpee change
-       preventpee(curtext);
+       listenerList = preventpee(listenerList);
        sayText(curtext);
    }
    else {
-       let listenerList = [];
        curtext = standobjs(curtext);
        sayText(curtext);
-       listenerList.push([[stealbeer], "stealBeer"]);
-       cListener([stealbeer, "Get a beer."], "stealBeer");
-       listenerList.push([[kissher], "kissHer"]);
-       cListener([kissher, "Kiss her."], "kissHer");
-       listenerList.push([[feelup], "feelUp"]);
-       cListener([feelup, "Feel her up."], "feelUp");
-       listenerList.push([[playDarts], "playDarts"]);
-       cListener([playDarts, "Play a game of darts"], "playDarts");
+       listenerList.push(
+           [[stealbeer, objects["stealChoices"]["beer"]], "stealBeer"],
+           [[kissher, general["kissHer"]], "kissHer"],
+           [[feelup, general["feelUp"]], "feelUp"],
+           [[playDarts, bar["choices"]["playDarts"]], "playDarts"]
+           );
        if (!checkedherout){
-           listenerList.push([[checkherout], "checkOut"]);
-           cListener([checkherout, "Check her out."], "checkOut");
+           listenerList.push([[checkherout, general["checkHerOut"]], "checkOut"]);
        }
        if (yourbladder > yourbladurge) {
-           listenerList.push([[youpee], "youPee"]);
-           cListener([youpee, "Go to the bathroom."], "youPee");
+           listenerList.push([[youpee, bar["choices"]["youPee"]], "youPee"]);
        }
-       listenerList.push([[leavehm], "leaveHm"]);
-       cListener([leavehm, "Leave the bar."], "leaveHm");
-       addListenersList(listenerList);
+       listenerList.push([[leavehm, bar["choices"]["leaveHm"]], "leaveHm"]);
    }
-
+    cListenerGenList(listenerList);
 }
 
 function pdrinkinggame() {

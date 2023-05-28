@@ -44,24 +44,22 @@ function theMakeOut() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            // TODO preventpee change
-            curtext = preventpee(curtext);
-            listenerList.push([[peeoutside, "Suggest that she pees outside."], "peeOutside"]);
+            listenerList = preventpee(listenerList);
+            listenerList.push([[peeoutside, makeOut["choices"]["suggestPeeOutside"]], "peeOutside"]);
         } else {
-            listenerList.push([[viewStars, "Suggest that you gaze at the stars."], "viewStars"]);
-            listenerList.push([[theWalk, "Invite " + girlname + " to take a walk."], "theWalk"]);
+            listenerList.push([[viewStars, makeOut["choices"]["viewStars"]], "viewStars"]);
+            listenerList.push([[theWalk, makeOut["choices"]["inviteWalk"]], "theWalk"]);
             if (!locations.theTheatre.foundKey) {
-                listenerList.push([[function () {lookAround("theTheatre")}, "look around."], "lookAround"]);
+                listenerList.push([[function () {lookAround("theTheatre")}, locjson["choices"]["lookAround"]], "lookAround"]);
             }
             curtext = standobjs(curtext);
             if (yourbladder > yourbladurge)
-                listenerList.push([[ypeeoutside, "Pee outside."], "ypeeOutside"])
+                listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "ypeeOutside"])
         }
-        listenerList.push([[leavehm, "Drive off."], "leaveHm"]);
+        listenerList.push([[leavehm, makeOut["choices"]["leaveHm"]], "leaveHm"]);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
-
 }
 
 function failMakeOut() {
@@ -144,20 +142,18 @@ function theWalk() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            // TODO preventpee change
-            curtext = preventpee(curtext);
-            listenerList.push([[peeoutside, "Suggest that she pees on the ground."]]);
+            listenerList = preventpee(listenerList);
+            listenerList.push([[peeoutside, makeOut["choices"]["suggestPeeGround"]], "peeOutside"]);
         } else {
             if (darkYard) {
-                listenerList.push([[examineGate, "Investigate the open gate."], "examineGate"]);
+                listenerList.push([[examineGate, makeOut["choices"]["examineGate"]], "examineGate"]);
             }
             if (yourbladder > yourbladurge)
-                listenerList.push([[ypeeoutside, "Pee outside."], "yPeeOutside"]);
-                // c("ypeeoutside", "Pee outside.");
+                listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "yPeeOutside"]);
             curtext = standobjs(curtext);
-            listenerList.push([[theWalk, "Keep walking..."], "theWalk"]);
+            listenerList.push([[theWalk, makeOut["choices"]["keepWalking"]], "theWalk"]);
         }
-        listenerList.push([[exitWalk, "Walk back to the car."], "exitWalk"]);
+        listenerList.push([[exitWalk, makeOut["choices"]["exitWalk"]], "exitWalk"]);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
@@ -209,7 +205,6 @@ function theYard() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            // TODO preventpee change
             curtext = preventpee(curtext);
             listenerList.push([[peeoutside, "Suggest that she pee on the ground."], "peeOutside"]);
         } else {
@@ -275,20 +270,19 @@ function theHotTub() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            // TODO preventpee change
-            curtext = preventpee(curtext);
-            listenerList.push([[peeintub, "Suggest that she pees in the tub."], "peeInTub"]);
+            listenerList = preventpee(listenerList);
+            listenerList.push([[peeintub, makeOut["choices"]["suggestPeeInTub"]], "peeInTub"]);
         } else {
-            listenerList.push([[kissher, "Kiss her."], "kissHer"]);
-            listenerList.push([[feelup, "Feel her up."], "FeelUp"]);
+            listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
+            listenerList.push([[feelup, general["feelHerUp"]], "FeelUp"]);
             if (attraction >= 130 && shyness <= 0) {
-                listenerList.push([[function () {haveSex("theHotTub")}, "Make out with her."], "sexTub"]);
+                listenerList.push([[function () {haveSex("theHotTub")}, makeOut["choices"]["makeOut"]], "sexTub"]);
             }
             curtext = standobjs(curtext);
             if (yourbladder > yourbladurge)
-                listenerList.push([[yPeeInTub, "Pee in the hot tub"], "ypeetub"]);
+                listenerList.push([[yPeeInTub, makeOut["choices"]["youPeeInTub"]], "ypeetub"]);
         }
-        listenerList.push([[exitHotTub, "Get out of the tub."], "goBack"]);
+        listenerList.push([[exitHotTub, makeOut["choices"]["exitHotTub"]], "goBack"]);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
@@ -309,12 +303,10 @@ function theBeach() {
     let curtext = [];
     if (locstack[0] !== "theBeach") {
         curtext = printList(curtext, makeOut["theBeach"][0]);
-        // s("You and " + girlname + " walk out onto the sand.  It makes a soft swooshing noise as you step, like boots on dry snow.");
         pushloc("theBeach");
         askedswim = 0;
     } else {
         curtext = printList(curtext, makeOut["theBeach"][1]);
-        // s("You and " + girlname + " are on the dark beach.");
         if (askedswim > 0) askedswim--;
     }
 
@@ -323,10 +315,8 @@ function theBeach() {
         curtext = displayneed(curtext);
         askedswim = 7;
         curtext = printList(curtext, makeOut["theBeach"][2]);
-        // s(girltalk + " Hey!  Want to go for a swim together?");
-        // s(girlname + " seems strangely insistent.  You realize that neither of you has swimming gear, so this means you get to see her naked.  Or at least see as much as you can in the dark.");
-        listenerList.push([[beachSwim, "Sure, let's go for a swim!"], "beachSwim"]);
-        listenerList.push([[theBeach, "Nah. We didn't bring swimsuits."], "theBeach"]);
+        listenerList.push([[beachSwim, makeOut["choices"]["beachSwim"]], "beachSwim"]);
+        listenerList.push([[theBeach, makeOut["choices"]["denySwim"]], "theBeach"]);
     } else {
         curtext = showneed(curtext);
         curtext = displayyourneed(curtext);
@@ -340,19 +330,18 @@ function theBeach() {
         }
         else {
             if (gottagoflag > 0) {
-                // TODO preventpee change
-                curtext = preventpee(curtext);
-                listenerList.push([[peeoutside, "Suggest that she pees on the sand."], "peeOutside"]);
+                listenerList = preventpee(listenerList);
+                listenerList.push([[peeoutside, makeOut["choices"]["suggestPeeSand"]], "peeOutside"]);
             } else {
-                listenerList.push([[kissher, "Kiss her."], "kissHer"]);
-                listenerList.push([[feelup, "Feel her up."], "FeelUp"]);
+                listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
+                listenerList.push([[feelup, general["feelHerUp"]], "FeelUp"]);
                 curtext = standobjs(curtext);
-                if (!checkedherout) listenerList.push([[checkherout, "Check her out."], "checkHerOut"]);
-                if (yourbladder > yourbladurge) listenerList.push([[ypeeoutside, "Pee outside."], "yPeeOutside"]);
+                if (!checkedherout) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);
+                if (yourbladder > yourbladurge) listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "yPeeOutside"]);
                 if (attraction > 100 && shyness < 10)
-                    listenerList.push([[function () {haveSex("theBeach")}, "Make out with her."], "sexTub"]);
+                    listenerList.push([[function () {haveSex("theBeach")}, makeOut["choices"]["makeOut"]], "sexTub"]);
             }
-            listenerList.push([[leaveBeach, "Leave the beach."], "goBack"]);
+            listenerList.push([[leaveBeach, makeOut["choices"]["leaveBeach"]], "goBack"]);
         }
     }
     sayText(curtext);

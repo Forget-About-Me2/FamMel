@@ -23,9 +23,13 @@
     "</div>"
   ],
   "buyChoices": {
-    "soda": "Buy soda."
+    "soda": "Buy soda.",
+    "beer": "Buy beer.",
+    "cocktail": "Buy a drink."
   },
   "stealChoices": {
-    "soda": "Get a soda."
+    "soda": "Get a soda.",
+    "beer": "Get a beer.",
+    "moreBeer": "Steal another beer."
   }
 }

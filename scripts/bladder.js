@@ -334,7 +334,6 @@ function indepee(curtext=[], called=false) {
             curtext.push(pickrandom(appearance["clothes"][heroutfit]["peeprivate"]));
         else
             curtext.push(pickrandom(appearance["clothes"][heroutfit]["peeprivate2"]));
-        //TODO check validity of these attraction
         attraction -= 2;
         flushdrank();
     }

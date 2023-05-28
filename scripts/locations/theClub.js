@@ -24,8 +24,8 @@ function theClub() {
     if (locations.theClub.visited && locstack[0] === "driveout" && thetime < clubclosingtime) {
         curtext = printList(curtext, club["theClub"][0]);
         if (haveItem("theClubKey"))
-            listenerList.push([[reClub, "But I found this key I have to return!"], "reClub"]);
-        listenerList.push([[driveout, "Continue..."], "driveOut"]);
+            listenerList.push([[reClub, locjson["choices"]["returnKey"]], "reClub"]);
+        listenerList.push([[driveout, general["continue"]], "driveOut"]);
     } else if ((thetime < clubclosingtime) || locstack[0] === "theClub") {
             if (locstack[0] !== "theClub" && locstack[0] !== "doDance") {
                 curtext = printList(curtext, club["theClub"][1]);
@@ -48,17 +48,16 @@ function theClub() {
                 return;
             }
             else if (gottagoflag > 0)
-                // TODO preventpee change
-                curtext = preventpee(curtext);
+                listenerList = preventpee(listenerList);
             else {
-                listenerList.push([[function () {buyItem("cocktail")}, "Buy  a drink."], "buyDrink"]);
-                listenerList.push([[goDance, "Ask her to dance."], "goDance"]);
+                listenerList.push([[function () {buyItem("cocktail")}, objects["buyChoices"]["cocktail"]], "buyDrink"]);
+                listenerList.push([[goDance, club["choices"]["goDance"]], "goDance"]);
                 if (!locations.theClub.foundKey)
-                    listenerList.push([[function () {lookAround("theClub")}, "Look around."], "lookAround"]);
+                    listenerList.push([[function () {lookAround("theClub")}, locjson["choices"]["lookAround"]], "lookAround"]);
                 curtext = standobjs(curtext);
                 if (yourbladder > yourbladurge)
-                    listenerList.push([[youpee, "Go to the bathroom."], "youpee"]);
-                listenerList.push([[leavehm, "Leave the Club."], "leavehm"]);
+                    listenerList.push([[youpee, club["choices"]["youPee"]], "youpee"]);
+                listenerList.push([[leavehm, club["Choices"]["leaveHm"]], "leavehm"]);
             }
         } else {
             itsClosed("theClub", darkClub, "darkClub");
@@ -115,16 +114,15 @@ function doDance(){
     else {
         let listenerList = [];
         if (gottagoflag > 0)
-            // TODO preventpee change
-            curtext = preventpee(curtext);
+            listenerList = preventpee(listenerList);
         else{
-            listenerList.push([[doDance, "Keep dancing."], "doDance"]);
-            listenerList.push([[kissher,  "Kiss her."], "kissHer"]);
-            listenerList.push([[feelup, "Feel her up."], "feelup"]);
+            listenerList.push([[doDance, club["choices"]["keepDancing"]], "doDance"]);
+            listenerList.push([[kissher,  general["kissHer"]], "kissHer"]);
+            listenerList.push([[feelup, general["feelHerUp"]], "feelup"]);
             if (yourbladder > yourbladurge)
-                listenerList.push([[youpee, "Go to the toilet."], "youpee"]);
+                listenerList.push([[youpee, club["choices"]["youPee"]], "youpee"]);
         }
-        listenerList.push([[leaveDance, "Leave the dancefloor."], "leaveDance"]);
+        listenerList.push([[leaveDance, club["choices"]["leaveDance"]], "leaveDance"]);
         curtext = standobjs(curtext);
         sayText(curtext);
         cListenerGenList(listenerList);
@@ -161,22 +159,22 @@ function darkClub() {
     curtext = displayyourneed(curtext);
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
-    else if (gottagoflag > 0) {
-        // TODO preventpee change
-        curtext = preventpee(curtext);
-        sayText(curtext);
-    }
     else {
         let listenerList = [];
-        curtext = standobjs(curtext);
+        if (gottagoflag > 0) {
+            listenerList = preventpee(listenerList);
+        } else {
+            curtext = standobjs(curtext);
+            sayText(curtext);
+            listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
+            listenerList.push([[feelup, general["feelHerUp"]], "feelUp"]);
+            if (!checkedherout)
+                listenerList.push([[checkherout, general["checkHerOut"]], "checkOut"]);
+            if (yourbladder > yourbladurge)
+                listenerList.push([[youpee, club["choices"]["youPee"]], "youPee"]);
+            listenerList.push([[leavehm, club["choices"]["leaveHm"]], "LeaveHm"]);
+        }
         sayText(curtext);
-        listenerList.push([[kissher, "Kiss her."], "kissHer"]);
-        listenerList.push([[feelup, "Feel her up."], "feelUp"]);
-        if (!checkedherout)
-            listenerList.push([[checkherout, "Check her out."], "checkOut"]);
-        if (yourbladder > yourbladurge)
-            listenerList.push([[youpee, "Go to the bathroom."], "youPee"]);
-        listenerList.push([[leavehm, "Leave the club."], "LeaveHm"]);
         cListenerGenList(listenerList);
     }
 }
