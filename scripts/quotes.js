@@ -600,16 +600,21 @@ function handleFlirt(curtext){
     let choice = [];
     let low = "low";
     let med = "med";
+    let high = "high";
     if(locstack[0] === "callher"){
         low += "cell";
         med += "cell";
+    } else if (locstack[0] === "theHotTub"){
+        low += "Naked";
+        med += "Naked";
+        high += "Naked";
     }
     result.push([flirtquotes[low][randcounter]]);
     choice.push("flirt_l");
     incrandom();
     if (Math.floor(Math.random() * 7) === 0 && locstack[0] !== "callher"){
         choice.push("flirt_h");
-        result.push([flirtquotes["high"][randcounter]]);
+        result.push([flirtquotes[high][randcounter]]);
     } else {
         choice.push("flirt_m");
         result.push([flirtquotes[med][randcounter]]);

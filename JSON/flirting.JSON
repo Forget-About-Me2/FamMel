@@ -7,6 +7,13 @@
       "she has nice eyes",
       "you like the way she dresses",
       "you like her hair"],
+    "lowNaked": [
+      "she's cute",
+      "she's pretty",
+      "she's nice",
+      "she has nice eyes",
+      "you like her hair"
+    ],
     "lowcell": [
       "she sounds cute",
       "she's smart",
@@ -21,6 +28,12 @@
       "she has a cute butt",
       "she has sexy legs",
       "she dresses sexy"],
+    "medNaked": [
+      "she's sexy",
+      "she's gorgeous",
+      "she looks hot",
+      "she has a cute butt",
+      "she has sexy legs"],
     "medcell": [
       "she sounds sexy",
       "she's vivacious",
@@ -34,7 +47,12 @@
       "you'd like to shower with her tomorrow",
       "she's given you a hard-on",
       "you envy her panties",
-      "you envy her bra"]
+      "you envy her bra"],
+    "highNaked": [
+      "she's making you hot",
+      "you bet she's gorgeous naked",
+      "you'd like to shower with her tomorrow",
+      "she's given you a hard-on"]
   },
   "respons" : {
     "low": [

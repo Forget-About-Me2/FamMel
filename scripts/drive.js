@@ -41,7 +41,6 @@ function driveout() {
         suggestedloc = "none";
         if (wetthecar)
             curtext.push(appearance["clothes"][heroutfit]["soakedseatquote"]);
-            // s(soakedseatquote);
         else
             curtext = printIntro(curtext, 1);
         curtext = printIntro(curtext, 2);
