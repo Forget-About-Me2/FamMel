@@ -325,7 +325,7 @@ function darkTheatre() {
     } else {
         curtext = standobjs(curtext);
         sayText(curtext);
-        listenerList.push([[stealSoda, objects["stealChoices"]["soda"]], "stealSoda"]);
+        listenerList.push([[stealSoda, objQuotes["stealChoices"]["soda"]], "stealSoda"]);
         listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
         listenerList.push([[feelup, general["feelUp"]], "feelUp"]);
         if (!checkedherout) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);

@@ -8,3 +8,10 @@ The game is also offered on the following sites:
 * [Latest release](http://fammel.unaux.com/)
 * [development version](http://famtest.unaux.com/)
 
+# Debugging
+There is a list of usefull debug functions defined in the "debugFunctions.js" file.
+These functions are added to a debug object that can be called from the console when running the game.
+I.e. to get all items you can use 
+`Debug.allItems()`
+
+To get a list of all functions use `Debug.help()`

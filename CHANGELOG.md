@@ -15,6 +15,8 @@
 * Fixed you being bursting and toilet being locked resulting in an error
 * Fixed some broken quotes
 * When peeing into things when you're alone you don't interact with the girl that isn't there.
+* Fix that you can't ask her to pee outside when asking her if she has to pee while at the make out spot
+* Fix that you can compliment her clothes when she's not wearing any
 
 # version 0.5.2
 * Fixed buying items being broken.
