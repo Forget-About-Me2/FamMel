@@ -51,11 +51,11 @@ function thebar(){
                 listenerList = barTalk(curtext);
                 listenerList.push([[function () {
                     buyItem("beer")
-                },objects["buyChoices"]["beer"] ], "buybeer"]);
+                },objQuotes["buyChoices"]["beer"] ], "buybeer"]);
                 if (!locations.theBar.foundKey) {
                     listenerList.push([[function () {
                         lookAround("theBar")
-                    }, locjson["choices"]["lookAround"]], "lookAround"]);
+                    }, sharedLoc["choices"]["lookAround"]], "lookAround"]);
                 }
                 curtext = standobjs([]);
                 addSayText(curtext);
@@ -93,8 +93,7 @@ function barTalk(curtext){
             order.splice(i, 1);
             listenerList.push([[function () {
                 barResp(cur);
-            }], "barResp"+cur]);
-            cListener(["", curTopic[cur]], "barResp"+cur);
+            }, curTopic[cur]], "barResp"+cur]);
         }
         return listenerList;
     } else
