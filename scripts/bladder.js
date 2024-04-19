@@ -62,9 +62,9 @@ const pnorestroomthreshold = 110; // She'll pee outside of the restroom.
 const pwatchthreshold = 90; // You can watch her pee in a closed place.
 const drinkinggamethreshold = 90; // She'll play your silly drinking game.
 const photoGameThresholds = {
-  snapshots: 90, // She'll play your silly photo game
-  costume: 100, // She'll play your silly photo game in costume
-  nudes: 110  // She'll play your silly photo game nude
+    snapshots: 90, // She'll play your silly photo game
+    costume: 100, // She'll play your silly photo game in costume
+    nudes: 110  // She'll play your silly photo game nude
 };
 const hottubthresh = 90; //  She'll strip and go into the hot tub
 const holditneedthresh = 30; // She'll hold it for need
@@ -91,8 +91,8 @@ let nowpeeing = 0; // She is currently peeing
 let ynowpeeing = 0; // You're currently peeing
 
 //Initializes the bladder values for the girl
-function initUrge(urge){
-    minurge = urge * minperc/100;
+function initUrge(urge) {
+    minurge = urge * minperc / 100;
     updateurge(urge);
 }
 
@@ -162,7 +162,7 @@ function flushdrank() {
 
 // Showneed calculates how she's going to indicate
 // her current level of need ( if at all ) based on her situation
-function showneed(curtext=[]) {
+function showneed(curtext = []) {
 
     // Clear the gottagoflag.  It will be set by displaygottavoc().
     gottagoflag = 0;
@@ -198,15 +198,15 @@ function showneed(curtext=[]) {
         // She'll try to hold it if you flirted with somebody at that location
         // Shyness < 80 is enough to ask if she's having a bladder emergency
         if (shyness < 80 && bladder > blademer) {
-            waitcounter = Math.max(Math.round(bladlose/150), 6);
+            waitcounter = Math.max(Math.round(bladlose / 150), 6);
             curtext = displaygottavoc(curtext);
             // Shyness < 60 is enough to ask if she's merely needing to pee bad
         } else if (shyness < 60 && bladder > bladneed) {
-            waitcounter = Math.max(Math.round(bladlose/90), 9);
+            waitcounter = Math.max(Math.round(bladlose / 90), 9);
             curtext = displaygottavoc(curtext);
             // Shyness < 40 and she's letting you know at 1st urge.
         } else if (shyness < 40 && bladder > bladurge) {
-            waitcounter = Math.max(Math.round(bladlose/75), 12);
+            waitcounter = Math.max(Math.round(bladlose / 75), 12);
             curtext = displaygottavoc(curtext);
             // Otherwise, she may or may not show symptoms of having to go
         } else if ((Math.random() * bladlose) < bladder) {
@@ -257,11 +257,14 @@ function displaygottavoc(curtext, index) {
     }
     if (bladder >= bladneed) gottagoflag = 1;
     if (bladder >= bladurge) brokeice = 1;
-    if(index){
-        if (textchoice.length === 1){
+    if (index) {
+        if (textchoice.length === 1) {
             curtext.splice(index, 0, textchoice[0]);
         } else {
-            textchoice.forEach(text => {curtext.splice(index, 0, text); index++});
+            textchoice.forEach(text => {
+                curtext.splice(index, 0, text);
+                index++
+            });
         }
     } else
         curtext = printList(curtext, textchoice);
@@ -287,7 +290,7 @@ function interpbladder(curtext) {
 }
 
 //TODO lose control when bursting on the way
-function indepee(curtext=[], called=false) {
+function indepee(curtext = [], called = false) {
     gottagoflag = 0;
     //TODO the locstack aren't compeltely correct
     if (haveherpurse) {
@@ -307,9 +310,9 @@ function indepee(curtext=[], called=false) {
         curtext.push(peelines["noneavailable"][0]);
     } else
         curtext = printList(curtext, peelines["remaining"]);
-    if ((locstack[0] === "theBar" && randomchoice(rrlockedthresh) ) ||
+    if ((locstack[0] === "theBar" && randomchoice(rrlockedthresh)) ||
         ((locstack[0] === "theClub" || locstack[0] === "doDance") && randomchoice(rrlinethresh)) ||
-        (locstack[0] === "theTheatre" && randomchoice(rrMovieLineThresh) || locstack[0] === "domovie" && randomchoice(rrMovieLineThresh))){
+        (locstack[0] === "theTheatre" && randomchoice(rrMovieLineThresh) || locstack[0] === "domovie" && randomchoice(rrMovieLineThresh))) {
         curtext = bathroomlocked(curtext);
     } else if (locstack[0] === "theMakeOut") {
         curtext.push(peelines["noneavailable"][1]);
@@ -358,7 +361,7 @@ function bathroomlocked(curtext) {
         curtext.push(locked["urgency"][1]);
     else
         curtext.push(locked["urgency"][2]);
-    if(locstack[0] === "thebar") {
+    if (locstack[0] === "thebar") {
         //She tells you the bathroom was locked, depending on how often you tried already
         if (rrlockedflag > 3) {
             curtext.push(locked["cbar"][0]);
@@ -392,8 +395,8 @@ function displayneed(curtext) {
     showedneed = 1;
     if (locstack[0] === "themakeout" || locstack[0] === "driveout" ||
         locstack[0] === "drivearound" || locstack[0] === "domovie" ||
-        locstack[0] === "thebed" || fuckingnow > 0){
-        if (bladder >= bladlose){
+        locstack[0] === "thebed" || fuckingnow > 0) {
+        if (bladder >= bladlose) {
             curtext.push(needs["sitneedlose"][randcounter]);
         } else if (bladder > blademer) {
             curtext.push(needs["sitneedemer"][randcounter]);
@@ -402,8 +405,8 @@ function displayneed(curtext) {
         } else if (bladder > bladurge) {
             curtext.push(needs["sitneedurge"][randcounter]);
         }
-    } else if (locstack[0] === "thehottub"){
-        if (bladder >= bladlose){
+    } else if (locstack[0] === "thehottub") {
+        if (bladder >= bladlose) {
             curtext.push(needs["tubneedlose"][randcounter]);
         } else if (bladder > blademer) {
             curtext.push(needs["tubneedemer"][randcounter]);
@@ -413,7 +416,7 @@ function displayneed(curtext) {
             curtext.push(needs["tubneedurge"][randcounter]);
         }
     } else {
-        if (bladder >= bladlose){
+        if (bladder >= bladlose) {
             curtext.push(needs["needlose"][randcounter]);
         } else if (bladder > blademer) {
             curtext.push(needs["needemer"][randcounter]);
@@ -438,7 +441,7 @@ function askpee() {
     if (bladder > bladneed && bladder < blademer)
         curtext.push(needs["askpee"][3]);
     if (((shyness < 50 && bladder > bladneed) ||
-        bladder > blademer) &&
+            bladder > blademer) &&
         (locstack[0] !== "drinkinggame" && !externalflirt)) {
         curtext = displaygottavoc(curtext);
         curtext = interpbladder(curtext);
@@ -471,18 +474,24 @@ function preventpee(listenerList = []) {
 
     if (locstack[0] === "doDance")
         listenerList.push([[ptogether, needs["preventpee"]["pTogether"]], "pTogether"]);
-    if (locstack[0] === "darkBar" || locstack[0] === "darkTheatre" || locstack[0] === "darkClub")
+    else if (locstack[0] === "darkBar" || locstack[0] === "darkTheatre" || locstack[0] === "darkClub")
         listenerList.push([[pgirlsroom, needs["preventpee"]["pGirlsRoom"]], "pGirlRoom"]);
-    if (locstack[0] === "darkTheatre")
+    else if (locstack[0] === "darkTheatre")
         listenerList.push([[pnorestroom, needs["preventpee"]["pNoRestroom"]], "pNoRestroom"]);
-    if (locstack[0] === "darkBar")
+    else if (locstack[0] === "darkBar")
         listenerList.push([[pdrinkinggame, needs["preventpee"]["pDrinkingGame"]], "pDrinkingGame"]);
-    if (locstack[0] === "darkClub")
+    else if (locstack[0] === "darkClub")
         listenerList.push([[pphotogame, needs["preventpee"]["pPhotoGame"]], "pPhotoGame"]);
-    if (locstack[0] === "driveout" && !gasStation)
+    else if (locstack[0] === "driveout" && !gasStation)
         listenerList.push([[nextstop, needs["preventpee"]["nextStop"]], "nextStop"]);
-    if (locstack[0] === "theMakeOut" || locstack[0] === "theBeach" || locstack[0] === "theYard" || locstack[0] === "theWalk")
-        listenerList.push([[peeoutside, needs["preventpee"]["pOutside"]], "pOutside"]);
+    else if (locstack[0] === "theYard" || locstack[0] === "theWalk")
+        listenerList.push([[peeoutside, needs["preventpee"]["suggestPeeGround"]], "pOutside"]);
+    else if (locstack[0] === "theMakeOut")
+        listenerList.push([[peeoutside, needs["preventpee"]["suggestPeeOutside"]], "pOutside"]);
+    else if (locstack[0] === "theBeach")
+        listenerList.push([[peeoutside, needs["preventpee"]["suggestPeeSand"]], "pOutside"]);
+    else if (locstack[0] === "theHotTub")
+        listenerList.push([[peeintub, needs["preventpee"]["suggestPeeInTub"]], "suggestPeeInTub"]);
     else
         listenerList.push([[allowpee, needs["preventpee"]["allowPee"]], "allowPee"]);
 
@@ -547,6 +556,7 @@ function holdit() {
     }
     sayText(curtext);
 }
+
 //  DisplayHoldQuip function prints a quasi-random quip from "+girlname+"
 //  saying she's going to try to hold it for you.
 function displayholdquip(curtext) {
@@ -583,12 +593,13 @@ function askcanhold() {
 
 let toldstories;
 let lastStory;
+
 function pstory() {
     let curtext = [needs["pstory"][0]];
     let listenerList = [];
     curtext = displayneed(curtext);
     if (toldstories.length === 0) {
-        toldstories = range(0, needs["peestory"].length-1);
+        toldstories = range(0, needs["peestory"].length - 1);
         toldstories.splice(toldstories.indexOf(lastStory), 1);
     }
     lastStory = pickrandom(toldstories);
@@ -602,7 +613,7 @@ function pstory() {
 }
 
 function pstory2() {
-    let curtext = printListSelection([], needs["pstory"], [1,2])
+    let curtext = printListSelection([], needs["pstory"], [1, 2])
     curtext.push(needs["peestory2"][lastStory]);
     curtext = displayneed(curtext);
     curtext = callChoice(["curloc", "Continue..."], curtext);
@@ -734,14 +745,14 @@ function peephone() {
     gottagoflag = 0;
     if (attraction > 30) {
         if (bladder > blademer && shyness < 75) {
-            curtext = printLList(curtext,peelines["peephone"], 0);
+            curtext = printLList(curtext, peelines["peephone"], 0);
             attraction += 10;
             flushdrank();
         } else {
-            curtext = printLList(curtext,peelines["peephone"], 1);
+            curtext = printLList(curtext, peelines["peephone"], 1);
         }
     } else {
-        curtext = printLList(curtext,peelines["peephone"], 2);
+        curtext = printLList(curtext, peelines["peephone"], 2);
         bladder = 0;
     }
     curtext = c([locstack[0], "Continue..."], curtext);
@@ -749,7 +760,7 @@ function peephone() {
 }
 
 //Ask her to pee in a given item from your backpack
-function peein(item){
+function peein(item) {
     //Closes the backpack since a function has been chosen
     const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
@@ -768,9 +779,9 @@ function peein(item){
             } else {
                 //Only if you maxed attraction, she'll try to pee even if she doesn't have to go.
                 curtext = printList(curtext, list[1]);
-                curtext = callChoice(["peein2(&quot;" +item+ "&quot;)", "Continue..."], curtext);
+                curtext = callChoice(["peein2(&quot;" + item + "&quot;)", "Continue..."], curtext);
             }
-        }else if (bladder < blademer) {
+        } else if (bladder < blademer) {
             if (attraction < 100) {
                 //She's not quite willing to try it but not against the idea.
                 curtext = printList(curtext, list[2]);
@@ -780,17 +791,17 @@ function peein(item){
                 //She likes you enough to do it.
                 curtext = displayneed(curtext);
                 curtext = printList(curtext, list[3]);
-                curtext = callChoice(["peein2(&quot;" +item+ "&quot;)", "Continue..."], curtext);
+                curtext = callChoice(["peein2(&quot;" + item + "&quot;)", "Continue..."], curtext);
             }
         } else {
             //She's desperate so uses it.
-            if (attraction < 70 && !objects[item].peed){
+            if (attraction < 70 && !objects[item].peed) {
                 //An exclamation about the idea of it
                 curtext = printList(list[4]);
             }
             curtext = displayneed(curtext);
             curtext = printList(curtext, list[5]);
-            curtext = callChoice(["peein2(&quot;" +item+ "&quot;)", "Continue..."], curtext);
+            curtext = callChoice(["peein2(&quot;" + item + "&quot;)", "Continue..."], curtext);
         }
     } else {
         //She outrightly refuses the idea.
@@ -798,14 +809,14 @@ function peein(item){
         attraction -= 3;
         if (attraction < 0) attraction = 0;
         //TODO add check for makeout
-        if (locstack[0] === "driveout"){
+        if (locstack[0] === "driveout") {
             //When in the car she'll throw the item out of the window.
             curtext.push("She throws it out of the window.");
             curtext.push("You sigh, not sure how to fix this.");
             objects[item].value--;
-        } else if (bladder > bladneed){
+        } else if (bladder > bladneed) {
             //If she actually has to go she'll go to the bathroom and take the item with her
-            curtext.push("She grabs your "+ objects[item].bpname.toLowerCase() + " and runs to the bathroom");
+            curtext.push("She grabs your " + objects[item].bpname.toLowerCase() + " and runs to the bathroom");
             curtext.push("Leaving you to ponder your current situation.");
             flushdrank();
             objects[item].value--;
@@ -815,7 +826,7 @@ function peein(item){
     sayText(curtext);
 }
 
-function peein2(item){
+function peein2(item) {
     let curtext = [];
     //print quote depending on the panties she wears.
     if (pantycolor !== "none")
@@ -831,7 +842,7 @@ function peein2(item){
     sayText(curtext);
 }
 
-function peein3(item){
+function peein3(item) {
     const list = needs[item];
     let curtext = [];
     //If her bladder is virtually empty she can't go even if she tries.
@@ -841,8 +852,8 @@ function peein3(item){
         shyness += 1;
     } else {
         const container = objects[item];
-        if (container.hasOwnProperty("volume")){
-            if (container.volume < bladder){
+        if (container.hasOwnProperty("volume")) {
+            if (container.volume < bladder) {
                 if (bladder > blademer)
                     //She's desperate and it shows
                     curtext = printList(curtext, list[7]);
@@ -856,7 +867,7 @@ function peein3(item){
                 curtext = printList(curtext, list[8]);
                 flushdrank();
             }
-        } else{
+        } else {
             if (bladder > blademer)
                 //She's desperate and it shows
                 curtext = printList(curtext, list[7]);
@@ -908,14 +919,14 @@ function peeoutside() {
                 curtext.push(needs["peeoutside"][0]);
             else
                 curtext.push(needs["peeoutside"][1]);
-            curtext = printListSelection(curtext, needs["peeoutside"], [2,3]);
+            curtext = printListSelection(curtext, needs["peeoutside"], [2, 3]);
             curtext = displayneed(curtext);
             if (locstack[0] === "theMakeOut") listenerList.push([[peeoutside2, "Continue..."], "peeoutside2"]);
             else listenerList.push([[peeoutside2b, "Continue..."], "peeoutside2b"]);
 
         } else {
             curtext = displaygottavoc(curtext);
-            curtext = printListSelection(curtext, needs["peeoutside"], [4,5]);
+            curtext = printListSelection(curtext, needs["peeoutside"], [4, 5]);
             curtext = displayholdquip(curtext);
             gottagoflag = 0;
             curtext = callChoice(["curloc", "Continue..."], curtext);
@@ -962,7 +973,7 @@ function peeoutside2b() {
 // She was in the car
 function peeoutside3() {
     let curtext = itscomingout([]);
-    curtext = printListSelection(curtext, needs["peeoutside"], range(8,10));
+    curtext = printListSelection(curtext, needs["peeoutside"], range(8, 10));
     attraction += 3;
     flushdrank();
     peedoutside = 1;
@@ -974,7 +985,7 @@ function peeoutside3() {
 //  Again, she's not in the car
 function peeoutside3b() {
     let curtext = itscomingout([]);
-    curtext = printListSelection(curtext, needs["peeoutside"], range(11,13));
+    curtext = printListSelection(curtext, needs["peeoutside"], range(11, 13));
     attraction += 3;
     flushdrank();
     peedoutside = 1;
@@ -986,7 +997,7 @@ function peeoutside3b() {
 //  Pee on the beach
 function peeoutside3c() {
     let curtext = itscomingout([]);
-    curtext = printListSelection(curtext, needs["peeoutside"], range(14,16));
+    curtext = printListSelection(curtext, needs["peeoutside"], range(14, 16));
     attraction += 3;
     flushdrank();
     peedoutside = 1;
@@ -1038,7 +1049,7 @@ function wetherself2m() {
 
 // She's in the hottub
 function wetherself2t() {
-    let curtext = printListSelection([],  needs["wetherself"], range(2,4));
+    let curtext = printListSelection([], needs["wetherself"], range(2, 4));
     flushdrank();
     sayText(curtext);
     cListenerGen([wetherself3t, "Continue..."], "wetherself3t");
@@ -1046,7 +1057,7 @@ function wetherself2t() {
 
 // She's in the car
 function wetherself2c() {
-    let curtext = printListSelection([],  needs["wetherself"], range(5,8));
+    let curtext = printListSelection([], needs["wetherself"], range(5, 8));
     flushdrank();
     wetlegs = 1;
     wetherpanties = 1;
@@ -1056,7 +1067,7 @@ function wetherself2c() {
 }
 
 function wetherself3c() {
-    let curtext = printListSelection([],  needs["wetherself"], [9,10]);
+    let curtext = printListSelection([], needs["wetherself"], [9, 10]);
     shyness += 20;
     if (shyness > 100) shyness = 100;
     curtext = callChoice(["curloc", "Continue..."], curtext);
@@ -1069,7 +1080,7 @@ function wetherself3() {
     if (pantycolor !== "none" && shyness < 70) {
         curtext.push(appearance["clothes"][heroutfit]["wetherselfquote"].format([pantycolor]));
         if (attraction > 40) {
-            curtext = printListSelection(curtext, needs["wetherself"], [11,12]);
+            curtext = printListSelection(curtext, needs["wetherself"], [11, 12]);
             objects.wetPanties.value++
         }
         pantycolor = "none";
@@ -1085,14 +1096,15 @@ function wetherself3() {
         listenerList.push([[function () {
             giveHer("ptowels");
         }, "Offer her paper towels."], "pTowels"]);
-    } if (haveItem("panties")) {
+    }
+    if (haveItem("panties")) {
         listenerList.push([[function () {
             giveHer("panties");
         }, "Offer her a clean pair of panties."], "oPanties"]);
     }
     sayText(curtext);
     listenerList.forEach(item => cListener(item[0], item[1]));
-    curtext = callChoice(["curloc", "Continue..."] );
+    curtext = callChoice(["curloc", "Continue..."]);
     addSayText(curtext);
     addListenersList(listenerList);
 }
@@ -1100,7 +1112,7 @@ function wetherself3() {
 // In the tub
 function wetherself3t() {
     console.log("test");
-    let curtext = printListSelection([], needs["wetherself"] ,range(14, 16));
+    let curtext = printListSelection([], needs["wetherself"], range(14, 16));
     shyness += 10;
     if (shyness > 100) shyness = 100;
     curtext = callChoice(["curloc", "Continue..."], curtext);
@@ -1137,15 +1149,15 @@ function checkspurted() {
     let curtext = [needs["askspurted"][1]];
     let listenerList = [];
     if (attraction < 75) {
-        curtext = printListSelection(curtext, needs["askspurted"], [2,3]);
+        curtext = printListSelection(curtext, needs["askspurted"], [2, 3]);
         curtext = displayneed(curtext);
         attraction -= 10;
         shyness += 10;
     } else {
         if (pantycolor === "none") {
-            curtext = printListSelection(curtext, needs["askspurted"], [4,5]);
+            curtext = printListSelection(curtext, needs["askspurted"], [4, 5]);
         } else {
-            curtext = printListSelection(curtext, needs["askspurted"], [6,7]);
+            curtext = printListSelection(curtext, needs["askspurted"], [6, 7]);
         }
         if (bladder > blademer)
             curtext.push(pickrandom(needs["feelthigh"]));
@@ -1295,7 +1307,7 @@ function pTogether3d() {
     cListenerGen([pTogether3e, "Continue..."], "goBack");
 }
 
-function pTogether3e(){
+function pTogether3e() {
     let curtext = [];
     if (locstack[0] === "pmensroom") {
         curtext = printList(curtext, peelines["ptogether"][19]);
@@ -1400,7 +1412,7 @@ function pTogether5c() {
     poploc();
 }
 
-function pTogether5d(){
+function pTogether5d() {
     poploc();
     kissher(["You quickly compose yourselves and head back out to the club, but first..."]);
 }
@@ -1426,7 +1438,7 @@ function pnorestroom() {
         sayText(curtext);
         let listenerList = [];
         Object.keys(theatre["noToilet"]).forEach(option => {
-            const temp = function (){
+            const temp = function () {
                 noToiletPee(option);
             }
             listenerList.push([[temp, theatre["noToilet"][option]["text"]], option]);
@@ -1439,7 +1451,7 @@ function pnorestroom() {
     }
 }
 
-function noToiletPee(choice){
+function noToiletPee(choice) {
     let quotes = theatre["noToilet"][choice]["quotes"];
     let curtext = printList([], quotes[0]);
     curtext = displayneed(curtext);
@@ -1456,7 +1468,7 @@ function noToiletPee(choice){
     cListenerGen([noToiletPee2, "Continue..."]);
 }
 
-function noToiletPee2(){
+function noToiletPee2() {
     let curtext = printList([], theatre["noRest"][3]);
     kissher(curtext);
 }

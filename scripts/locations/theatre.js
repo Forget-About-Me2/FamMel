@@ -30,7 +30,7 @@ function theTheatre(){
         sayText(curtext);
         listenerList.push([[driveout, general["continue"]], "driveOut"]);
         if (haveItem("theTheatreKey")) {
-            listenerList.push([[reTheatre, locjson["choices"]["returnKey"]], "reTheatre"]);
+            listenerList.push([[reTheatre, sharedLoc["choices"]["returnKey"]], "reTheatre"]);
         }
     } else if ((thetime < theaterclosingtime) || locstack[0] === "theTheatre"){
         if (locstack[0] !== "theTheatre") {
@@ -48,12 +48,12 @@ function theTheatre(){
             listenerList = preventpee(curtext);
             sayText(curtext);
         } else {
-            listenerList.push([[function () {buyItem("soda")}, objects["buyChoices"]["soda"]], "buySoda"]);
-            listenerList.push([[askMovie, theatre["askMovie"]], "askMovie"]);
-            listenerList.push([[chooseMovie, theatre["chooseMovie"]], "chooseMovie"]);
+            listenerList.push([[function () {buyItem("soda")}, objQuotes["buyChoices"]["soda"]], "buySoda"]);
+            listenerList.push([[askMovie, theatre["choices"]["askMovie"]], "askMovie"]);
+            listenerList.push([[chooseMovie, theatre["choices"]["chooseMovie"]], "chooseMovie"]);
             if (yourbladder > yourbladurge)
-                listenerList.push([[youpee, theatre["youPee"]], "youPee"]);
-            listenerList.push([[leavehm, theatre["leaveHm"]], "leaveHm"]);
+                listenerList.push([[youpee, theatre["choices"]["youPee"]], "youPee"]);
+            listenerList.push([[leavehm, theatre["choices"]["leaveHm"]], "leaveHm"]);
             curtext = standobjs(curtext);
             sayText(curtext);
         }

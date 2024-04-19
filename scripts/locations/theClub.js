@@ -24,7 +24,7 @@ function theClub() {
     if (locations.theClub.visited && locstack[0] === "driveout" && thetime < clubclosingtime) {
         curtext = printList(curtext, club["theClub"][0]);
         if (haveItem("theClubKey"))
-            listenerList.push([[reClub, locjson["choices"]["returnKey"]], "reClub"]);
+            listenerList.push([[reClub, sharedLoc["choices"]["returnKey"]], "reClub"]);
         listenerList.push([[driveout, general["continue"]], "driveOut"]);
     } else if ((thetime < clubclosingtime) || locstack[0] === "theClub") {
             if (locstack[0] !== "theClub" && locstack[0] !== "doDance") {
@@ -50,14 +50,14 @@ function theClub() {
             else if (gottagoflag > 0)
                 listenerList = preventpee(listenerList);
             else {
-                listenerList.push([[function () {buyItem("cocktail")}, objects["buyChoices"]["cocktail"]], "buyDrink"]);
+                listenerList.push([[function () {buyItem("cocktail")}, objQuotes["buyChoices"]["cocktail"]], "buyDrink"]);
                 listenerList.push([[goDance, club["choices"]["goDance"]], "goDance"]);
                 if (!locations.theClub.foundKey)
-                    listenerList.push([[function () {lookAround("theClub")}, locjson["choices"]["lookAround"]], "lookAround"]);
+                    listenerList.push([[function () {lookAround("theClub")}, sharedLoc["choices"]["lookAround"]], "lookAround"]);
                 curtext = standobjs(curtext);
                 if (yourbladder > yourbladurge)
                     listenerList.push([[youpee, club["choices"]["youPee"]], "youpee"]);
-                listenerList.push([[leavehm, club["Choices"]["leaveHm"]], "leavehm"]);
+                listenerList.push([[leavehm, club["choices"]["leaveHm"]], "leavehm"]);
             }
         } else {
             itsClosed("theClub", darkClub, "darkClub");
@@ -118,7 +118,7 @@ function doDance(){
         else{
             listenerList.push([[doDance, club["choices"]["keepDancing"]], "doDance"]);
             listenerList.push([[kissher,  general["kissHer"]], "kissHer"]);
-            listenerList.push([[feelup, general["feelHerUp"]], "feelup"]);
+            listenerList.push([[feelup, general["feelUp"]], "feelup"]);
             if (yourbladder > yourbladurge)
                 listenerList.push([[youpee, club["choices"]["youPee"]], "youpee"]);
         }

@@ -45,12 +45,11 @@ function theMakeOut() {
     else {
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
-            listenerList.push([[peeoutside, makeOut["choices"]["suggestPeeOutside"]], "peeOutside"]);
         } else {
             listenerList.push([[viewStars, makeOut["choices"]["viewStars"]], "viewStars"]);
             listenerList.push([[theWalk, makeOut["choices"]["inviteWalk"]], "theWalk"]);
             if (!locations.theTheatre.foundKey) {
-                listenerList.push([[function () {lookAround("theTheatre")}, locjson["choices"]["lookAround"]], "lookAround"]);
+                listenerList.push([[function () {lookAround("theTheatre")}, sharedLoc["choices"]["lookAround"]], "lookAround"]);
             }
             curtext = standobjs(curtext);
             if (yourbladder > yourbladurge)
@@ -143,7 +142,6 @@ function theWalk() {
     else {
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
-            listenerList.push([[peeoutside, makeOut["choices"]["suggestPeeGround"]], "peeOutside"]);
         } else {
             if (darkYard) {
                 listenerList.push([[examineGate, makeOut["choices"]["examineGate"]], "examineGate"]);
@@ -206,7 +204,6 @@ function theYard() {
     else {
         if (gottagoflag > 0) {
             curtext = preventpee(curtext);
-            listenerList.push([[peeoutside, "Suggest that she pee on the ground."], "peeOutside"]);
         } else {
             listenerList.push([[preHotTub, "Suggest you take a dip in the tub."], "preHotTub"]);
             listenerList.push([[kissher, "Kiss her."], "kissHer"]);
@@ -331,7 +328,6 @@ function theBeach() {
         else {
             if (gottagoflag > 0) {
                 listenerList = preventpee(listenerList);
-                listenerList.push([[peeoutside, makeOut["choices"]["suggestPeeSand"]], "peeOutside"]);
             } else {
                 listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
                 listenerList.push([[feelup, general["feelHerUp"]], "FeelUp"]);

@@ -26,7 +26,7 @@ function thebar(){
         curtext = printList(curtext, bar["theBar"][0]);
         sayText(curtext);
         if (haveItem("theBarKey")) {
-            listenerList.push([[rebar, locjson["choices"]["returnKey"]], "reBar"]);
+            listenerList.push([[rebar, sharedLoc["choices"]["returnKey"]], "reBar"]);
         }
         listenerList.push([[driveout, general["continue"]], "driveOut"]);
     } else if (!((thetime < barclosingtime) || locstack[0] === "thebar")) itsClosed("theBar", darkBar, "darkBar");

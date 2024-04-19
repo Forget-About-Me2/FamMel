@@ -38,15 +38,13 @@ function driveAround(){
         sayText(curtext);
         curtext = []
         if (yourbladder > yourblademer) {
-            listenerList.push([[drivetell], "drivetell"]);
-            cListener([drivetell, "Tell her you need to go."], "drivetell");
+            listenerList.push([[drivetell, "Tell her you need to go."], "drivetell"]);
         }
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
         } else curtext = standobjs(curtext);
         if (gasStation) {
-            listenerList.push([[station], "gasStation"]);
-            cListener([station, "Stop at the gas station"], "gasStation");
+            listenerList.push([[station, "Stop at the gas station"], "gasStation"]);
         }
         curtext = c([locstack[0], "Continue..."], curtext);
         addSayText(curtext);
