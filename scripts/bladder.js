@@ -1237,9 +1237,9 @@ function pGirlsRoom2() {
 //TODO option for you to pee as well
 function ptogether() {
     let curtext = printList([], peelines["ptogether"][0]);
-    pushloc("ptogether");
     let listenerList = [];
     if (attraction >= ptogetherthreshold) {
+        pushloc("ptogether");
         curtext = displayneed(curtext);
         curtext = printList(curtext, peelines["ptogether"][1]);
         curtext = displayneed(curtext);
