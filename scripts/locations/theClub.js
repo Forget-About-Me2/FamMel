@@ -167,7 +167,7 @@ function darkClub() {
             curtext = standobjs(curtext);
             sayText(curtext);
             listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
-            listenerList.push([[feelup, general["feelHerUp"]], "feelUp"]);
+            listenerList.push([[feelup, general["feelUp"]], "feelUp"]);
             if (!checkedherout)
                 listenerList.push([[checkherout, general["checkHerOut"]], "checkOut"]);
             if (yourbladder > yourbladurge)

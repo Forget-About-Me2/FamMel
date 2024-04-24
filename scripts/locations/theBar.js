@@ -134,7 +134,7 @@ function stealbeer() {
     objects.beer.value++;
     sayText(curtext);
     let listenerList = [
-        [[stealbeer2, objects["stealChoices"]["moreBeer"]], "stealbeer"],
+        [[stealbeer2, objQuotes["stealChoices"]["moreBeer"]], "stealbeer"],
         [[darkBar, general["continue"]], "darkbar"]
     ]
     cListenerGenList(listenerList);
@@ -154,7 +154,7 @@ function stealbeer2(){
         objects.beer.value++;
         sayText(curtext);
         let listenerList = [
-            [[stealbeer2, objects["stealChoices"]["moreBeer"]], "stealbeer"],
+            [[stealbeer2, objQuotes["stealChoices"]["moreBeer"]], "stealbeer"],
             [[darkBar, general["continue"]], "darkbar"]
         ]
         cListenerGenList(listenerList);
@@ -193,7 +193,7 @@ function darkBar(){
        curtext = standobjs(curtext);
        sayText(curtext);
        listenerList.push(
-           [[stealbeer, objects["stealChoices"]["beer"]], "stealBeer"],
+           [[stealbeer, objQuotes["stealChoices"]["beer"]], "stealBeer"],
            [[kissher, general["kissHer"]], "kissHer"],
            [[feelup, general["feelUp"]], "feelUp"],
            [[playDarts, bar["choices"]["playDarts"]], "playDarts"]
@@ -268,8 +268,6 @@ function drinkinggame() {
         curtext = displayneed(curtext);
         curtext = displayyourneed(curtext);
         curtext = printList(curtext, bar["drinkingGame"][6]);
-        // s("<b>YOU:</b> It's time to drink up!");
-        // s("You pull two beers, toast, and both drain the glasses.");
         tummy += 40;
         yourtummy += 40;
         holdself = 0;
@@ -281,7 +279,6 @@ function drinkinggame() {
         listenerList.push([[feelup, "You feel her up."], "feelUp"]);
         listenerList.push([[kissher, "Kiss her."], "kissHer"]);
         listenerList.push([[askcanhold, "You ask her how she's doing."], "askHold"]);
-        listenerList.push([[playDarts, "Ask her to play darts"], "playDarts"]);
         listenerList.push([[pstory, "Ask her if she's ever wet herself."], "pStory"]);
         listenerList.push([[drinkinggamewait, "Continue..."], "drinkWait"]);
         sayText(curtext);

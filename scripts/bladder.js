@@ -455,7 +455,7 @@ function askpee() {
         curtext = callChoice(["curloc", "Continue..."], curtext);
     }
     sayText(curtext);
-    addListenersList(listenerList);
+    cListenerGenList(listenerList);
 }
 
 //TODO make her less demanding
@@ -472,17 +472,20 @@ function preventpee(listenerList = []) {
     if (bladder < bladlose - 50)
         gottagoflag = 0;
 
+    // These options can happen in addition to the standard allow pee, so not jumping to the else.
     if (locstack[0] === "doDance")
         listenerList.push([[ptogether, needs["preventpee"]["pTogether"]], "pTogether"]);
-    else if (locstack[0] === "darkBar" || locstack[0] === "darkTheatre" || locstack[0] === "darkClub")
+    if (locstack[0] === "darkBar" || locstack[0] === "darkTheatre" || locstack[0] === "darkClub")
         listenerList.push([[pgirlsroom, needs["preventpee"]["pGirlsRoom"]], "pGirlRoom"]);
-    else if (locstack[0] === "darkTheatre")
+    if (locstack[0] === "darkTheatre")
         listenerList.push([[pnorestroom, needs["preventpee"]["pNoRestroom"]], "pNoRestroom"]);
-    else if (locstack[0] === "darkBar")
+    if (locstack[0] === "darkBar")
         listenerList.push([[pdrinkinggame, needs["preventpee"]["pDrinkingGame"]], "pDrinkingGame"]);
-    else if (locstack[0] === "darkClub")
+    if (locstack[0] === "darkClub")
         listenerList.push([[pphotogame, needs["preventpee"]["pPhotoGame"]], "pPhotoGame"]);
-    else if (locstack[0] === "driveout" && !gasStation)
+
+    // Only one of these can be chosen and if none is it should go to the else.
+    if (locstack[0] === "driveout" && !gasStation)
         listenerList.push([[nextstop, needs["preventpee"]["nextStop"]], "nextStop"]);
     else if (locstack[0] === "theYard" || locstack[0] === "theWalk")
         listenerList.push([[peeoutside, needs["preventpee"]["suggestPeeGround"]], "pOutside"]);
@@ -591,7 +594,7 @@ function askcanhold() {
     sayText(curtext);
 }
 
-let toldstories;
+let toldstories = [];
 let lastStory;
 
 function pstory() {
@@ -603,8 +606,8 @@ function pstory() {
         toldstories.splice(toldstories.indexOf(lastStory), 1);
     }
     lastStory = pickrandom(toldstories);
-    toldstories.splice(toldstories.indexOf(lastStory), 1);
     curtext.push(needs["peestory"][lastStory]);
+    toldstories.splice(toldstories.indexOf(lastStory), 1);
     sayText(curtext);
     listenerList.push([[pstory2, needs["choices"]["askHappened"]], "askHappened"]);
     cListener([pstory2, needs["choices"]["askHappened"]], "askHappened");

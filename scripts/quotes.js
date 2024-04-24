@@ -543,7 +543,7 @@ function needSetup(){
     needs["wetherself"] = replaceWCLC(needs["wetherself"], needs["girltalk"], "girltalk");
     needs["drinkquote"] = addGirlname(needs["drinkquote"]);
     needs["peeoutside"] = replaceWCLC(needs["peeoutside"], needs["girltalk"], "girltalk");
-    toldstories = range(0, needs["peestory"].length);
+    toldstories = range(0, needs["peestory"].length - 1);
 }
 
 //Girl curses

@@ -48,13 +48,22 @@ var Debug = function () {
         drankbeer = 300;
     }
 
+    /**
+     * Fulls your stomach and sets it to the max diuretic so you have to pee often
+     */
+    function quickFillPlayer(){
+        yourtummy += 3000;
+        ydranksodas += 300;
+    }
+
     return {
         help: help,
         allItems: allItems,
         fullStats: fullStats,
         nightTime: nightTime,
         getInvite: getInvite,
-        quickFill: quickFill
+        quickFill: quickFill,
+        quickFillPlayer: quickFillPlayer,
     }
 
 }();
