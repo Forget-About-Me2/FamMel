@@ -405,7 +405,7 @@ function handleDisclaimer(){
         const textElem = document.getElementById("pop-up-text");
         textElem.innerHTML = "";
         credits["disclaimer"].forEach(line => textElem.innerHTML += line);
-        openPopUpTemp();
+        openPopUp();
     }
 }
 

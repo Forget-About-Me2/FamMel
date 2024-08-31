@@ -519,7 +519,7 @@ function holdit() {
                 curtext = displaydrank(curtext);
             else
                 curtext = displaywaited(curtext);
-            curtext.push(needs["holdit"]["dialogue"][0]); //She's not sure, you have to convince her
+            curtext.push(needs["holdIt"][0]); //She's not sure, you have to convince her
             if (locstack[0] !== "gostore") curtext = displayneed(curtext);
             else curtext = displaygottavoc(curtext);
             curtext = convinceher(curtext);
@@ -529,9 +529,9 @@ function holdit() {
             if (bladder >= bladlose) {
                 if (locstack[0] === "gostore") {
                     //TODO maybe put in one thing to print all lines
-                    curtext.push(needs["holdit"]["dialogue"][1]);
-                    curtext.push(needs["holdit"]["dialogue"][2]);
-                    curtext.push(needs["holdit"]["dialogue"][3]); //She's wetting herself over the phone
+                    curtext.push(needs["holdIt"][1]);
+                    curtext.push(needs["holdIt"][2]);
+                    curtext.push(needs["holdIt"][3]); //She's wetting herself over the phone
                     bladder = 0;
                     waitcounter = 0;
                     askholditcounter = 0;
@@ -544,14 +544,14 @@ function holdit() {
         }
     } else {
         if (locstack[0] === "gostore") {
-            curtext.push(needs["holdit"]["dialogue"][4]);
-            curtext.push(needs["holdit"]["dialogue"][5]);
+            curtext.push(needs["holdIt"][4]);
+            curtext.push(needs["holdIt"][5]);
             //She's not holding it while on the phone
             attraction -= 5;
             bladder = 0;
             curtext = callChoice(["curloc", "Continue..."], curtext);
         } else {
-            curtext.push(needs["holdit"]["dialogue"][6]);
+            curtext.push(needs["holdIt"][6]);
             // she's not holding it for you
             attraction -= 5;
             curtext = indepee(curtext, true);
@@ -768,9 +768,10 @@ function peein(item) {
     const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
     const list = needs[item];
-    let curtext = [];
+    var object = objects[item];
+    let curtext = [needs["suggestPeeIn"].format(object.bpname)];
     let itemAttr = 30;
-    if (list.hasOwnProperty("attrThresh"))
+    if (object.hasOwnProperty("attrThresh"))
         itemAttr = list.attrThresh;
     if (attraction > itemAttr) {
         gottagoflag = 0;

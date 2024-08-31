@@ -224,7 +224,7 @@ function domovie() {
 }
 
 // moviedesc - 0 : Anticipate
-//             1 : Strange
+//             1 : Introduction
 //             2 : Scary
 //             3 : Sexy
 //             4 : Romantic
@@ -232,7 +232,7 @@ function domovie() {
 //             6 : Romantic
 //             7 : End
 
-
+// Hold her hand
 function movieRomance() {
     allowItems = 1;
     let curtext = [];
@@ -251,6 +251,7 @@ function movieRomance() {
         cListenerGen([theTheatre, "Continue..."], "theTheatre");
 }
 
+// Touch her thigh
 function movieSex() {
     allowItems = 1;
     let curtext = [];
@@ -269,6 +270,7 @@ function movieSex() {
         cListenerGen([theTheatre, "Continue..."], "theTheatre");
 }
 
+// Lean closer to her
 function movieScary() {
     allowItems = 1;
     let curtext = printList([], theatre["movieScary"][0]);
@@ -286,6 +288,7 @@ function movieScary() {
         cListenerGen([theTheatre, "Continue..."], "theTheatre");
 }
 
+// look her in the eyes
 function movieDoh() {
     allowItems = 1;
     let curtext = printList([], theatre["movieDoh"][0]);

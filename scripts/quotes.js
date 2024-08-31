@@ -472,7 +472,10 @@ function LreplaceCheck(rpstring, list, tag){
 //calls all json requests to get recurring quotes
 function setupQuotes(){
     getjson("flirting", flirtSetup);
-    getjson("needs", needSetup);
+    getjson("needs", function () {
+        needs = json;
+        toldstories = range(0, needs["peestory"].length - 1);
+    });
     getjson("youpee", yPeeSetup);
     getjson("shepee", shePeeSetup);
     getjson("drinking", function (){
@@ -514,36 +517,6 @@ function flirtSetup(){
     feelUp["bad"] = formatAllVars(feelUp["bad"]);
     kissing = json.kiss;
     kissing["diag"] = formatAllVarsList(kissing["diag"]);
-}
-
-
-function needSetup(){
-    needs = json;
-    needs["girltalk"] = addGirlTalk(needs["girltalk"]);
-    needs["girlgasp"] = addGirlGasp(needs["girlgasp"]);
-    needs["askpee"] = replaceWCLC(needs["askpee"], needs["girltalk"], "girltalk");
-    needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
-    needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
-    needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girltalk"], "girltalk");
-    needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girlgasp"], "girlgasp");
-    needs["briberoses"] = replaceWCLC(needs["briberoses"], needs["girltalk"],"girltalk");
-    needs["bribefavor"] = replaceWCLC(needs["bribefavor"], needs["girltalk"],"girltalk");
-    needs["payholdit"] = replaceWCLC(needs["payholdit"], needs["girltalk"],"girltalk");
-    needs["payfails"] = replaceWCLC(needs["payfails"], needs["girltalk"],"girltalk");
-    needs["bribeearrings"] = replaceWCLC(needs["bribeearrings"], needs["girltalk"],"girltalk");
-    needs["allowpee"] = replaceWCLC(needs["allowpee"], needs["girltalk"],"girltalk");
-    needs["holdpurse"] = replaceWCLC(needs["holdpurse"], needs["girltalk"], "girltalk");
-    needs["vase"] = replaceWCLCI(needs["vase"], needs["girltalk"], "girltalk");
-    needs["shotglass"] = replaceWCLCI(needs["shotglass"], needs["girltalk"], "girltalk");
-    needs["ptowels"] = replaceWCLCI(needs["ptowels"], needs["girltalk"], "girltalk");
-    needs["champ-glass"] = replaceWCLCI(needs["champ-glass"], needs["girltalk"], "girltalk");
-    needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girltalk"], "girltalk");
-    needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girlgasp"], "girlgasp");
-    needs["wetquote"] = addGirlname(needs["wetquote"]);
-    needs["wetherself"] = replaceWCLC(needs["wetherself"], needs["girltalk"], "girltalk");
-    needs["drinkquote"] = addGirlname(needs["drinkquote"]);
-    needs["peeoutside"] = replaceWCLC(needs["peeoutside"], needs["girltalk"], "girltalk");
-    toldstories = range(0, needs["peestory"].length - 1);
 }
 
 //Girl curses

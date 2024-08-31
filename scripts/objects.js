@@ -118,7 +118,7 @@ const objects = {
         "owned": "{0} roll{1} of paper towels",
         "description":"One should always have paper towels handy."
     },
-    "panties": {
+    "sexyPanties": {
         "bpname":"Sexy panties",
         price: 30,
         "value": 0,
@@ -337,7 +337,7 @@ function backpack(){
     let itemlist = createItemButtonList();
     let items = "";
     const backpackitem = document.getElementById("backpackitems");
-    if (itemlist.length !== 0) {
+    if (itemlist.length > 0) {
         itemlist.forEach(item => items += item);
         backpackitem.innerHTML = items;
     } else {
@@ -572,15 +572,15 @@ function giveHer(item){
     let quotes = formatAllVarsList(obj.giveQuotes);
     let curtext = printList([], quotes[0]);
     let listenerList = [];
-    if (item === "panties"){
+    if (item === "sexyPanties"){
         pantycolor = "sexy";
         if (!wetlegs) attraction += 5;
         else curtext = printList(curtext, quotes[1]);
     } else if (item === "ptowels") {
         wetlegs = 0;
-        if (haveItem("panties")) {
+        if (haveItem("sexypanties")) {
             listenerList.push([[function () {
-                giveHer("panties");
+                giveHer("sexypanties");
             }, "Offer her a clean pair of panties."], "oPanties"]);
         }
     } else {

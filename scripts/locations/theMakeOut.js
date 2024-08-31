@@ -268,10 +268,9 @@ function theHotTub() {
     else {
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
-            listenerList.push([[peeintub, makeOut["choices"]["suggestPeeInTub"]], "peeInTub"]);
         } else {
             listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
-            listenerList.push([[feelup, general["feelHerUp"]], "FeelUp"]);
+            listenerList.push([[feelup, general["feelUp"]], "FeelUp"]);
             if (attraction >= 130 && shyness <= 0) {
                 listenerList.push([[function () {haveSex("theHotTub")}, makeOut["choices"]["makeOut"]], "sexTub"]);
             }
@@ -330,7 +329,7 @@ function theBeach() {
                 listenerList = preventpee(listenerList);
             } else {
                 listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
-                listenerList.push([[feelup, general["feelHerUp"]], "FeelUp"]);
+                listenerList.push([[feelup, general["feelUp"]], "FeelUp"]);
                 curtext = standobjs(curtext);
                 if (!checkedherout) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);
                 if (yourbladder > yourbladurge) listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "yPeeOutside"]);
