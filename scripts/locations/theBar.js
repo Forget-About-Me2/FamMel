@@ -118,7 +118,7 @@ function sellPanties(){
     money += price;
     objects.wetPanties.value -= 1;
     let listenerList = [
-        [[function () {buyItem("beer")}, objects["buyChoices"]["beer"]], "buybeer"],
+        [[function () {buyItem("beer")}, objQuotes["buyChoices"]["beer"]], "buybeer"],
         [[thebar, general["continue"]], "theBar"]
     ];
     listenerList.push([[thebar], "theBar"]);

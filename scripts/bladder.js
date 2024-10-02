@@ -1101,9 +1101,9 @@ function wetherself3() {
             giveHer("ptowels");
         }, "Offer her paper towels."], "pTowels"]);
     }
-    if (haveItem("panties")) {
+    if (haveItem("sexyPanties")) {
         listenerList.push([[function () {
-            giveHer("panties");
+            giveHer("sexyPanties");
         }, "Offer her a clean pair of panties."], "oPanties"]);
     }
     sayText(curtext);
