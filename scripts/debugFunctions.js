@@ -56,6 +56,14 @@ var Debug = function () {
         ydranksodas += 300;
     }
 
+    function yardTest(times = 1){
+        for (let i=0; i < times; i++){
+            go(theYard);
+            go(exitYard);
+            go(theWalk);
+        }
+    }
+
     return {
         help: help,
         allItems: allItems,
@@ -64,6 +72,7 @@ var Debug = function () {
         getInvite: getInvite,
         quickFill: quickFill,
         quickFillPlayer: quickFillPlayer,
+        yardTest: yardTest
     }
 
 }();

@@ -203,7 +203,7 @@ function theYard() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            curtext = preventpee(curtext);
+             listenerList = preventpee(listenerList);
         } else {
             listenerList.push([[preHotTub, "Suggest you take a dip in the tub."], "preHotTub"]);
             listenerList.push([[kissher, "Kiss her."], "kissHer"]);

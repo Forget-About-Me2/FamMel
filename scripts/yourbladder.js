@@ -327,6 +327,7 @@ function yPeeOutside3(){
     curtext = printList(curtext, ypeelines[locstack[0]][0]);
     curtext = printList(curtext, ypeelines["peeOutside"][10]);
     curtext = callChoice(["curloc", "Continue..."], curtext);
+    flushyourdrank();
     sayText(curtext);
 }
 

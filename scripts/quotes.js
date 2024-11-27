@@ -272,7 +272,16 @@ function cListenerGenList(list){
 //print the given lines list on the screen
 function sayText(lines){
     let result = "";
-    lines.forEach(item => result += "<p>" + item.formatVars() + "</p>");
+    lines.forEach(item => {
+        if (item === undefined || item === ""){
+            console.error("lines for say text not properly defined, lines:", lines);
+            console.log(lines);
+        }
+        if (typeof item !== "string"){
+            console.error("array found in saytest, incompatible", lines);
+            console.log(lines);
+        }
+        result += "<p>" + item.formatVars() + "</p>";});
     document.getElementById('textsp').innerHTML = result;
 }
 
