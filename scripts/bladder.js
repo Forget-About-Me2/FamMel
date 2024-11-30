@@ -769,7 +769,7 @@ function peein(item) {
     backpackcnt.style.display = "none";
     const list = needs[item];
     var object = objects[item];
-    let curtext = [needs["suggestPeeIn"].format(object.bpname)];
+    let curtext = [needs["suggestPeeIn"].format([object.bpname])];
     let itemAttr = 30;
     if (object.hasOwnProperty("attrThresh"))
         itemAttr = list.attrThresh;
@@ -801,7 +801,7 @@ function peein(item) {
             //She's desperate so uses it.
             if (attraction < 70 && !objects[item].peed) {
                 //An exclamation about the idea of it
-                curtext = printList(list[4]);
+                curtext = printList(curtext, list[4]);
             }
             curtext = displayneed(curtext);
             curtext = printList(curtext, list[5]);
