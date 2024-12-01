@@ -336,7 +336,7 @@ function takeOff(item, location){
             curtext = printList(curtext, sexLines["clothes"][item][i][0]);
             failTakeOff = clothesInfo[2] === "fail";
             if (item === "panties")
-                curtext.push(appearance["clothes"][heroutfit]["sexPantiesTOSkirt"].formatVars());
+                curtext.push(appearance["clothes"][heroutfit]["sexPantiesTOSkirt"]);
             if (clothesInfo[1] === "lose") {
                 if (bladder > bladlose)
                     curtext = printList(curtext, sexLines["clothes"][item][i][1]);

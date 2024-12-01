@@ -272,17 +272,24 @@ function cListenerGenList(list){
 //print the given lines list on the screen
 function sayText(lines){
     let result = "";
-    lines.forEach(item => {
-        if (item === undefined || item === ""){
-            console.error("lines for say text not properly defined, lines:", lines);
-            console.log(lines);
-        }
-        if (typeof item !== "string"){
-            console.error("array found in saytest, incompatible", lines);
-            console.log(lines);
-        }
-        result += "<p>" + item.formatVars() + "</p>";});
-    document.getElementById('textsp').innerHTML = result;
+    try {
+        lines.forEach(item => {
+            if (item === undefined || item === "") {
+                console.error("lines for say text not properly defined, lines:", lines);
+                console.log(lines);
+            }
+            if (typeof item !== "string") {
+                console.error("array found in saytest, incompatible", lines);
+                console.log(lines);
+            }
+            result += "<p>" + item.formatVars() + "</p>";
+        });
+        document.getElementById('textsp').innerHTML = result;
+    } catch (e) {
+        console.WriteLine("Somethign went wrong while saying text");
+        console.error(e);
+        console.WriteLine(lines);
+    }
 }
 
 //Adds the given line list to the already existing screen.
@@ -506,7 +513,9 @@ function setupQuotes(){
     getjson("objects", function () {
         objQuotes = json;
         objQuotes["buyItem2"] = formatAllVarsList(objQuotes["buyItem2"]);
-
+    });
+    getjson("endScreens", function (){
+        endScreens = json;
     });
 }
 

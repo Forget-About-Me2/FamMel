@@ -107,9 +107,6 @@ function pickup() {
 }
 
 function takeHerHome(){
-    getjson("endScreens", function (){
-        endScreens = json;
-    });
     let curtext = printList([], herHome["arrive"]);
     let listenerList = [];
     if (homeConditions()){
