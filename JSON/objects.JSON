@@ -21,5 +21,15 @@
     "<div id=\"item-text\"></div>",
     "<div class=\"btn-group\" id=\"backpackitems\">",
     "</div>"
-  ]
+  ],
+  "buyChoices": {
+    "soda": "Buy soda.",
+    "beer": "Buy beer.",
+    "cocktail": "Buy a drink."
+  },
+  "stealChoices": {
+    "soda": "Get a soda.",
+    "beer": "Get a beer.",
+    "moreBeer": "Steal another beer."
+  }
 }

@@ -38,7 +38,7 @@
       ["buyItem(&quot;shotglass&quot;)", "A shot glass ($10)"],
       ["buyItem(&quot;champ-glass&quot;)", "A champagne glass ($12)"],
       ["buyItem(&quot;ptowels&quot;)", "A roll of paper towels ($10)"],
-      ["buyItem(&quot;panties&quot;)", "A pair of sexy panties ($30)"],
+      ["buyItem(&quot;sexyPanties&quot;)", "A pair of sexy panties ($30)"],
       ["buyItem(&quot;champagne&quot;)", "A bottle of fancy champagne ($50)"],
       ["goback", "Nothing"]
     ],

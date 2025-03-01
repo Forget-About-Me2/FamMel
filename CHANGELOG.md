@@ -1,4 +1,24 @@
-#version 0.5.2
+# version 0.5.3
+* Fixed the sex scenes breaking when she's bursting
+* Fixed the game breaking when you pee outside at the car.
+* Fixed dialogue sometimes being printed twice when she asks to go.
+* Fixed dialogue of her asking questions while you're in the bar.
+* Fixed a double game tick happening in the beginning.
+* Fixed pacing when buying an item. (It takes 2 ticks now instead of 3)
+* Fixed giving her panties sometimes not working
+* Fixed typo in Jennifer's name breaking things if she is chosen.
+* Changed layout of the backpack to hopefully stop text appearing outside the text-box
+* Fixed not being able to watch her pee when in closed venues
+* Fixed the wrong scene playing after the drinking game in certain situations.
+* You can no longer use items to pee during the drinking game.
+* Added restrictions on when you can use items to prevent it being exploited
+* Fixed you being bursting and toilet being locked resulting in an error
+* Fixed some broken quotes
+* When peeing into things when you're alone you don't interact with the girl that isn't there.
+* Fix that you can't ask her to pee outside when asking her if she has to pee while at the make out spot
+* Fix that you can compliment her clothes when she's not wearing any
+
+# version 0.5.2
 * Fixed buying items being broken.
 * Fixed you being stuck when finishing a movie after closing time.
 * Fixed flirt options not properly randomizing
@@ -7,7 +27,7 @@
 * Fixed some quotes
 * Gave the waiting for elevator scene more variety, so it looks like you actually did something if you click continue.
 
-#version 0.5.1
+# version 0.5.1
 * Fixed bug where it showed undefined when visiting closed venues
 * Added options to flirt while dancing
 * Fixed typo in the girlname for appearence, which broke both the bar game and checking her out when using Melissa as a basegirl

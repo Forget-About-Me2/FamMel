@@ -17,6 +17,7 @@ const gasChance = 3; //Chance you'll encounter a gas station
 let gasStation;
 
 function driveAround(){
+    allowItems = 1;
     let curtext = printList([], driveRound["driveAround"][0]);
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
@@ -37,19 +38,17 @@ function driveAround(){
         sayText(curtext);
         curtext = []
         if (yourbladder > yourblademer) {
-            listenerList.push([[drivetell], "drivetell"]);
-            cListener([drivetell, "Tell her you need to go."], "drivetell");
+            listenerList.push([[drivetell, "Tell her you need to go."], "drivetell"]);
         }
         if (gottagoflag > 0) {
-            curtext = preventpee(curtext);
+            listenerList = preventpee(listenerList);
         } else curtext = standobjs(curtext);
         if (gasStation) {
-            listenerList.push([[station], "gasStation"]);
-            cListener([station, "Stop at the gas station"], "gasStation");
+            listenerList.push([[station, "Stop at the gas station"], "gasStation"]);
         }
         curtext = c([locstack[0], "Continue..."], curtext);
         addSayText(curtext);
-        addListenersList(listenerList);
+        cListenerGenList(listenerList);
     }
 }
 
@@ -61,6 +60,7 @@ function nextstop() {
 }
 
 function drivetell() {
+    allowItems = 1;
     let curtext = printList([], driveRound["driveTell"]);
     curtext = displayyourneed(curtext);
     sayText(curtext);
@@ -90,6 +90,7 @@ function drivePee() {
 }
 
 function station(){
+    allowItems = 1;
     //TODO create properly
     let curtext = printList([], driveRound["station"]);
     curtext = callChoice(["curloc", "Continue ..."], curtext);

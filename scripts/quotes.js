@@ -223,7 +223,7 @@ function cListener(choice, tag){
     document.getElementById('textsp').innerHTML += html;
 }
 
-//Gets the string html for the given choice
+//Gets the string html for the given choice, formats it if neccesarry
 function cListenerString(choice, loc){
     return "<li class='cListener' id='"+loc+"'>"+choice[1].formatVars()+"</li>";
 }
@@ -259,8 +259,10 @@ function cListenerGen(choice, loc){
     addListeners(choice, loc);
 }
 
-/*For a given list generates the element and listeners
+/*
+For a given list generates the element and listeners
 expected input: [[function, description], tag]
+Description is formatted if needed.
 */
 function cListenerGenList(list){
     list.forEach(item => cListener(item[0], item[1]));
@@ -270,8 +272,24 @@ function cListenerGenList(list){
 //print the given lines list on the screen
 function sayText(lines){
     let result = "";
-    lines.forEach(item => result += "<p>" + item.formatVars() + "</p>");
-    document.getElementById('textsp').innerHTML = result;
+    try {
+        lines.forEach(item => {
+            if (item === undefined || item === "") {
+                console.error("lines for say text not properly defined, lines:", lines);
+                console.log(lines);
+            }
+            if (typeof item !== "string") {
+                console.error("array found in saytest, incompatible", lines);
+                console.log(lines);
+            }
+            result += "<p>" + item.formatVars() + "</p>";
+        });
+        document.getElementById('textsp').innerHTML = result;
+    } catch (e) {
+        console.WriteLine("Somethign went wrong while saying text");
+        console.error(e);
+        console.WriteLine(lines);
+    }
 }
 
 //Adds the given line list to the already existing screen.
@@ -306,6 +324,15 @@ async function getjsonT(tag){
     json = await response.json();
     calledjsons[tag] = json;
     eval(tag+"()");
+}
+
+//This requests a json file from the webserver using the location tag and then calls teh callback function.
+async function getjsonTF(tag, callback){
+    const file = "JSON/" + tag + ".JSON";
+    const response= await fetch(file);
+    json = await response.json();
+    calledjsons[tag] = json;
+    return callback();
 }
 
 //Assign locjson of the given location when there are multiple locations in the json file.
@@ -461,7 +488,10 @@ function LreplaceCheck(rpstring, list, tag){
 //calls all json requests to get recurring quotes
 function setupQuotes(){
     getjson("flirting", flirtSetup);
-    getjson("needs", needSetup);
+    getjson("needs", function () {
+        needs = json;
+        toldstories = range(0, needs["peestory"].length - 1);
+    });
     getjson("youpee", yPeeSetup);
     getjson("shepee", shePeeSetup);
     getjson("drinking", function (){
@@ -483,7 +513,9 @@ function setupQuotes(){
     getjson("objects", function () {
         objQuotes = json;
         objQuotes["buyItem2"] = formatAllVarsList(objQuotes["buyItem2"]);
-
+    });
+    getjson("endScreens", function (){
+        endScreens = json;
     });
 }
 
@@ -503,46 +535,6 @@ function flirtSetup(){
     feelUp["bad"] = formatAllVars(feelUp["bad"]);
     kissing = json.kiss;
     kissing["diag"] = formatAllVarsList(kissing["diag"]);
-}
-
-
-function needSetup(){
-    needs = json;
-    needs["girltalk"] = addGirlTalk(needs["girltalk"]);
-    needs["girlname"] = addGirlname(needs["girlname"]);
-    needs["girlgasp"] = addGirlGasp(needs["girlgasp"]);
-    needs["askpee"] = replaceWCLC(needs["askpee"],  needs["girlname"], "girlname");
-    needs["askpee"] = replaceWCLC(needs["askpee"], needs["girltalk"], "girltalk");
-    needs["preventpee"] = replaceChoicesList(needs["preventpee"],  needs["girlname"], "girlname");
-    needs["pstory"] = replaceWCLC(needs["pstory"], needs["girlname"], "girlname");
-    needs["holdit"]["girltalk"] = addGirlTalk(needs["holdit"]["girltalk"]);
-    needs["holdit"]["girlgasp"] = addGirlGasp(needs["holdit"]["girlgasp"]);
-    needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girltalk"], "girltalk");
-    needs["holdit"]["dialogue"] = replaceWCLC(needs["holdit"]["dialogue"], needs["holdit"]["girlgasp"], "girlgasp");
-    needs["begtoilet"]["girlname"] = addGirlname(needs["begtoilet"]["girlname"]);
-    needs["begtoilet"]["dialogue"] = replaceWCLC(needs["begtoilet"]["dialogue"], needs["begtoilet"]["girlname"], "girlname");
-    needs["briberoses"] = replaceWCLC(needs["briberoses"], needs["girltalk"],"girltalk");
-    needs["bribefavor"] = replaceWCLC(needs["bribefavor"], needs["girltalk"],"girltalk");
-    needs["payholdit"] = replaceWCLC(needs["payholdit"], needs["girltalk"],"girltalk");
-    needs["payfails"] = replaceWCLC(needs["payfails"], needs["girltalk"],"girltalk");
-    needs["bribeearrings"] = replaceWCLC(needs["bribeearrings"], needs["girltalk"],"girltalk");
-    needs["allowpee"] = replaceWCLC(needs["allowpee"], needs["girltalk"],"girltalk");
-    needs["holdpurse"] = replaceWCLC(needs["holdpurse"], needs["girltalk"], "girltalk");
-    needs["vase"] = replaceWCLCI(needs["vase"], needs["girltalk"], "girltalk");
-    needs["vase"] = replaceWCLCI(needs["vase"], needs["girlname"], "girlname");
-    needs["shotglass"] = replaceWCLCI(needs["shotglass"], needs["girltalk"], "girltalk");
-    needs["shotglass"] = replaceWCLCI(needs["shotglass"], needs["girlname"], "girlname");
-    needs["ptowels"] = replaceWCLCI(needs["ptowels"], needs["girltalk"], "girltalk");
-    needs["ptowels"] = replaceWCLCI(needs["ptowels"], needs["girlname"], "girlname");
-    needs["champ-glass"] = replaceWCLCI(needs["champ-glass"], needs["girltalk"], "girltalk");
-    needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girltalk"], "girltalk");
-    needs["peeintub"] = replaceWCLC(needs["peeintub"], needs["girlgasp"], "girlgasp");
-    needs["wetquote"] = addGirlname(needs["wetquote"]);
-    needs["wetherself"] = replaceWCLC(needs["wetherself"], needs["girlname"], "girlname");
-    needs["wetherself"] = replaceWCLC(needs["wetherself"], needs["girltalk"], "girltalk");
-    needs["drinkquote"] = addGirlname(needs["drinkquote"]);
-    needs["peeoutside"] = replaceWCLC(needs["peeoutside"], needs["girltalk"], "girltalk");
-    toldstories = range(0, needs["peestory"].length);
 }
 
 //Girl curses
@@ -599,16 +591,21 @@ function handleFlirt(curtext){
     let choice = [];
     let low = "low";
     let med = "med";
+    let high = "high";
     if(locstack[0] === "callher"){
         low += "cell";
         med += "cell";
+    } else if (locstack[0] === "theHotTub"){
+        low += "Naked";
+        med += "Naked";
+        high += "Naked";
     }
     result.push([flirtquotes[low][randcounter]]);
     choice.push("flirt_l");
     incrandom();
     if (Math.floor(Math.random() * 7) === 0 && locstack[0] !== "callher"){
         choice.push("flirt_h");
-        result.push([flirtquotes["high"][randcounter]]);
+        result.push([flirtquotes[high][randcounter]]);
     } else {
         choice.push("flirt_m");
         result.push([flirtquotes[med][randcounter]]);

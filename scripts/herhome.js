@@ -36,6 +36,7 @@ function herhome() {
 //TODO fix this scene
 //The dialogues is fucked if you asked her to hold it
 function pickup() {
+    allowItems = 1;
     let curtext = [];
     if (locstack[0] !== "pickup") { // happens first time only.
         getMLocations("herhome", "pickup");
@@ -92,7 +93,7 @@ function pickup() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            curtext = preventpee(curtext);
+            listenerList = preventpee(listenerList);
         } else {
             curtext = standobjs(curtext);
             if (yourbladder > yourbladurge)
@@ -106,9 +107,6 @@ function pickup() {
 }
 
 function takeHerHome(){
-    getjson("endScreens", function (){
-        endScreens = json;
-    });
     let curtext = printList([], herHome["arrive"]);
     let listenerList = [];
     if (homeConditions()){
@@ -123,6 +121,7 @@ function takeHerHome(){
 
 let floorcounter = 0;
 function elevatorWait() {
+    allowItems = 1;
     let curtext = [];
     let listenerList = [];
     if (locstack[0] !== "theElevator") {
@@ -155,6 +154,7 @@ function elevatorWait() {
 }
 
 function theElevator(){
+    allowItems = 1;
     let curtext = [];
     let listenerList = [];
     if (floorcounter === 3) {
@@ -264,8 +264,8 @@ function lookForKeys() {
     ]);
 }
 
-//TODO offer beer
 function theHome() {
+    allowItems = 1;
     if (locstack[0] !== "theHome")
         pushloc("theHome")
     let curtext = [herHome["atHome"].formatVars()];

@@ -26,6 +26,7 @@ const objects = {
         "emerAttr": 2,
         "holdCount":2,
         "attr": 7,
+        banLocs: ["theHotTub"],
         "functions": [
             ['giveHer(&quot;roses&quot;)', "Give her a bouquet of roses"]
         ],
@@ -43,6 +44,7 @@ const objects = {
         price: 60,
         "value": 0,
         "owned": "{0} pair{1} of earrings",
+        banLocs: ["theHotTub"],
         "emerAttr": 4,
         "holdCount":4,
         "attr": 14,
@@ -69,6 +71,7 @@ const objects = {
         "yfunctions":[
             ["ypeein(&quot;vase&quot;)", "Pee into the vase."]
         ],
+        "banLocs": ["drinkinggame", "theHotTub"],
         "quote": "peevasequote",
         "owned": "{0} vase{1}",
         "description": "You're not quite sure how you managed to fit this in your backpack," +
@@ -86,6 +89,7 @@ const objects = {
         "yfunctions":[
             ["ypeein(&quot;shotglass&quot;)", "Pee into the shot glass."]
         ],
+        "banLocs": ["drinkinggame", "theHotTub"],
         "quote": "peeshotquote",
         "owned": "{0} shotglass{1}",
         "description":"You can't quite recall why you thought it was a good idea to bring this glass to your date. " +
@@ -105,6 +109,7 @@ const objects = {
         // "yfunctions":[
         //     ["ypeein(&quot;ptowels&quot;)", "Pee into the paper towels."]
         // ],
+        "banLocs": ["drinkinggame", "theHotTub"],
         "quote": "peetowelquote",
         "giveQuotes":[[
             "girltalk Thanks",
@@ -113,7 +118,7 @@ const objects = {
         "owned": "{0} roll{1} of paper towels",
         "description":"One should always have paper towels handy."
     },
-    "panties": {
+    "sexyPanties": {
         "bpname":"Sexy panties",
         price: 30,
         "value": 0,
@@ -163,6 +168,7 @@ const objects = {
         "yfunctions":[
             ["ypeein(&quot;champ-glass&quot;)", "Pee in the champagne glass."]
         ],
+        "banLocs": ["drinkinggame", "theHotTub"],
         "quote": "peechampquote",
         "owned": "{0} champagne glass{1}",
         "description": "A standard champagne glass, can hold 180ml. Maybe use it to share some champagne with {0}"
@@ -185,6 +191,7 @@ const objects = {
         "yfunctions":[
             ['ydrinknow(&quot;beer&quot;)', "Drink a beer."]
         ],
+        "banLocs": ["drinkinggame"],
         "drinkquote": "Bottoms up!.",
         "description":"Beer is the route to every woman's heart. Or at least to the toilet."
     },
@@ -293,10 +300,12 @@ const noItemLoc = ["start2", "beachsex", "tubsex", "pnorestroom", "thebed"]
 const playOnly = ["yourhome", "gostore", "callher"]
 
 //Locations where drinkitems can be used
-//This isn't used but it's a handy list, might be useful for later
+//This isn't used, but it's a handy list, might be useful for later
 const drinkLoc = ["pickup", "driveout", "domovie",
     "thebar", "theclub", "themakeout", "thewalk", "thebeach", "theyard",
     "thehottub", "darkmovie", "photogame", "drinkinggame", "thehome"]
+
+let allowItems= 1; //Are you currently allowed to use items?
 
 //TODO add a mention need option
 // standobjs function allows one to use the normal objects.
@@ -328,7 +337,7 @@ function backpack(){
     let itemlist = createItemButtonList();
     let items = "";
     const backpackitem = document.getElementById("backpackitems");
-    if (itemlist.length !== 0) {
+    if (itemlist.length > 0) {
         itemlist.forEach(item => items += item);
         backpackitem.innerHTML = items;
     } else {
@@ -382,7 +391,7 @@ function buyItem(item){
     });
     listenerList.push([[function(){
         buyItem2(item, value, price);
-    }], "buy"]);
+    }], "buy", false]);
     let form = document.getElementById("buy"+item);
     form.onsubmit = function (event) {
         event.preventDefault();
@@ -484,7 +493,7 @@ function briberoses() {
     curtext = printList(curtext, needs["briberoses"]);
     askholditcounter++;
     curtext = displayholdquip(curtext);
-    curtext = printChoicesList(curtext, [0],  needs["choices"]);
+    curtext = callChoice(["curloc", "Continue..."], curtext);
     objects.roses.value -= 1;
     sayText(curtext);
 }
@@ -494,18 +503,20 @@ function bribeearrings() {
     curtext = printList(curtext, needs["bribeearrings"]);
     askholditcounter++;
     curtext = displayholdquip(curtext);
-    curtext = printChoicesList(curtext, [0],  needs["choices"]);
+    curtext = callChoice(["curloc", "Continue..."], curtext);
     objects.earrings.value -= 1;
     sayText(curtext);
 }
 
 function holdpurse() {
     haveherpurse = 1;
-    let curtext = [];
-    curtext.push(needs["holdpurse"][0]);
-    curtext.push(needs["holdpurse"][1]);
-    curtext = printChoicesList(curtext, [6,7], needs["choices"]);
-    sayText(curtext)
+    let curtext = printListSelection([], needs["holdpurse"], [0,1]);
+    let listenerList = [
+        [[lookinsidepurse, needs["choices"]["lookInsidePurse"]], "lookInsidePurse"],
+        [[indepee, needs["choices"]["gentleman"]], "gentleman"]
+    ];
+    sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
 function lookinsidepurse() {
@@ -534,8 +545,8 @@ function lookinsidepurse() {
             if ("funDesc" in item && !haveItem(key))
                 curtext = c(["takeHerItem(&quot;" + key + "&quot;)", "take " + item.funDesc], curtext);
     });
-    curtext = printChoicesList(curtext,[8], needs["choices"]);
     sayText(curtext);
+    cListener([indepee, needs["choices"]["closePurse"]], "closePurse");
 }
 
 //You steal the given item from her purse
@@ -543,8 +554,12 @@ function takeHerItem(item){
     let curtext = [];
     curtext.push(needs["holdpurse"][3].format([herpurse[item].funDesc]));
     objects[item].value += 1;
-    curtext = printChoicesList(curtext, [9,1], needs["choices"]);
+    let listenerList =[
+        [[lookinsidepurse, needs["choices"]["lookAgain"]], "lookAgain"],
+        [[indepee, "Continue..."], "indepee"]
+    ]
     sayText(curtext);
+    cListenerGenList(listenerList);
 
 }
 
@@ -557,16 +572,16 @@ function giveHer(item){
     let quotes = formatAllVarsList(obj.giveQuotes);
     let curtext = printList([], quotes[0]);
     let listenerList = [];
-    if (item === "panties"){
+    if (item === "sexyPanties"){
         pantycolor = "sexy";
         if (!wetlegs) attraction += 5;
         else curtext = printList(curtext, quotes[1]);
     } else if (item === "ptowels") {
         wetlegs = 0;
-        if (haveItem("panties")) {
+        if (haveItem("sexypanties")) {
             listenerList.push([[function () {
-                giveHer("panties");
-            }, "Offer her a clean pair of panties."], "panties"]);
+                giveHer("sexypanties");
+            }, "Offer her a clean pair of panties."], "oPanties"]);
         }
     } else {
         if (bladder < blademer) {
@@ -626,8 +641,8 @@ function selectitem(selecteditem){
     if(clickedObj.owned)
         tobeprinted += "<b><i>You have " + getAmountOwned(clickedObj) + "</i></b><br><br>";
     tobeprinted += clickedObj.description.format([girlname]);
-    if (!noItemLoc.includes(locstack[0]) && locstack.length !== 0 && clickedObj.hasOwnProperty("functions")){
-        if (!(clickedObj.hasOwnProperty("locations") && clickedObj.locations.includes(locstack[0]))){
+    if (!noItemLoc.includes(locstack[0]) && locstack.length !== 0 && clickedObj.hasOwnProperty("functions") && allowItems){
+        if (!clickedObj.hasOwnProperty("locations") && !(clickedObj.hasOwnProperty("banLocs") && clickedObj.banLocs.includes(locstack[0]))){
             //If the girl isn't with you, you can't ask her to use a certain item
             if (!playOnly.includes(locstack[0]))
                 printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
@@ -636,7 +651,7 @@ function selectitem(selecteditem){
                 if (clickedObj.hasOwnProperty("togfunctions") && !playOnly.includes(locstack[0]) && clickedObj.value > 1)
                     printAllChoicesList([], clickedObj.togfunctions).forEach(item => tobeprinted += item);
             }
-        } else
+        } else if (clickedObj.hasOwnProperty("locations") && clickedObj.locations.includes(locstack[0]))
             printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
     }
     itemtext.innerHTML= tobeprinted;
@@ -726,7 +741,7 @@ function drinknow(item) {
             shyness -= drink.shyness;
         }
         if (drink.hasOwnProperty("tuminc")){
-            if (maxtummy < 1000) {
+            if (maxtummy < 1250) {
                 maxtummy += drink.tuminc;
                 maxbeer += drink.tuminc;
             }
@@ -761,7 +776,7 @@ function ydrinknow(item){
             ydrankbeer += drink.drankbeer;
         }
         if (drink.hasOwnProperty("tuminc")){
-            if (ymaxtummy < 1000) {
+            if (ymaxtummy < 1250) {
                 ymaxtummy += drink.tuminc;
                 ymaxbeer += drink.tuminc;
             }

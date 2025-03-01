@@ -17,6 +17,7 @@ function makeOutJson(){
 }
 
 function theMakeOut() {
+    allowItems = 1;
     let curtext = [];
     let listenerList = [];
     if (locstack[0] !== "theMakeOut") {
@@ -43,23 +44,21 @@ function theMakeOut() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            curtext = preventpee(curtext);
-            listenerList.push([[peeoutside, "Suggest that she pees outside."], "peeOutside"]);
+            listenerList = preventpee(listenerList);
         } else {
-            listenerList.push([[viewStars, "Suggest that you gaze at the stars."], "viewStars"]);
-            listenerList.push([[theWalk, "Invite " + girlname + " to take a walk."], "theWalk"]);
+            listenerList.push([[viewStars, makeOut["choices"]["viewStars"]], "viewStars"]);
+            listenerList.push([[theWalk, makeOut["choices"]["inviteWalk"]], "theWalk"]);
             if (!locations.theTheatre.foundKey) {
-                listenerList.push([[function () {lookAround("theTheatre")}, "look around."], "lookAround"]);
+                listenerList.push([[function () {lookAround("theTheatre")}, sharedLoc["choices"]["lookAround"]], "lookAround"]);
             }
             curtext = standobjs(curtext);
             if (yourbladder > yourbladurge)
-                listenerList.push([[ypeeoutside, "Pee outside."], "ypeeOutside"])
+                listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "ypeeOutside"])
         }
-        listenerList.push([[leavehm, "Drive off."], "leaveHm"]);
+        listenerList.push([[leavehm, makeOut["choices"]["leaveHm"]], "leaveHm"]);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
-
 }
 
 function failMakeOut() {
@@ -117,6 +116,7 @@ function viewStars() {
 }
 
 function theWalk() {
+    allowItems = 1;
     let curtext = [];
     if (locstack[0] !== "theWalk") {
         curtext = printList(curtext, makeOut["theWalk"][0]);
@@ -141,19 +141,17 @@ function theWalk() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            curtext = preventpee(curtext);
-            listenerList.push([[peeoutside, "Suggest that she pees on the ground."]]);
+            listenerList = preventpee(listenerList);
         } else {
             if (darkYard) {
-                listenerList.push([[examineGate, "Investigate the open gate."], "examineGate"]);
+                listenerList.push([[examineGate, makeOut["choices"]["examineGate"]], "examineGate"]);
             }
             if (yourbladder > yourbladurge)
-                listenerList.push([[ypeeoutside, "Pee outside."], "yPeeOutside"]);
-                // c("ypeeoutside", "Pee outside.");
+                listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "yPeeOutside"]);
             curtext = standobjs(curtext);
-            listenerList.push([[theWalk, "Keep walking..."], "theWalk"]);
+            listenerList.push([[theWalk, makeOut["choices"]["keepWalking"]], "theWalk"]);
         }
-        listenerList.push([[exitWalk, "Walk back to the car."], "exitWalk"]);
+        listenerList.push([[exitWalk, makeOut["choices"]["exitWalk"]], "exitWalk"]);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
@@ -170,20 +168,15 @@ function exitWalk(){
 
 function examineGate() {
     let curtext = printList([], makeOut["theWalk"][2]);
-    // s("You slowly open the gate and peer behind.");
     let listenerList = [];
     if (walkcounter < 10) {
         curtext = printList(curtext, makeOut["theWalk"][3]);
-        // s("The yard beyond is dark, illuminated only by starlight.");
         if (shyness < 30 && attraction > 75) {
             curtext = printList(curtext, makeOut["theWalk"][4]);
-            // s(girltalk + "Hey!  Let's check it out.");
             listenerList.push([[theYard, "Take her into the dark yard."], "theYard"]);
         }
     } else {
         curtext = printList(curtext, makeOut["theWalk"][5]);
-        // s(girlname + " gasps: We've made it to the beach!");
-        // s("There's sand beyond the gate, and you can hear the calm waves breaking on the shore.");
         listenerList.push([[theBeach, "Visit the beach."], "theBeach"]);
     }
     listenerList.push([[theWalk, "Continue onward..."], "theWalk"]);
@@ -192,18 +185,16 @@ function examineGate() {
 }
 
 function theYard() {
+    allowItems = 1;
     let curtext = [];
     if (locstack[0] !== "theYard") {
         curtext = printList(curtext, makeOut["theYard"][0]);
-        // s("You and " + girlname + " quietly enter the yard.  The grass is soft and slightly damp under your feet.");
         pushloc("theYard");
     } else {
         curtext = printList(curtext, makeOut["theYard"][1]);
-        // s("You and " + girlname + " are in somebody's back yard.");
     }
 
     curtext = printList(curtext, makeOut["theYard"][2]);
-    // s("There is a hot tub here.");
 
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
@@ -212,8 +203,7 @@ function theYard() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            curtext = preventpee(curtext);
-            listenerList.push([[peeoutside, "Suggest that she pee on the ground."], "peeOutside"]);
+             listenerList = preventpee(listenerList);
         } else {
             listenerList.push([[preHotTub, "Suggest you take a dip in the tub."], "preHotTub"]);
             listenerList.push([[kissher, "Kiss her."], "kissHer"]);
@@ -261,6 +251,7 @@ function preHotTub() {
 //TODO she can pee in the hottub if she's not about to burst
 //TODO fix need dialogue
 function theHotTub() {
+    allowItems = 1;
     let curtext = []
     if (locstack[0] !== "theHotTub") {
         curtext = printList(curtext, makeOut["theYard"][5]);
@@ -276,19 +267,18 @@ function theHotTub() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         if (gottagoflag > 0) {
-            curtext = preventpee(curtext);
-            listenerList.push([[peeintub, "Suggest that she pees in the tub."], "peeInTub"]);
+            listenerList = preventpee(listenerList);
         } else {
-            listenerList.push([[kissher, "Kiss her."], "kissHer"]);
-            listenerList.push([[feelup, "Feel her up."], "FeelUp"]);
+            listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
+            listenerList.push([[feelup, general["feelUp"]], "FeelUp"]);
             if (attraction >= 130 && shyness <= 0) {
-                listenerList.push([[function () {haveSex("theHotTub")}, "Make out with her."], "sexTub"]);
+                listenerList.push([[function () {haveSex("theHotTub")}, makeOut["choices"]["makeOut"]], "sexTub"]);
             }
             curtext = standobjs(curtext);
             if (yourbladder > yourbladurge)
-                listenerList.push([[yPeeInTub, "Pee in the hot tub"], "ypeetub"]);
+                listenerList.push([[yPeeInTub, makeOut["choices"]["youPeeInTub"]], "ypeetub"]);
         }
-        listenerList.push([[exitHotTub, "Get out of the tub."], "goBack"]);
+        listenerList.push([[exitHotTub, makeOut["choices"]["exitHotTub"]], "goBack"]);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
@@ -304,17 +294,15 @@ function exitHotTub(){
 
 }
 
-
 function theBeach() {
+    allowItems = 1;
     let curtext = [];
     if (locstack[0] !== "theBeach") {
         curtext = printList(curtext, makeOut["theBeach"][0]);
-        // s("You and " + girlname + " walk out onto the sand.  It makes a soft swooshing noise as you step, like boots on dry snow.");
         pushloc("theBeach");
         askedswim = 0;
     } else {
         curtext = printList(curtext, makeOut["theBeach"][1]);
-        // s("You and " + girlname + " are on the dark beach.");
         if (askedswim > 0) askedswim--;
     }
 
@@ -323,10 +311,8 @@ function theBeach() {
         curtext = displayneed(curtext);
         askedswim = 7;
         curtext = printList(curtext, makeOut["theBeach"][2]);
-        // s(girltalk + " Hey!  Want to go for a swim together?");
-        // s(girlname + " seems strangely insistent.  You realize that neither of you has swimming gear, so this means you get to see her naked.  Or at least see as much as you can in the dark.");
-        listenerList.push([[beachSwim, "Sure, let's go for a swim!"], "beachSwim"]);
-        listenerList.push([[theBeach, "Nah. We didn't bring swimsuits."], "theBeach"]);
+        listenerList.push([[beachSwim, makeOut["choices"]["beachSwim"]], "beachSwim"]);
+        listenerList.push([[theBeach, makeOut["choices"]["denySwim"]], "theBeach"]);
     } else {
         curtext = showneed(curtext);
         curtext = displayyourneed(curtext);
@@ -340,18 +326,17 @@ function theBeach() {
         }
         else {
             if (gottagoflag > 0) {
-                curtext = preventpee(curtext);
-                listenerList.push([[peeoutside, "Suggest that she pees on the sand."], "peeOutside"]);
+                listenerList = preventpee(listenerList);
             } else {
-                listenerList.push([[kissher, "Kiss her."], "kissHer"]);
-                listenerList.push([[feelup, "Feel her up."], "FeelUp"]);
+                listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
+                listenerList.push([[feelup, general["feelUp"]], "FeelUp"]);
                 curtext = standobjs(curtext);
-                if (!checkedherout) listenerList.push([[checkherout, "Check her out."], "checkHerOut"]);
-                if (yourbladder > yourbladurge) listenerList.push([[ypeeoutside, "Pee outside."], "yPeeOutside"]);
+                if (!checkedherout) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);
+                if (yourbladder > yourbladurge) listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "yPeeOutside"]);
                 if (attraction > 100 && shyness < 10)
-                    listenerList.push([[function () {haveSex("theBeach")}, "Make out with her."], "sexTub"]);
+                    listenerList.push([[function () {haveSex("theBeach")}, makeOut["choices"]["makeOut"]], "sexTub"]);
             }
-            listenerList.push([[leaveBeach, "Leave the beach."], "goBack"]);
+            listenerList.push([[leaveBeach, makeOut["choices"]["leaveBeach"]], "goBack"]);
         }
     }
     sayText(curtext);
@@ -458,37 +443,26 @@ function beachSwim3b() {
 
 function beachSwim4() {
     let curtext = printList([], makeOut["theBeach"][16]);
-    // s(girlname + " pauses for a moment, and over the sound of the surf, you can barely hear the hiss of her urine hitting the water.");
     flushdrank();
     if (pantycolor === "none")
         curtext = printList(curtext, makeOut["theBeach"][17]);
-        // s("She's right there beside you in the dark, naked and peeing into the water.");
     else
         curtext = printList(curtext, makeOut["theBeach"][18]);
-        // s("She's right there beside you in the dark, peeing through her wet panties into the water.");
     sayText(curtext);
     cListenerGen([beachSwim5, "Continue..."], "beachSwim");
 }
 
 function beachSwim4b() {
     let curtext = printList([], makeOut["theBeach"][19]);
-    // s(girlname + " pauses for a moment.");
-    // s("You run your hand up her smooth leg under the water.");
-    // s("The water is even warmer around her crotch.  Probing closer, you feel a jet of hot pee escaping from between her pussy lips, passing through your fingers and warming your leg.");
     flushdrank();
-    // s("You feel it slow, spurt a couple of times, and finally come to a stop.");
     sayText(curtext);
     cListenerGen([beachSwim5, "Continue..."], "beachSwim");
 }
 
 function beachSwim5() {
     let curtext = printList([], makeOut["theBeach"][20]);
-    // s(girltalk + " maybe we should go back.  Could be sharks, you know!");
-    // s("You take her hand and lead her back to the beach where you dry off as well as you can and put your clothes back on.");
     if (pantycolor !== "none") {
         curtext = printList(curtext, makeOut["theBeach"][21]);
-        // s("She hands you her wet panties.");
-        // s(girltalk + "Is there someplace you can put these?");
         objects.wetPanties.value += 1;
         pantycolor = "none";
     }

@@ -32,6 +32,7 @@ function leavehm() {
 
 //TODO fix the go to the bar like she asked
 function driveout() {
+    allowItems = 1;
     let curtext = [];
     if (locstack[0] !== "driveout") {
         pushloc("driveout");
@@ -40,7 +41,6 @@ function driveout() {
         suggestedloc = "none";
         if (wetthecar)
             curtext.push(appearance["clothes"][heroutfit]["soakedseatquote"]);
-            // s(soakedseatquote);
         else
             curtext = printIntro(curtext, 1);
         curtext = printIntro(curtext, 2);

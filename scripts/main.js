@@ -157,6 +157,7 @@ function valueChange(id, value){
 // time passage and so on.
 //    tag - name of function to go to next.
 function go(tag) {
+    allowItems = 0;
 
     if (tag !== "options" && tag !== "explainimgs" && tag !== "hidescreen" && tag !== "customgirl" && !enablehide) {
         showedneed = 0; // clear showed need - only active in the current window.
@@ -305,7 +306,8 @@ function incrandom() {
 //  1 corresponds to 10% likelihood.
 //  10 corresponds to 100% likelihood.
 function randomchoice(probability) {
-    if (Math.floor(Math.random() * 10) <= probability)
+    let x = Math.floor(Math.random() * 10);
+    if (x < probability)
         return 1;
     else
         return 0;
@@ -354,7 +356,7 @@ function gamestart(){
         yourbladder = 0;
     }
     displaystats();
-    go("yourhome");
+    getjsonTF("yourhome", yourhome);
     setupQuotes();
 }
 
@@ -403,7 +405,7 @@ function handleDisclaimer(){
         const textElem = document.getElementById("pop-up-text");
         textElem.innerHTML = "";
         credits["disclaimer"].forEach(line => textElem.innerHTML += line);
-        openPopUpTemp();
+        openPopUp();
     }
 }
 
@@ -417,7 +419,7 @@ function start() {
     setup();
     pushloc("yourhome");
     locationSetup("start");
-    let curtext = locjson.always;
+    let curtext = locjson["always"];
     curtext = printAllChoices(curtext);
     sayText(curtext);
     //the start of the game is dependent on yneeds, to save loading time it is called as soon as you move from the main screen
@@ -437,6 +439,7 @@ function gameSexBoth(){
     setText(curtext);
 }
 
+//It's just who who came. You selfish bastard
 function gameSexYou(){
 //TODO
 }

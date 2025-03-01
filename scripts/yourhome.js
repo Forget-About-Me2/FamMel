@@ -9,6 +9,7 @@ let shopping = 0;// Flag for being in the shop
 //TODO decide whether you can always go to the bathroom(maybe like a certain percentage filled)
 //TODO refactor
 function yourhome() {
+    allowItems = 1;
     let curtext = [];
     if (didintro === 0) {
         locationMSetup("yourhome", "yourhome");
@@ -39,6 +40,7 @@ function yourhome() {
 
 // Buy stuff at the store.
 function gostore() {
+    allowItems = 1;
     if (locstack[0] !== "gostore") {
         pushloc("gostore");
         shopping=1;
@@ -85,6 +87,7 @@ function buy(number){
 //TODO you can't see her looking away on the phone
 //TODO show your need?
 function callher() {
+    allowItems = 1;
     let curtext = [];
     if (locstack[0] !== "callher") {
         flirtedflag = 0;
@@ -266,11 +269,8 @@ function ypredrink() {
 
 function cellphone() {
     let curtext = [calledjsons["yourhome"]["getcalled"]["getcalled"]]
-    // s("Your cellphone rings.");
     waitcounter += 3;
     curtext = printChoicesList(curtext, [0,1], calledjsons["yourhome"]["getcalled"]["choices"]);
-    // c("anscell", "Answer it.");
-    // c("ignorecell", "Ignore it.");
     sayText(curtext);
 }
 

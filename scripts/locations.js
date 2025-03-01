@@ -9,13 +9,13 @@ let locations = {
     "theHome": herHomeSetup()
 };
 
-let locJson;
+let sharedLoc;
 getjson("/locations/locations", locJsonSetup);
 
 function locJsonSetup(){
-    locJson = json;
-    locJson["itsClosed"] = formatAllVarsList(locJson["itsClosed"]);
-    locJson["sayHero"] = formatAllVarsList(locJson["sayHero"]);
+    sharedLoc = json;
+    sharedLoc["itsClosed"] = formatAllVarsList(sharedLoc["itsClosed"]);
+    sharedLoc["sayHero"] = formatAllVarsList(sharedLoc["sayHero"]);
 }
 
 //Determines whether the wants to visit a location.
@@ -49,15 +49,15 @@ function printLocationMenu(){
 function lookAround(loc){
     const findkey = randomchoice(locations[loc].keyChance);
     let curtext = [];
-    curtext.push(pickrandom(locJson["lookAround"]));
+    curtext.push(pickrandom(sharedLoc["lookAround"]));
     let listenerList = [];
     if (findkey){
-        curtext.push(locJson[loc][1]);
+        curtext.push(sharedLoc[loc][1]);
         sayText(curtext);
         listenerList.push([[function () {lookKey(loc)}], "lookKey"]);
         cListener(["", "Investigate..."], "lookKey");
     } else {
-        curtext.push(pickrandom(locJson[loc][0]));
+        curtext.push(pickrandom(sharedLoc[loc][0]));
         sayText(curtext);
         //Increase the chance to find the key you were looking for by 20%.
         //Success is guaranteed on the 5th try.
@@ -69,7 +69,7 @@ function lookAround(loc){
 }
 
 function lookKey(loc){
-    let curtext = [pickrandom(locJson["lookKey"])];
+    let curtext = [pickrandom(sharedLoc["lookKey"])];
     let listenerList = [];
     sayText(curtext);
     listenerList.push([[function () {getKey(loc)}], "getKey"]);
@@ -81,7 +81,7 @@ function lookKey(loc){
 
 function getKey(loc){
     locations[loc].foundKey = 1;
-    let curtext = [pickrandom(locJson["getKey"])];
+    let curtext = [pickrandom(sharedLoc["getKey"])];
     objects[loc+"Key"].value++;
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
@@ -94,15 +94,15 @@ function itsClosed(locname, fun, curloc) {
     else if (locname === "theClub") theloc = "night club";
     else  theloc = "movie theater";
     let curtext = []
-    let list = new Array(locJson["itsClosed"][0].length).fill([theloc]);
-    let temp = formatAll(locJson["itsClosed"][0], list);
+    let list = new Array(sharedLoc["itsClosed"][0].length).fill([theloc]);
+    let temp = formatAll(sharedLoc["itsClosed"][0], list);
     curtext = printList(curtext, temp);
     if (bladder > blademer) {
-        curtext = printList(curtext, locJson["itsClosed"][1]);
+        curtext = printList(curtext, sharedLoc["itsClosed"][1]);
         curtext = displaygottavoc(curtext);
     }
-    list = new Array(locJson["itsClosed"][2].length).fill([theloc]);
-    temp = formatAll(locJson["itsClosed"][2], list);
+    list = new Array(sharedLoc["itsClosed"][2].length).fill([theloc]);
+    temp = formatAll(sharedLoc["itsClosed"][2], list);
     curtext = printList(curtext, temp);
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
@@ -122,13 +122,13 @@ function itsClosed(locname, fun, curloc) {
 let emerBreak; //True if she rushed to the toilet after you opened the door
 let emerHold; //True if you asked her to hold it.
 function breakLoc(loc, curloc){
-    let curtext = printList(locJson["breakLoc"][0], []);
+    let curtext = printList(sharedLoc["breakLoc"][0], []);
     let listenerList = [];
     if (bladder > blademer){
         //There's a 30% chance she'll run to the bathroom as soon as you break in.
         if (randomchoice(3)) {
-            curtext.push(pickrandom(locJson["sayHero"][1]));
-            curtext = printList(locJson["breakLoc"][1], curtext);
+            curtext.push(pickrandom(sharedLoc["sayHero"][1]));
+            curtext = printList(sharedLoc["breakLoc"][1], curtext);
             curtext = displayneed(curtext);
             curtext = displayyourneed(curtext);
             pushloc(curloc);
@@ -148,7 +148,7 @@ function breakLoc(loc, curloc){
             addListenersList(listenerList);
             return
         } else
-            curtext.push(pickrandom(locJson["sayHero"][0]));
+            curtext.push(pickrandom(sharedLoc["sayHero"][0]));
     }
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);

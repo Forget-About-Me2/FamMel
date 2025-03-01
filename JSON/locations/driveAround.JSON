@@ -9,7 +9,7 @@
   ],
   "driveTell": [
     "You shift uncomfortably in your seat, trying to focus on the road.",
-    "<b>You: I'm bursting for a pee.",
+    "<b>You:</b> I'm bursting for a pee.",
     "girltalk Then you better stop somewhere so you can go."
   ],
   "drivePee": "girltalk Do you have anything you can pee in? A cup or something?",
