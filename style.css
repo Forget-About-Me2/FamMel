@@ -89,6 +89,20 @@ text {
     padding-left: 1%;
 }
 
+#errorMessage {
+    width:50vw;
+    height:10vh;
+    line-height:1em;
+    font-size: 1em;
+    overflow:auto;
+    background-color: #ffffff;
+    padding-top: 5px;
+    border-color: black;
+    border-width: thin;
+    border-style: solid;
+    font-family: monospace;
+}
+
 #picture {
     display: table-cell;
     float:right;
@@ -276,5 +290,3 @@ text {
 .buy {
     width: 50px;
 }
-
-

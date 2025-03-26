@@ -265,6 +265,7 @@ expected input: [[function, description], tag]
 Description is formatted if needed.
 */
 function cListenerGenList(list){
+    validateListenerList(list)
     list.forEach(item => cListener(item[0], item[1]));
     addListenersList(list);
 }
@@ -616,5 +617,3 @@ function handleFlirt(curtext){
     }
     return curtext;
 }
-
-

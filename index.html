@@ -26,6 +26,7 @@
     <script src="scripts/fuckHer.js"></script>
     <script src="scripts/debugFunctions.js"></script>
     <script src="scripts/pop-up.js"></script>
+    <script src="scripts/validation.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
     <title>Melissa Explains it All</title>
@@ -97,6 +98,19 @@
     </div>
 <script>
 
+    window.onerror = (errorMsg, url, lineNumber, column, errorObj) => {
+        console.log("fuck");
+        const message = 'Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
+            + ' Column: ' + column + ' StackTrace: ' + errorObj;
+        setErrorPopup(message)
+    }
+    window.onunhandledrejection = (message) => {
+        let reason = message.reason;
+        if (reason.stack !== undefined){
+            reason = reason.stack;
+        }
+        setErrorPopup(reason);
+    }
     function startChoices(){
         const listenerList = [
             [["start", "Play"], "start"],
