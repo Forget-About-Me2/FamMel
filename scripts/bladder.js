@@ -1115,7 +1115,6 @@ function wetherself3() {
 
 // In the tub
 function wetherself3t() {
-    console.log("test");
     let curtext = printListSelection([], needs["wetherself"], range(14, 16));
     shyness += 10;
     if (shyness > 100) shyness = 100;

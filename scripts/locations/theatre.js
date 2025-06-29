@@ -217,7 +217,7 @@ function domovie() {
             listenerList.push([[movieDoh, theatre["choices"]["movieDoh"]], "movieDoh"]);
         }
         if (moviecounter < 7)
-            listenerList.push([[leavehm, theatre["choices"]["leaveHm"]]]);
+            listenerList.push([[leavehm, theatre["choices"]["leaveHm"]], "leaveHm"]);
         sayText(curtext);
         cListenerGenList(listenerList);
     }

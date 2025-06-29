@@ -540,13 +540,17 @@ function lookinsidepurse() {
     }
 
     curtext.push(tempstring);
+    var listenerList = [];
     keys.forEach(key => {
             const item = herpurse[key];
             if ("funDesc" in item && !haveItem(key))
-                curtext = c(["takeHerItem(&quot;" + key + "&quot;)", "take " + item.funDesc], curtext);
+                listenerList.push([[function () {
+                    takeHerItem(key);
+                }, "Take " + item.funDesc], "takeHer" + key]);
     });
+    listenerList.push([[indepee, needs["choices"]["closePurse"]], "closePurse"])
     sayText(curtext);
-    cListener([indepee, needs["choices"]["closePurse"]], "closePurse");
+    cListenerGenList(listenerList);
 }
 
 //You steal the given item from her purse
