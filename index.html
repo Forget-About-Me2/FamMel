@@ -99,9 +99,8 @@
 <script>
 
     window.onerror = (errorMsg, url, lineNumber, column, errorObj) => {
-        console.log("fuck");
         const message = 'Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
-            + ' Column: ' + column + ' StackTrace: ' + errorObj;
+            + ' Column: ' + column + ' StackTrace: \n' + errorObj.stack;
         setErrorPopup(message)
     }
     window.onunhandledrejection = (message) => {

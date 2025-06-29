@@ -1143,7 +1143,7 @@ function askspurted() {
     curtext = displayneed(curtext);
     let listenerList = [];
     if (locstack[0] !== "thehottub")
-        listenerList.push([[checkspurted, needs["choices"]["checkSpurted"], "checkSpurted"]]);
+        listenerList.push([[checkspurted, needs["choices"]["checkSpurted"]], "checkSpurted"]);
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
     cListenerGenList(listenerList);

@@ -578,9 +578,9 @@ function giveHer(item){
         else curtext = printList(curtext, quotes[1]);
     } else if (item === "ptowels") {
         wetlegs = 0;
-        if (haveItem("sexypanties")) {
+        if (haveItem("sexyPanties")) {
             listenerList.push([[function () {
-                giveHer("sexypanties");
+                giveHer("sexyPanties");
             }, "Offer her a clean pair of panties."], "oPanties"]);
         }
     } else {

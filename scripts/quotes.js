@@ -287,7 +287,7 @@ function sayText(lines){
         });
         document.getElementById('textsp').innerHTML = result;
     } catch (e) {
-        console.WriteLine("Somethign went wrong while saying text");
+        console.WriteLine("Something went wrong while saying text");
         console.error(e);
         console.WriteLine(lines);
     }

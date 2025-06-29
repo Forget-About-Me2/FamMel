@@ -1,3 +1,9 @@
+# version 0.5.3.1
+* Add error handling to show the user an error message when the game breaks, instead of a blank page.
+* Fixed game breaking on check spurting
+* Fixed game breaking on giving her a paper towel when also holding new panties
+* Fixed the game breaking on the photo game
+
 # version 0.5.3
 * Fixed the sex scenes breaking when she's bursting
 * Fixed the game breaking when you pee outside at the car.
@@ -181,4 +187,3 @@ I think this is version 3.1, it has not been documented very well, unfortunately
 * Added possibility to take her keys or cellphone when you let her go pee.
 * Added lost keys functionality to apartment 
 * Massively Enhanced solo bargirl scene.
-

@@ -17,27 +17,8 @@ function setCloseButton(){
     window.onclick = function(event){
         if (event.target === popUp)
             popUp.style.display = "none";
+        window.onclick = null; // Remove the event listener after closing
     }
-}
-
-//Open the pop-up for 5 seconds before it's possible to close it.
-//Mainly used for the disclaimer
-function openPopUpTemp(){
-    const popUp = document.getElementById("pop-up");
-    popUp.style.display = "flex";
-    const btn = document.getElementById("close-pop-up");
-    btn.innerText = "5";
-    let count = 4;
-    let counter = setInterval(function (){
-        if(count === 0){
-            btn.innerHTML = "&times;"
-            setCloseButton();
-            clearInterval(counter);
-        } else {
-            btn.innerText = count.toString();
-            count--;
-        }
-    }, 1000);
 }
 
 function setErrorPopup(data){
@@ -45,6 +26,7 @@ function setErrorPopup(data){
     popUp.style.display = "flex";
     const closeButton = document.getElementById("close-pop-up");
     closeButton.style.display = "none";
+    window.onclick = null; // Remove the event listener to prevent closing on click outside
     document.getElementById("pop-up-title").innerText = "Error page";
     document.getElementById("pop-up-text").innerHTML = "<p>Oh oh, Something went wrong running the game.</p>" +
         "<p>Sorry for the inconvenience.</p>" +
