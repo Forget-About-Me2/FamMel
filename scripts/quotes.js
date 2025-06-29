@@ -265,6 +265,7 @@ expected input: [[function, description], tag]
 Description is formatted if needed.
 */
 function cListenerGenList(list){
+    validateListenerList(list)
     list.forEach(item => cListener(item[0], item[1]));
     addListenersList(list);
 }
@@ -286,7 +287,7 @@ function sayText(lines){
         });
         document.getElementById('textsp').innerHTML = result;
     } catch (e) {
-        console.WriteLine("Somethign went wrong while saying text");
+        console.WriteLine("Something went wrong while saying text");
         console.error(e);
         console.WriteLine(lines);
     }
@@ -616,5 +617,3 @@ function handleFlirt(curtext){
     }
     return curtext;
 }
-
-

@@ -236,7 +236,7 @@ function preHotTub() {
         curtext = showneed(curtext);
         curtext = displayyourneed(curtext);
         listenerList.push([[theHotTub, "Don't worry - it's really dark out here."], "theHotTub"]);
-        listenerList.push([[theYard, "I'm not so sure..."]]);
+        listenerList.push([[theYard, "I'm not so sure..."], "theYard"]);
     } else {
         curtext = printList(curtext, makeOut["theYard"][4]);
         // s(girltalk + "But I didn't bring a bathing suit!");
@@ -478,4 +478,3 @@ function leaveBeach(){
     poploc();
     cListenerGen([theWalk, "Continue..."], "theWalk");
 }
-

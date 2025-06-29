@@ -1115,7 +1115,6 @@ function wetherself3() {
 
 // In the tub
 function wetherself3t() {
-    console.log("test");
     let curtext = printListSelection([], needs["wetherself"], range(14, 16));
     shyness += 10;
     if (shyness > 100) shyness = 100;
@@ -1143,7 +1142,7 @@ function askspurted() {
     curtext = displayneed(curtext);
     let listenerList = [];
     if (locstack[0] !== "thehottub")
-        listenerList.push([[checkspurted, needs["choices"]["checkSpurted"], "checkSpurted"]]);
+        listenerList.push([[checkspurted, needs["choices"]["checkSpurted"]], "checkSpurted"]);
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
     cListenerGenList(listenerList);

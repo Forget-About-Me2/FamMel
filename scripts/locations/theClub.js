@@ -185,9 +185,9 @@ function pphotogame() {
     curtext.push(club["questPic"].formatVars());
     sayText(curtext);
     cListenerGenList([
-        [function () {photoConvince("snapshots")}, club["choices"]["snapshots"], "snapshots"],
-        [function () {photoConvince("costume")}, club["choices"]["costume"], "costume"],
-        [function () {photoConvince("nudes")}, club["choices"]["nudes"], "nudes"]
+        [[function () {photoConvince("snapshots")}, club["choices"]["snapshots"]], "snapshots"],
+        [[function () {photoConvince("costume")}, club["choices"]["costume"]], "costume"],
+        [[function () {photoConvince("nudes")}, club["choices"]["nudes"]], "nudes"]
     ])
 }
 
@@ -358,4 +358,3 @@ function photoFinish(){
     else
         cListenerGen([darkClub, "Continue..."], "darkClub");
 }
-
