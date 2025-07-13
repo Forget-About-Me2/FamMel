@@ -68,7 +68,7 @@ function buy(number){
     const item = locjson["buying"][number];
     const price = Number(item[1]);
     let curtext = [];
-    let obj = objects[item[2]];
+    let obj = backPackItems[item[2]];
     if (money >= price){
         curtext.push("You buy a "+ item[0]+ ".")
         obj.value += 1;
@@ -102,6 +102,7 @@ function callher() {
         curtext = printIntro(curtext, 1);
     }
 
+    var listenerList = [];
     if (late) {
         let startI = curtext.length;
         curtext = printDialogue(curtext, "callher",0);
@@ -122,7 +123,7 @@ function callher() {
         if (shyness > 80) shyness -= 1;
         //TODO This also prints highflirts while in the original that can't happen over the phone
         if(flirtedflag < maxflirts){
-            curtext = handleFlirt(curtext);
+            curtext = handleFlirt(listenerList);
         }
         incrandom();
         curtext = printChoices(curtext, [1,2]);
@@ -241,11 +242,11 @@ function predrink() {
         if (tummy < maxtummy / 2 && attraction > 12) {
             curtext = printDialogue(curtext, "predrink", 1);
             tummy += 200;
-            objects.water.shedrank += 2;
+            backPackItems.water.sheDrank += 2;
         } else if (tummy < maxtummy && attraction > 15) {
             curtext = printDialogue(curtext, "predrink", 2);
             tummy += 200;
-            objects.water.shedrank += 2;
+            backPackItems.water.sheDrank += 2;
         } else {
             curtext = printDialogue(curtext, "predrink", 3);
         }
@@ -259,7 +260,7 @@ function ypredrink() {
     if (yourtummy < ymaxtummy) {
         curtext = printList(curtext, drinklines["ypredrink"][0]);
         yourtummy += 200;
-        objects.water.ydrank += 2;
+        backPackItems.water.yDrank += 2;
     } else {
         curtext = printList(curtext, drinklines["ypredrink"][1]);
     }

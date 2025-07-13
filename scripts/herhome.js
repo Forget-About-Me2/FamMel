@@ -200,7 +200,7 @@ function stolenKeys(){
 }
 
 function giveKeys() {
-    objects.herKeys.value=0;
+    backPackItems.herKeys.value=0;
     let curtext = [herHome["getKeys"]];
     let listenerList = [];
     if (bladder >= blademer) {
@@ -253,7 +253,7 @@ function lookForKeys() {
     // s(girlname + " offers you her purse.");
     // showneed();
     // s("You palm the keys in your pocket, take her purse and rummage through it.");
-    objects.herKeys.value = 0;
+    backPackItems.herKeys.value = 0;
     sayText(curtext);
     cListenerGenList([
         [[lookForKeys, herHome["choices"]["keysNotFound"]],"lookForKeys"],

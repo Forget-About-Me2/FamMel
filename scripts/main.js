@@ -1,4 +1,5 @@
 //Functions and variables that don't belong to anything specific
+const gameState = new GameState();
 
 let randcounter = 0; // text randomizer
 let playerbladder = 1; //Whether playerBladder has been enabled.

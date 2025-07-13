@@ -62,7 +62,7 @@ function theTheatre(){
 }
 
 function reTheatre() {
-    objects.theTheatreKey.value = 0;
+    backPackItems.theTheatreKey.value = 0;
     pushloc("theTheatre");
     theTheatre();
 }
@@ -340,7 +340,7 @@ function darkTheatre() {
 
 function stealSoda() {
     let curtext = printList([], theatre["stealSoda"][0]);
-    objects.soda.value += 1;
+    backPackItems.soda.value += 1;
     let listenerList = [
         [[stealSoda2, "Steal another soda."], "stealSoda"],
         [[darkTheatre, "Continue..."], "darkTheatre"]
@@ -353,7 +353,7 @@ function stealSoda() {
 //TODO randomize quotes
 function stealSoda2(){
     let curtext = printList([], theatre["stealSoda"][1]);
-    objects.soda.value += 1;
+    backPackItems.soda.value += 1;
     let listenerList = [
         [[stealSoda2, "Steal another soda."], "stealSoda"],
         [[darkTheatre, "Continue..."], "darkTheatre"]

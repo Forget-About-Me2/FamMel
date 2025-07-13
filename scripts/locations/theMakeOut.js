@@ -463,7 +463,7 @@ function beachSwim5() {
     let curtext = printList([], makeOut["theBeach"][20]);
     if (pantycolor !== "none") {
         curtext = printList(curtext, makeOut["theBeach"][21]);
-        objects.wetPanties.value += 1;
+        backPackItems.wetPanties.value += 1;
         pantycolor = "none";
     }
     sayText(curtext);

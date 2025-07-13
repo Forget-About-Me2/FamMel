@@ -587,9 +587,7 @@ function shePeeSetup(){
 }
 
 
-function handleFlirt(curtext){
-    let result = [];
-    let choice = [];
+function handleFlirt(listenerList){
     let low = "low";
     let med = "med";
     let high = "high";
@@ -601,19 +599,16 @@ function handleFlirt(curtext){
         med += "Naked";
         high += "Naked";
     }
-    result.push([flirtquotes[low][randcounter]]);
-    choice.push("flirt_l");
+    listenerList.push([[flirt_l, flirtFormat(flirtquotes[low][randcounter])], "flirt_l"])
     incrandom();
     if (Math.floor(Math.random() * 7) === 0 && locstack[0] !== "callher"){
-        choice.push("flirt_h");
-        result.push([flirtquotes[high][randcounter]]);
+        listenerList.push([[flirt_h, flirtFormat(flirtquotes[high][randcounter])], "flirt_h"]);
     } else {
-        choice.push("flirt_m");
-        result.push([flirtquotes[med][randcounter]]);
+        listenerList.push([[flirt_m, flirtFormat(flirtquotes[med][randcounter])], "flirt_m"]);
     }
-    const build = "Tell her {0}.";
-    for (let i = 0; i < result.length; i++){
-        curtext = c([choice[i], formatString(build, result[i])], curtext);
-    }
-    return curtext;
+    return listenerList;
+}
+
+function flirtFormat(quote){
+    return "Tell her " + quote + ".";
 }

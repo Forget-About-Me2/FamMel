@@ -79,7 +79,7 @@ function flirtBarGirl() {
 }
 
 function reClub() {
-    objects.theClubKey.value = 0;
+    backPackItems.theClubKey.value = 0;
     pushloc("theClub");
     theClub();
 }

@@ -71,7 +71,7 @@ function thebar(){
 
 //You use the key you found as excuse to go to the bar another time
 function rebar(){
-    objects.theBarKey.value = 0;
+    backPackItems.theBarKey.value = 0;
     pushloc("thebar");
     thebar();
 }
@@ -116,7 +116,7 @@ function sellPanties(){
     const price = 20 + Math.floor(Math.random() * 20);
     sayText(["BARTENDER: I'll give you $" + price + " for those."]);
     money += price;
-    objects.wetPanties.value -= 1;
+    backPackItems.wetPanties.value -= 1;
     let listenerList = [
         [[function () {buyItem("beer")}, objQuotes["buyChoices"]["beer"]], "buybeer"],
         [[thebar, general["continue"]], "theBar"]
@@ -131,7 +131,7 @@ function sellPanties(){
 function stealbeer() {
     let curtext = [];
     curtext.push(bar["stealBeer"]);
-    objects.beer.value++;
+    backPackItems.beer.value++;
     sayText(curtext);
     let listenerList = [
         [[stealbeer2, objQuotes["stealChoices"]["moreBeer"]], "stealbeer"],
@@ -151,7 +151,7 @@ function stealbeer2(){
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         curtext.push(bar["stealMoreBeer"]);
-        objects.beer.value++;
+        backPackItems.beer.value++;
         sayText(curtext);
         let listenerList = [
             [[stealbeer2, objQuotes["stealChoices"]["moreBeer"]], "stealbeer"],

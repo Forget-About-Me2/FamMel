@@ -82,7 +82,7 @@ function lookKey(loc){
 function getKey(loc){
     locations[loc].foundKey = 1;
     let curtext = [pickrandom(sharedLoc["getKey"])];
-    objects[loc+"Key"].value++;
+    backPackItems[loc+"Key"].value++;
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
 }
@@ -155,9 +155,3 @@ function breakLoc(loc, curloc){
     sayText(curtext);
     cListenerGen([loc, "Continue..."], "curloc");
 }
-
-
-
-
-
-

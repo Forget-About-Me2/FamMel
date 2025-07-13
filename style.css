@@ -54,6 +54,12 @@ text {
     float: right;
 }
 
+#debugmenubutton {
+    display: none;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 #gamescreen {
     display: block;
     height: 90%;
@@ -242,7 +248,7 @@ text {
     cursor: pointer;
 }
 
-.btn-group .itembtn {
+.itembtn {
     background-color: #bcf6f6;
     border: none;
     color: #a21717;
@@ -256,7 +262,7 @@ text {
     margin: 10px;
 }
 
-.btn-group .itembtn:hover{
+.itembtn:hover{
     background-color: #b0e9f3;
 }
 

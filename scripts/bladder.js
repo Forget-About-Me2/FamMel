@@ -145,7 +145,7 @@ function flushdrank() {
         }
     }
 
-    Object.keys(objects).forEach(item => {
+    Object.keys(backPackItems).forEach(item => {
         if (item.hasOwnProperty("shedrank"))
             item.shedrank = 0;
     });
@@ -768,7 +768,7 @@ function peein(item) {
     const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
     const list = needs[item];
-    var object = objects[item];
+    var object = backPackItems[item];
     let curtext = [needs["suggestPeeIn"].format([object.bpname])];
     let itemAttr = 30;
     if (object.hasOwnProperty("attrThresh"))
@@ -799,7 +799,7 @@ function peein(item) {
             }
         } else {
             //She's desperate so uses it.
-            if (attraction < 70 && !objects[item].peed) {
+            if (attraction < 70 && !backPackItems[item].peed) {
                 //An exclamation about the idea of it
                 curtext = printList(curtext, list[4]);
             }
@@ -817,13 +817,13 @@ function peein(item) {
             //When in the car she'll throw the item out of the window.
             curtext.push("She throws it out of the window.");
             curtext.push("You sigh, not sure how to fix this.");
-            objects[item].value--;
+            backPackItems[item].value--;
         } else if (bladder > bladneed) {
             //If she actually has to go she'll go to the bathroom and take the item with her
-            curtext.push("She grabs your " + objects[item].bpname.toLowerCase() + " and runs to the bathroom");
+            curtext.push("She grabs your " + backPackItems[item].bpname.toLowerCase() + " and runs to the bathroom");
             curtext.push("Leaving you to ponder your current situation.");
             flushdrank();
-            objects[item].value--;
+            backPackItems[item].value--;
         }
         curtext = callChoice(["curloc", "Continue..."], curtext);
     }
@@ -834,9 +834,9 @@ function peein2(item) {
     let curtext = [];
     //print quote depending on the panties she wears.
     if (pantycolor !== "none")
-        curtext.push(appearance["clothes"][heroutfit][objects[item].quote].format([pantycolor]));
+        curtext.push(appearance["clothes"][heroutfit][backPackItems[item].quote].format([pantycolor]));
     else
-        curtext.push(appearance["clothes"][heroutfit][objects[item].quote + "bare"]);
+        curtext.push(appearance["clothes"][heroutfit][backPackItems[item].quote + "bare"]);
     //prints certain quotes about it coming out if she is actually able to pee
     if (bladder > blademer)
         curtext = itscomingout(curtext);
@@ -855,7 +855,7 @@ function peein3(item) {
         curtext.push(girltalk + "I just can't. Maybe later.");
         shyness += 1;
     } else {
-        const container = objects[item];
+        const container = backPackItems[item];
         if (container.hasOwnProperty("volume")) {
             if (container.volume < bladder) {
                 if (bladder > blademer)
@@ -1085,7 +1085,7 @@ function wetherself3() {
         curtext.push(appearance["clothes"][heroutfit]["wetherselfquote"].format([pantycolor]));
         if (attraction > 40) {
             curtext = printListSelection(curtext, needs["wetherself"], [11, 12]);
-            objects.wetPanties.value++
+            backPackItems.wetPanties.value++
         }
         pantycolor = "none";
     } else if (pantycolor === "none")

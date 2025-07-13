@@ -221,7 +221,7 @@ function ypeein(item){
             curtext = callChoice(["ypeein2(&quot;" +item+ "&quot;," + yneedtype + ")", "Continue..."], curtext);
         } else {
             curtext.push("\"Are you out of your mind!?\" She hisses urgently. \"You can't do that! What if someone sees?!\"");
-            curtext.push("You sigh, but put away the " + objects[item].bpname.toLowerCase() + ".");
+            curtext.push("You sigh, but put away the " + backPackItems[item].bpname.toLowerCase() + ".");
             curtext = callChoice(["curloc", "Continue..."], curtext);
             attraction -= Math.round(10 / (yneedtype + 1));
         }
@@ -246,7 +246,7 @@ function ypeein3(item, yneedtype){
         curtext.push("With a sigh, you zip your trousers back up.");
         curtext.push("<b>You:</b> It's not happening, I'll try again later when my bladder is a bit fuller.");
     } else {
-        const container = objects[item];
+        const container = backPackItems[item];
         const list = yneeds[item];
         if (container.hasOwnProperty("volume")){
             if (container.volume < yourbladder){

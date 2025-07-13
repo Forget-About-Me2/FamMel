@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
 <!-- TODO sort out imports?-->
+    <script src="scripts/debugMenu.ts"></script>
     <script src="scripts/main.js"></script>
     <script src="scripts/quotes.js"></script>
     <script src="scripts/animation.js"></script>
@@ -24,11 +25,11 @@
     <script src="scripts/locations.js"></script>
     <script src="scripts/games/darts.js"></script>
     <script src="scripts/fuckHer.js"></script>
-    <script src="scripts/debugFunctions.js"></script>
     <script src="scripts/pop-up.js"></script>
     <script src="scripts/validation.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>  <!-- markdown to html converter -->
+<!--    <script src="scripts/GameState.ts"></script>-->
     <title>Melissa Explains it All</title>
 </head>
 <body>
@@ -48,10 +49,13 @@
         </div>
     </div>
     <div id="titlebar">
-        <div id="engine">Game Engine 3.2a by drw</div>
-        <div id="version">V0.5.4: 29 June 2025</div>
+        <>
+            <div id="engine">Game Engine 3.2a by drw</div>
+            <div id="version">V0.5.4: 29 June 2025</div>
     </div>
-    <br>
+<div id="debugmenubutton">
+    <button class="itembtn">Debug menu</button>
+</div>
     <hr>
     <br>
     <div id="gamescreen">
