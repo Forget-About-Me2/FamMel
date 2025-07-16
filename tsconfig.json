@@ -15,5 +15,6 @@
       "./scripts/GameState.ts"
     ],
     "outDir": "./dist",
+    "resolveJsonModule": true
   }
 }

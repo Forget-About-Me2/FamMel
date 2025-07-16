@@ -218,7 +218,7 @@ function fuckHerSetup(){
 function haveSex(location){
     let curtext = [];
     let sexQuotes = sexLines[location];
-    if (locstack[0]!== "haveSex"){
+    if (locStack[0]!== "haveSex"){
         kisscounter = 0;
         arousal = 0;
         pushloc("haveSex");
@@ -445,7 +445,7 @@ function fuckTry(location) {
 
 function theBedroom() {
     let curtext = [];
-    if (locstack[0] !== "theBedroom") {
+    if (locStack[0] !== "theBedroom") {
         pushloc("theBedroom");
         curtext.push(sexLines["followBed"]);
         if (bladder > bladlose-25)

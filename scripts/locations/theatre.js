@@ -25,15 +25,15 @@ function theTheatre(){
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
-    if (locations.theTheatre.visited && locstack[0] === "driveout" && thetime < theaterclosingtime){
+    if (locations.theTheatre.visited && locStack[0] === "driveout" && thetime < theaterclosingtime){
         curtext = printList(curtext, theatre["theatre"][0]);
         sayText(curtext);
         listenerList.push([[driveout, general["continue"]], "driveOut"]);
         if (haveItem("theTheatreKey")) {
             listenerList.push([[reTheatre, sharedLoc["choices"]["returnKey"]], "reTheatre"]);
         }
-    } else if ((thetime < theaterclosingtime) || locstack[0] === "theTheatre"){
-        if (locstack[0] !== "theTheatre") {
+    } else if ((thetime < theaterclosingtime) || locStack[0] === "theTheatre"){
+        if (locStack[0] !== "theTheatre") {
             curtext = printList(curtext, theatre["theatre"][1]);
             pushloc("theTheatre");
             locations.theTheatre.visited = 1;
@@ -311,7 +311,7 @@ function darkTheatre() {
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
-    if (locstack[0] !== "darkTheatre") {
+    if (locStack[0] !== "darkTheatre") {
         curtext = printList(curtext, theatre["darkTheatre"][0]);
         pushloc("darkTheatre");
     } else {

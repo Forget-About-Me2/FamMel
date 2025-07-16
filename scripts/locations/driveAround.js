@@ -46,7 +46,7 @@ function driveAround(){
         if (gasStation) {
             listenerList.push([[station, "Stop at the gas station"], "gasStation"]);
         }
-        curtext = c([locstack[0], "Continue..."], curtext);
+        curtext = c([locStack[0], "Continue..."], curtext);
         addSayText(curtext);
         cListenerGenList(listenerList);
     }
@@ -96,4 +96,3 @@ function station(){
     curtext = callChoice(["curloc", "Continue ..."], curtext);
     sayText(curtext);
 }
-

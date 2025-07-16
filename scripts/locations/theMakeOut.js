@@ -20,7 +20,7 @@ function theMakeOut() {
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
-    if (locstack[0] !== "theMakeOut") {
+    if (locStack[0] !== "theMakeOut") {
         if (attraction > gomakeoutthresh) {
             curtext = printList(curtext, makeOut["theMakeOut"][0]);
             pushloc("theMakeOut");
@@ -118,7 +118,7 @@ function viewStars() {
 function theWalk() {
     allowItems = 1;
     let curtext = [];
-    if (locstack[0] !== "theWalk") {
+    if (locStack[0] !== "theWalk") {
         curtext = printList(curtext, makeOut["theWalk"][0]);
         // s("You and " + girlname + " decide to take a walk.  It's a warm, still night.");
         walkcounter = 0;
@@ -187,7 +187,7 @@ function examineGate() {
 function theYard() {
     allowItems = 1;
     let curtext = [];
-    if (locstack[0] !== "theYard") {
+    if (locStack[0] !== "theYard") {
         curtext = printList(curtext, makeOut["theYard"][0]);
         pushloc("theYard");
     } else {
@@ -253,7 +253,7 @@ function preHotTub() {
 function theHotTub() {
     allowItems = 1;
     let curtext = []
-    if (locstack[0] !== "theHotTub") {
+    if (locStack[0] !== "theHotTub") {
         curtext = printList(curtext, makeOut["theYard"][5]);
         pushloc("theHotTub");
     } else {
@@ -297,7 +297,7 @@ function exitHotTub(){
 function theBeach() {
     allowItems = 1;
     let curtext = [];
-    if (locstack[0] !== "theBeach") {
+    if (locStack[0] !== "theBeach") {
         curtext = printList(curtext, makeOut["theBeach"][0]);
         pushloc("theBeach");
         askedswim = 0;

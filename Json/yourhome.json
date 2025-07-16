@@ -1,0 +1,13 @@
+{
+  "intro": [
+    "You have a hot date tonight at 8 pm.",
+    "Her name is {girlname}",
+    "You've heard she might be into desperation play... but you're not sure."
+  ],
+  "actionQuestion": "So what are you going to do?",
+  "goStore" : "Go to the store",
+  "callHer" : "Call her on the phone",
+  "youPee" : "Pee before you leave",
+  "yPreDrink": "Drink some water",
+  "herHome": "Pick her up"
+}

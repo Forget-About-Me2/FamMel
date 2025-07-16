@@ -1,0 +1,90 @@
+{
+  "instructionLines": [
+    "You have {money}",
+    "What are you going to buy?"
+  ],
+  "choices": [
+    {
+      "action": "buyItem(&quot;water&quot;)",
+      "description": "An overpriced bottle of water ($10)"
+    },
+    {
+      "action": "buyItem(&quot;roses&quot;)",
+      "description": "A bouquet of red roses ($20)"
+    },
+    {
+      "action": "buyItem(&quot;earrings&quot;)",
+      "description": "A pair of diamond earrings ($60)"
+    },
+    {
+      "action": "buyItem(&quot;vase&quot;)",
+      "description": "A flower vase ($30)"
+    },
+    {
+      "action": "buyItem(&quot;shotglass&quot;)",
+      "description": "A shot glass ($10)"
+    },
+    {
+      "action": "buyItem(&quot;champ-glass&quot;)",
+      "description": "A champagne glass ($12)"
+    },
+    {
+      "action": "buyItem(&quot;ptowels&quot;)",
+      "description": "A roll of paper towels ($10)"
+    },
+    {
+      "action": "buyItem(&quot;sexyPanties&quot;)",
+      "description": "A pair of sexy panties ($30)"
+    },
+    {
+      "action": "buyItem(&quot;champagne&quot;)",
+      "description": "A bottle of fancy champagne ($50)"
+    },
+    {
+      "action": "goback",
+      "description": "Nothing"
+    }
+  ],
+  "buying": [
+    {
+      "name": "bottle of water",
+      "price": "10",
+      "id": "water"
+    },
+    {
+      "name": "bouquet of red roses",
+      "price": "20",
+      "id": "roses"
+    },
+    {
+      "name": "pair of diamond earrings",
+      "price": "60",
+      "id": "earrings"
+    },
+    {
+      "name": "flower vase",
+      "price": "30",
+      "id": "vase"
+    },
+    {
+      "name": "shot glass",
+      "price": "10",
+      "id": "shotglass"
+    },
+    {
+      "name": "roll of paper towels",
+      "price": "10",
+      "id": "ptowels"
+    },
+    {
+      "name": "pair of sexy panties",
+      "price": "30",
+      "id": "panties"
+    },
+    {
+      "name": "bottle of fancy champagne",
+      "price": "50",
+      "id": "champagne"
+    }
+  ]
+}

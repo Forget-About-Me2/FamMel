@@ -77,12 +77,12 @@ function youpee() {
     let curtext = [];
     gottagoflag = 0;
     let peed = 0;
-    if (locstack[0] === "yourhome") {
+    if (locStack[0] === "yourhome") {
         curtext = printList(curtext, ypeelines["yourhome"]);
         peed = 1
-    } else if (locstack[0] === "theHome" ||
-        locstack[0] === "thebedroom" || locstack[0] === "pickup" || locstack[0] === "fuckher6") {
-        if(locstack[0] !== "fuckher6") {
+    } else if (locStack[0] === "theHome" ||
+        locStack[0] === "thebedroom" || locStack[0] === "pickup" || locStack[0] === "fuckher6") {
+        if(locStack[0] !== "fuckher6") {
             curtext = printList(curtext, ypeelines["thehome"][0]);
         }
         curtext = printList(curtext, ypeelines["thehome"][1]);
@@ -91,12 +91,12 @@ function youpee() {
         curtext = printList(curtext, ypeelines["remaining"]);
     }
 
-    if ((locstack[0] === "thebar" && randomchoice(rrlockedthresh) ) ||
-        ((locstack[0] === "theclub" || locstack[0] === "dodance") && randomchoice(rrlinethresh)) ||
-        (locstack[0] === "themovie" && randomchoice(rrMovieLineThresh) || locstack[0] === "domovie" && randomchoice(rrMovieLineThresh))) {
+    if ((locStack[0] === "thebar" && randomchoice(rrlockedthresh) ) ||
+        ((locStack[0] === "theclub" || locStack[0] === "dodance") && randomchoice(rrlinethresh)) ||
+        (locStack[0] === "themovie" && randomchoice(rrMovieLineThresh) || locStack[0] === "domovie" && randomchoice(rrMovieLineThresh))) {
         allowItems = 1;
         curtext = youbathroomlocked(curtext);
-    } else if (locstack[0] === "darkBar" || locstack[0] === "darkTheatre" || locstack[0] === "darkclub") {
+    } else if (locStack[0] === "darkBar" || locStack[0] === "darkTheatre" || locStack[0] === "darkclub") {
         //TODO potentially cycle between quotes
         if (yourbladder > yourbladlose - 25)
             curtext.push(ypeelines["youpeeprivate"][0]);
@@ -110,9 +110,9 @@ function youpee() {
             curtext.push(pickrandom(ypeelines["youpeeprivate2"]));
         flushyourdrank();
     }
-    if (yourbladder >= yourbladlose - 25 && locstack[0] !== "thehottub") curtext = youbegtoilet(curtext);
+    if (yourbladder >= yourbladlose - 25 && locStack[0] !== "thehottub") curtext = youbegtoilet(curtext);
     else {
-        curtext = c([locstack[0], "Continue..."], curtext);
+        curtext = c([locStack[0], "Continue..."], curtext);
     }
     sayText(curtext);
 }
@@ -120,7 +120,7 @@ function youpee() {
 function youbathroomlocked(curtext) {
     const locked = ypeelines["locked"];
     //Description of the situation
-    if (locstack[0] === "thebar")
+    if (locStack[0] === "thebar")
         curtext = printList(curtext, locked["bar"]);
     else {
         curtext = printList(curtext, locked["club"]);
@@ -132,7 +132,7 @@ function youbathroomlocked(curtext) {
         curtext.push(locked["urgency"][1]);
     else
         curtext.push(locked["urgency"][2]);
-    if(locstack[0] === "thebar") {
+    if(locStack[0] === "thebar") {
         //Tell her the bathroom was locked, depending on how often you tried already
         if (yrrlockedflag > 3) {
             curtext.push(locked["cbar"][0]);
@@ -178,7 +178,7 @@ function displayyourneed(curtext) {
         curtext.push(pickrandom(yneeds["need"]));
     } else if (yourbladder > yourbladurge) {
         curtext.push(pickrandom(yneeds["urge"]));
-    } else if (locstack[0] === "drinkinggame") {
+    } else if (locStack[0] === "drinkinggame") {
         curtext.push(pickrandom(yneeds["empty"]));
     }
     return curtext
@@ -196,7 +196,7 @@ function ypeein(item){
     else if (yourbladder>yourbladneed)
         yneedtype = 1;
     //When you're alone you don't have an interaction with her.
-    if (playOnly.includes(locstack[0])) {
+    if (playOnly.includes(locStack[0])) {
         //TODO you call out to her when desperate in one of the quotes.
         curtext.push(list[0][3]);
         curtext = callChoice(["ypeein2(&quot;" + item + "&quot;," + yneedtype + ")", "Continue..."], curtext);
@@ -209,7 +209,7 @@ function ypeein(item){
             yneedtype === 2 && attraction > 30){
             if (yneedtype === 2) {
                 // if you're desperate print a quote about giving her the item so you can focus on your trousers
-                if (locstack[0] === "driveout")
+                if (locStack[0] === "driveout")
                     //The quote is slightly different when you're driving
                     curtext = printList(curtext, list[1]);
                 else
@@ -302,7 +302,7 @@ function ypeeoutside() {
 function yPeeOutside2() {
     let curtext = [];
     let listenerList = [];
-    if (locstack[0] === "theMakeOut"){
+    if (locStack[0] === "theMakeOut"){
         curtext = printList(curtext, ypeelines["peeOutside"][3]);
         listenerList.push([[yPeeOutsideCar, "Continue..."], "peeOutCar"]);
     } else {
@@ -324,7 +324,7 @@ function yPeeOutsideCar() {
 function yPeeOutside3(){
     let curtext = printList([], ypeelines["peeOutside"][9]);
     //TODO have different quotes for theWalk and theYard
-    curtext = printList(curtext, ypeelines[locstack[0]][0]);
+    curtext = printList(curtext, ypeelines[locStack[0]][0]);
     curtext = printList(curtext, ypeelines["peeOutside"][10]);
     curtext = callChoice(["curloc", "Continue..."], curtext);
     flushyourdrank();
@@ -335,7 +335,7 @@ function yPeeOutside3(){
 function ypeeOutsideWatch(){
     let curtext = [];
     let listenerList = [];
-    if (locstack[0] === "theMakeOut"){
+    if (locStack[0] === "theMakeOut"){
         curtext = printList(curtext, ypeelines["peeOutside"][5]);
         curtext = printList(curtext, ypeelines["peeOutside"][6]);
         listenerList.push([[yPeeOutsideWatchCar, "Continue..."], "peeOutCar"]);
@@ -357,7 +357,7 @@ function yPeeOutsideWatchCar() {
 //You're not in the car, either at the beach or on the walk. The text is located in the ypeeline json under the current location.
 function yPeeOutsideWatch2(){
     let curtext = printList([], ypeelines["peeOutside"][12]);
-    curtext = printList(curtext, ypeelines[locstack[0]][1]);
+    curtext = printList(curtext, ypeelines[locStack[0]][1]);
     curtext = printList(curtext, ypeelines["peeOutside"][13]);
     curtext = callChoice(["curloc", "Continue..."], curtext);
     flushyourdrank();
@@ -371,15 +371,15 @@ function yPeeOutsideWatch2(){
 function wetyourself() {
     let curtext = [pickrandom(yneeds["wetquote"])];
     sayText(curtext);
-    if (randomchoice(yspurtthresh) && locstack[0] !== "thehottub") {
+    if (randomchoice(yspurtthresh) && locStack[0] !== "thehottub") {
         spurtedyourself(curtext);
     } else {
         yspurtthresh = 3;
-        if (locstack[0] === "driveout")
+        if (locStack[0] === "driveout")
             cListenerGen([wetyourself2c, "Continue ..."], "wetyourself");
-        else if (locstack[0] === "themakeout")
+        else if (locStack[0] === "themakeout")
             cListenerGen([wetyourself2m, "Continue ..."], "wetyourself");
-        else if (locstack[0] === "thehottub")
+        else if (locStack[0] === "thehottub")
             cListenerGen([wetyourself2t, "Continue ..."],"wetyourself");
         else
             cListenerGen([wetyourself2, "Continue ..."], "wetyourself");

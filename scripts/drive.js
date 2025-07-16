@@ -34,7 +34,7 @@ function leavehm() {
 function driveout() {
     allowItems = 1;
     let curtext = [];
-    if (locstack[0] !== "driveout") {
+    if (locStack[0] !== "driveout") {
         pushloc("driveout");
         locationMCSetup("driveout", drive);
         curtext = printIntro(curtext, 0);
@@ -61,4 +61,3 @@ function driveout() {
     sayText(curtext);
     printLocationMenu();
 }
-

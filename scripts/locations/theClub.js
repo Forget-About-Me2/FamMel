@@ -21,13 +21,13 @@ function theClub() {
     allowItems = 1;
     let curtext = [];
     let listenerList = []
-    if (locations.theClub.visited && locstack[0] === "driveout" && thetime < clubclosingtime) {
+    if (locations.theClub.visited && locStack[0] === "driveout" && thetime < clubclosingtime) {
         curtext = printList(curtext, club["theClub"][0]);
         if (haveItem("theClubKey"))
             listenerList.push([[reClub, sharedLoc["choices"]["returnKey"]], "reClub"]);
         listenerList.push([[driveout, general["continue"]], "driveOut"]);
-    } else if ((thetime < clubclosingtime) || locstack[0] === "theClub") {
-            if (locstack[0] !== "theClub" && locstack[0] !== "doDance") {
+    } else if ((thetime < clubclosingtime) || locStack[0] === "theClub") {
+            if (locStack[0] !== "theClub" && locStack[0] !== "doDance") {
                 curtext = printList(curtext, club["theClub"][1]);
                 pushloc("theClub");
                 locations.theClub.visited = 1;
@@ -148,7 +148,7 @@ function darkClub() {
         curtext.push(club["emerHold"].formatVars());
         emerHold = 0;
     }
-    else if (locstack[0] !== "darkClub") {
+    else if (locStack[0] !== "darkClub") {
         curtext.push(club["darkClubEnter"].formatVars());
         pushloc("darkClub");
     } else {
@@ -226,7 +226,7 @@ function photoGame() {
     if (wetPhoto) {
         wetPhoto = 0;
         go("goback");
-    } else if (locstack[0] !== "photogame") {
+    } else if (locStack[0] !== "photogame") {
         pushloc("photogame");
         curtext = displayholdquip(curtext);
         posectr = 0;

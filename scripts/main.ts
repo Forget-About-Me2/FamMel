@@ -1,166 +1,109 @@
-//Functions and variables that don't belong to anything specific
-const gameState = new GameState();
+import {GameLocation, gameState, LocationCategory} from "./gameState";
+import {gameSettings, ImageChoice} from "./gameSettings";
+import {yourHome} from './yourHome';
 
-let randcounter = 0; // text randomizer
-let playerbladder = 1; //Whether playerBladder has been enabled.
-let playerGame = 0; //Whether the playerBladder is enabled in the drinking game
-let statsBars; //JSON of the status bars depending on which setting has been chosen
-let endScreens; //JSON of the endScreens used at the end of the game.
+/**
+ * Updates all UI elements displaying game statistics
+ * Shows money, attraction, shyness, and tummy/bladder values
+ * Handles stats visibility based on game settings
+ * Updates color indicators for changed values
+ */
+export function DisplayStats() {
 
-let money = 200;
-let attraction = 10;
-let tummy = 100;
-let bladder = 300;
-let shyness = 90;
-
-const clubclosingtime = 7 * 60; // 2:00AM
-const theaterclosingtime = 3 * 60; // 10:00PM last showing
-const barclosingtime = 6 * 60; // 1:00AM
-
-let lastmoney = money;
-let lastattraction = attraction;
-let lastshyness = shyness;
-
-let hour = 7;
-let minute = 0;
-let meridian = "PM";
-const timespeed = 2;
-let thetime = 0;
-
-//Counter Parameters
-const maxkiss = 7; // maximum number of kisses that have effect.
-const maxfeel = 7; // maximum number of feel-ups that have effect
-
-//  Location handling stack
-//  initialized at the start.
-const locstack = []; //The first element in the Array is the current location
-
-let didintro = 0; // Flag for having done introduction
-let flirtedflag = 0; // Actually a counter.  Keeps track of flirting.
-const maxflirts = 2; // Maximum flirt points per venue
-let haveherpurse = 0; // You're holding her purse
-let late = 0; //You are late to pick her up
-let noflirtflag = 0; // Suppress flirty options
-
-// Girl stats(Counter and Flags)
-let owedfavor = 0; // she owes you a favor
-let flirtcounter = 0; // time since last flirt ( counts by 2 )
-let changevenueflag = 0; // you are changing venue - makes her easily ask to pee.
-let checkedherout = 0; // Flags that you just checked her out.
-
-
-function range(start, end) {
-    if(start === end) return [start];
-    return [start, ...range(start + 1, end)];
-}
-
-function objInit(){
-    let initVal = [];
-    Object.keys(this).forEach(prop => {
-        if (prop !== "initVal")
-            initVal[prop] = this[prop];
-            if (typeof this[prop] === "object" && !Array.isArray(this[prop]))
-                this[prop].init();
-    });
-    this.initVal = initVal;
-}
-
-function objReset(){
-    Object.keys(this).forEach(prop => {
-        if (typeof this[prop] === "object" && !Array.isArray(this[prop]) && prop !== "initVal")
-            this[prop].reset();
-        else
-            this[prop] = this.initVal[prop];
-    });
-    this.init();
-}
-
-function goback() {
-    poploc();
-    eval(locstack[0] + "()");
-}
-
-//TODO this is called way too often
-//  Updates the information on the stats
-function displaystats() {
-    let textminutes = minute;
-
-    if (minute < 10) textminutes = "0" + minute;
-
-    document.getElementById("mon").innerText = "$" + money;
-    document.getElementById("att").innerText = attraction;
-    document.getElementById("shy").innerText = shyness;
-    document.getElementById("tum").innerText = tummy;
-    document.getElementById("blad").innerText = bladder;
-    document.getElementById("time").innerText = hour + ":" + textminutes + " " + meridian;
-    if(playerbladder) {
-        document.getElementById("ytum").innerText = yourtummy.toString();
-        document.getElementById("yblad").innerText = yourbladder;
+    document.GetRequiredElementById("mon").innerText = "$" + gameState.Money;
+    document.GetRequiredElementById("att").innerText = gameState.Attraction.toString();
+    document.GetRequiredElementById("shy").innerText = gameState.Shyness.toString();
+    document.GetRequiredElementById("tum").innerText = gameState.Companion.Tummy.toString();
+    document.GetRequiredElementById("blad").innerText = gameState.Companion.Bladder.toString();
+    document.GetRequiredElementById("time").innerText = gameState.Time.toString();
+    if(gameSettings.PlayerBladder) {
+        document.GetRequiredElementById("ytum").innerText = gameState.Player.Tummy.toString();
+        document.GetRequiredElementById("yblad").innerText = gameState.Player.Bladder.toString();
     }
-    if (!showstats) {
-        document.getElementById("tum").innerText = "?";
-        document.getElementById("blad").innerText = "?";
-        if(playerbladder) {
-            document.getElementById("ytum").innerText = "?";
-            document.getElementById("yblad").innerText = "?";
+    if (!gameSettings.ShowStats) {
+        document.GetRequiredElementById("tum").innerText = "?";
+        document.GetRequiredElementById("blad").innerText = "?";
+        if(gameSettings.PlayerBladder) {
+            document.GetRequiredElementById("ytum").innerText = "?";
+            document.GetRequiredElementById("yblad").innerText = "?";
         }
     }
-    if (attraction < lastattraction) {
+    if (gameState.Attraction < gameState.LastAttraction) {
         setColour("att", "red", "white");
-    } else if (attraction > lastattraction)
+    } else if (gameState.Attraction> gameState.LastAttraction)
         setColour("att", "green", "white");
-    if (attraction > 130)
 
-    if (shyness < lastshyness) {
+    if (gameState.Shyness < gameState.LastShyness) {
         setColour("shy", "green", "blue");
-    } else if (shyness > lastshyness)
+    } else if (gameState.Shyness > gameState.LastShyness) {
         setColour("shy", "red", "blue");
+    }
 
-    if (money < lastmoney) {
+    if (gameState.Money < gameState.LastMoney) {
         setColour("mon", "red", "blue");
-    } else if (money > lastmoney)
+    } else if (gameState.Money > gameState.LastMoney) {
         setColour("mon", "green", "blue");
+    }
 
     //  Hard Limits on shyness and attraction
-    if (shyness < 0) {
-        shyness = 0;
+    if (gameState.Shyness < 0) {
+        gameState.Shyness = 0;
         valueChange("shy", 0);
-    } if (shyness > 100) {
-        shyness = 100;
+    }
+    if (gameState.Shyness > 100) {
+        gameState.Shyness = 100;
         valueChange("shy", 100);
-    } if (attraction < 0) {
-        attraction = 0;
+    }
+    if (gameState.Attraction < 0) {
+        gameState.Attraction = 0;
         valueChange("att", 0);
-    } if (attraction > 130) {
-        attraction = 130;
+    }
+    if (gameState.Attraction > 130) {
+        gameState.Attraction = 130;
         valueChange("att", 130);
     }
 }
 
-//Sets the given colour to the given id attribute for half a second
-function setColour(id, colour, original){
-    let elem = document.getElementById(id);
+/**
+ * Sets a temporary color on an UI element and reverts it after delay
+ * @param id - Element ID to color
+ * @param colour - Color to temporarily apply
+ * @param original - Original color to revert to
+ */
+function setColour(id : string, colour : string, original : string){
+    let elem = document.GetRequiredElementById(id);
     elem.className = "stats-cells-"+colour;
     setTimeout(function () {
         elem.className = "stats-cells-"+original;
     }, 500);
 }
 
-//Sets the value of the given id after half a second.
-function valueChange(id, value){
+/**
+ * Updates the text value of an UI element after a delay
+ * @param id - Element ID to update
+ * @param value - New value to display
+ */
+function valueChange(id : string, value : number){
     setTimeout(function () {
-        document.getElementById(id).innerText = value;
+        document.GetRequiredElementById(id).innerText = value.toString();
     }, 500);
 }
 
 
-// Main program loop.  Refreshes display, recalculates
-// time passage and so on.
-//    tag - name of function to go to next.
-function go(tag) {
+/**
+ * Main program loop that handles location transitions and game state updates
+ * Processes time passage, bladder/tummy changes, and status effects
+ * Updates UI and triggers location-specific logic
+ * @param location - New game location to transition to
+ */
+function go(location : GameLocation) {
     allowItems = 0;
 
-    if (tag !== "options" && tag !== "explainimgs" && tag !== "hidescreen" && tag !== "customgirl" && !enablehide) {
+    if (location.category !== LocationCategory.Options &&
+        location.category !== LocationCategory.ExplainImg &&
+        location.category !== LocationCategory.HideScreen &&
+        location.category !== LocationCategory.CustomGirl &&
+        gameSettings.ImageChoice != ImageChoice.None) {
         showedneed = 0; // clear showed need - only active in the current window.
         changevenueflag = 0; // clear venue change.
         noflirtflag = 0; // clear no flirting flag.
@@ -174,11 +117,11 @@ function go(tag) {
         bladder += tuminc;
 
         //  If she's not with you, then she can go pee
-        if (playOnly.includes(locstack[0]) && bladder > blademer && !askholditcounter)
-            if (locstack[0] !== "callher")
+        if (playOnly.includes(locStack[0]) && bladder > blademer && !askholditcounter)
+            if (locStack[0] !== "callher")
                 flushdrank();
 
-        if (playerbladder || (locstack[0]==="drinkinggame" && playerGame)) {
+        if (playerbladder || (locStack[0]==="drinkinggame" && playerGame)) {
             yourtumavg = Math.round((yourtumavg * (tumdecay - 1) + yourtummy) / tumdecay);
             let yourtuminc = Math.round(yourtumavg / 10);
             if (ydrankbeer === 0 && yourtuminc > 12) yourtuminc = 12;
@@ -230,9 +173,9 @@ function go(tag) {
     if (tummy < 0) tummy = 0;
     if (money < 0) money = 0;
 
-    document.getElementById('textsp').innerText = "";
+    document.GetRequiredElementById('textsp').innerText = "";
     if (didintro) {
-        displaystats();
+        DisplayStats();
     }
 
     // Flash changed stuff...
@@ -242,9 +185,9 @@ function go(tag) {
 
     if (tag === "hidescreen") {
         enablehide = 1;
-        document.getElementById('statsp').innerHTML = "";
-        document.getElementById('objsp').innerHTML = "";
-        document.getElementById('thepic').innerHTML = "<table style='text-align:right'><tr><td style='width:100px'><pre>&nbsp;</pre></table>";
+        document.GetRequiredElementById('statsp').innerHTML = "";
+        document.GetRequiredElementById('objsp').innerHTML = "";
+        document.GetRequiredElementById('thepic').innerHTML = "<table style='text-align:right'><tr><td style='width:100px'><pre>&nbsp;</pre></table>";
     }
 
     if (typeof tag === "function")
@@ -285,14 +228,14 @@ nextloc is the INTENDED destination.  Meaning you set it
 
 */
 function pushloc(newloc) {
-    if (newloc !== locstack[0]) {
-        locstack.unshift(newloc);
+    if (newloc !== locStack[0]) {
+        locStack.unshift(newloc);
     }
 }
 
 function poploc() {
-    if (locstack[0] !== locstack[1]) {
-        locstack.shift();
+    if (locStack[0] !== locStack[1]) {
+        locStack.shift();
     }
 }
 
@@ -350,15 +293,14 @@ function getDeepCopy(list){
 //as it's called in there and this is the cleanest solution I can think of
 function gamestart(){
     if (!playerbladder) {
-        const stats = document.getElementById("stats-bar");
+        const stats = document.GetRequiredElementById("stats-bar");
         let result = "";
         statsBars["noplayer"].forEach(item => result += item);
         stats.innerHTML = result;
         yourbladder = 0;
     }
-    displaystats();
-    getjsonTF("yourhome", yourhome);
-    setupQuotes();
+    DisplayStats();
+    yourHome();
 }
 
 
@@ -373,8 +315,8 @@ function changeLog(){
         }
     );
     const converter = new showdown.Converter();
-    document.getElementById("pop-up-title").innerText = "Changelog";
-    document.getElementById("pop-up-text").innerHTML = converter.makeHtml(result);
+    document.GetRequiredElementById("pop-up-title").innerText = "Changelog";
+    document.GetRequiredElementById("pop-up-text").innerHTML = converter.makeHtml(result);
     openPopUp();
 }
 
@@ -386,8 +328,8 @@ function showCredits(){
         });
         return
     }
-    document.getElementById("pop-up-title").innerText = "Credits";
-    const textElem = document.getElementById("pop-up-text");
+    document.GetRequiredElementById("pop-up-title").innerText = "Credits";
+    const textElem = document.GetRequiredElementById("pop-up-text");
     textElem.innerHTML = "";
     credits["page"].forEach(line => textElem.innerHTML += line);
     openPopUp();
@@ -402,8 +344,8 @@ function handleDisclaimer(){
             });
             return
         }
-        document.getElementById("pop-up-title").innerText = "Disclaimer";
-        const textElem = document.getElementById("pop-up-text");
+        document.GetRequiredElementById("pop-up-title").innerText = "Disclaimer";
+        const textElem = document.GetRequiredElementById("pop-up-text");
         textElem.innerHTML = "";
         credits["disclaimer"].forEach(line => textElem.innerHTML += line);
         openPopUp();
@@ -411,7 +353,8 @@ function handleDisclaimer(){
 }
 
 // Introduction page.
-function start() {
+async function start() {
+    await quoteManager.initialize();
     handleDisclaimer();
 // See random number generator from the date
     anim8();

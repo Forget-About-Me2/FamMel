@@ -1,68 +1,43 @@
+import yourHomeJson from "../Json/yourhome.json"
+
 //This contains everything you can do from your home before you pick-up your date
-
-let onphone = 0; // Flag for being on the phone with her
-let shopping = 0;// Flag for being in the shop
-
 
 //TODO different scene if you're desperate and go pee at your house
 //TODO you can actually wet yourself in the house
 //TODO decide whether you can always go to the bathroom(maybe like a certain percentage filled)
 //TODO refactor
-function yourhome() {
+export function yourHome() {
     allowItems = 1;
-    let curtext = [];
+    let curText: string[] =[];
     if (didintro === 0) {
-        locationMSetup("yourhome", "yourhome");
         didintro = 1;
-        curtext = printIntro(curtext, 0);
+        curText.concat(yourHomeJson.intro);
     } else {
-        if (locstack[0] !== "yourhome" || onphone || shopping){
+        if (gameState.CurrentLocation !== "yourhome"){
             locationMSetup("yourhome", "yourhome");
-            onphone = 0;
-            shopping = 0;
         }
-        curtext = printIntro(curtext, 1);
     }
-    curtext = printAlways(curtext);
-    curtext = displayyourneed(curtext);
+    curText.push(yourHomeJson.actionQuestion);
+    curText = displayyourneed(curText);
+    const listenerList : [[Function, string], string][] = [];
+    listenerList.push([[goStore, yourHomeJson.goStore], "goStore"]);
+    listenerList.push([[callHer, yourHomeJson.callHer], "callHer"]);
     if (playerbladder) {
         if (yourbladder > yourbladlose) {
             wetyourself();
             return;
         }
-        curtext = printAllChoices(curtext);
-    } else {
-        curtext = printChoices(curtext, [0,1,4]);
+        if (yourbladder > yourbladurge) {
+            listenerList.push([[youpee, yourHomeJson.youPee], "youPee"]);
+        }
+        listenerList.push([[yPreDrink, yourHomeJson.yPreDrink], "yPreDrink"]);
     }
-    sayText(curtext)
+    listenerList.push([[herhome, yourHomeJson.herHome], "pickup"]);
+    sayText(curText)
+    cListenerGenList(listenerList);
 }
 
 
-// Buy stuff at the store.
-function gostore() {
-    allowItems = 1;
-    if (locstack[0] !== "gostore") {
-        pushloc("gostore");
-        shopping=1;
-    }
-    locationMSetup("yourhome", "store");
-    if (askholditcounter > 0 && bladder > blademer && bladder < bladlose && !waitcounter) {
-        cellphone();
-    } else {
-        if (!askholditcounter && bladder > bladneed) {
-            bladder = 0;
-        }
-        if (bladder > bladlose) {
-            bladder = 0;
-            prepeed = 1;
-        }
-        let curtext = [];
-        curtext = printAlways(curtext);
-        curtext = displayyourneed(curtext);
-        curtext = printAllChoices(curtext);
-        sayText(curtext);
-    }
-}
 
 function buy(number){
     const item = locjson["buying"][number];
@@ -86,10 +61,10 @@ function buy(number){
 //
 //TODO you can't see her looking away on the phone
 //TODO show your need?
-function callher() {
+function callHer() {
     allowItems = 1;
     let curtext = [];
-    if (locstack[0] !== "callher") {
+    if (locStack[0] !== "callher") {
         flirtedflag = 0;
         pushloc("callher");
         locationMSetup("yourhome", "callher")
@@ -97,7 +72,6 @@ function callher() {
         if (thetime > 75 && bladder < blademer) {
             late = 1;
         }
-        onphone = 1;
     } else {
         curtext = printIntro(curtext, 1);
     }
@@ -255,44 +229,44 @@ function predrink() {
     sayText(curtext);
 }
 
-function ypredrink() {
+function yPreDrink() {
     let curtext = []
     if (yourtummy < ymaxtummy) {
-        curtext = printList(curtext, drinklines["ypredrink"][0]);
+        curtext = printList(curtext, drinklines["yPreDrink"][0]);
         yourtummy += 200;
         backPackItems.water.yDrank += 2;
     } else {
-        curtext = printList(curtext, drinklines["ypredrink"][1]);
+        curtext = printList(curtext, drinklines["yPreDrink"][1]);
     }
-    curtext = c([locstack[0], "Continue..."], curtext);
+    curtext = c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
 }
 
 function cellphone() {
-    let curtext = [calledjsons["yourhome"]["getcalled"]["getcalled"]]
+    let curtext = [calledjsons["yourHome"]["getcalled"]["getcalled"]]
     waitcounter += 3;
-    curtext = printChoicesList(curtext, [0,1], calledjsons["yourhome"]["getcalled"]["choices"]);
+    curtext = printChoicesList(curtext, [0,1], calledjsons["yourHome"]["getcalled"]["choices"]);
     sayText(curtext);
 }
 
 function anscell() {
     //TODO this isn't very elegant
-    let curtext = [calledjsons["yourhome"]["getcalled"]["anscell"]];
+    let curtext = [calledjsons["yourHome"]["getcalled"]["anscell"]];
     curtext = cantwait(curtext);
     sayText(curtext);
 }
 
 function ignorecell() {
-    let curtext = [calledjsons["yourhome"]["getcalled"]["ignorecell"]];
+    let curtext = [calledjsons["yourHome"]["getcalled"]["ignorecell"]];
     attraction -= 1;
-    curtext = c([locstack[0], "Continue..."], curtext);
+    curtext = c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
 }
 
 function cantwait(curtext) {
     waitcounter += 4;
-    curtext.push(formatString(calledjsons["yourhome"]["getcalled"]["cantwait"], [girltalk]));
+    curtext.push(formatString(calledjsons["yourHome"]["getcalled"]["cantwait"], [girltalk]));
     curtext = displaygottavoc(curtext);
-    curtext = printChoicesList(curtext, [2,3,4], calledjsons["yourhome"]["getcalled"]["choices"]);
+    curtext = printChoicesList(curtext, [2,3,4], calledjsons["yourHome"]["getcalled"]["choices"]);
     return curtext;
 }

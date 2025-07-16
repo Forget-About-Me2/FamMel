@@ -22,16 +22,16 @@ function thebar(){
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
-    if (locstack[0] === "driveout" && locations.theBar.visited && thetime < barclosingtime){
+    if (locStack[0] === "driveout" && locations.theBar.visited && thetime < barclosingtime){
         curtext = printList(curtext, bar["theBar"][0]);
         sayText(curtext);
         if (haveItem("theBarKey")) {
             listenerList.push([[rebar, sharedLoc["choices"]["returnKey"]], "reBar"]);
         }
         listenerList.push([[driveout, general["continue"]], "driveOut"]);
-    } else if (!((thetime < barclosingtime) || locstack[0] === "thebar")) itsClosed("theBar", darkBar, "darkBar");
+    } else if (!((thetime < barclosingtime) || locStack[0] === "thebar")) itsClosed("theBar", darkBar, "darkBar");
     else {
-        if (locstack[0] !== "thebar"){
+        if (locStack[0] !== "thebar"){
             curtext = printList(curtext, bar["theBar"][1]);
             pushloc("thebar");
             locations.theBar.visited = 1;
@@ -173,7 +173,7 @@ function darkBar(){
        curtext = printList(curtext, bar["darkBar"][1]);
        emerHold = 0;
    }
-   else if (locstack[0] !== "darkBar") {
+   else if (locStack[0] !== "darkBar") {
        curtext = printList(curtext, bar["darkBar"][2]);
        pushloc("darkBar");
    }

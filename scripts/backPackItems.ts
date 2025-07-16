@@ -492,7 +492,7 @@ function buyItem2(item, value, price){
         listenerList.push([[again, "Try again."], "buyItem"]);
         choice = callChoice(["curloc", "Forget it."], choice);
     } else {
-        if (!playOnly.includes(locstack[0]))
+        if (!playOnly.includes(locStack[0]))
             curtext = printList(curtext, objQuotes["buyItem2"][3]);
         else
             curtext = printList(curtext, objQuotes["buyItem2"][4]);
@@ -716,17 +716,17 @@ function selectitem(selecteditem){
     if(clickedObj.owned)
         tobeprinted += "<b><i>You have " + getAmountOwned(clickedObj) + "</i></b><br><br>";
     tobeprinted += clickedObj.description.format([girlname]);
-    if (!noItemLoc.includes(locstack[0]) && locstack.length !== 0 && clickedObj.hasOwnProperty("functions") && allowItems){
-        if (!clickedObj.hasOwnProperty("locations") && !(clickedObj.hasOwnProperty("banLocs") && clickedObj.banLocs.includes(locstack[0]))){
+    if (!noItemLoc.includes(locStack[0]) && locStack.length !== 0 && clickedObj.hasOwnProperty("functions") && allowItems){
+        if (!clickedObj.hasOwnProperty("locations") && !(clickedObj.hasOwnProperty("banLocs") && clickedObj.banLocs.includes(locStack[0]))){
             //If the girl isn't with you, you can't ask her to use a certain item
-            if (!playOnly.includes(locstack[0]))
+            if (!playOnly.includes(locStack[0]))
                 printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
             if (playerbladder && clickedObj.hasOwnProperty("yfunctions")){
                 printAllChoicesList([], clickedObj.yFunctions).forEach(item => tobeprinted += item);
-                if (clickedObj.hasOwnProperty("togfunctions") && !playOnly.includes(locstack[0]) && clickedObj.value > 1)
+                if (clickedObj.hasOwnProperty("togfunctions") && !playOnly.includes(locStack[0]) && clickedObj.value > 1)
                     printAllChoicesList([], clickedObj.togFunctions).forEach(item => tobeprinted += item);
             }
-        } else if (clickedObj.hasOwnProperty("locations") && clickedObj.locations.includes(locstack[0]))
+        } else if (clickedObj.hasOwnProperty("locations") && clickedObj.locations.includes(locStack[0]))
             printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
     }
     itemtext.innerHTML= tobeprinted;
@@ -822,7 +822,7 @@ function drinkNow(item) {
             }
         }
     }
-    curtext = c([locstack[0], "Continue..."], curtext);
+    curtext = c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
 }
 
@@ -857,7 +857,7 @@ function yDrinkNow(item){
             }
         }
     }
-    curtext = c([locstack[0], "Continue..."], curtext);
+    curtext = c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
 }
 
@@ -868,7 +868,7 @@ function champagneNow() {
     backpackcnt.style.display = "none";
     let obj = backPackItems.champagne;
     let curtext = [];
-    if (locstack[0] === "theHome"){
+    if (locStack[0] === "theHome"){
         curtext = printList(curtext, drinklines["champagne"][0]);
         if (!homeChampagne){
             curtext = printList(curtext, drinklines["champagne"][1]);
@@ -968,6 +968,6 @@ function drinkTogether(item){
             }
         }
     }
-    curtext = c([locstack[0], "Continue..."], curtext);
+    curtext = c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
 }

@@ -1,3 +1,4 @@
+import '/helperFiles/stringExtensions'
 //TODO make a more general function for handling curtext
 
 const jsonlocs = ["options", "start", "yourhome", "herhome"]; //List of locations that have a corresponding json file
@@ -50,38 +51,22 @@ String.prototype.format = function() {
 
 //Format a given string adding the variables
 String.prototype.formatVars = function() {
-    let s = this;
-    s = s.replaceAll(new RegExp("girlname",'gm'), girlname);
-    s = s.replaceAll(new RegExp("girltalk", 'gm'), girltalk);
-    s = s.replaceAll(new RegExp("girlgasp", 'gm'), girlgasp);
-    s = s.replaceAll(new RegExp("bladlose", 'gm'), bladlose.toString());
-    s = s.replaceAll(new RegExp("pantyColor", 'gm'), pantycolor);
-    s = s.replaceAll(new RegExp("timeheld", 'gm'),timeheld.toString());
-    s = s.replaceAll(new RegExp("bladderAm", 'gm'), bladder.toString());
-    return s;
-}
+    const replacements = [
+        [/girlname/gm, girlname],
+        [/girltalk/gm, girltalk],
+        [/girlgasp/gm, girlgasp],
+        [/bladlose/gm, bladlose.toString()],
+        [/pantyColor/gm, pantycolor],
+        [/timeheld/gm, timeheld.toString()],
+        [/bladderAm/gm, bladder.toString()],
+        [/money/gm, money.toString()]
+    ];
 
-function formatString(expr, arguments){
-    return expr.format(arguments);
-}
+    return replacements.reduce((text, [pattern, replacement]) =>
+            text.replaceAll(pattern, replacement),
+        this
+    );
 
-//formats all Strings in exprList with the corresponding value in values
-function formatAll(exprList, values){
-    let result = [];
-    for(let i=0;i<exprList.length; i++){
-        result.push(formatString(exprList[i], values[i]));
-    }
-    return result;
-}
-
-//Formats all Strings in exprList with the corresponding single value in values while wrapping each value in a list
-//For each argument format expects a list of values that need to be formatted. Even if there only is one value
-function wrapAndFormatAll(exprList, values){
-    let result = [];
-    for(let i=0;i<exprList.length; i++){
-        result.push(formatString(exprList[i], [values[i]]));
-    }
-    return result;
 }
 
 //Formats all Strings in exprList to add the variables
@@ -116,12 +101,6 @@ function addGirlTalk(quotes){
     return result;
 }
 
-function addGirlGasp(quotes){
-    let result = [];
-    quotes.forEach(item => result.push(item.format([girlgasp])));
-    return result;
-}
-
 function printIntro(curtext, index){
     locjson["intro"][index].forEach(item => curtext.push(item));
     return curtext;
@@ -129,11 +108,6 @@ function printIntro(curtext, index){
 
 function printAlways(curtext) {
     locjson.always.forEach(item => curtext.push(item));
-    return curtext;
-}
-
-function printDialogue(curtext, loc, index){
-    locjson.dialogue[loc][index].forEach(item => curtext.push(item));
     return curtext;
 }
 
@@ -198,7 +172,7 @@ function printAllChoicesList(curtext, list){
 
 function callChoice(choice, curtext=[]){
     if(choice[0] === "curloc") {
-        return c([locstack[0], choice[1]], curtext);
+        return c([locStack[0], choice[1]], curtext);
     } else {
         return c(choice, curtext);
     }
@@ -437,12 +411,6 @@ function replaceWCLC(strlist, checklist, tag){
     return result;
 }
 
-function replaceWCLCI(strlist, checklist, tag){
-    let result = [];
-    strlist.forEach(item => result.push(replaceWCLC(item, checklist, tag)));
-    return result
-}
-
 function replaceChoices(tag){
     let result = [];
     locjson["choices"].forEach(item => result.push(replaceChoice(item, tag)));
@@ -452,18 +420,6 @@ function replaceChoices(tag){
 function replaceChoice(choice, tag){
     let result = [choice[0]];
     result.push(replaceCheck(choice[1], tag));
-    return result
-}
-
-function replaceChoicesList(strList, tag, checkList ){
-    let result = [];
-    strList.forEach(item => result.push(replaceChoiceList(item, tag, checkList)));
-    return strList;
-}
-
-function replaceChoiceList(choice, tag, checkList){
-    let result = [choice[0]];
-    result.push(LreplaceCheck(choice[1], checkList, tag));
     return result
 }
 
@@ -591,17 +547,17 @@ function handleFlirt(listenerList){
     let low = "low";
     let med = "med";
     let high = "high";
-    if(locstack[0] === "callher"){
+    if(locStack[0] === "callher"){
         low += "cell";
         med += "cell";
-    } else if (locstack[0] === "theHotTub"){
+    } else if (locStack[0] === "theHotTub"){
         low += "Naked";
         med += "Naked";
         high += "Naked";
     }
     listenerList.push([[flirt_l, flirtFormat(flirtquotes[low][randcounter])], "flirt_l"])
     incrandom();
-    if (Math.floor(Math.random() * 7) === 0 && locstack[0] !== "callher"){
+    if (Math.floor(Math.random() * 7) === 0 && locStack[0] !== "callher"){
         listenerList.push([[flirt_h, flirtFormat(flirtquotes[high][randcounter])], "flirt_h"]);
     } else {
         listenerList.push([[flirt_m, flirtFormat(flirtquotes[med][randcounter])], "flirt_m"]);

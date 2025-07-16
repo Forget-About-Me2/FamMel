@@ -2,7 +2,7 @@ function flirt_l() {
     let curtext = []
     shyness -= 1;
     if (flirtcounter < 1) {
-        if (locstack[0] === "callher")
+        if (locStack[0] === "callher")
             curtext.push(flirtresps["lowcell"][randcounter]);
         else
             curtext.push(flirtresps["low"][randcounter]);
@@ -13,7 +13,7 @@ function flirt_l() {
         curtext.push(flirtresps["neutral"][0])
     flirtcounter += 3;
     flirtedflag += 1;
-    c([locstack[0], "Continue..."], curtext);
+    c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
 }
 
@@ -21,7 +21,7 @@ function flirt_m() {
     let curtext = [];
     shyness -= 2;
     if (flirtcounter < 1) {
-        if (locstack[0] === "callher")
+        if (locStack[0] === "callher")
             curtext.push(flirtresps["lowcell"][randcounter]);
         else
             curtext.push(flirtresps["low"][randcounter]);
@@ -29,7 +29,7 @@ function flirt_m() {
         attraction += 3;
     }
     if (flirtcounter === 1) {
-        if (locstack[0] === "callher")
+        if (locStack[0] === "callher")
             curtext.push(flirtresps["medcell"][randcounter]);
         else
             curtext.push(flirtresps["med"][randcounter]);
@@ -41,7 +41,7 @@ function flirt_m() {
     }
     flirtcounter += 3;
     flirtedflag += 1;
-    c([locstack[0], "Continue..."], curtext);
+    c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
 }
 
@@ -59,7 +59,7 @@ function flirt_h() {
     }
     flirtcounter += 4;
     flirtedflag += 1;
-    c([locstack[0], "Continue..."], curtext);
+    c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
 }
 
@@ -73,7 +73,7 @@ function checkherout() {
 function feelup() {
     feelcounter += 1;
     let curtext = [];
-    if (locstack[0] !== "thehottub") {
+    if (locStack[0] !== "thehottub") {
         curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelher"]));
         if (bladder > blademer) curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelpee"]));
         else curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelres"]));
@@ -84,7 +84,7 @@ function feelup() {
     }
     if (flirtcounter > 1 && attraction > 35) {
         curtext.push(pickrandom(feelUp["resp"]));
-        if (locstack[0] !== "thehottub")
+        if (locStack[0] !== "thehottub")
             curtext.push("She" + pickrandom(feelUp["you"]));
         else
             curtext.push("She" + pickrandom(feelUp["youTub"]));
@@ -94,7 +94,7 @@ function feelup() {
             arousal += 1;
         }
     } else if (attraction > 20) {
-        if (locstack[0] !== "thehottub")
+        if (locStack[0] !== "thehottub")
             curtext.push(girlname + pickrandom(feelUp["you"]));
         else
             curtext.push(girlname + pickrandom(feelUp["youTub"]));
@@ -144,7 +144,7 @@ function kissher(curtext=[], sexLoc) {
         }
     } else {
         if (bladder < blademer) {
-            if (locstack[0] !== "thehottub") {
+            if (locStack[0] !== "thehottub") {
                 curtext.push(pickrandom(kissing["sxy"]));
                 arousal += 8;
             }
@@ -154,7 +154,7 @@ function kissher(curtext=[], sexLoc) {
             }
             incrandom();
         } else {
-            if (locstack[0] !== "thehottub") {
+            if (locStack[0] !== "thehottub") {
                 curtext.push(pickrandom(kissing["pee"]));
                 arousal += 10;
             }

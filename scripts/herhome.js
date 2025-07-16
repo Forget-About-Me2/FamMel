@@ -25,7 +25,7 @@ function homeConditions() {
 
 function herhome() {
     //This chooses the appropriate function to continue in the location herhome
-    if (locstack[0] === "yourhome")
+    if (locStack[0] === "yourhome")
         getjson("appearance", function (){
             appearance = json;
             pickup();
@@ -38,7 +38,7 @@ function herhome() {
 function pickup() {
     allowItems = 1;
     let curtext = [];
-    if (locstack[0] !== "pickup") { // happens first time only.
+    if (locStack[0] !== "pickup") { // happens first time only.
         getMLocations("herhome", "pickup");
         pushloc("pickup");
         curtext.push(locjson["goOver"].formatVars());
@@ -124,7 +124,7 @@ function elevatorWait() {
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
-    if (locstack[0] !== "theElevator") {
+    if (locStack[0] !== "theElevator") {
         pushloc("theElevator");
         curtext.push(herHome["goElevator"].formatVars());
         listenerList.push([[elevatorWait, "Continue..."], "elevatorWait"]);
@@ -242,7 +242,7 @@ function keyBadExcuse(){
 
 function lookForKeys() {
     let curtext = [];
-    if (locstack[0] !== "lookForKeys"){
+    if (locStack[0] !== "lookForKeys"){
         pushloc("lookForKeys");
         curtext = printList(curtext, herHome["offersPurse"]);
         curtext = showneed(curtext);
@@ -266,7 +266,7 @@ function lookForKeys() {
 
 function theHome() {
     allowItems = 1;
-    if (locstack[0] !== "theHome")
+    if (locStack[0] !== "theHome")
         pushloc("theHome")
     let curtext = [herHome["atHome"].formatVars()];
     let listerList = [];

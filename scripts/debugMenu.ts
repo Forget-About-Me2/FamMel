@@ -129,7 +129,7 @@ function OpenDebugMenu() {
     infoDiv.appendChild(table);
 }
 
-function CreatePersonRows(person: Person, tag : string, table: HTMLTableElement){
+function CreatePersonRows(person: person, tag : string, table: HTMLTableElement){
     let row = table.insertRow();
     const cell = row.insertCell();
     cell.innerHTML = `<b>${tag}</b>`;

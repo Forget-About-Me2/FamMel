@@ -1,11 +1,3 @@
-//TODO proper integration
-let settings; //The json for the settings.
-
-// Stats parameters
-let enableimages = 0; // 0 = Disable image loading
-let enableascii = 1; // 0 = Disable ascii art display
-let enablehide = 0; // 1 = Hide screen
-
 let showstats = 1; // 1 = Show her bladder state, etc.
 // Girl Selection Parameters
 let photoChoice; //How she's dressed for photogame
