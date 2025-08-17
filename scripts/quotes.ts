@@ -1,4 +1,3 @@
-import '/helperFiles/stringExtensions'
 //TODO make a more general function for handling curtext
 
 const jsonlocs = ["options", "start", "yourhome", "herhome"]; //List of locations that have a corresponding json file

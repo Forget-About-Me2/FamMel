@@ -69,11 +69,11 @@ function anim8() {
             pixfname = "pixlose";
         }
     }
-    if (enableascii && !enablehide) {
+    if (enableascii) {
         document.getElementById('thepic').innerHTML = "<table style='text-align:right'><tr><td style='width:100px'><pre>" + asciiart[directartno] + "</pre></table>";
         artno++;
         if (artno > maxart) artno = 0;
-    } else if (!enableimages || enablehide) {
+    } else if (!enableimages) {
         document.getElementById('thepic').innerHTML = "<table style='text-align:right'><tr><td style='width:100px'><pre>&nbsp;</pre></table>";
     } else {
         displaypix(pixfname);

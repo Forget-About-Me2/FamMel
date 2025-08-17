@@ -78,14 +78,14 @@
             <tbody>
             <tr>
                 <td>&nbsp;</td>
-                <td class="stats-cells"><small>Money</small></td>
-                <td class="stats-cells"><small>Attraction</small></td>
-                <td class="stats-cells"><small>Shyness</small></td>
-                <td class="stats-cells"><small>Tummy</small></td>
-                <td class="stats-cells"><small>Her Bladder</small></td>
-                <td class="stats-cells"><small>Time</small></td>
-                <td class="stats-cells"><small>Your Tummy</small></td>
-                <td class="stats-cells"><small>Your Bladder</small></td>
+                <td id="monHeader" class="stats-cells"><small>Money</small></td>
+                <td id="attHeader" class="stats-cells"><small>Attraction</small></td>
+                <td id="shyHeader" class="stats-cells"><small>Shyness</small></td>
+                <td id="tumHeader" class="stats-cells"><small>Tummy</small></td>
+                <td id="bladHeader" class="stats-cells"><small>Her Bladder</small></td>
+                <td id="timeHeader" class="stats-cells"><small>Time</small></td>
+                <td id="ytumHeader" class="stats-cells"><small>Your Tummy</small></td>
+                <td id="ybladHeader" class="stats-cells"><small>Your Bladder</small></td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
@@ -103,6 +103,10 @@
     </div>
 <script>
 
+    import {gameScreen, GameScreen} from "./scripts/gameScreen/gameScreen";
+    import {ContentScreen} from "./scripts/gameScreen/contentScreen";
+    import {start} from "./scripts/main";
+
     window.onerror = (errorMsg, url, lineNumber, column, errorObj) => {
         const message = 'Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
             + ' Column: ' + column + ' StackTrace: \n' + errorObj.stack;
@@ -116,9 +120,10 @@
         setErrorPopup(reason);
     }
     function startChoices(){
+        const contentScreen = new ContentScreen().KeepExistingHtml();
         const listenerList = [
-            [["start", "Play"], "start"],
-            [[changeLog, "Changelog"], "changeLog", false],
+            [[start, "Play"], "start"],
+            [[gameScreen.ChangeLog.displayChangelogPopup, "Changelog"], "changeLog", false],
             [[showCredits, "Credits"], "creditss", false]
         ];
         let html = "";

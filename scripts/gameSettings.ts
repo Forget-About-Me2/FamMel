@@ -14,18 +14,25 @@ export enum ImageChoice{
 
 
 class GameSettings{
+    private _playerBladder : boolean = true;
+
     /**
      * The name of the date
      */
     DateName : string = "Laura"
 
-    /**
-     * Whether the player bladder is enabled in the game.
-     */
-    PlayerBladder : boolean = true
+    get PlayerBladder(): boolean {
+        return this._playerBladder;
+    }
+
+    set PlayerBladder(value: boolean) {
+        this._playerBladder = value;
+        if (value){
+        }
+    }
 
     /**
-     * Whether the player bladder is enabled in the drinking game.
+     * Whether the player bladder is enabled in the drinking game, if the player bladder is disabled otherwise. When player bladder is enabled this setting is ignored.
      */
     PlayerDrinkGame : boolean = true
 
@@ -69,6 +76,31 @@ class GameSettings{
      */
     ShowStats : boolean = true;
 
+    /**
+     * The number of cycles for tummy decay to average bladder filling.
+     * This prevents the bladder filling exponentially once a lot is drunk.
+     */
+    TummyDecayCycles : number = 6;
+
+    /**
+     * Whether the bladder should decay if peeing on bladder failure.
+     */
+    BladderDecay : boolean = true;
+
+    /**
+     * Whether the bladder should also decay when peeing on bladder emergency. Requires bladder decay to be enabled.
+     */
+    BladderDecayOnEmer : boolean = true;
+
+    /**
+     * Whether the bladder should also decay when peeing after drinking alcohol. Requires bladder decay to be enabled.
+     */
+    BladderDecayOnBreakingTheSeal : boolean = true;
+
+    /**
+     * Sets the max value of the random counter.
+     */
+    RandCounterMax : number = 5;
 
 }
 

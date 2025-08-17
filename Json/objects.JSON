@@ -31,5 +31,8 @@
     "soda": "Get a soda.",
     "beer": "Get a beer.",
     "moreBeer": "Steal another beer."
+  },
+  "drinkQuotes":{
+
   }
 }

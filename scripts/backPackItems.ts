@@ -3,9 +3,6 @@ interface IBackpackItem {
     price?: number;
     value: number;
     owned?: string;
-    volume?: number;
-    sheDrank?: number;
-    yDrank?: number;
     attr?: number;
     attrThresh?: number;
     attraction?: number;
@@ -15,21 +12,30 @@ interface IBackpackItem {
     functions?: Array<[Function, string]>;
     yFunctions?: Array<[Function, string]>;
     togFunctions?: Array<[Function, string]>;
-    bottles?: number[];
     locations?: string[];
     options?: string[];
     giveQuotes?: string[][];
     description?: string;
     quote?: string;
-    peed?: number;
-    drankBeer?: number;
     shyness?: number;
-    tumInc?: number;
+}
+
+interface IDrink extends IBackpackItem
+{
+    bottles?: number[];
+    alhocolVolume: number; // TODO rename
+    tumInc: number;
     drinkQuote?: string;
     cDrinkQuote?: string[];
     cYouDrinkQuote?: string[];
     cTogDrinkQuote?: string[];
     yDrinkQuote?: string;
+    volume: number;
+}
+
+interface IContainer extends IBackpackItem{
+    volume: number;
+    peed?: number;
 }
 
 //TODO add keys and phone
@@ -47,13 +53,15 @@ const backPackItems: { [key: string]: IBackpackItem } = {
         attraction: 0,
         emerAttr: 0,
         holdCount: 0,
+        alhocolVolume: 0,
+        tumInc: 0,
         banLocs: [],
         functions: [
             [function (){
              drinkNow("water");
             }, "Give her a drink of water"]
         ]
-    },
+    } as IDrink,
     "roses": {
         bpName: "Bouquet",
         price: 20,
@@ -117,7 +125,7 @@ const backPackItems: { [key: string]: IBackpackItem } = {
         owned: "{0} vase{1}",
         description: "You're not quite sure how you managed to fit this in your backpack," +
             " but it can hold an insane amount of liquid. You wonder if it's bigger on the inside."
-    },
+    } as IContainer,
     shotglass: {
         bpName: "Shotglass",
         price: 10,
@@ -139,7 +147,7 @@ const backPackItems: { [key: string]: IBackpackItem } = {
         owned: "{0} shotglass{1}",
         description: "You can't quite recall why you thought it was a good idea to bring this glass to your date. " +
             "It can hold about 100ml, maybe it will be of use?"
-    },
+    } as IContainer,
     ptowels: {
         bpName: "Paper Towels",
         price: 10,
@@ -164,7 +172,7 @@ const backPackItems: { [key: string]: IBackpackItem } = {
         ]],
         owned: "{0} roll{1} of paper towels",
         description: "One should always have paper towels handy."
-    },
+    } as IContainer,
     sexyPanties: {
         bpName: "Sexy panties",
         price: 30,
@@ -187,6 +195,9 @@ const backPackItems: { [key: string]: IBackpackItem } = {
         bpName: "Champagne",
         price: 50,
         value: 0,
+        volume: 50,
+        alhocolVolume: 10,
+        tumInc: 50,
         owned: "{0} {1} bottle{2} of champagne",
         options: [
             "half-empty ",
@@ -202,14 +213,13 @@ const backPackItems: { [key: string]: IBackpackItem } = {
         locations: ["theHome"],
         description: "Some nice champagne, maybe you can share it with {0}? " +
             "If you give it at the right moment, she'll probably be more willing to take things further."
-    },
+    } as IDrink,
     "champ-glass": {
         bpName: "Champagne glass",
         price: 12,
         value: 0,
         volume: 180,
         peed: 0,
-        drankBeer: 30,
         attraction: 15,
         functions: [
             [function () {
@@ -225,16 +235,15 @@ const backPackItems: { [key: string]: IBackpackItem } = {
         quote: "peechampquote",
         owned: "{0} champagne glass{1}",
         description: "A standard champagne glass, can hold 180ml. Maybe use it to share some champagne with {0}"
-    },
+    } as IContainer,
     beer: {
         bpName: "Beer",
         price: 3,
         value: 0,
         owned: "{0} bottle{1} of beer",
         volume: 250,
-        sheDrank: 0,
-        yDrank: 0,
-        drankBeer: 30,
+        alhocolVolume: 30,
+        tumInc: 0,
         shyness: 5,
         functions: [
             [function () {
@@ -253,15 +262,16 @@ const backPackItems: { [key: string]: IBackpackItem } = {
         banLocs: ["drinkinggame"],
         drinkQuote: "Bottoms up!.",
         description: "Beer is the route to every woman's heart. Or at least to the toilet."
-    },
+    } as IDrink,
     soda: {
         bpName: "Soda",
         owned: "{0} cup{1} of soda",
         price: 5,
         value: 0,
         volume: 500,
-        sheDrank: 0,
         yDrank: 0,
+        alhocolVolume: 0,
+        tumInc: 0,
         functions: [
             [function () {
                 drinkNow("soda");
@@ -290,16 +300,14 @@ const backPackItems: { [key: string]: IBackpackItem } = {
             "{0} That was refreshing!"
         ],
         description: "A nice big cup of soda is all you need to stay hydrated."
-    },
+    } as IDrink,
     cocktail: {
         bpName: "Cocktail",
         owned: "{0} cocktail glass{1}",
         value: 0,
         price: 9,
         volume: 150,
-        sheDrank: 0,
-        yDrank: 0,
-        drankBeer: 50,
+        alhocolVolume: 50,
         shyness: 10,
         tumInc: 100,
         functions: [
@@ -318,7 +326,7 @@ const backPackItems: { [key: string]: IBackpackItem } = {
         ],
         drinkQuote: "Cheers.",
         description: "Hmmm, alcohol."
-    },
+    } as IDrink,
     theBarKey: {
         bpName: "Bar Key",
         value: 0,

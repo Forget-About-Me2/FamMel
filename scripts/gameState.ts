@@ -1,22 +1,28 @@
 import {gameSettings} from "./gameSettings";
+import {getRandomValueFromNormalDistribution} from "./helperFiles/helperFunctions";
 export enum LocationCategory {
     Options,
     ExplainImg,
     HideScreen,
-    CustomGirl
+    CustomGirl,
+    YourHome,
+    GoStore,
+    CallHer,
+    DrinkingGame,
 }
 
 
 class GameState {
-    Player: Person = new Person(yourbladurge);
+    Player: Person = new Person(500, 500, 200, 500);
     Companion: dateNPC = new dateNPC(bladurge, girlname);
     LastMoney : number = 0;
     LastAttraction : number = 0;
     LastShyness : number = 0;
-    Money: number = gameSettings.StartMoney;
+    private _money: number = gameSettings.StartMoney;
     Attraction: number = 10;
     Shyness : number = 90;
     readonly LocStack : GameLocation[] = [];
+    private _randCounter = Math.floor(Math.random() * gameSettings.RandCounterMax);
 
     /**
      * Flag for having done the introduction
@@ -56,14 +62,19 @@ class GameState {
      */
     AllowedToFlirt : boolean = false;
 
-    private randCounter : number = 0;
+    randCounter : number = 0;
 
-    pushLoc(location: LocationCategory) {
-        this.LocStack.unshift(location); // Use global directly
+    /**
+     * She has just visually displayed her need.
+     */
+    ShowedNeed : boolean = false;
+
+    pushLoc(location: GameLocation) {
+        this.LocStack.unshift(location);
     }
 
     popLoc() {
-        return this.LocStack.shift(); // Use global directly
+        return this.LocStack.shift();
     }
 
     goBack(){
@@ -79,18 +90,78 @@ class GameState {
         this.randCounter = (this.RandCounter + Math.floor(Math.random() * 2) + 1) % 5;
     }
 
-    get CurrentLocation(): LocationCategory {
+    get CurrentLocation(): GameLocation {
         return this.LocStack[0];
+    }
+
+    isCurrentLocation(category: LocationCategory) : boolean{
+        return this.LocStack[0].category === category;
+    }
+
+    get Money(): number {
+        return this._money;
+    }
+    PayAmount (value: number) : boolean {
+        if (value > this._money) return false;
+        this._money -= value;
+        return true;
+    }
+
+    ReceiveMoney (value: number) : void {
+        this._money += value;
+    }
+
+    get CurRandCounter() : number {
+        return this._randCounter;
+    }
+
+    incRandCounter() : void {
+        const increment = 1 + Math.floor(Math.random() * 2);
+        this._randCounter = (this._randCounter + increment) % gameSettings.RandCounterMax;
     }
 }
 
 
 class Person {
     private _bladderUrge: number;
+    private _timeLastBreakingSeal: number = 0;
+    readonly MinUrge: number;
+    private _arousal: number = 0;
     UnderWearColour: string = "black";
-    Bladder : number = 100;
-    Tummy : number = 100
-    MaxTummy : number = 100;
+    Bladder : number;
+    Tummy : number;
+    MaxTummy : number;
+    MaxAlcohol : number;
+    ItemsDrankSinceLastPee : IBackpackItem[] = [];
+
+    /**
+     * The average tummy level over the last 10 ticks.
+     * @private
+     */
+    private TummyAverage : number;
+
+    /**
+     * The time of the last time the person peed.
+     * @private
+     */
+    private lastPeeTime : number = 0;
+
+    /**
+     * The time of the last time the person was asked to keep holding.
+     * @private
+     */
+    private lastAskedToHoldTime : number = 0;
+
+    /**
+     * A number to represent the amount of alcohol in the tummy.
+     * Used to simulate the diuretic effect.
+     */
+    AlcoholInTummy : number = 0;
+
+    /**
+     * The person is currently peeing.
+     */
+    NowPeeing : boolean = false;
 
 
     /**
@@ -135,25 +206,84 @@ class Person {
         return this._bladderUrge * 5;
     }
 
-    readonly MinUrge: number;
+    processFluidsDigestion(){
+        this.TummyAverage = Math.round((this.TummyAverage * (gameSettings.TummyDecayCycles - 1) + this.Tummy) / (gameSettings.TummyDecayCycles))
+        let tummyDecrease = Math.round(this.TummyAverage / 10);
+        if (this.AlcoholInTummy === 0 && tummyDecrease > 12) tummyDecrease = 12;
+        else if (this.AlcoholInTummy > 0 && tummyDecrease > 18) tummyDecrease = 18;
+        else if (tummyDecrease < 1) tummyDecrease = 2;
+        tummyDecrease = getRandomValueFromNormalDistribution(tummyDecrease);
+        this.Tummy -= tummyDecrease;
+        if (this.Tummy < 0) this.Tummy = 0;
+        this.Bladder += tummyDecrease;
+        if (this.AlcoholInTummy > 0) this.AlcoholInTummy -= 1;
+    }
 
-    constructor(bladderUrge: number, bladder: number, tummy: number, maxTummy : number) {
+    /**
+     * Person is peeing. Resets all counters related.
+     */
+    pee(){
+        if (gameSettings.BladderDecay) {
+            if (this.Bladder > this.bladderLose)
+                this._bladderUrge = this.bladderUrge * 0.9; // Decay by 10 percent
+            else if (gameSettings.BladderDecayOnEmer && this.Bladder > this.bladderEmer)
+                this._bladderUrge = this.bladderUrge * 0.95; // Decay by 5 percent
+            else if (gameSettings.BladderDecayOnBreakingTheSeal && this.AlcoholInTummy > 15 && gameState.Time.timeSince(this._timeLastBreakingSeal) > 60 ){
+                // breaking the seal decay can only happen once an hour
+                this._bladderUrge = this.bladderUrge * 0.95; // Decay by 5 percent
+                this._timeLastBreakingSeal = gameState.Time.totalTime;
+            }
+        }
+
+        this.ItemsDrankSinceLastPee = [];
+    }
+
+    /**
+     * Drinks a drink.
+     * @param drink
+     * @returns false if the drink is not allowed to be consumed. True otherwise.
+     */
+    drink(drink: IDrink) : boolean {
+        if ((this.IsTummyFull || this.IsAlcoholLimitExceeded) && drink.tumInc === 0) return false;
+        this.Bladder -= drink.volume;
+        this.ItemsDrankSinceLastPee.push(drink);
+        this.Tummy += drink.volume;
+        this.AlcoholInTummy += drink.alhocolVolume;
+        this.MaxTummy += drink.tumInc;
+        return true;
+    }
+
+    get IsTummyFull() : boolean{
+        return this.Tummy > this.MaxTummy;
+    }
+
+    get IsAlcoholLimitExceeded() : boolean{
+        return this.AlcoholInTummy > this.MaxAlcohol;
+    }
+
+    get TimeSinceLastPeed(){
+        return gameState.Time.timeSince(lastpeetime);
+    }
+
+    constructor(bladderUrge: number, bladder: number, tummy: number, maxTummy : number, maxAlcohol = 1000) {
         this._bladderUrge = bladderUrge;
         this.MinUrge = bladderUrge * minperc / 100
         this.Bladder = bladder;
         this.Tummy = tummy;
         this.MaxTummy = maxTummy;
+        this.TummyAverage = tummy;
+        this.MaxAlcohol = maxAlcohol;
     }
 }
 
 class dateNPC extends Person{
     readonly name: string;
 
-    get talkHTml() : string{
+    get talkHtml() : string{
         return "<b>" + this.name + ":&nbsp</b>"
     }
 
-    get gaspHTml() : string{
+    get gaspHtml() : string{
         return "<b>" + this.name + " gasps:&nbsp</b>"
     }
 
@@ -184,15 +314,30 @@ class Time{
         const period = this.hour < 12 ? 'AM' : 'PM';
         return `${hours}:${minutes} ${period}`;
     }
+
+    timeSince(timeStamp: number) :number {
+        return this.totalTime - timeStamp;
+    }
 }
 
 export class GameLocation {
     category: LocationCategory;
-    function: Function;
-    constructor(category: LocationCategory, LocFunction: Function){
+    function: () => void;
+
+    constructor(category: LocationCategory, LocFunction: () => void) {
         this.category = category;
         this.function = LocFunction;
     }
+
+    get isPlayerOnly() : boolean{
+        return GameLocation.PlayerOnlyLocations.includes(this.category);
+    }
+    get isOptionsMenu() : boolean{
+        return GameLocation.SettingsLocations.includes(this.category);
+    }
+
+    private static readonly PlayerOnlyLocations = [LocationCategory.YourHome, LocationCategory.GoStore, LocationCategory.CallHer];
+    private static readonly SettingsLocations = [LocationCategory.Options, LocationCategory.ExplainImg, LocationCategory.HideScreen, LocationCategory.CustomGirl];
 }
 
 export const gameState = new GameState();

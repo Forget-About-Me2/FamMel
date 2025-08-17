@@ -351,12 +351,6 @@ function setPlayGame(choice){
         setLocal("playerGame", "false");
 }
 
-
-
-function hidescreen() {
-    enablehide = 1;
-}
-
 function setjpgimgs() {
     enableimages = 1;
     enableascii = 0;

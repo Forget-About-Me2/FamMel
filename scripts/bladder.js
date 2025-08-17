@@ -81,14 +81,10 @@ let wetlegs = 0; // her legs are wet
 let wetherpanties = 0; // did she ever wet herself?
 
 let gottagoflag = 0; // has she just asked to use the restroom
-let showedneed = 0; // has she just visually displayed her need
 
 let askholditcounter = 0; // How many times have you asked her to hold it.
 let waitcounter = 0; // how long ago did she ask to pee?
                      //Reset positive when you ask her.
-
-let nowpeeing = 0; // She is currently peeing
-let ynowpeeing = 0; // You're currently peeing
 
 //Initializes the bladder values for the girl
 function initUrge(urge) {

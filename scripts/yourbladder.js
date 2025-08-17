@@ -16,7 +16,6 @@ let ymaxtummy = 500; // Drink capacity of stomach
 let ymaxbeer = 1000; // Beer capacity of stomach
 
 let yourcustomurge = 500;
-let yminurge = 375; //Bladder never decays below this
 
 //  The following are used to keep track of what you drank and when you last went
 // Might be used later on.
