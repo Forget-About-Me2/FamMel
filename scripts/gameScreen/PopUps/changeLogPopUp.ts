@@ -1,9 +1,9 @@
 import showdown from "showdown";
 import {PopUp} from "./popUp";
 
-export class ChangeLog extends PopUp{
+export class ChangeLogPopUp extends PopUp{
 
-    async displayChangelogPopup(): Promise<void> {
+    async displayPopup(): Promise<void> {
         if (!this._popupConfig) {
             await this.setPopUpConfig();
         }
@@ -11,7 +11,6 @@ export class ChangeLog extends PopUp{
         if (!this._popupConfig) {
             throw new Error('Failed to set popup config for changelog');
         }
-
 
         this.openPopup();
     }

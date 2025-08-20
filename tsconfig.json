@@ -12,7 +12,7 @@
       "./scripts"
     ],
     "exclude": [
-      "./scripts/GameState.ts"
+      "./scripts/gameState/gameState.ts"
     ],
     "outDir": "./dist",
     "resolveJsonModule": true

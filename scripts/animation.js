@@ -48,39 +48,45 @@ const alphadecode = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 //
 function anim8() {
     let pixfname;
-    {
+
+    // Decide which frame to show and which sprite name to use, based on state
+    const chooseFrame = () => {
         if (nowpeeing) {
-            directartno = alphadecode.indexOf(peeingloop.charAt(artno));
             pixfname = "pixpee";
-        } else if (bladder < bladurge) {
-            directartno = alphadecode.indexOf(asciiloops[0].charAt(artno));
-            pixfname = "pixnorm";
-        } else if (bladder < bladneed) {
-            directartno = alphadecode.indexOf(asciiloops[1].charAt(artno));
-            pixfname = "pixurge";
-        } else if (bladder < blademer) {
-            directartno = alphadecode.indexOf(asciiloops[2].charAt(artno));
-            pixfname = "pixneed";
-        } else if (bladder < bladlose) {
-            directartno = alphadecode.indexOf(asciiloops[3].charAt(artno));
-            pixfname = "pixemer";
-        } else {
-            directartno = alphadecode.indexOf(asciiloops[4].charAt(artno));
-            pixfname = "pixlose";
+            return alphadecode.indexOf(peeingloop.charAt(artno));
         }
-    }
+
+        const states = [
+            { threshold: bladurge, loopIdx: 0, pix: "pixnorm" },
+            { threshold: bladneed, loopIdx: 1, pix: "pixurge" },
+            { threshold: blademer, loopIdx: 2, pix: "pixneed" },
+            { threshold: bladlose, loopIdx: 3, pix: "pixemer" }
+        ];
+
+        for (const s of states) {
+            if (bladder < s.threshold) {
+                pixfname = s.pix;
+                return alphadecode.indexOf(asciiloops[s.loopIdx].charAt(artno));
+            }
+        }
+
+        // Fallback: bladder >= bladlose
+        pixfname = "pixlose";
+        return alphadecode.indexOf(asciiloops[4].charAt(artno));
+    };
+
+    directartno = chooseFrame();
+
+    const picEl = document.getElementById('thepic');
     if (enableascii) {
-        document.getElementById('thepic').innerHTML = "<table style='text-align:right'><tr><td style='width:100px'><pre>" + asciiart[directartno] + "</pre></table>";
-        artno++;
-        if (artno > maxart) artno = 0;
+        picEl.innerHTML = "<table style='text-align:right'><tr><td style='width:100px'><pre>" + asciiart[directartno] + "</pre></table>";
+        artno = (artno + 1) % (maxart + 1);
     } else if (!enableimages) {
-        document.getElementById('thepic').innerHTML = "<table style='text-align:right'><tr><td style='width:100px'><pre>&nbsp;</pre></table>";
+        picEl.innerHTML = "<table style='text-align:right'><tr><td style='width:100px'><pre>&nbsp;</pre></table>";
     } else {
         displaypix(pixfname);
     }
 
-    if (!nowpeeing)
-        setTimeout("anim8()", Math.floor(Math.random() * 750) + 250);
-    else
-        setTimeout("anim8()", 250);
+    const delay = nowpeeing ? 250 : Math.floor(Math.random() * 750) + 250;
+    setTimeout(anim8, delay);
 }

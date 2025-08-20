@@ -1,22 +1,19 @@
-import {gameState} from "../gameState";
-import {gameSettings} from "../gameSettings";
+import {gameState} from "../gameState/gameState";
+import {gameSettings} from "../settings/gameSettings";
 import {StatusBar} from "./statusBar";
-import {ChangeLog} from "./changeLog";
+import {PopUpManager} from "./PopUps/popUpManager";
 
 class GameScreen {
     readonly StatusBar : StatusBar;
-    readonly ChangeLog : ChangeLog;
+    readonly PopUps : PopUpManager
+
+
 
     constructor(){
         this.StatusBar = new StatusBar();
-        this.ChangeLog = new ChangeLog();
+        this.PopUps = new PopUpManager();
     }
-
-
 }
-
-
-
 
 
 export const gameScreen = new GameScreen();

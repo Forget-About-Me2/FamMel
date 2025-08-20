@@ -31,7 +31,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>  <!-- markdown to html converter -->
 <!--    <script src="scripts/GameState.ts"></script>-->
-    <title>Melissa Explains it All</title>
+    <title></title>
 </head>
 <body>
 <link rel="stylesheet" type="text/css" href="style.css">
@@ -64,11 +64,11 @@
             <pre id="thepic"></pre>
         </div>
         <div id="textsp">
-            <p class="title">Melissa Explains it All </p>
-            <p style="text-align: center">This game contains mature content.</p>
+            <p class="title" id="home-title"></p>
+            <p id="home-mature" style="text-align: center"></p>
             <ul id="choices" class="choices-start"></ul>
             <pre style="padding-top: 13vh;padding-left:30vw;"><br>  ((<br>  -))<br>  /\) <br> ( |)<br>   \ \<br>   _/ )<br>  //-/<br>  ||<br>  d/<br></pre>
-            <br><br><p style="text-align: center"> Follow this project on github:</p>
+            <br><br><p id="home-follow" style="text-align: center"></p>
             <p style="text-align: center"><a href="https://github.com/FamTroder/FamMel"><img src="icons/GitHub-Mark-32px.png" ></a></p>
         </div>
         <a href="javascript:backpack()"><img id="backpack" src="icons/backpack.png" alt="Picture of girl" class="pic"></a>
@@ -104,8 +104,14 @@
 <script>
 
     import {gameScreen, GameScreen} from "./scripts/gameScreen/gameScreen";
-    import {ContentScreen} from "./scripts/gameScreen/contentScreen";
-    import {start} from "./scripts/main";
+    import {
+        ContentScreen,
+        DirectFunctionChoiceItems,
+        LocationChoiceItem
+    } from "./scripts/gameScreen/contentScreen";
+    import {showCredits, start} from "./scripts/main";
+    import homeScreenJson from "./Json/homeScreen.json";
+    import {GameLocation, LocationCategory} from "./scripts/gameState/gameState";
 
     window.onerror = (errorMsg, url, lineNumber, column, errorObj) => {
         const message = 'Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
@@ -119,23 +125,24 @@
         }
         setErrorPopup(reason);
     }
-    function startChoices(){
-        const contentScreen = new ContentScreen().KeepExistingHtml();
-        const listenerList = [
-            [[start, "Play"], "start"],
-            [[gameScreen.ChangeLog.displayChangelogPopup, "Changelog"], "changeLog", false],
-            [[showCredits, "Credits"], "creditss", false]
-        ];
-        let html = "";
-        listenerList.forEach(item => html += cListenerString(item[0], item[1]));
-        document.getElementById("choices").innerHTML = html;
-        listenerList.forEach(item => {
-            document.getElementById(item[1]).classList.add("choices-items-start");
-        })
-        addListenersList(listenerList);
-    }
 
-    startChoices();
+    document.title = homeScreenJson.title;
+    document.getElementById("home-title").textContent = homeScreenJson.title;
+    document.getElementById("home-mature").textContent = homeScreenJson.matureWarning;
+    document.getElementById("home-follow").textContent = homeScreenJson.followOnGithub;
+    const listenerList = [];
+    let html = "";
+    homeScreenJson.choices.forEach(item => html += cListenerString(item, item.tag));
+    document.getElementById("choices").innerHTML = html;
+    listenerList.forEach(item => {
+        document.getElementById(item[1]).classList.add("choices-items-start");
+    })
+
+    const contentScreen = new ContentScreen().KeepExistingHtml();
+    contentScreen.ChoicesList.push(new LocationChoiceItem(homeScreenJson.Start, new GameLocation(LocationCategory.Start, start)));
+    contentScreen.ChoicesList.push(new DirectFunctionChoiceItems(homeScreenJson.Changelog, gameScreen.PopUps.ChangeLog.displayPopup, "changeLog"));
+    contentScreen.ChoicesList.push(new DirectFunctionChoiceItems(homeScreenJson.Credits, gameScreen.PopUps.Credits.displayPopup, "credits"));
+    contentScreen.PrintContentToScreen()
 
 </script>
 </body>

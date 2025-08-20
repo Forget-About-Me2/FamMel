@@ -1,8 +1,9 @@
-import {GameLocation, gameState, LocationCategory} from "./gameState";
-import {gameSettings} from "./gameSettings";
+import {GameLocation, gameState, LocationCategory} from "./gameState/gameState";
+import {gameSettings} from "./settings/gameSettings";
 import {yourHome} from './yourHome';
-import {gameScreen} from "./gameScreen/GameScreen";
-import showdown from 'showdown';
+import {gameScreen} from "./gameScreen/gameScreen";
+import { animationManager } from "./gameScreen/animation";
+import {SettingsManager} from "./settings/settingsManager";
 
 /**
  * Main program loop that handles location transitions and game state updates
@@ -13,7 +14,7 @@ import showdown from 'showdown';
 export function go(location : GameLocation) {
     allowItems = 0;
 
-    if (!location.isOptionsMenu) {
+    if (!location.isPreGame) {
         gameState.ShowedNeed = false; // clear the showed need flag - only active in the current window.
         gameState.ChangeVenueFlag = false;
         gameState.AllowedToFlirt = true;
@@ -84,71 +85,19 @@ function shuffle<T>(array: T[]): T[] {
     return copy;
 }
 
-//This setups the game when you click start
-//Main reason we have a seperate function is because we need have to wait for yneeds to be assigned for the first scene
-//as it's called in there and this is the cleanest solution I can think of
+//This sets the game up when you click start
+// TODO probably no longer needed.
 function gamestart(){
     gameScreen.StatusBar.Update();
     yourHome();
 }
 
 
-function changeLog(){
-    let result;
-    $.ajax(
-        { url: "CHANGELOG.md",
-            type: 'get',
-            dataType: 'html',
-            async: false,
-            success: function(data) { result = data; }
-        }
-    );
-    const converter = new showdown.Converter();
-    document.GetRequiredElementById("pop-up-title").innerText = "Changelog";
-    document.GetRequiredElementById("pop-up-text").innerHTML = converter.makeHtml(result);
-    openPopUp();
-}
-
-function showCredits(){
-    if (!credits){
-        getjson("credits", function (){
-            credits = json;
-            showCredits();
-        });
-        return
-    }
-    document.GetRequiredElementById("pop-up-title").innerText = "Credits";
-    const textElem = document.GetRequiredElementById("pop-up-text");
-    textElem.innerHTML = "";
-    credits["page"].forEach(line => textElem.innerHTML += line);
-    openPopUp();
-}
-
-function handleDisclaimer(){
-    if (!localStorage.disclaimer || localStorage.disclaimer === "true") {
-        if (!credits) {
-            getjson("credits", function () {
-                credits = json;
-                handleDisclaimer();
-            });
-            return
-        }
-        document.GetRequiredElementById("pop-up-title").innerText = "Disclaimer";
-        const textElem = document.GetRequiredElementById("pop-up-text");
-        textElem.innerHTML = "";
-        credits["disclaimer"].forEach(line => textElem.innerHTML += line);
-        openPopUp();
-    }
-}
-
 // Introduction page.
 export async function start() {
-    await quoteManager.initialize();
-    handleDisclaimer();
-// See random number generator from the date
-    anim8();
-    randcounter = Math.floor(Math.random() * 5);
-    incrandom();
+    gameScreen.PopUps.Disclaimer.displayDisclaimerPopup();
+    animationManager.start();
+    new SettingsManager().readFromLocalStorage();
     setup();
     pushloc("yourhome");
     locationSetup("start");

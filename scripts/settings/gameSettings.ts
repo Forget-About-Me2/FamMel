@@ -1,3 +1,5 @@
+import {ImageSettings} from "./imageSettings";
+
 export enum baseGirl{
     Jennifer = 'Jennifer',
     Laura = 'Laura',
@@ -11,9 +13,7 @@ export enum ImageChoice{
     None
 }
 
-
-
-class GameSettings{
+export class GameSettings{
     private _playerBladder : boolean = true;
 
     /**
@@ -101,6 +101,15 @@ class GameSettings{
      * Sets the max value of the random counter.
      */
     RandCounterMax : number = 5;
+
+    /**
+     * Image settings to show the state of the date.
+     */
+    ImageSettings : ImageSettings = new ImageSettings();
+}
+
+class CompanionSettings {
+    CompanionName : string = "Laura"
 
 }
 

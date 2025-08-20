@@ -1,4 +1,4 @@
-import {gameState} from "../gameState";
+import {gameState} from "../gameState/gameState";
 
 export class StatusBar {
     private readonly _moneyValueElem: HTMLElement;

@@ -1,77 +1,40 @@
-import {GameLocation, gameState, LocationCategory} from "../gameState";
+import {GameLocation, gameState, LocationCategory} from "../gameState/gameState";
 import {go} from "../main";
-
-interface IChoicesItem {
-    ToHtml(): string;
-    AddListener(): void;
-}
-
-class ChoiceItem {
-    private readonly _text: string;
-    protected readonly _tag: string;
-
-    ToHtml(): string {
-        return "<li class=cListener id=" + this._tag + ">" + ContentScreen.FormatVars(this._text) + "</li>"
-    }
-
-    constructor(text: string, tag: string) {
-        this._text = text;
-        this._tag = tag;
-    }
-}
-
-export class DirectionFunctionChoiceItems extends ChoiceItem implements IChoicesItem {
-
-    readonly _action: () => void;
-
-    AddListener() {
-        document.GetRequiredElementById(this._tag).addEventListener("click", this._action);
-    }
-
-    constructor(text: string, action: () => void, tag: string) {
-        super(text, tag);
-        this._action = action;
-    }
-}
-
-export class LocationChoiceItem extends ChoiceItem implements IChoicesItem {
-    private readonly _location: GameLocation;
-
-    AddListener() {
-        document.GetRequiredElementById(this._tag).addEventListener("click", () => go(this._location));
-    }
-
-    constructor(text: string, location: GameLocation, tag: string) {
-        super(text, tag);
-        this._location = location;
-    }
-}
 
 export class ContentScreen {
     private _existingHtml: string = "";
     readonly ChoicesList: IChoicesItem[] = [];
     readonly CurText: string[] = [];
-    readonly TextElem : HTMLElement;
+    readonly TextElem: HTMLElement;
+    private _customChoiceLocation: string = "";
 
     PrintContentToScreen() {
         let i;
-        let result =  this._existingHtml;
+        this.TextElem.innerHTML = this._existingHtml;
         for (i = 0; i < this.CurText.length; i++) {
-            result += "<p>" + this.FormatVars(this.CurText[i]) + "</p>";
+            this.TextElem.innerHTML += "<p>" + this.FormatVars(this.CurText[i]) + "</p>";
         }
 
+        let curElem = this.TextElem;
+        if (this._customChoiceLocation.length !== 0) {
+            curElem = document.GetRequiredElementById(this._customChoiceLocation);
+        }
         for (i = 0; i < this.ChoicesList.length; i++) {
-            result += this.ChoicesList[i].ToHtml();
+            curElem.innerHTML += this.ChoicesList[i].ToHtml();
         }
 
-        this.TextElem.innerHTML = result;
         for (i = 0; i < this.ChoicesList.length; i++) {
             this.ChoicesList[i].AddListener();
         }
     }
 
-    KeepExistingHtml(): ContentScreen{
+    KeepExistingHtml(): ContentScreen {
         this._existingHtml = this.TextElem.innerHTML;
+        return this;
+    }
+
+    CustomChoiceLocation(id: string) {
+        this._customChoiceLocation = id;
         return this;
     }
 
@@ -126,5 +89,54 @@ export class ContentScreen {
 
     constructor() {
         this.TextElem = document.GetRequiredElementById<HTMLElement>("textsp");
+    }
+}
+
+interface IChoicesItem {
+    ToHtml(): string;
+    AddListener(): void;
+}
+
+class ChoiceItem {
+    private readonly _text: string;
+    protected readonly _tag: string;
+
+    ToHtml(): string {
+        return "<li class=cListener id=" + this._tag + ">" + ContentScreen.FormatVars(this._text) + "</li>"
+    }
+
+    constructor(text: string, tag: string) {
+        this._text = text;
+        this._tag = tag;
+    }
+}
+
+export class DirectFunctionChoiceItems extends ChoiceItem implements IChoicesItem {
+
+    readonly _action: () => void;
+
+    AddListener() {
+        document.GetRequiredElementById(this._tag).addEventListener("click", this._action);
+    }
+
+    constructor(text: string, action: () => void, tag: string) {
+        super(text, tag);
+        this._action = action;
+    }
+}
+
+export class LocationChoiceItem extends ChoiceItem implements IChoicesItem {
+    private readonly _location: GameLocation;
+
+    AddListener() {
+        document.GetRequiredElementById(this._tag).addEventListener("click", () => go(this._location));
+    }
+
+    constructor(text: string, location: GameLocation, tag: string = "") {
+        if (tag.length === 0) {
+            tag = location.category.toString().toLowerCase();
+        }
+        super(text, tag);
+        this._location = location;
     }
 }
