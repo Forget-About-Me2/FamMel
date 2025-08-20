@@ -1,4 +1,4 @@
-export enum BaseGirl{
+export enum BaseCompanion{
     Melissa = "Melissa",
     Laura = "Laura",
     Karen = "Karen",

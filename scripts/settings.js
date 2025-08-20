@@ -394,7 +394,7 @@ function setbasegirl(hername) {
         urge = 350;
         if(htmlcall) {
             htmlcall.innerHTML = customgirlname +
-                " is an innocent red headed college girl.";
+                " is a red headed college girl.";
         }
         favoritemovie = "thelitr";
     }
@@ -413,7 +413,7 @@ function updategirldesc() {
             " is a petite and slim Asian girl with an equally petite bladder.";
     } else if (girlname === "Melissa") {
         document.getElementById('girlstats').innerHTML = girlname +
-            " is an innocent red headed college girl who knows how to hold her pee.";
+            " is a red headed college girl who knows how to hold her pee.";
     } else {
         let bladquote;
         if (customurge < 100)

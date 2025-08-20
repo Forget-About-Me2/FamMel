@@ -1,6 +1,6 @@
 import { gameSettings } from "../settings/gameSettings";
 import { BladderState } from "../gameState/bladderState";
-import { BaseGirl } from "../settings/baseGirl";
+import { BaseCompanion } from "../models/baseCompanion";
 import { ImageType } from "../settings/imageType";
 
 /**
@@ -58,13 +58,13 @@ class ImageManager {
      * Attempt to coerce the selected base girl from settings to the BaseGirl enum.
      * Falls back to Laura if not matched.
      */
-    private resolveBaseGirl(): BaseGirl {
+    private resolveBaseGirl(): BaseCompanion {
         const value = (gameSettings as any).BaseGirl as string;
-        const validValues = Object.values(BaseGirl) as string[];
+        const validValues = Object.values(BaseCompanion) as string[];
         if (validValues.includes(value)) {
-            return value as unknown as BaseGirl;
+            return value as unknown as BaseCompanion;
         }
-        return BaseGirl.Laura;
+        return BaseCompanion.Laura;
     }
 }
 

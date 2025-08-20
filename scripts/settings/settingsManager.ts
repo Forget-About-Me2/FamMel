@@ -1,6 +1,5 @@
 import { instanceToPlain, plainToInstance } from "class-transformer";
 import { gameSettings, GameSettings } from "./gameSettings";
-import { ImageSettings } from "./imageSettings";
 
 export class SettingsManager{
     readFromLocalStorage() : void {
@@ -20,13 +19,6 @@ export class SettingsManager{
         const merged = plainToInstance(GameSettings, json as object, {
             enableImplicitConversion: true
         });
-
-        // Ensure nested ImageSettings is an instance
-        if (!(merged.ImageSettings instanceof ImageSettings) && (merged as any).ImageSettings) {
-            merged.ImageSettings = plainToInstance(ImageSettings, (merged as any).ImageSettings, {
-                enableImplicitConversion: true
-            });
-        }
 
         // Merge into the singleton instance
         Object.assign(gameSettings, merged);

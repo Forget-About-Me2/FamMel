@@ -1,4 +1,4 @@
-import {gameSettings} from "../settings/gameSettings";
+import {gameSettings, PersonSettings} from "../settings/gameSettings";
 import {getRandomValueFromNormalDistribution} from "../helperFiles/helperFunctions";
 import {gameState} from "./gameState";
 import {BladderState} from "./bladderState";
@@ -175,13 +175,13 @@ export class Person {
         return gameState.Time.timeSince(lastpeetime);
     }
 
-    constructor(bladderUrge: number, bladder: number, tummy: number, maxTummy: number, maxAlcohol = 1000) {
-        this._bladderUrge = bladderUrge;
-        this.MinUrge = bladderUrge * minperc / 100
-        this.Bladder = bladder;
-        this.Tummy = tummy;
-        this.MaxTummy = maxTummy;
-        this.TummyAverage = tummy;
-        this.MaxAlcohol = maxAlcohol;
+    constructor(settings: PersonSettings) {
+        this._bladderUrge = settings.bladderUrge;
+        this.MinUrge = settings.bladderUrge * minperc / 100
+        this.Bladder = settings.startBladderVolume;
+        this.Tummy = settings.startTummyVolume;
+        this.MaxTummy = settings.startMaxTummy;
+        this.TummyAverage = settings.startTummyVolume;
+        this.MaxAlcohol = settings.startMaxAlcohol;
     }
 }

@@ -1,6 +1,7 @@
 import {ImageSettings} from "./imageSettings";
+import {Movie} from "../models/movie";
 
-export enum baseGirl{
+export enum baseCompanion{
     Jennifer = 'Jennifer',
     Laura = 'Laura',
     Karen = 'Karen',
@@ -16,19 +17,12 @@ export enum ImageChoice{
 export class GameSettings{
     private _playerBladder : boolean = true;
 
-    /**
-     * The name of the date
-     */
-    DateName : string = "Laura"
-
     get PlayerBladder(): boolean {
         return this._playerBladder;
     }
 
     set PlayerBladder(value: boolean) {
         this._playerBladder = value;
-        if (value){
-        }
     }
 
     /**
@@ -38,10 +32,6 @@ export class GameSettings{
 
     StartMoney : number = 200
 
-    BaseGirl : baseGirl = baseGirl.Laura
-
-    IsCustomGirl : boolean = false
-
     ClubClosingTime : number = 7 * 60; // 2: 00 AM
 
     TheaterClosingTime : number = 3 * 60; // 10: 00 PM last showing
@@ -49,22 +39,6 @@ export class GameSettings{
     BarClosingTime : number = 6 * 60; // 1: 00 AM
 
     TimeSpeed: number = 2;
-
-    /**
-     * Max number of kisses that have an effect per location.
-     */
-    MaxKissCount : number = 7;
-
-    /**
-     * Max number of feelings that have an effect per location.
-     */
-    MaxFeelCount : number = 7;
-
-    /**
-     * Max number of flirt points per venue.
-     */
-
-    MaxFlirtCount : number = 2;
 
     /**
      * Option for which image type is shown.
@@ -109,8 +83,72 @@ export class GameSettings{
 }
 
 class CompanionSettings {
-    CompanionName : string = "Laura"
+    DateName : string = "Laura"
+    BaseCompanion: baseCompanion = baseCompanion.Laura
+    IsCustomCompanion: boolean = false
 
+    CustomCompanionSettings : CompanionSettings = {
+        bladderUrge: 250,
+        minPercentage: 75,
+        startBladderVolume: 300,
+        startMaxTummy: 250,
+        startMaxAlcohol: 1000,
+        startTummyVolume: 100,
+        FavouriteMovie: Movie.TwoLitres
+    };
+
+    /**
+     * Max number of kisses that have an effect per location.
+     */
+    MaxKissCount: number = 7;
+
+    /**
+     * Max number of feelings that have an effect per location.
+     */
+    MaxFeelCount: number = 7;
+
+    /**
+     * Max number of flirt points per venue.
+     */
+
+    MaxFlirtCount: number = 2;
+}
+
+
+
+/**
+ * Settings for a person, can be player or date.
+ */
+export interface PersonSettings {
+    /**
+     * The bladder volume at which point the person starts feeling it.
+     */
+    bladderUrge : number;
+
+    /**
+     * The bladder volume at the start of the game.
+     */
+    startBladderVolume: number;
+
+    /**
+     * The tummy volume at the start of the game.
+     */
+    startTummyVolume: number;
+
+    /*
+     * The max amount of drink volume the person can stomach before rejecting non-alcoholic drinks.
+     */
+    startMaxTummy: number;
+
+    /*
+     * The max amount of alcohol volume the person can drink before rejecting alcoholic drinks.
+     */
+    startMaxAlcohol: number;
+
+    /**
+     * The percentage of the initial bladder urge, the urge can decay to.
+     */
+    minPercentage: number;
 }
 
 export const gameSettings = new GameSettings();
