@@ -136,7 +136,6 @@ function elevatorWait() {
                     curtext.push(herHome["elevArrive"].formatVars());
                 }
                 listenerList.push([[theElevator, "Continue..."], "theElevator"]);
-                poploc();
             } else {
                 curtext = printList(curtext, herHome["elevWait"]);
                 if (bladder > blademer)
@@ -172,14 +171,14 @@ function theElevator(){
     }
     curtext =  showneed(curtext);
     curtext = displayyourneed(curtext);
-    if (floorcounter >= 3) {
-        poploc();
-    } else  {
-        floorcounter += 1;
-    }
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
+        if (floorcounter >= 3) {
+            poploc();
+        } else {
+            floorcounter += 1;
+        }
         sayText(curtext);
         cListenerGenList(listenerList);
     }

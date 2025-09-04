@@ -1,3 +1,7 @@
+# version 0.5.5
+* Fix selection of custom girl in settings
+* You no longer teleport to the car on wetting in the elevator
+
 # version 0.5.4
 * Add error handling to show the user an error message when the game breaks, instead of a blank page.
 * Fixed game breaking on check spurting
