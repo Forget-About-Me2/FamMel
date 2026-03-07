@@ -2,7 +2,7 @@ import {GameLocation, gameState, LocationCategory} from "./gameState/gameState";
 import {gameSettings} from "./settings/gameSettings";
 import {yourHome} from './yourHome';
 import {gameScreen} from "./gameScreen/gameScreen";
-import { animationManager } from "./gameScreen/animation";
+import { animationManager } from "./gameScreen/animationManager";
 import {SettingsManager} from "./settings/settingsManager";
 
 /**
@@ -11,10 +11,107 @@ import {SettingsManager} from "./settings/settingsManager";
  * Updates UI and triggers location-specific logic
  * @param location - New game location to transition to
  */
-export function go(location : GameLocation) {
+function isGameLocation(location: unknown): location is GameLocation {
+    return typeof location === "object"
+        && location !== null
+        && "function" in location
+        && typeof (location as GameLocation).function === "function"
+        && "category" in location;
+}
+
+function resolveLegacyTarget(location: unknown): (() => void) | undefined {
+    if (typeof location === "function") {
+        const callback = location as () => void;
+        return callback;
+    }
+
+    if (typeof location !== "string") {
+        return undefined;
+    }
+
+    let target = normalizeLegacyTarget(location);
+    if (target.toLowerCase() === "goback") {
+        poploc();
+        target = normalizeLegacyTarget(locStack[0] ?? "");
+    }
+
+    const maybeFunction = (window as any)[target];
+    if (typeof maybeFunction === "function") {
+        return maybeFunction;
+    }
+
+    const lowerTarget = target.toLowerCase();
+    if (lowerTarget === "gamestart") {
+        return gamestart;
+    }
+
+    return undefined;
+}
+
+function normalizeLegacyTarget(target: string): string {
+    const trimmed = target.trim();
+    // Accept old-style stack entries like "someFunction()" and resolve as function names.
+    const match = trimmed.match(/^([A-Za-z_$][\w$]*)\s*\(\s*\)\s*;?$/);
+    return match ? match[1] : trimmed;
+}
+
+function legacyTag(locationTag: string | undefined): string {
+    return (locationTag ?? "").toLowerCase();
+}
+
+function isLegacyPlayerOnlyLocation(locationTag: string | undefined): boolean {
+    const tag = legacyTag(locationTag);
+    return tag === "yourhome" || tag === "gostore" || tag === "callher";
+}
+
+function isLegacyCallHerLocation(locationTag: string | undefined): boolean {
+    return legacyTag(locationTag) === "callher";
+}
+
+function isLegacyDrinkingGameLocation(locationTag: string | undefined): boolean {
+    return legacyTag(locationTag) === "drinkinggame";
+}
+
+function syncLegacyLocStackFromTypedLocation(location: GameLocation): void {
+    const tagMap: Record<LocationCategory, string> = {
+        [LocationCategory.Start]: "start",
+        [LocationCategory.Options]: "options",
+        [LocationCategory.ExplainImg]: "explainimg",
+        [LocationCategory.HideScreen]: "hidescreen",
+        [LocationCategory.CustomGirl]: "customgirl",
+        [LocationCategory.YourHome]: "yourhome",
+        [LocationCategory.GoStore]: "gostore",
+        [LocationCategory.CallHer]: "callher",
+        [LocationCategory.DrinkingGame]: "drinkinggame",
+    };
+
+    const mappedTag = tagMap[location.category];
+    if (!mappedTag) {
+        return;
+    }
+
+    if (locStack.length === 0) {
+        locStack.unshift(mappedTag);
+        return;
+    }
+
+    locStack[0] = mappedTag;
+}
+
+export function go(location: unknown) {
     allowItems = 0;
 
-    if (!location.isPreGame) {
+    const previousLocation = gameState.CurrentLocation;
+    const currentLegacyTag = locStack[0];
+    const typedLocation = isGameLocation(location) ? location : undefined;
+    const shouldProcessTick = !typedLocation || !typedLocation.isPreGame;
+    const isPlayerOnlyLocation = previousLocation?.isPlayerOnly ?? isLegacyPlayerOnlyLocation(currentLegacyTag);
+    const isCallHerLocation = previousLocation?.category === LocationCategory.CallHer
+        || isLegacyCallHerLocation(currentLegacyTag);
+    const isDrinkingGameLocation = previousLocation?.category === LocationCategory.DrinkingGame
+        || isLegacyDrinkingGameLocation(currentLegacyTag);
+
+    if (shouldProcessTick) {
         gameState.ShowedNeed = false; // clear the showed need flag - only active in the current window.
         gameState.ChangeVenueFlag = false;
         gameState.AllowedToFlirt = true;
@@ -23,14 +120,14 @@ export function go(location : GameLocation) {
         gameState.Companion.processFluidsDigestion();
 
         //  If she's not with you, then she can go pee
-        if (gameState.CurrentLocation.isPlayerOnly &&
+        if (isPlayerOnlyLocation &&
             // TODO Add bladder state enum instead
             gameState.Companion.Bladder > blademer && !askholditcounter)
-            if (!gameState.isCurrentLocation(LocationCategory.CallHer))
+            if (!isCallHerLocation)
                 gameState.Companion.pee();
 
         if (gameSettings.PlayerBladder
-            || (gameState.isCurrentLocation(LocationCategory.DrinkingGame) && gameSettings.PlayerDrinkGame)) {
+            || (isDrinkingGameLocation && gameSettings.PlayerDrinkGame)) {
             gameState.Player.processFluidsDigestion();
         }
 
@@ -46,7 +143,20 @@ export function go(location : GameLocation) {
         gameScreen.StatusBar.Update();
     }
 
-    location.function();
+    if (typedLocation) {
+        gameState.setCurrentLocation(typedLocation);
+        syncLegacyLocStackFromTypedLocation(typedLocation);
+        typedLocation.function();
+        return;
+    }
+
+    const legacyTarget = resolveLegacyTarget(location);
+    if (legacyTarget) {
+        legacyTarget();
+        return;
+    }
+
+    console.error("Invalid location passed to go():", location);
 }
 
 //TODO potentially use this to choose quotes instead of randomchoice
@@ -61,15 +171,14 @@ function pickRandom<T>(array: T[]): T {
     if (!array.length) {
         throw new Error('Cannot pick from an empty array');
     }
-    const index = Math.floor(Math.random() * array.length);
+    const index = randomInt(array.length);
     return array[index];
 }
 
 
 //Picks a random index from a list.
 function randomIndex(list : []){
-    let number = Math.random() * list.length;
-    return Math.floor(number);
+    return randomInt(list.length);
 }
 
 //Randomizes the given list
@@ -78,7 +187,7 @@ function shuffle<T>(array: T[]): T[] {
 
     // Fisher-Yates (Knuth) shuffle algorithm
     for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = randomInt(i + 1);
         [copy[i], copy[j]] = [copy[j], copy[i]]; // swap elements
     }
 
@@ -99,6 +208,7 @@ export async function start() {
     animationManager.start();
     new SettingsManager().readFromLocalStorage();
     setup();
+    await getjsonTF("start", () => undefined);
     pushloc("yourhome");
     locationSetup("start");
     let curtext = locjson["always"];

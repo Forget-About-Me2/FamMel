@@ -39,7 +39,7 @@ let comma = 0; // used in formatting possessions.
 //Overwrites the wildcards with the given values in the list.
 //Wildcards are of the format {i} where i is the index of which the corresponding value is in the given list.
 String.prototype.format = function() {
-    let s = this,
+    let s = this.toString(),
         i = arguments[0].length;
     const args = arguments[0]
     while (i--) {
@@ -50,7 +50,7 @@ String.prototype.format = function() {
 
 //Format a given string adding the variables
 String.prototype.formatVars = function() {
-    const replacements = [
+    const replacements: Array<[RegExp, string]> = [
         [/girlname/gm, girlname],
         [/girltalk/gm, girltalk],
         [/girlgasp/gm, girlgasp],
@@ -61,9 +61,9 @@ String.prototype.formatVars = function() {
         [/money/gm, money.toString()]
     ];
 
-    return replacements.reduce((text, [pattern, replacement]) =>
+    return replacements.reduce((text: string, [pattern, replacement]) =>
             text.replaceAll(pattern, replacement),
-        this
+        this.toString()
     );
 
 }
@@ -260,9 +260,9 @@ function sayText(lines){
         });
         document.getElementById('textsp').innerHTML = result;
     } catch (e) {
-        console.WriteLine("Something went wrong while saying text");
+        console.error("Something went wrong while saying text");
         console.error(e);
-        console.WriteLine(lines);
+        console.error(lines);
     }
 }
 
@@ -556,7 +556,7 @@ function handleFlirt(listenerList){
     }
     listenerList.push([[flirt_l, flirtFormat(flirtquotes[low][randcounter])], "flirt_l"])
     incrandom();
-    if (Math.floor(Math.random() * 7) === 0 && locStack[0] !== "callher"){
+    if (randomInt(7) === 0 && locStack[0] !== "callher"){
         listenerList.push([[flirt_h, flirtFormat(flirtquotes[high][randcounter])], "flirt_h"]);
     } else {
         listenerList.push([[flirt_m, flirtFormat(flirtquotes[med][randcounter])], "flirt_m"]);

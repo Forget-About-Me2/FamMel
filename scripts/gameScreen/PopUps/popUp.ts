@@ -10,6 +10,7 @@ export class PopUp{
 
         this.popUpTitle.innerText = this._popupConfig.title;
         this.popUpText.innerHTML = this._popupConfig.content;
+        openPopUp();
     }
 
     constructor() {

@@ -7,6 +7,40 @@ let fuckingnow = 0; // You are in the middle of fucking.
 let champagnecounter = 0; // Number of glasses of champagne served.
 let drankChamp = 0; // Time since last champagne glass was drunk.
 
+function deepClone(value) {
+    return JSON.parse(JSON.stringify(value));
+}
+
+// Store initial primitive/array/object values and recursively init nested action objects.
+function objInit() {
+    this.initVal = {};
+    Object.keys(this).forEach(key => {
+        const value = this[key];
+        if (typeof value === "function" || key === "initVal")
+            return;
+        if (value && typeof value === "object" && typeof value.init === "function") {
+            value.init();
+            return;
+        }
+        this.initVal[key] = deepClone(value);
+    });
+}
+
+// Reset this object and nested objects back to their initialized state.
+function objReset() {
+    if (!this.initVal)
+        this.init();
+    Object.keys(this.initVal).forEach(key => {
+        this[key] = deepClone(this.initVal[key]);
+    });
+    Object.keys(this).forEach(key => {
+        const value = this[key];
+        if (key !== "initVal" && value && typeof value === "object" && typeof value.reset === "function") {
+            value.reset();
+        }
+    });
+}
+
 //This object is used to keep track of everything related to the sexActions
 let sexActions = {
     clothes:{

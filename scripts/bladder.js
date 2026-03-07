@@ -17,6 +17,10 @@ let bladsexlose = bladurge * 5; // Level where she can't control it during sex
 let maxtummy = 250; // Drink capacity of stomach
 let maxbeer = 500; // Beer capacity of stomach
 
+// Legacy global state used across script-style JS files.
+let tummy = 0;
+let bladder = 0;
+
 let bladDec = 1;
 let bladDespDec = 1;
 let seal = 1;
@@ -205,11 +209,11 @@ function showneed(curtext = []) {
             waitcounter = Math.max(Math.round(bladlose / 75), 12);
             curtext = displaygottavoc(curtext);
             // Otherwise, she may or may not show symptoms of having to go
-        } else if ((Math.random() * bladlose) < bladder) {
+        } else if ((gameRandom() * bladlose) < bladder) {
             curtext = displayneed(curtext);
         }
         // Otherwise, she may or may not show symptoms of having to go
-    } else if ((Math.random() * bladlose) < bladder) {
+    } else if ((gameRandom() * bladlose) < bladder) {
         curtext = displayneed(curtext);
     }
     changevenueflag = 0;
@@ -688,7 +692,7 @@ function bribeask() {
     let curtext = []
     let listenerList = [];
     curtext = printList(curtext, needs["bribeask"]);
-    if (!Math.floor(Math.random() * askholditcounter) && (
+    if (!randomInt(askholditcounter) && (
         (bladder >= bladlose && attraction > holditlosethresh) ||
         (bladder >= blademer && attraction > holditemerthresh) ||
         (bladder >= bladneed && attraction > holditneedthresh))) {

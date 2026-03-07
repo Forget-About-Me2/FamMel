@@ -80,7 +80,7 @@ class AnimationManager {
         }
 
         // Schedule next tick (faster when peeing)
-        const delay = subject.NowPeeing ? 250 : Math.floor(Math.random() * 750) + 250;
+        const delay = subject.NowPeeing ? 250 : randomInt(750) + 250;
         this.timerId = window.setTimeout(() => this.tick(), delay);
     }
 

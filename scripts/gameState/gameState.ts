@@ -1,4 +1,4 @@
-import {gameSettings} from "../settings/gameSettings";
+import {gameSettings, PersonSettings} from "../settings/gameSettings";
 import {getRandomValueFromNormalDistribution} from "../helperFiles/helperFunctions";
 import {Person} from "./Person";
 export enum LocationCategory {
@@ -15,8 +15,22 @@ export enum LocationCategory {
 
 
 class GameState {
-    Player: Person = new Person(500, 500, 200, 500);
-    Companion: dateNPC = new dateNPC(bladurge, girlname);
+    Player: Person = new Person({
+        bladderUrge: 500,
+        startBladderVolume: 500,
+        startTummyVolume: 200,
+        startMaxTummy: 500,
+        startMaxAlcohol: 500,
+        minPercentage: 70
+    });
+    Companion: dateNPC = new dateNPC({
+        bladderUrge: bladurge,
+        startBladderVolume: 0,
+        startTummyVolume: 0,
+        startMaxTummy: 300,
+        startMaxAlcohol: 750,
+        minPercentage: 70
+    }, girlname);
     LastMoney : number = 0;
     LastAttraction : number = 0;
     LastShyness : number = 0;
@@ -24,7 +38,7 @@ class GameState {
     Attraction: number = 10;
     Shyness : number = 90;
     readonly LocStack : GameLocation[] = [];
-    private _randCounter = Math.floor(Math.random() * gameSettings.RandCounterMax);
+    private _randCounter = randomInt(gameSettings.RandCounterMax);
 
     /**
      * Flag for having done the introduction
@@ -89,15 +103,23 @@ class GameState {
     }
 
     incRandom() {
-        this.randCounter = (this.RandCounter + Math.floor(Math.random() * 2) + 1) % 5;
+        this.randCounter = (this.RandCounter + randomInt(2) + 1) % 5;
     }
 
-    get CurrentLocation(): GameLocation {
+    get CurrentLocation(): GameLocation | undefined {
         return this.LocStack[0];
     }
 
+    setCurrentLocation(location: GameLocation): void {
+        if (this.LocStack.length === 0) {
+            this.LocStack.unshift(location);
+            return;
+        }
+        this.LocStack[0] = location;
+    }
+
     isCurrentLocation(category: LocationCategory) : boolean{
-        return this.LocStack[0].category === category;
+        return this.LocStack[0]?.category === category;
     }
 
     get Money(): number {
@@ -118,7 +140,7 @@ class GameState {
     }
 
     incRandCounter() : void {
-        const increment = 1 + Math.floor(Math.random() * 2);
+        const increment = 1 + randomInt(2);
         this._randCounter = (this._randCounter + increment) % gameSettings.RandCounterMax;
     }
 }
@@ -137,8 +159,8 @@ class dateNPC extends Person{
         return "<b>" + this.name + " gasps:&nbsp</b>"
     }
 
-    constructor(bladderUrge: number, name: string) {
-        super(bladderUrge);
+    constructor(settings: PersonSettings, name: string) {
+        super(settings);
         this.name = name;
     }
 }

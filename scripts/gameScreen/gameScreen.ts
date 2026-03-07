@@ -15,5 +15,23 @@ class GameScreen {
     }
 }
 
+class GameScreenFacade {
+    private _instance: GameScreen | null = null;
 
-export const gameScreen = new GameScreen();
+    private get instance(): GameScreen {
+        if (!this._instance) {
+            this._instance = new GameScreen();
+        }
+        return this._instance;
+    }
+
+    get StatusBar(): StatusBar {
+        return this.instance.StatusBar;
+    }
+
+    get PopUps(): PopUpManager {
+        return this.instance.PopUps;
+    }
+}
+
+export const gameScreen = new GameScreenFacade();

@@ -2,16 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-<!-- TODO sort out imports?-->
-    <script src="scripts/quotes.ts"></script>
-    <script src="scripts/debugMenu.ts"></script>
-    <script src="scripts/quotes.js"></script>
+    <!-- External libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>  <!-- markdown to html converter -->
+
+    <!-- Shims for missing globals (bridge between old JS and new TS) -->
+    <script src="scripts/shims.js"></script>
+
+    <!-- Core utilities (compiled from TS) -->
+    <script src="dist/quotes.js"></script>
+
+    <!-- Game JS files -->
     <script src="scripts/animation.js"></script>
     <script src="scripts/settings.js"></script>
     <script src="scripts/images.js"></script>
-    <script src="scripts/yourHome.ts"></script>
-    <script src="scripts/main.ts"></script>
-    <script src="scripts/objects.js"></script>
+    <script src="dist/backPackItems.js"></script>
     <script src="scripts/actions.js"></script>
     <script src="scripts/bladder.js"></script>
     <script src="scripts/yourbladder.js"></script>
@@ -28,9 +33,14 @@
     <script src="scripts/fuckHer.js"></script>
     <script src="scripts/pop-up.js"></script>
     <script src="scripts/validation.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>  <!-- markdown to html converter -->
-<!--    <script src="scripts/GameState.ts"></script>-->
+    <script src="dist/store.js"></script>
+
+    <!-- Module bundle (main.ts + gameState + gameScreen + settings + helpers) -->
+    <script src="dist/app.js"></script>
+
+    <!-- Debug menu (needs gameState and go from the bundle) -->
+    <script src="dist/debugMenu.js"></script>
+    <link rel="icon" type="image/png" href="icons/GitHub-Mark-32px.png">
     <title></title>
 </head>
 <body>
@@ -50,7 +60,6 @@
         </div>
     </div>
     <div id="titlebar">
-        <>
             <div id="engine">Game Engine 3.2a by drw</div>
             <div id="version">V0.5.4: 29 June 2025</div>
     </div>
@@ -102,48 +111,51 @@
         </table>
     </div>
 <script>
-
-    import {gameScreen, GameScreen} from "./scripts/gameScreen/gameScreen";
-    import {
-        ContentScreen,
-        DirectFunctionChoiceItems,
-        LocationChoiceItem
-    } from "./scripts/gameScreen/contentScreen";
-    import {showCredits, start} from "./scripts/main";
-    import homeScreenJson from "./Json/homeScreen.json";
-    import {GameLocation, LocationCategory} from "./scripts/gameState/gameState";
+    const fallbackHomeScreen = {
+        title: "Melissa Explains it All",
+        matureWarning: "This game contains mature content.",
+        followOnGithub: "Follow this project on github:",
+        Start: "Start",
+        Changelog: "Changelog",
+        Credits: "Credits"
+    };
 
     window.onerror = (errorMsg, url, lineNumber, column, errorObj) => {
-        const message = 'Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
-            + ' Column: ' + column + ' StackTrace: \n' + errorObj.stack;
-        setErrorPopup(message)
-    }
+        const stack = errorObj && errorObj.stack ? errorObj.stack : "";
+        const message = "Error: " + errorMsg + " Script: " + url + " Line: " + lineNumber
+            + " Column: " + column + " StackTrace: \n" + stack;
+        setErrorPopup(message);
+    };
+
     window.onunhandledrejection = (message) => {
         let reason = message.reason;
-        if (reason.stack !== undefined){
+        if (reason && reason.stack !== undefined) {
             reason = reason.stack;
         }
         setErrorPopup(reason);
+    };
+
+    function renderHomeScreen(homeScreenJson) {
+        document.title = homeScreenJson.title;
+        document.getElementById("home-title").textContent = homeScreenJson.title;
+        document.getElementById("home-mature").textContent = homeScreenJson.matureWarning;
+        document.getElementById("home-follow").textContent = homeScreenJson.followOnGithub;
+
+        const choicesElem = document.getElementById("choices");
+        choicesElem.innerHTML = ""
+            + "<li class='cListener choices-items-start' id='start'>" + homeScreenJson.Start + "</li>"
+            + "<li class='cListener choices-items-start' id='changeLog'>" + homeScreenJson.Changelog + "</li>"
+            + "<li class='cListener choices-items-start' id='credits'>" + homeScreenJson.Credits + "</li>";
+
+        document.getElementById("start").addEventListener("click", () => start());
+        document.getElementById("changeLog").addEventListener("click", () => gameScreen.PopUps.ChangeLog.displayPopup());
+        document.getElementById("credits").addEventListener("click", () => gameScreen.PopUps.Credits.displayPopup());
     }
 
-    document.title = homeScreenJson.title;
-    document.getElementById("home-title").textContent = homeScreenJson.title;
-    document.getElementById("home-mature").textContent = homeScreenJson.matureWarning;
-    document.getElementById("home-follow").textContent = homeScreenJson.followOnGithub;
-    const listenerList = [];
-    let html = "";
-    homeScreenJson.choices.forEach(item => html += cListenerString(item, item.tag));
-    document.getElementById("choices").innerHTML = html;
-    listenerList.forEach(item => {
-        document.getElementById(item[1]).classList.add("choices-items-start");
-    })
-
-    const contentScreen = new ContentScreen().KeepExistingHtml();
-    contentScreen.ChoicesList.push(new LocationChoiceItem(homeScreenJson.Start, new GameLocation(LocationCategory.Start, start)));
-    contentScreen.ChoicesList.push(new DirectFunctionChoiceItems(homeScreenJson.Changelog, gameScreen.PopUps.ChangeLog.displayPopup, "changeLog"));
-    contentScreen.ChoicesList.push(new DirectFunctionChoiceItems(homeScreenJson.Credits, gameScreen.PopUps.Credits.displayPopup, "credits"));
-    contentScreen.PrintContentToScreen()
-
+    fetch("Json/homeScreen.json")
+        .then(response => response.ok ? response.json() : fallbackHomeScreen)
+        .then(json => renderHomeScreen(json || fallbackHomeScreen))
+        .catch(() => renderHomeScreen(fallbackHomeScreen));
 </script>
 </body>
 </html>

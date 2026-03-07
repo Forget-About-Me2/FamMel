@@ -42,6 +42,6 @@ export function getRandomValueFromNormalDistribution(baseValue: number): number 
     }
     const strategy = new NormalDistributionStrategy();
     const distribution = strategy.generateDistribution(baseValue);
-    const randomIndex = Math.floor(Math.random() * distribution.length);
+    const randomIndex = randomInt(distribution.length);
     return distribution[randomIndex];
 }

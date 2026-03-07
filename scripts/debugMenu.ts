@@ -2,6 +2,7 @@
 //Functions are added as needed
 
 type DebugFunctions = {
+    help: () => void,
     allItems: () => void,
     fullStats: () => void,
     nightTime: () => void,
@@ -13,6 +14,10 @@ type DebugFunctions = {
 
 const Debug: DebugFunctions = function () {
 
+    function help() {
+        OpenDebugMenu();
+    }
+
 //Gives you all items
     function allItems() {
         Object.keys(backPackItems).forEach(key => backPackItems[key].value = 2);
@@ -20,8 +25,10 @@ const Debug: DebugFunctions = function () {
 
 //Makes her fully into you.
     function fullStats() {
-        attraction = 130;
-        shyness = 0;
+        gameState.Attraction = 130;
+        gameState.Shyness = 0;
+        setLegacyGlobalValue('attraction', 130);
+        setLegacyGlobalValue('shyness', 0);
     }
 
 //Sets the clock to night
@@ -75,11 +82,21 @@ const Debug: DebugFunctions = function () {
 }();
 
 let debugCounter = 0;
-GetRequiredElementById('version').onclick = function(){
-    debugCounter++;
-    if (debugCounter === 3) {
-        enableDebugMenuButton();
+let lastDebugMessage = "";
+
+function setDebugVersionHandler() {
+    GetRequiredElementById('version').onclick = function(){
+        debugCounter++;
+        if (debugCounter === 3) {
+            enableDebugMenuButton();
+        }
     }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setDebugVersionHandler);
+} else {
+    setDebugVersionHandler();
 }
 
 function enableDebugMenuButton(){
@@ -95,46 +112,101 @@ function OpenDebugMenu() {
     const content = GetRequiredElementById('pop-up-text');
     // Set up three columns in the pop-up content
     content.innerHTML = `
-        <div style="display: flex; gap: 16px;">
-            <div style="flex: 1;" id="debug-locations"></div>
-            <div style="flex: 1;" id="debug-functions"></div>
-            <div style="flex: 1;" id="debug-info"></div>
+        <div style="margin-bottom: 8px; font-size: 0.9rem;" id="debug-status">${lastDebugMessage}</div>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 260px;" id="debug-locations"></div>
+            <div style="flex: 1; min-width: 260px;" id="debug-functions"></div>
+            <div style="flex: 1; min-width: 260px;" id="debug-info"></div>
         </div>
     `;
+
+    const infoDiv = GetRequiredElementById('debug-info');
     const locationsDiv = GetRequiredElementById('debug-locations');
-    for (const location of gameState.LocStack) {
-        const locButton = document.createElement('button');
-        locButton.innerText = location;
-        locButton.onclick = function() {
-            go(location);
-        };
-        locButton.className = 'itembtn';
-        locationsDiv.appendChild(locButton)
-    }
+    CreateSectionHeading(locationsDiv, "Legacy Location Stack");
+    CreateLocationButtons(locationsDiv, locStack ?? []);
+
+    CreateSectionHeading(locationsDiv, "Typed Location Stack");
+    CreateTypedLocationButtons(locationsDiv, gameState.LocStack ?? []);
+
     const functionsDiv = GetRequiredElementById('debug-functions');
+    CreateSectionHeading(functionsDiv, "Debug Functions");
     Object.entries(Debug).forEach(([name, func]) => {
         const funcButton = document.createElement('button');
         funcButton.innerText = name;
         funcButton.onclick = function() {
             func();
-            infoDiv.innerText = `Executed: ${name}`;
+            SetDebugMessage(`Executed: ${name}`);
+            OpenDebugMenu();
         };
         funcButton.className = 'itembtn';
+        funcButton.style.margin = '2px';
         functionsDiv.appendChild(funcButton);
     });
-    const infoDiv = GetRequiredElementById('debug-info');
+
+    CreateSectionHeading(functionsDiv, "Quick Actions");
+    CreateQuickActions(functionsDiv);
+
+    CreateSectionHeading(infoDiv, "Core State");
     const table = document.createElement('table');
-    CreatePersonRows(gameState.Date, "Date", table)
+    CreateValueRow(table, "Random Seed", getRandomSeed().toString());
+    CreateValueRow(table, "Money", gameState.Money.toString());
+    CreateValueRow(table, "Attraction", gameState.Attraction.toString());
+    CreateValueRow(table, "Shyness", gameState.Shyness.toString());
+    CreateValueRow(table, "Legacy Attraction", getLegacyGlobalValue('attraction')?.toString?.() ?? "N/A");
+    CreateValueRow(table, "Legacy Shyness", getLegacyGlobalValue('shyness')?.toString?.() ?? "N/A");
+    CreateValueRow(table, "Game Time", gameState.Time.timeString);
+    CreateValueRow(table, "Current Typed Location", GetTypedLocationLabel(gameState.CurrentLocation));
+    CreateValueRow(table, "Legacy Stack (full)", (locStack ?? []).join(" -> ") || "(empty)");
+    CreateValueRow(table, "Typed Stack (full)", GetTypedLocationStackLabel(gameState.LocStack ?? []));
+    CreatePersonRows(gameState.Companion, "Companion", table)
     CreatePersonRows(gameState.Player, "Player", table)
     infoDiv.appendChild(table);
+
+    CreateSectionHeading(infoDiv, "State Dump");
+    const dump = document.createElement('pre');
+    dump.style.maxHeight = '260px';
+    dump.style.overflow = 'auto';
+    dump.style.whiteSpace = 'pre-wrap';
+    dump.style.wordBreak = 'break-word';
+    dump.textContent = JSON.stringify(BuildDebugDump(), null, 2);
+    infoDiv.appendChild(dump);
 }
 
-function CreatePersonRows(person: person, tag : string, table: HTMLTableElement){
+function CreateValueRow(table: HTMLTableElement, label: string, value: string) {
+    const row = table.insertRow();
+    row.insertCell().innerText = label;
+    row.insertCell().innerText = value;
+}
+
+function CreatePersonRows(person: person | undefined, tag : string, table: HTMLTableElement){
     let row = table.insertRow();
     const cell = row.insertCell();
     cell.innerHTML = `<b>${tag}</b>`;
     cell.colSpan = 2;
     cell.style.alignItems = 'flex-center';
+
+    if (!person) {
+        row = table.insertRow();
+        row.insertCell().innerText = "State";
+        row.insertCell().innerText = "Unavailable";
+        return;
+    }
+
+    row = table.insertRow();
+    row.insertCell().innerText = "Bladder";
+    row.insertCell().innerText = (person.Bladder ?? "N/A").toString();
+    row = table.insertRow();
+    row.insertCell().innerText = "Tummy";
+    row.insertCell().innerText = (person.Tummy ?? "N/A").toString();
+    row = table.insertRow();
+    row.insertCell().innerText = "Max Tummy";
+    row.insertCell().innerText = (person.MaxTummy ?? "N/A").toString();
+    row = table.insertRow();
+    row.insertCell().innerText = "Alcohol In Tummy";
+    row.insertCell().innerText = (person.AlcoholInTummy ?? "N/A").toString();
+    row = table.insertRow();
+    row.insertCell().innerText = "Now Peeing";
+    row.insertCell().innerText = (person.NowPeeing ?? "N/A").toString();
     row = table.insertRow();
     row.insertCell().innerText = "Bladder Urge";
     row.insertCell().innerText = person.bladderUrge.toString();
@@ -153,4 +225,195 @@ function CreatePersonRows(person: person, tag : string, table: HTMLTableElement)
     row = table.insertRow();
     row.insertCell().innerText = "Bladder sex lose";
     row.insertCell().innerText = person.bladderSexLose.toString();
+}
+
+function SetDebugMessage(message: string) {
+    lastDebugMessage = message;
+}
+
+function CreateSectionHeading(container: HTMLElement, title: string) {
+    const heading = document.createElement('h4');
+    heading.innerText = title;
+    heading.style.margin = '6px 0';
+    container.appendChild(heading);
+}
+
+function CreateLocationButtons(container: HTMLElement, stack: string[]) {
+    if (!stack.length) {
+        const empty = document.createElement('div');
+        empty.innerText = '(empty)';
+        container.appendChild(empty);
+        return;
+    }
+
+    stack.forEach((locationTag, index) => {
+        const locButton = document.createElement('button');
+        locButton.innerText = `${index}: ${locationTag}`;
+        locButton.onclick = function() {
+            go(locationTag);
+            SetDebugMessage(`Teleported to legacy location: ${locationTag}`);
+            OpenDebugMenu();
+        };
+        locButton.className = 'itembtn';
+        locButton.style.display = 'block';
+        locButton.style.margin = '2px 0';
+        container.appendChild(locButton);
+    });
+}
+
+function CreateTypedLocationButtons(container: HTMLElement, stack: any[]) {
+    if (!stack.length) {
+        const empty = document.createElement('div');
+        empty.innerText = '(empty)';
+        container.appendChild(empty);
+        return;
+    }
+
+    stack.forEach((location, index) => {
+        const locButton = document.createElement('button');
+        locButton.innerText = `${index}: ${GetTypedLocationLabel(location)}`;
+        locButton.onclick = function() {
+            go(location);
+            SetDebugMessage(`Teleported to typed location: ${GetTypedLocationLabel(location)}`);
+            OpenDebugMenu();
+        };
+        locButton.className = 'itembtn';
+        locButton.style.display = 'block';
+        locButton.style.margin = '2px 0';
+        container.appendChild(locButton);
+    });
+}
+
+function CreateQuickActions(container: HTMLElement) {
+    CreateQuickActionButton(container, 'Set Time 22:00', function () {
+        gameState.Time.hour = 22;
+        gameState.Time.minute = 0;
+        hour = 22;
+        SetDebugMessage('Time set to 22:00');
+    });
+
+    CreateQuickActionButton(container, 'Add 1 Hour', function () {
+        gameState.Time.hour = (gameState.Time.hour + 1) % 24;
+        hour = gameState.Time.hour;
+        SetDebugMessage(`Time advanced to ${gameState.Time.timeString}`);
+    });
+
+    CreateQuickActionButton(container, 'Companion Fill Bladder', function () {
+        if (!gameState.Companion) return;
+        gameState.Companion.Bladder = gameState.Companion.bladderLose + 50;
+        SetDebugMessage('Companion bladder set near lose threshold');
+    });
+
+    CreateQuickActionButton(container, 'Companion Empty Bladder', function () {
+        if (!gameState.Companion) return;
+        gameState.Companion.Bladder = 0;
+        gameState.Companion.pee();
+        SetDebugMessage('Companion bladder emptied');
+    });
+
+    CreateQuickActionButton(container, 'Player Fill Bladder', function () {
+        if (!gameState.Player) return;
+        gameState.Player.Bladder = gameState.Player.bladderLose + 50;
+        SetDebugMessage('Player bladder set near lose threshold');
+    });
+
+    CreateQuickActionButton(container, 'Player Empty Bladder', function () {
+        if (!gameState.Player) return;
+        gameState.Player.Bladder = 0;
+        gameState.Player.pee();
+        SetDebugMessage('Player bladder emptied');
+    });
+
+    CreateQuickActionButton(container, 'Money +100', function () {
+        gameState.ReceiveMoney(100);
+        SetDebugMessage('Added 100 money');
+    });
+
+    CreateQuickActionButton(container, 'Money -100', function () {
+        gameState.PayAmount(100);
+        SetDebugMessage('Removed 100 money');
+    });
+}
+
+function CreateQuickActionButton(container: HTMLElement, label: string, action: () => void) {
+    const button = document.createElement('button');
+    button.innerText = label;
+    button.className = 'itembtn';
+    button.style.display = 'block';
+    button.style.margin = '2px 0';
+    button.onclick = function () {
+        action();
+        OpenDebugMenu();
+    };
+    container.appendChild(button);
+}
+
+function GetTypedLocationLabel(location: any): string {
+    if (!location) return '(none)';
+    const category = location.category ?? '?';
+    const functionName = typeof location.function === 'function' ? (location.function.name || 'anonymous') : 'unknown';
+    return `${functionName} (category ${category})`;
+}
+
+function GetTypedLocationStackLabel(stack: any[]): string {
+    if (!stack.length) return '(empty)';
+    return stack.map(GetTypedLocationLabel).join(' -> ');
+}
+
+function BuildDebugDump() {
+    return {
+        randomSeed: getRandomSeed(),
+        gameTime: {
+            hour: gameState.Time.hour,
+            minute: gameState.Time.minute,
+            text: gameState.Time.timeString,
+            totalTime: gameState.Time.totalTime
+        },
+        resources: {
+            money: gameState.Money,
+            attraction: gameState.Attraction,
+            shyness: gameState.Shyness,
+            legacyAttraction: getLegacyGlobalValue('attraction'),
+            legacyShyness: getLegacyGlobalValue('shyness')
+        },
+        locationStack: {
+            legacy: [...(locStack ?? [])],
+            typed: (gameState.LocStack ?? []).map((location: any) => ({
+                category: location?.category,
+                functionName: typeof location?.function === 'function' ? (location.function.name || 'anonymous') : 'unknown'
+            }))
+        },
+        companion: {
+            bladder: gameState.Companion?.Bladder,
+            bladderUrge: gameState.Companion?.bladderUrge,
+            bladderNeed: gameState.Companion?.bladderNeed,
+            bladderEmer: gameState.Companion?.bladderEmer,
+            bladderLose: gameState.Companion?.bladderLose,
+            tummy: gameState.Companion?.Tummy,
+            alcoholInTummy: gameState.Companion?.AlcoholInTummy,
+            nowPeeing: gameState.Companion?.NowPeeing
+        },
+        player: {
+            bladder: gameState.Player?.Bladder,
+            bladderUrge: gameState.Player?.bladderUrge,
+            bladderNeed: gameState.Player?.bladderNeed,
+            bladderEmer: gameState.Player?.bladderEmer,
+            bladderLose: gameState.Player?.bladderLose,
+            tummy: gameState.Player?.Tummy,
+            alcoholInTummy: gameState.Player?.AlcoholInTummy,
+            nowPeeing: gameState.Player?.NowPeeing
+        }
+    };
+}
+
+function getLegacyGlobalValue(name: string): unknown {
+    const store = globalThis as Record<string, unknown>;
+    return store[name];
+}
+
+function setLegacyGlobalValue(name: string, value: unknown): void {
+    const store = globalThis as Record<string, unknown>;
+    if (name in store) {
+        store[name] = value;
+    }
 }

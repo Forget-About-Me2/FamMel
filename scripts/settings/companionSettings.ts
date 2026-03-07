@@ -5,13 +5,13 @@ import {Outfit} from "../models/outfit";
 
 export interface CompanionSettings extends PersonSettings {
     FavouriteMovie: Movie;
-    Outfit: Outfit.Jeans
+    Outfit?: Outfit;
 }
 
 /*
  * Note that the descriptions of the girls here are not actually in the game *yet* they're more ideas for characterization later on.
  */
-export const baseCompanionDefaultSettings = new Record<BaseCompanion, CompanionSettings> =
+export const baseCompanionDefaultSettings: Record<string, CompanionSettings> =
     {
         /**
          * Jennifer is blonde.
@@ -60,7 +60,7 @@ export const baseCompanionDefaultSettings = new Record<BaseCompanion, CompanionS
          */
         Karen:{
             FavouriteMovie: Movie.ControlYourself,
-            bladerUrge: 200,
+            bladderUrge: 200,
             startBladderVolume: 390,
             startTummyVolume: 0,
             startMaxTummy: 100,

@@ -30,42 +30,43 @@ public class PickherupTest {
   }
   [Test]
   public void pickherup() {
-    driver.Navigate().GoToUrl("http://localhost:8080");
+    driver.Navigate().GoToUrl("http://localhost:8080?seed=20260307");
     driver.Manage().Window.Size = new System.Drawing.Size(1268, 1042);
-    driver.FindElement(By.CssSelector("pre:nth-child(4)")).Click();
-    driver.FindElement(By.Id("start")).Click();
-    driver.FindElement(By.Id("close-pop-up")).Click();
-    driver.FindElement(By.LinkText("Start the game.")).Click();
-    driver.FindElement(By.LinkText("Call her on the phone")).Click();
-    driver.FindHighestFlirt().Click();
-    driver.FindElement(By.LinkText("Continue...")).Click();
-    driver.FindHighestFlirt().Click();
-    driver.FindElement(By.LinkText("Continue...")).Click();
-    driver.FindElement(By.CssSelector("i")).Click();
-    driver.FindElement(By.LinkText("Go to the store")).Click();
-    driver.FindElement(By.LinkText("A bottle of fancy champagne ($50)")).Click();
-    driver.FindElement(By.Id("buy")).Click();
-    driver.FindElement(By.LinkText("Continue...")).Click();
-    driver.FindElement(By.LinkText("A pair of sexy panties ($30)")).Click();
-    driver.FindElement(By.Id("buy")).Click();
-    driver.FindElement(By.Id("textsp")).Click();
-    driver.FindElement(By.Id("textsp")).Click();
+    driver.SetGameSeed(20260307);
+    driver.ClickWhenInteractable(By.CssSelector("pre:nth-child(4)"));
+    driver.ClickWhenInteractable(By.Id("start"));
+    driver.ClickWhenInteractable(By.Id("close-pop-up"));
+    driver.ClickWhenInteractable(By.LinkText("Start the game."));
+    driver.ClickWhenInteractable(By.LinkText("Call her on the phone"));
+    driver.ClickWhenInteractable(MelissaBy.Flirt(FlirtLevel.High));
+    driver.ClickWhenInteractable(By.LinkText("Continue..."));
+    driver.ClickWhenInteractable(MelissaBy.Flirt(FlirtLevel.High));
+    driver.ClickWhenInteractable(By.LinkText("Continue..."));
+    driver.ClickWhenInteractable(By.CssSelector("i"));
+    driver.ClickWhenInteractable(By.LinkText("Go to the store"));
+    driver.ClickWhenInteractable(By.LinkText("A bottle of fancy champagne ($50)"));
+    driver.ClickWhenInteractable(By.Id("buy"));
+    driver.ClickWhenInteractable(By.LinkText("Continue..."));
+    driver.ClickWhenInteractable(By.LinkText("A pair of sexy panties ($30)"));
+    driver.ClickWhenInteractable(By.Id("buy"));
+    driver.ClickWhenInteractable(By.Id("textsp"));
+    driver.ClickWhenInteractable(By.Id("textsp"));
     {
       var element = driver.FindElement(By.Id("textsp"));
       Actions builder = new Actions(driver);
       builder.DoubleClick(element).Perform();
     }
-    driver.FindElement(By.LinkText("Continue...")).Click();
-    driver.FindElement(By.LinkText("Nothing")).Click();
-    driver.FindElement(By.LinkText("Call her on the phone")).Click();
-    driver.FindHighestFlirt().Click();
-    driver.FindElement(By.Id("textsp")).Click();
-    driver.FindElement(By.LinkText("Continue...")).Click();
-    driver.FindHighestFlirt().Click();
-    driver.FindElement(By.LinkText("Continue...")).Click();
-    driver.FindElement(By.CssSelector("i")).Click();
-    driver.FindElement(By.Id("textsp")).Click();
-    driver.FindElement(By.LinkText("Pick her up")).Click();
-    driver.FindElement(By.Id("leavehm")).Click();
+    driver.ClickWhenInteractable(By.LinkText("Continue..."));
+    driver.ClickWhenInteractable(By.LinkText("Nothing"));
+    driver.ClickWhenInteractable(By.LinkText("Call her on the phone"));
+    driver.ClickWhenInteractable(MelissaBy.Flirt(FlirtLevel.High));
+    driver.ClickWhenInteractable(By.Id("textsp"));
+    driver.ClickWhenInteractable(By.LinkText("Continue..."));
+    driver.ClickWhenInteractable(MelissaBy.Flirt(FlirtLevel.High));
+    driver.ClickWhenInteractable(By.LinkText("Continue..."));
+    driver.ClickWhenInteractable(By.CssSelector("i"));
+    driver.ClickWhenInteractable(By.Id("textsp"));
+    driver.ClickWhenInteractable(By.LinkText("Pick her up"));
+    driver.ClickWhenInteractable(By.Id("leavehm"));
   }
 }

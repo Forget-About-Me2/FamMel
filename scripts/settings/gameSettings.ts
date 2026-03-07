@@ -87,14 +87,13 @@ class CompanionSettings {
     BaseCompanion: baseCompanion = baseCompanion.Laura
     IsCustomCompanion: boolean = false
 
-    CustomCompanionSettings : CompanionSettings = {
+    CustomCompanionSettings : PersonSettings = {
         bladderUrge: 250,
         minPercentage: 75,
         startBladderVolume: 300,
         startMaxTummy: 250,
         startMaxAlcohol: 1000,
         startTummyVolume: 100,
-        FavouriteMovie: Movie.TwoLitres
     };
 
     /**

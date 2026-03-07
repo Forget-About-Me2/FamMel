@@ -113,7 +113,7 @@ function barResp(choice){
 }
 
 function sellPanties(){
-    const price = 20 + Math.floor(Math.random() * 20);
+    const price = 20 + randomInt(20);
     sayText(["BARTENDER: I'll give you $" + price + " for those."]);
     money += price;
     backPackItems.wetPanties.value -= 1;

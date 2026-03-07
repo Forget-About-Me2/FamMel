@@ -17,3 +17,21 @@ I.e. to get all items you can use
 `Debug.allItems()`
 
 To get a list of all functions use `Debug.help()`
+
+# Deterministic Testing
+Randomness can now be seeded for stable integration tests during refactors.
+
+Use either approach:
+
+* URL query parameter: `http://localhost:8080?seed=12345`
+* Runtime call from tests/devtools: `setRandomSeed(12345)`
+
+Reset to a fresh random seed with:
+
+* `clearRandomSeed()`
+
+Notes:
+
+* The game now always starts with a random seed.
+* `?seed=12345` (or `setRandomSeed(12345)`) overrides that startup seed.
+* Seeded randomness now drives gameplay and animation randomness used by both TS and legacy JS files.

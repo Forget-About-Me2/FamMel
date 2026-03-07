@@ -1,20 +1,19 @@
 {
   "compilerOptions": {
     "target": "ES2024",
-    "module": "commonjs",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
     "skipLibCheck": true,
-    "allowJs": true,
+    "allowJs": false,
     "sourceMap": true,
-    "include": [
-      "./scripts"
-    ],
-    "exclude": [
-      "./scripts/gameState/gameState.ts"
-    ],
-    "outDir": "./dist",
+    "noEmit": true,
     "resolveJsonModule": true
-  }
+  },
+  "include": ["./scripts/**/*.ts"],
+  "exclude": ["./node_modules", "./dist"]
 }

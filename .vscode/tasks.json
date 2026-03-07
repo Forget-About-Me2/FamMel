@@ -1,0 +1,90 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "tsc: build",
+      "type": "shell",
+      "command": "node esbuild.config.mjs",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "tsc: watch",
+      "type": "shell",
+      "command": "node esbuild.config.mjs --watch",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "a^",
+          "message": 0
+        },
+        "background": {
+          "activeOnStart": true,
+          "endsPattern": "Watching for changes\\.\\.\\."
+        }
+      }
+    },
+    {
+      "label": "typecheck",
+      "type": "shell",
+      "command": "npx tsc -p . --noEmit",
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "dev: start",
+      "type": "shell",
+      "command": "npm run dev",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "a^",
+          "message": 0
+        },
+        "background": {
+          "activeOnStart": true,
+          "endsPattern": "Watching for changes\\.\\.\\.|Serving \\\".*\\\" at http://"
+        }
+      }
+    },
+    {
+      "label": "tests: userflow",
+      "type": "shell",
+      "command": "dotnet",
+      "args": [
+        "test",
+        "UserFlowTests/UserFlowTests/UserFlowTests.csproj"
+      ],
+      "group": "test",
+      "problemMatcher": [
+        "$msCompile"
+      ]
+    },
+    {
+      "label": "tests: userflow (filter)",
+      "type": "shell",
+      "command": "dotnet",
+      "args": [
+        "test",
+        "UserFlowTests/UserFlowTests/UserFlowTests.csproj",
+        "--filter",
+        "$(input:testFilter)"
+      ],
+      "group": "test",
+      "problemMatcher": [
+        "$msCompile"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "testFilter",
+      "type": "promptString",
+      "description": "dotnet test --filter value (example: FullyQualifiedName~RandomSeedDeterminismTest)"
+    }
+  ]
+}
+

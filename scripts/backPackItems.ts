@@ -18,6 +18,18 @@ interface IBackpackItem {
     description?: string;
     quote?: string;
     shyness?: number;
+    volume?: number;
+    sheDrank?: number;
+    yDrank?: number;
+    drankBeer?: number;
+    tumInc?: number;
+    drinkQuote?: string;
+    cDrinkQuote?: string[];
+    cYouDrinkQuote?: string[];
+    cTogDrinkQuote?: string[];
+    yDrinkQuote?: string;
+    bottles?: number[];
+    [key: string]: any;
 }
 
 interface IDrink extends IBackpackItem
@@ -34,7 +46,7 @@ interface IDrink extends IBackpackItem
 }
 
 interface IContainer extends IBackpackItem{
-    volume: number;
+    volume?: number;
     peed?: number;
 }
 
@@ -109,6 +121,7 @@ const backPackItems: { [key: string]: IBackpackItem } = {
         bpName: "Vase",
         price: 30,
         value: 0,
+        volume: 1500,
         peed: 0,
         functions: [
             [function () {
@@ -152,6 +165,7 @@ const backPackItems: { [key: string]: IBackpackItem } = {
         bpName: "Paper Towels",
         price: 10,
         value: 0,
+        volume: 200,
         peed: 0,
         attrThresh: 50,
         attraction: 5,
@@ -442,7 +456,7 @@ function buyItem(item){
     formatList.push([]);
     html = formatAll(html, formatList);
     setText(html);
-    const itemElem = document.getElementById(item+"Am");
+    const itemElem = document.getElementById(item+"Am") as HTMLInputElement;
     let listenerList = [];
     if (item === "beer"){
         const i = randomIndex(bar["barQuotes"]);
@@ -466,7 +480,7 @@ function buyItem(item){
         if (price < 0)
             moneyElem.innerText = "NaN";
         else
-            moneyElem.innerText = price;
+            moneyElem.innerText = price.toString();
     });
     listenerList.push([[function(){
         buyItem2(item, value, price);
@@ -560,8 +574,9 @@ function displaydrank(curtext){
 }
 
 function displayDrankItem(item){
-    if (item.hasOwnProperty("shedrank")){
-        return displaypos(item, item.shedrank);
+    const backpackItem = backPackItems[item];
+    if (backpackItem && backpackItem.hasOwnProperty("sheDrank")){
+        return displaypos(backpackItem, backpackItem.sheDrank);
     }
     return ""
 }
@@ -704,7 +719,7 @@ function createItemButtonList(){
             curString += "')\" class=\"itembtn\" id=\"";
             curString += obj[i];
             curString += "\">";
-            curString += curobj.bpname;
+            curString += curobj.bpName;
             curString += "</button> \n";
             itemlist.push(curString)
         }
@@ -720,7 +735,7 @@ function selectitem(selecteditem){
     clickedbtn.style.color = "#e52222";
     if (previousbtn)
         previousbtn.removeAttribute("style");
-    let tobeprinted = "<p class='title'>"+ clickedObj.bpname +"</p>";
+    let tobeprinted = "<p class='title'>"+ clickedObj.bpName +"</p>";
     if(clickedObj.owned)
         tobeprinted += "<b><i>You have " + getAmountOwned(clickedObj) + "</i></b><br><br>";
     tobeprinted += clickedObj.description.format([girlname]);
@@ -729,9 +744,9 @@ function selectitem(selecteditem){
             //If the girl isn't with you, you can't ask her to use a certain item
             if (!playOnly.includes(locStack[0]))
                 printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
-            if (playerbladder && clickedObj.hasOwnProperty("yfunctions")){
+            if (playerbladder && clickedObj.hasOwnProperty("yFunctions")){
                 printAllChoicesList([], clickedObj.yFunctions).forEach(item => tobeprinted += item);
-                if (clickedObj.hasOwnProperty("togfunctions") && !playOnly.includes(locStack[0]) && clickedObj.value > 1)
+                if (clickedObj.hasOwnProperty("togFunctions") && !playOnly.includes(locStack[0]) && clickedObj.value > 1)
                     printAllChoicesList([], clickedObj.togFunctions).forEach(item => tobeprinted += item);
             }
         } else if (clickedObj.hasOwnProperty("locations") && clickedObj.locations.includes(locStack[0]))
@@ -746,7 +761,7 @@ function getAmountOwned(selected) {
     let number = selected.value;
     let description = selected.owned
     let formatlist = [number.toString()];
-    if (selected.bpname === "Champagne"){
+    if (selected.bpName === "Champagne"){
         if (selected.bottles[0] === 0){
             let i = 0;
             while (i < selected.bottles.length && selected.bottles[i] === 0) {
@@ -802,19 +817,19 @@ function drinkNow(item) {
         let drink = backPackItems[item];
         if (bladder > blademer && shyness < 90 && brokeice) {
             curtext.push(pickrandom(needs["drinkquote"]));
-            curtext.push("She drinks the " + (drink.bpname.toLowerCase()) + ".");
+            curtext.push("She drinks the " + (drink.bpName.toLowerCase()) + ".");
         } else {
-            if (drink.hasOwnProperty("cdrinkquote")) {
+            if (drink.hasOwnProperty("cDrinkQuote")) {
                 curtext = printList(curtext, addGirlTalk(drink.cDrinkQuote));
             } else {
-                curtext.push(girltalk + drink.drinkquote);
-                curtext.push("She drinks the " + drink.bpname.toLowerCase() + ".");
+                curtext.push(girltalk + drink.drinkQuote);
+                curtext.push("She drinks the " + drink.bpName.toLowerCase() + ".");
             }
         }
         tummy += drink.volume;
         drink.value -= 1;
         drink.sheDrank += 1;
-        if (drink.hasOwnProperty("drankbeer")){
+        if (drink.hasOwnProperty("drankBeer")){
             drankbeer += drink.drankBeer;
         }
         if (drink.hasOwnProperty("attraction")){
@@ -823,7 +838,7 @@ function drinkNow(item) {
         if (drink.hasOwnProperty("shyness")){
             shyness -= drink.shyness;
         }
-        if (drink.hasOwnProperty("tuminc")){
+        if (drink.hasOwnProperty("tumInc")){
             if (maxtummy < 1250) {
                 maxtummy += drink.tumInc;
                 maxbeer += drink.tumInc;
@@ -841,24 +856,24 @@ function yDrinkNow(item){
     let drink = backPackItems[item];
     let curtext = [];
     if (item !== "cocktail" && (yourtummy > ymaxtummy && yourtummy > ymaxbeer)){
-        curtext.push("You consider drinking the " + drink.bpname.toLowerCase() + ", but you have drunk way too much already.");
+        curtext.push("You consider drinking the " + drink.bpName.toLowerCase() + ", but you have drunk way too much already.");
     } else {
-        if (drink.hasOwnProperty("cydrinkquote")) {
+        if (drink.hasOwnProperty("cYouDrinkQuote")) {
             curtext = printList(curtext, drink.cYouDrinkQuote);
         } else {
-            if (drink.hasOwnProperty("ydrinkquote"))
+            if (drink.hasOwnProperty("yDrinkQuote"))
                 curtext.push(drink.yDrinkQuote);
             else
-                curtext.push("<b>YOU: </b>" + drink.drinkquote);
-            curtext.push("You drink the " + drink.bpname.toLowerCase() + ".");
+                curtext.push("<b>YOU: </b>" + drink.drinkQuote);
+            curtext.push("You drink the " + drink.bpName.toLowerCase() + ".");
         }
         yourtummy += drink.volume;
         drink.value -= 1;
         drink.yDrank += 1;
-        if (drink.hasOwnProperty("drankbeer")){
+        if (drink.hasOwnProperty("drankBeer")){
             ydrankbeer += drink.drankBeer;
         }
-        if (drink.hasOwnProperty("tuminc")){
+        if (drink.hasOwnProperty("tumInc")){
             if (ymaxtummy < 1250) {
                 ymaxtummy += drink.tumInc;
                 ymaxbeer += drink.tumInc;
@@ -903,7 +918,7 @@ function champagneNow() {
             curtext = showneed(curtext);
             curtext.push(pickrandom(drinklines["fillChampBad"]));
             champagnecounter = 6;
-            curtext = printList(drinklines[5]);
+            curtext = printList(curtext, drinklines[5]);
         }
     } else if (backPackItems["champ-glass"].value >= 2) {
         curtext.push("You get out the glasses and champagne and fill up both glasses");
@@ -941,13 +956,13 @@ function drinkTogether(item){
         let drink = backPackItems[item];
         if (bladder > blademer && shyness < 90 && brokeice) {
             curtext.push(pickrandom(needs["drinkquote"]));
-            curtext.push("You both drink your " + (drink.bpname.toLowerCase()) + ".");
+            curtext.push("You both drink your " + (drink.bpName.toLowerCase()) + ".");
         } else {
-            if (drink.hasOwnProperty("ctdrinkquote")) {
+            if (drink.hasOwnProperty("cTogDrinkQuote")) {
                 curtext = printList(curtext, addGirlTalk(drink.cTogDrinkQuote));
             } else {
-                curtext.push(girltalk + drink.drinkquote);
-                curtext.push("After a toast you both drink your " + drink.bpname.toLowerCase() + ".");
+                curtext.push(girltalk + drink.drinkQuote);
+                curtext.push("After a toast you both drink your " + drink.bpName.toLowerCase() + ".");
             }
         }
         tummy += drink.volume;
@@ -955,7 +970,7 @@ function drinkTogether(item){
         drink.value -= 2;
         drink.sheDrank += 1;
         drink.yDrank += 1;
-        if (drink.hasOwnProperty("drankbeer")){
+        if (drink.hasOwnProperty("drankBeer")){
             drankbeer += drink.drankBeer;
             ydrankbeer += drink.drankBeer;
         }
@@ -965,7 +980,7 @@ function drinkTogether(item){
         if (drink.hasOwnProperty("shyness")){
             shyness -= drink.shyness;
         }
-        if (drink.hasOwnProperty("tuminc")){
+        if (drink.hasOwnProperty("tumInc")){
             if (maxtummy < 1000) {
                 maxtummy += drink.tumInc;
                 maxbeer += drink.tumInc;

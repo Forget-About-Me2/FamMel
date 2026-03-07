@@ -87,6 +87,6 @@ function anim8() {
         displaypix(pixfname);
     }
 
-    const delay = nowpeeing ? 250 : Math.floor(Math.random() * 750) + 250;
+    const delay = nowpeeing ? 250 : randomInt(750) + 250;
     setTimeout(anim8, delay);
 }

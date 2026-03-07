@@ -1,4 +1,6 @@
 import yourHomeJson from "../Json/yourhome.json"
+import { gameState, LocationCategory } from "./gameState/gameState";
+import { gameSettings } from "./settings/gameSettings";
 
 //This contains everything you can do from your home before you pick-up your date
 
@@ -9,11 +11,11 @@ import yourHomeJson from "../Json/yourhome.json"
 export function yourHome() {
     allowItems = 1;
     let curText: string[] =[];
-    if (didintro === 0) {
-        didintro = 1;
-        curText.concat(yourHomeJson.intro);
+    if (!gameState.DidIntro) {
+        gameState.DidIntro = true;
+        curText.push(...yourHomeJson.intro);
     } else {
-        if (gameState.CurrentLocation !== "yourhome"){
+        if (!gameState.isCurrentLocation(LocationCategory.YourHome)){
             locationMSetup("yourhome", "yourhome");
         }
     }
@@ -22,7 +24,7 @@ export function yourHome() {
     const listenerList : [[Function, string], string][] = [];
     listenerList.push([[goStore, yourHomeJson.goStore], "goStore"]);
     listenerList.push([[callHer, yourHomeJson.callHer], "callHer"]);
-    if (playerbladder) {
+    if (gameSettings.PlayerBladder) {
         if (yourbladder > yourbladlose) {
             wetyourself();
             return;

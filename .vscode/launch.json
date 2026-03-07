@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    
+    
+    {
+      "name": "Launch Chrome (Dev Server)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://127.0.0.1:8080/index.html",
+      "runtimeArgs": ["--disable-extensions"],
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "dev: start"
+    },
+    {
+      "name": "Attach to Chrome",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}"
+    }
+    ,
+    {
+      "name": "Launch Vivaldi (Dev Server)",
+      "type": "chrome",
+      "request": "launch",
+      "runtimeExecutable": "C:\\Program Files\\Vivaldi\\Application\\vivaldi.exe",
+      "userDataDir": "${workspaceFolder}\\.vscode\\vivaldi-profile",
+      "url": "http://127.0.0.1:8080/index.html",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "dev: start"
+    }
+  ]
+}
