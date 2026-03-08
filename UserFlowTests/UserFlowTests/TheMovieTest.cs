@@ -33,7 +33,7 @@ public class TheMovieTest {
     ");
 
     driver.ClickWhenInteractable(By.Id("start"));
-    driver.ClickWhenInteractable(By.Id("close-pop-up"));
+    driver.DismissDisclaimerPopupIfPresent();
     driver.ClickWhenInteractable(By.LinkText("Start the game."));
 
     WaitForGameDataReady();

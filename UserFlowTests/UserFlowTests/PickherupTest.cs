@@ -27,7 +27,7 @@ public class PickherupTest {
     driver.SetGameSeed(20260307);
     driver.ClickWhenInteractable(By.CssSelector("pre:nth-child(4)"));
     driver.ClickWhenInteractable(By.Id("start"));
-    driver.ClickWhenInteractable(By.Id("close-pop-up"));
+    driver.DismissDisclaimerPopupIfPresent();
     driver.ClickWhenInteractable(By.LinkText("Start the game."));
     driver.ClickWhenInteractable(By.LinkText("Call her on the phone"));
     driver.ClickWhenInteractable(MelissaBy.Flirt(FlirtLevel.Medium));

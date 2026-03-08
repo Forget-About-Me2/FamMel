@@ -81,7 +81,7 @@ public class SceneIntegrationSmokeTests
         ");
 
         _driver.ClickWhenInteractable(By.Id("start"));
-        _driver.ClickWhenInteractable(By.Id("close-pop-up"));
+        _driver.DismissDisclaimerPopupIfPresent();
         _driver.ClickWhenInteractable(By.LinkText("Start the game."));
         WaitForGameDataReady();
     }

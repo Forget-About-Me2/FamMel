@@ -1,4 +1,5 @@
 import { gameState, LocationCategory } from "./gameState/gameState";
+import { getLegacyBladderThresholds } from "./gameState/bladderThresholds";
 import { gameSettings } from "./settings/gameSettings";
 
 //This contains everything you can do from your home before you pick-up your date
@@ -66,6 +67,7 @@ function buy(number){
 //TODO you can't see her looking away on the phone
 //TODO show your need?
 export function callHer() {
+    const thresholds = getLegacyBladderThresholds();
     allowItems = 1;
     let curtext = [];
     if (locStack[0] !== "callher") {
@@ -73,7 +75,7 @@ export function callHer() {
         pushloc("callher");
         loadLocationScene("yourhome", "callher")
         curtext = printIntro(curtext, 0);
-        if (thetime > 75 && bladder < blademer) {
+        if (thetime > 75 && bladder < thresholds.emergency) {
             late = 1;
         }
         onphone = 1;
@@ -89,14 +91,14 @@ export function callHer() {
         attraction -= 5;
         shyness -= 10;
         curtext = printChoices(curtext, [0]);
-    } else if (thetime > 75 && bladder < blademer) {
+    } else if (thetime > 75 && bladder < thresholds.emergency) {
         curtext = printDialogue(curtext,"callher", 1);
         curtext = printChoices(curtext, [0]);
-    } else if (bladder > blademer && !askholditcounter) {
+    } else if (bladder > thresholds.emergency && !askholditcounter) {
         curtext = printDialogue(curtext, "callher", 2);
         curtext = printChoices(curtext, [0]);
         flushdrank();
-    } else if (bladder > blademer && askholditcounter && waitcounter === 0) {
+    } else if (bladder > thresholds.emergency && askholditcounter && waitcounter === 0) {
         curtext = cantwait(curtext);
     } else {
         if (shyness > 80) shyness -= 1;
@@ -119,22 +121,23 @@ function favor() {
 }
 
 function gotta() {
+    const thresholds = getLegacyBladderThresholds();
     let curtext = []
     if (shyness > 80) {
         curtext = printSDialogue(curtext, "gotta", 0, 0, 0);
         attraction -= 2;
         shyness += 5;
-    } else if (bladder < bladurge) {
+    } else if (bladder < thresholds.urge) {
         curtext = printSDialogue(curtext, "gotta", 0, 1, 1);
     } else {
-        if (bladder < bladneed || shyness > 75) {
+        if (bladder < thresholds.need || shyness > 75) {
             curtext = printSDialogue(curtext, "gotta", 0, 2, 2);
         } else {
             curtext = printSDialogue(curtext, "gotta", 0, 3, 3);
         }
     }
 
-    if (bladder >= bladneed && shyness <= 75)
+    if (bladder >= thresholds.need && shyness <= 75)
         curtext = printChoices(curtext, [9])
     curtext = printChoices(curtext, [7,8,6]);
     sayText(curtext);

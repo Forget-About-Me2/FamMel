@@ -101,5 +101,44 @@ namespace UserFlowTests
         {
             ((IJavaScriptExecutor)driver).ExecuteScript("setRandomSeed(arguments[0]);", seed);
         }
+
+        // Best-effort popup dismissal used at game startup in integration tests.
+        // The popup close button can be briefly non-interactable during page init.
+        public static void DismissDisclaimerPopupIfPresent(this IWebDriver driver, int timeoutSeconds = 10)
+        {
+            var timeoutAt = Stopwatch.StartNew();
+
+            while (timeoutAt.Elapsed < TimeSpan.FromSeconds(timeoutSeconds))
+            {
+                if (driver.TryFindElement(By.Id("close-pop-up"), out var closeButton)
+                    && closeButton!.Displayed
+                    && closeButton.Enabled)
+                {
+                    try
+                    {
+                        closeButton.Click();
+                    }
+                    catch (ElementClickInterceptedException)
+                    {
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", closeButton);
+                    }
+                    catch (ElementNotInteractableException)
+                    {
+                        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", closeButton);
+                    }
+                    return;
+                }
+
+                // If start-game choice is already interactable, treat popup handling as complete.
+                if (driver.TryFindElement(By.LinkText("Start the game."), out var startGame)
+                    && startGame!.Displayed
+                    && startGame.Enabled)
+                {
+                    return;
+                }
+
+                Thread.Sleep(100);
+            }
+        }
     }
 }
