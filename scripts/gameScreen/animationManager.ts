@@ -60,6 +60,8 @@ class AnimationManager {
     private tick(): void {
         const subject = gameState.Companion;
         const type = gameSettings.ImageSettings.ImageType;
+        const isPeeing = subject?.NowPeeing ?? !!(globalThis as any).nowpeeing;
+        const bladderState = subject?.bladderState ?? this.getLegacyBladderState();
 
         // Compute current ascii frame index
         this.artIndex = (this.artIndex + 1) % (this.maxArtIndex + 1);
@@ -67,11 +69,11 @@ class AnimationManager {
         // Render based on the configured image type
         switch (type) {
             case ImageType.Ascii:
-                const frameIndex = this.computeFrameIndex();
+                const frameIndex = this.computeFrameIndex(bladderState, isPeeing);
                 imageManager.renderAscii(this.asciiFrames[frameIndex]);
                 break;
             case ImageType.Image:
-                imageManager.renderImageFor(subject.bladderState);
+                imageManager.renderImageFor(bladderState);
                 break;
             case ImageType.None:
             default:
@@ -80,21 +82,44 @@ class AnimationManager {
         }
 
         // Schedule next tick (faster when peeing)
-        const delay = subject.NowPeeing ? 250 : randomInt(750) + 250;
+        const delay = isPeeing ? 250 : randomInt(750) + 250;
         this.timerId = window.setTimeout(() => this.tick(), delay);
     }
 
-    private computeFrameIndex(): number {
-        const subject = gameState.Companion;
-
-        if (subject.NowPeeing) {
+    private computeFrameIndex(bladderState: BladderState, isPeeing: boolean): number {
+        if (isPeeing) {
             const ch = this.peeingLoop.charAt(this.artIndex);
             return this.alphaDecodeIndex(ch);
         }
 
-        const loopIndex = this.mapBladderStateToLoopIndex(subject.bladderState);
+        const loopIndex = this.mapBladderStateToLoopIndex(bladderState);
         const ch = this.asciiLoops[loopIndex].charAt(this.artIndex);
         return this.alphaDecodeIndex(ch);
+    }
+
+    private getLegacyBladderState(): BladderState {
+        const legacyBladder = Number((globalThis as any).bladder);
+        const urge = Number((globalThis as any).bladurge);
+        const need = Number((globalThis as any).bladneed);
+        const emergency = Number((globalThis as any).blademer);
+        const lose = Number((globalThis as any).bladlose);
+
+        if (!Number.isFinite(legacyBladder)) {
+            return BladderState.Empty;
+        }
+        if (Number.isFinite(urge) && legacyBladder < urge) {
+            return BladderState.Empty;
+        }
+        if (Number.isFinite(need) && legacyBladder < need) {
+            return BladderState.Urge;
+        }
+        if (Number.isFinite(emergency) && legacyBladder < emergency) {
+            return BladderState.Need;
+        }
+        if (Number.isFinite(lose) && legacyBladder < lose) {
+            return BladderState.Emergency;
+        }
+        return BladderState.Lose;
     }
 
     private mapBladderStateToLoopIndex(state: BladderState): number {

@@ -65,7 +65,7 @@ function buy(number){
 //
 //TODO you can't see her looking away on the phone
 //TODO show your need?
-function callHer() {
+export function callHer() {
     allowItems = 1;
     let curtext = [];
     if (locStack[0] !== "callher") {

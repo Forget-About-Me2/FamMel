@@ -3,7 +3,6 @@ import {gameSettings} from "./settings/gameSettings";
 import {yourHome} from './yourHome';
 import {gameScreen} from "./gameScreen/gameScreen";
 import { animationManager } from "./gameScreen/animationManager";
-import {SettingsManager} from "./settings/settingsManager";
 
 /**
  * Main program loop that handles location transitions and game state updates
@@ -19,7 +18,7 @@ function isGameLocation(location: unknown): location is GameLocation {
         && "category" in location;
 }
 
-function resolveLegacyTarget(location: unknown): (() => void) | undefined {
+function resolveLegacyTarget(location: unknown): ((...args: any[]) => unknown) | undefined {
     if (typeof location === "function") {
         const callback = location as () => void;
         return callback;
@@ -35,7 +34,7 @@ function resolveLegacyTarget(location: unknown): (() => void) | undefined {
         target = normalizeLegacyTarget(locStack[0] ?? "");
     }
 
-    const maybeFunction = (window as any)[target];
+    const maybeFunction = getGlobalFunction(target);
     if (typeof maybeFunction === "function") {
         return maybeFunction;
     }
@@ -50,7 +49,7 @@ function resolveLegacyTarget(location: unknown): (() => void) | undefined {
     if (paramMatch) {
         const funcName = paramMatch[1];
         const argsRaw = paramMatch[2];
-        const func = (window as any)[funcName];
+        const func = getGlobalFunction(funcName);
         if (typeof func === "function") {
             // Parse simple quoted string or numeric arguments
             const args = argsRaw.split(',').map(a => {
@@ -119,6 +118,7 @@ function syncLegacyLocStackFromTypedLocation(location: GameLocation): void {
 }
 
 export function go(location: unknown) {
+    gameState.init();
     allowItems = 0;
 
     const previousLocation = gameState.CurrentLocation;
@@ -162,6 +162,7 @@ export function go(location: unknown) {
         hour = gameState.Time.hour;
 
         // Keep typed game state in sync with legacy globals modified by JS modules.
+        if (typeof money !== "undefined") gameState.Money = money;
         if (typeof attraction !== "undefined") gameState.Attraction = attraction;
         if (typeof shyness !== "undefined") gameState.Shyness = shyness;
     }
@@ -223,7 +224,7 @@ function shuffle<T>(array: T[]): T[] {
 }
 
 //This sets the game up when you click start
-async function gamestart(){
+export async function gamestart(){
     if (!gameSettings.PlayerBladder) {
         gameScreen.StatusBar.TogglePlayerBladder(false);
     }
@@ -237,11 +238,14 @@ async function gamestart(){
 // Introduction page.
 export async function start() {
     gameScreen.PopUps.Disclaimer.displayDisclaimerPopup();
-    animationManager.start();
-    new SettingsManager().readFromLocalStorage();
-    // Keep legacy global toggle in sync with typed settings
-    try { (globalThis as any).playerbladder = gameSettings.PlayerBladder; } catch {}
     setup();
+    // Keep typed settings in sync with legacy setup() localStorage behavior.
+    try { gameSettings.PlayerBladder = !!(globalThis as any).playerbladder; } catch {}
+    gameState.init();
+    animationManager.start();
+    if (typeof money !== "undefined") gameState.Money = money;
+    if (typeof attraction !== "undefined") gameState.Attraction = attraction;
+    if (typeof shyness !== "undefined") gameState.Shyness = shyness;
     await fetchAndCacheJson("start");
     pushloc("yourhome");
     locationSetup("start");
@@ -282,4 +286,20 @@ function gameWon() {
     let curtext = printList([], endScreens["gameWon"]);
     curtext = printList(curtext, endScreens["stats"]);
     setText(curtext);
+}
+
+function getGlobalFunction(functionName: string): ((...args: any[]) => unknown) | undefined {
+    const exact = (window as any)[functionName];
+    if (typeof exact === "function") {
+        return exact;
+    }
+
+    const normalized = functionName.toLowerCase();
+    const matchingKey = Object.keys(window).find(key => key.toLowerCase() === normalized);
+    if (!matchingKey) {
+        return undefined;
+    }
+
+    const matched = (window as any)[matchingKey];
+    return typeof matched === "function" ? matched : undefined;
 }

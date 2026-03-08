@@ -15,28 +15,15 @@ export enum LocationCategory {
 
 
 class GameState {
-    Player: Person = new Person({
-        bladderUrge: 500,
-        startBladderVolume: 500,
-        startTummyVolume: 200,
-        startMaxTummy: 500,
-        startMaxAlcohol: 500,
-        minPercentage: 70
-    });
-    Companion: dateNPC = new dateNPC({
-        bladderUrge: bladurge,
-        startBladderVolume: 0,
-        startTummyVolume: 0,
-        startMaxTummy: 300,
-        startMaxAlcohol: 750,
-        minPercentage: 70
-    }, girlname);
+    Player!: Person;
+    Companion!: dateNPC;
+    private initialized = false;
     LastMoney : number = 0;
     LastAttraction : number = 0;
     LastShyness : number = 0;
     private _money: number = gameSettings.StartMoney;
-    Attraction: number = 10;
-    Shyness : number = 90;
+    private _attraction: number = 10;
+    private _shyness: number = 90;
     readonly LocStack : GameLocation[] = [];
     private _randCounter = randomInt(gameSettings.RandCounterMax);
 
@@ -85,6 +72,40 @@ class GameState {
      */
     ShowedNeed : boolean = false;
 
+    init(): void {
+        if (this.initialized) {
+            return;
+        }
+
+        this.Player = new Person({
+            bladderUrge: 500,
+            startBladderVolume: 500,
+            startTummyVolume: 200,
+            startMaxTummy: 500,
+            startMaxAlcohol: 500,
+            minPercentage: 70
+        });
+
+        // Read legacy globals through globalThis so missing values don't throw at load time.
+        const rawBladurge = (globalThis as any).bladurge;
+        const rawGirlName = (globalThis as any).girlname;
+        const companionBladderUrge = Number(rawBladurge);
+        const companionName = typeof rawGirlName === "string" && rawGirlName.length > 0
+            ? rawGirlName
+            : "Melissa";
+
+        this.Companion = new dateNPC({
+            bladderUrge: Number.isFinite(companionBladderUrge) ? companionBladderUrge : 650,
+            startBladderVolume: 0,
+            startTummyVolume: 0,
+            startMaxTummy: 300,
+            startMaxAlcohol: 750,
+            minPercentage: 70
+        }, companionName);
+
+        this.initialized = true;
+    }
+
     pushLoc(location: GameLocation) {
         this.LocStack.unshift(location);
     }
@@ -125,14 +146,44 @@ class GameState {
     get Money(): number {
         return this._money;
     }
+
+    set Money(value: number) {
+        this._money = value;
+        if (typeof (globalThis as any).money !== "undefined") {
+            (globalThis as any).money = value;
+        }
+    }
+
     PayAmount (value: number) : boolean {
         if (value > this._money) return false;
-        this._money -= value;
+        this.Money = this._money - value;
         return true;
     }
 
     ReceiveMoney (value: number) : void {
-        this._money += value;
+        this.Money = this._money + value;
+    }
+
+    get Attraction(): number {
+        return this._attraction;
+    }
+
+    set Attraction(value: number) {
+        this._attraction = value;
+        if (typeof (globalThis as any).attraction !== "undefined") {
+            (globalThis as any).attraction = value;
+        }
+    }
+
+    get Shyness(): number {
+        return this._shyness;
+    }
+
+    set Shyness(value: number) {
+        this._shyness = value;
+        if (typeof (globalThis as any).shyness !== "undefined") {
+            (globalThis as any).shyness = value;
+        }
     }
 
     get CurRandCounter() : number {

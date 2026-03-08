@@ -58,6 +58,44 @@ public class YourHomeIntegrationTests
         AssertNoRuntimeErrors();
     }
 
+    [Test]
+    public void GoGamestart_RoutesToYourHome_AndRendersChoices()
+    {
+        StartGameAtYourHome();
+
+        var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            try {
+                if (typeof go !== 'function') {
+                    throw new Error('go() is not available');
+                }
+                go('gamestart');
+                return 'ok';
+            } catch (e) {
+                window.__testErrors = window.__testErrors || [];
+                const details = String((e && e.stack) || e);
+                window.__testErrors.push(details);
+                return 'fail:' + details;
+            }
+        ")?.ToString();
+
+        result.Should().Be("ok", $"go('gamestart') should execute without throwing (actual: {result})");
+
+        var yourHomeReady = WaitForCondition(@"
+            try {
+                const hasStack = Array.isArray(locStack) && locStack.length > 0;
+                const inYourHome = hasStack && String(locStack[0]).toLowerCase() === 'yourhome';
+                const text = document.getElementById('textsp')?.innerText || '';
+                return inYourHome && text.trim().length > 0;
+            } catch {
+                return false;
+            }
+        ", 4000);
+
+        yourHomeReady.Should().BeTrue("go('gamestart') should transition to yourhome and render visible text");
+
+        AssertNoRuntimeErrors();
+    }
+
     private void StartGameAtYourHome()
     {
         _driver.Navigate().GoToUrl(BaseUrl);
@@ -106,5 +144,22 @@ public class YourHomeIntegrationTests
         }
 
         return _driver.FindElement(By.Id("textsp")).Text;
+    }
+
+    private bool WaitForCondition(string jsCondition, int timeoutMs)
+    {
+        var start = DateTime.UtcNow;
+        while ((DateTime.UtcNow - start).TotalMilliseconds < timeoutMs)
+        {
+            var value = ((IJavaScriptExecutor)_driver).ExecuteScript(jsCondition);
+            if (value is bool ok && ok)
+            {
+                return true;
+            }
+
+            Thread.Sleep(100);
+        }
+
+        return false;
     }
 }
