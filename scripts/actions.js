@@ -115,12 +115,13 @@ function feelup() {
 
 function kissher(curtext=[], sexLoc) {
     kisscounter += 1;
-    curtext = printList(curtext, kissing["diag"][0]);
+    const [kissAttempt, kissRejected, kissPleasedResponse, kissReturnedKiss, kissPassionateReturn] = kissing["diag"];
+    curtext = printList(curtext, kissAttempt);
     if (attraction < 10 || (flirtcounter > 1 && attraction < 20)) {
-        curtext = printList(curtext, kissing["diag"][1]);
+        curtext = printList(curtext, kissRejected);
         attraction -= 3;
     } else if (attraction < 20 || (flirtcounter > 2 && attraction < 30)) {
-        curtext = printList(curtext, kissing["diag"][2]);
+        curtext = printList(curtext, kissPleasedResponse);
         if (kisscounter < maxkiss) {
             flirtcounter += 3;
             attraction += 3;
@@ -128,7 +129,7 @@ function kissher(curtext=[], sexLoc) {
             arousal += 2;
         }
     } else if (attraction < 30) {
-        curtext = printList(curtext, kissing["diag"][3]);
+        curtext = printList(curtext, kissReturnedKiss);
         if (kisscounter < maxkiss) {
             flirtcounter += 3;
             attraction += 3;
@@ -136,7 +137,7 @@ function kissher(curtext=[], sexLoc) {
             arousal += 4;
         }
     } else if (attraction < 50) {
-        curtext = printList(curtext, kissing["diag"][4]);
+        curtext = printList(curtext, kissPassionateReturn);
         if (kisscounter < maxkiss) {
             attraction += 3;
             shyness -= 3;

@@ -4,18 +4,16 @@ let prepeed = 0; // did she pee before you picked her up
 let elevatorwaitcounter = 0;
 
 function herHomeSetup() {
-    getjson("herhome", herHomeJsonSetup);
+    fetchAndCacheJson("herhome").then(function(data) {
+        herHome = data["theHome"];
+        locations.theHome.visit = [herhome, herHome["choices"]["visit"]];
+        locations.theHome.wantVisit = [herhome, herHome["choices"]["wantVisit"]];
+    });
     return {
         visit: [],
         wantVisit: [],
         group: 4
     }
-}
-
-function herHomeJsonSetup(){
-    herHome = json["theHome"];
-    locations.theHome.visit = [herhome, herHome["choices"]["visit"]];
-    locations.theHome.wantVisit = [herhome, herHome["choices"]["wantVisit"]]
 }
 
 function homeConditions() {
@@ -26,8 +24,8 @@ function homeConditions() {
 function herhome() {
     //This chooses the appropriate function to continue in the location herhome
     if (locStack[0] === "yourhome")
-        getjson("appearance", function (){
-            appearance = json;
+        fetchJson("appearance").then(function(data) {
+            appearance = data;
             pickup();
         });
     else takeHerHome();
@@ -95,7 +93,7 @@ function pickup() {
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
         } else {
-            curtext = standobjs(curtext);
+            curtext = standobjs(curtext, listenerList);
             if (yourbladder > yourbladurge)
                 listenerList.push([[youpee, locjson["choices"]["askToilet"]], "youpee"]);
         }

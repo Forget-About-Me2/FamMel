@@ -10,10 +10,10 @@ let locations = {
 };
 
 let sharedLoc;
-getjson("/locations/locations", locJsonSetup);
+fetchJson("locations/locations").then(locJsonSetup);
 
-function locJsonSetup(){
-    sharedLoc = json;
+function locJsonSetup(data){
+    sharedLoc = data;
     sharedLoc["itsClosed"] = formatAllVarsList(sharedLoc["itsClosed"]);
     sharedLoc["sayHero"] = formatAllVarsList(sharedLoc["sayHero"]);
 }
@@ -50,14 +50,17 @@ function lookAround(loc){
     const findkey = randomchoice(locations[loc].keyChance);
     let curtext = [];
     curtext.push(pickrandom(sharedLoc["lookAround"]));
+    // Location data: [0]=random observations array, [1]=key discovery text
+    const randomObservations = sharedLoc[loc][0];
+    const keyDiscoveryText = sharedLoc[loc][1];
     let listenerList = [];
     if (findkey){
-        curtext.push(sharedLoc[loc][1]);
+        curtext.push(keyDiscoveryText);
         sayText(curtext);
         listenerList.push([[function () {lookKey(loc)}], "lookKey"]);
         cListener(["", "Investigate..."], "lookKey");
     } else {
-        curtext.push(pickrandom(sharedLoc[loc][0]));
+        curtext.push(pickrandom(randomObservations));
         sayText(curtext);
         //Increase the chance to find the key you were looking for by 20%.
         //Success is guaranteed on the 5th try.
@@ -93,16 +96,20 @@ function itsClosed(locname, fun, curloc) {
     if (locname === "theBar") theloc = "bar";
     else if (locname === "theClub") theloc = "night club";
     else  theloc = "movie theater";
+
+    // itsClosed: [0]=arrival text, [1]=bladder emergency quote, [2]=confirmed closed text
+    const [arrivalLines, emergencyQuote, confirmedClosedLines] = sharedLoc["itsClosed"];
+
     let curtext = []
-    let list = new Array(sharedLoc["itsClosed"][0].length).fill([theloc]);
-    let temp = formatAll(sharedLoc["itsClosed"][0], list);
+    let list = new Array(arrivalLines.length).fill([theloc]);
+    let temp = formatAll(arrivalLines, list);
     curtext = printList(curtext, temp);
     if (bladder > blademer) {
-        curtext = printList(curtext, sharedLoc["itsClosed"][1]);
+        curtext = printList(curtext, emergencyQuote);
         curtext = displaygottavoc(curtext);
     }
-    list = new Array(sharedLoc["itsClosed"][2].length).fill([theloc]);
-    temp = formatAll(sharedLoc["itsClosed"][2], list);
+    list = new Array(confirmedClosedLines.length).fill([theloc]);
+    temp = formatAll(confirmedClosedLines, list);
     curtext = printList(curtext, temp);
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
@@ -122,13 +129,18 @@ function itsClosed(locname, fun, curloc) {
 let emerBreak; //True if she rushed to the toilet after you opened the door
 let emerHold; //True if you asked her to hold it.
 function breakLoc(loc, curloc){
-    let curtext = printList(sharedLoc["breakLoc"][0], []);
+    // breakLoc: [0]=trying the key, [1]=she rushes past you
+    const [tryingKey, sheRushesPast] = sharedLoc["breakLoc"];
+    // sayHero: [0]=hero compliments (calm), [1]=rushed hero thanks (urgent)
+    const [heroCompliments, heroThanksUrgent] = sharedLoc["sayHero"];
+
+    let curtext = printList(tryingKey, []);
     let listenerList = [];
     if (bladder > blademer){
         //There's a 30% chance she'll run to the bathroom as soon as you break in.
         if (randomchoice(3)) {
-            curtext.push(pickrandom(sharedLoc["sayHero"][1]));
-            curtext = printList(sharedLoc["breakLoc"][1], curtext);
+            curtext.push(pickrandom(heroThanksUrgent));
+            curtext = printList(sheRushesPast, curtext);
             curtext = displayneed(curtext);
             curtext = displayyourneed(curtext);
             pushloc(curloc);
@@ -148,7 +160,7 @@ function breakLoc(loc, curloc){
             addListenersList(listenerList);
             return
         } else
-            curtext.push(pickrandom(sharedLoc["sayHero"][0]));
+            curtext.push(pickrandom(heroCompliments));
     }
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);

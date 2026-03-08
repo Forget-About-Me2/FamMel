@@ -187,6 +187,10 @@ class Time{
         return `${hours}:${minutes} ${period}`;
     }
 
+    toString() : string {
+        return this.timeString;
+    }
+
     timeSince(timeStamp: number) :number {
         return this.totalTime - timeStamp;
     }

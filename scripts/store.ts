@@ -2,9 +2,10 @@
 function goStore() {
     allowItems = 1;
     if (locStack[0] !== "gostore") {
-        gameState.pushLoc("gostore");
+        pushloc("gostore");
+        shopping = 1;
     }
-    locationMSetup("yourhome", "store");
+    loadLocationScene("yourhome", "store");
     if (askholditcounter > 0 && bladder > blademer && bladder < bladlose && !waitcounter) {
         cellphone();
     } else {
@@ -18,7 +19,10 @@ function goStore() {
         let curText: string[] = [];
         curText = printAlways(curText);
         curText = displayyourneed(curText);
-        var listenerList = [];
+        curText = printAllChoices(curText);
         sayText(curText);
     }
 }
+
+// Register lowercase alias for JSON choice tag routing
+(window as any).gostore = goStore;

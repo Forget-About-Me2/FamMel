@@ -1,7 +1,7 @@
 let driveRound; //JSON quotes for location
 
 function driveAroundSetup(){
-    getjson("locations/driveAround", driveJsonSetup)
+    fetchJson("locations/driveAround").then(driveJsonSetup)
     return {
         "visit": [driveAround, "Just drive around"],
         "group": 0,
@@ -9,8 +9,8 @@ function driveAroundSetup(){
    }
 }
 
-function driveJsonSetup(){
-    driveRound = json;
+function driveJsonSetup(data){
+    driveRound = data;
 }
 
 const gasChance = 3; //Chance you'll encounter a gas station
@@ -18,12 +18,14 @@ let gasStation;
 
 function driveAround(){
     allowItems = 1;
-    let curtext = printList([], driveRound["driveAround"][0]);
+    // driveAround: [0]=driving narration, [1]=gas station spotted
+    const [drivingNarration, gasStationSpotted] = driveRound["driveAround"];
+    let curtext = printList([], drivingNarration);
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
     gasStation = randomchoice(gasChance);
     if(gasStation)
-        curtext = printList(curtext,driveRound["driveAround"][1]);
+        curtext = printList(curtext, gasStationSpotted);
     if (bladder > bladlose) {
         sayText(curtext);
         wetherself();
@@ -42,7 +44,7 @@ function driveAround(){
         }
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
-        } else curtext = standobjs(curtext);
+        } else curtext = standobjs(curtext, listenerList);
         if (gasStation) {
             listenerList.push([[station, "Stop at the gas station"], "gasStation"]);
         }

@@ -1,8 +1,55 @@
 // Globals that were removed during the TS migration but are still needed by the JS files.
 // These should be gradually replaced by gameState properties.
+// Originally declared in main.js — values preserved from the original.
 
 var locStack = ["yourhome"];
 var money = 200;
+var thetime = 0;
+var hour = 7;
+var minute = 0;
+var meridian = "PM";
+var late = 0;
+// Player bladder feature toggle (legacy global used by old JS files)
+var playerbladder = true;
+
+// Interaction / flirt state
+var attraction = 10;
+var shyness = 90;
+var flirtedflag = 0;
+var flirtcounter = 0;
+var noflirtflag = 0;
+var checkedherout = 0;
+var haveherpurse = 0;
+var owedfavor = 0;
+var changevenueflag = 0;
+var shopping = 0;
+
+// Flirt / interaction limits
+var maxflirts = 2;
+var maxkiss = 7;
+var maxfeel = 7;
+var randmax = 5;
+
+// Venue closing times (ticks from 7 PM)
+var clubclosingtime = 7 * 60;    // 2:00 AM
+var theaterclosingtime = 3 * 60; // 10:00 PM last showing
+var barclosingtime = 6 * 60;     // 1:00 AM
+
+// Time
+var timespeed = 2;
+var didintro = 0;
+// seenmovie is declared in theatre.js — do NOT redeclare here (var+let conflict breaks script loading)
+
+// Delta tracking (for status bar arrows)
+var lastmoney = money;
+var lastattraction = attraction;
+var lastshyness = shyness;
+
+// JSON data loaded at runtime (declared here so assignments in async callbacks work)
+var settings;
+var statsBars;
+var showedneed;
+var endScreens;
 
 // Seedable RNG support for deterministic integration tests.
 // A random seed is always generated at startup and can be overridden via ?seed=.
@@ -107,20 +154,16 @@ function range(start, end) {
 }
 
 // Simple string format function for templates with {0}, {1}, etc.
-function formatString(template, values) {
-    let result = template;
-    for (let i = values.length - 1; i >= 0; i--) {
-        result = result.replace(new RegExp('\\{' + i + '\\}', 'gm'), values[i].toString());
-    }
-    return result;
+function formatString(expr, values) {
+    return expr.format(values);
 }
 
-// Format all strings in an array with the given values
-function formatAll(htmlArray, vars) {
+// Format all strings in an array, each with its corresponding values entry
+function formatAll(exprList, values) {
     let result = [];
-    htmlArray.forEach(function(item) {
-        result.push(formatString(item, vars));
-    });
+    for (let i = 0; i < exprList.length; i++) {
+        result.push(formatString(exprList[i], values[i]));
+    }
     return result;
 }
 

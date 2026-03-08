@@ -1,5 +1,6 @@
 import { instanceToPlain, plainToInstance } from "class-transformer";
-import { gameSettings, GameSettings } from "./gameSettings";
+import { gameSettings, GameSettings, ImageChoice } from "./gameSettings";
+import { ImageType } from "./imageType";
 
 export class SettingsManager{
     readFromLocalStorage() : void {
@@ -22,6 +23,21 @@ export class SettingsManager{
 
         // Merge into the singleton instance
         Object.assign(gameSettings, merged);
+
+        // Ensure the legacy ImageChoice enum (user setting) controls the active ImageType
+        // This keeps the typed ImageSettings.ImageType in sync with the user-facing option.
+        switch (gameSettings.ImageChoice) {
+            case ImageChoice.Images:
+                gameSettings.ImageSettings.ImageType = ImageType.Image;
+                break;
+            case ImageChoice.None:
+                gameSettings.ImageSettings.ImageType = ImageType.None;
+                break;
+            case ImageChoice.Ascii:
+            default:
+                gameSettings.ImageSettings.ImageType = ImageType.Ascii;
+                break;
+        }
     }
 
     writeToLocalStorage() : void {

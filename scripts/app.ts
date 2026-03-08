@@ -5,6 +5,7 @@
  */
 import './helperFiles/documentFunctions';
 import { go, start } from './main';
+import { yourHome } from './yourHome';
 import { gameState } from './gameState/gameState';
 import { gameScreen } from './gameScreen/gameScreen';
 import { gameSettings } from './settings/gameSettings';

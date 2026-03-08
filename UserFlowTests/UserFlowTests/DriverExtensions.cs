@@ -64,10 +64,23 @@ namespace UserFlowTests
                     return highFlirt!;
                 }
 
-                return driver.FindElement(MelissaBy.Flirt(FlirtLevel.Low));
+                if (driver.TryFindElement(MelissaBy.Flirt(FlirtLevel.Low), out var lowFlirt))
+                {
+                    return lowFlirt!;
+                }
             }
 
-            return driver.FindElement(MelissaBy.Flirt(FlirtLevel.Medium));
+            if (driver.TryFindElement(MelissaBy.Flirt(FlirtLevel.Medium), out var mediumFlirt))
+            {
+                return mediumFlirt!;
+            }
+
+            if (driver.TryFindElement(MelissaBy.Flirt(FlirtLevel.Low), out var fallbackLowFlirt))
+            {
+                return fallbackLowFlirt!;
+            }
+
+            throw new NoSuchElementException("No flirt option is currently available.");
         }
 
         public static bool TryFindElement(this IWebDriver driver, By by, out IWebElement? element)

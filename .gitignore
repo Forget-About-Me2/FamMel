@@ -6,3 +6,4 @@
 # .NET build artifacts
 **/bin/
 **/obj/
+Selenium/*

@@ -128,6 +128,7 @@ declare let thetime: number;
 declare let hour: number;
 declare let late: number;
 declare let didintro: number;
+declare let shopping: number;
 declare let seenmovie: number;
 declare let elevatorwaitcounter: number;
 declare let floorcounter: number;
@@ -158,6 +159,32 @@ declare function formatAll(html: any, vars: any): any;
 declare function formatString(template: string, values: any[]): string;
 declare function printDialogue(curtext: any[], loc: string, index: number): any[];
 declare function range(start: number, end: number): number[];
+
+// ============================================================================
+// Global functions from quotes.ts (script-style TS)
+// ============================================================================
+declare function printIntro(curtext: any[], index: number): any[];
+declare function printAlways(curtext: any[]): any[];
+declare function printSDialogue(curtext: any[], loc: string, index: number, begin: number, end: number): any[];
+declare function printList(curtext: any[], list: any[]): any[];
+declare function printChoices(curtext: any[], selection: number[]): any[];
+declare function printAllChoices(curtext: any[]): any[];
+declare function printChoicesList(curtext: any[], selection: number[], list: any[]): any[];
+declare function sayText(lines: any[]): void;
+declare function addSayText(lines: any[]): void;
+declare function setText(lines: any[]): void;
+declare function c(choice: any[], curtext?: any[]): any[];
+declare function cListener(choice: any[], tag: string): void;
+declare function cListenerGen(choice: any[], loc: string): void;
+declare function cListenerGenList(list: any[]): void;
+declare function fetchJson(path: string): Promise<any>;
+declare function fetchAndCacheJson(tag: string): Promise<any>;
+declare function locationSetup(tag: string): void;
+declare function loadLocationScene(tag: string, subtag: string): void;
+declare function locationMCSetup(subtag: string, customloc: any): void;
+declare function setupQuotes(): Promise<void>;
+// locjson, calledjsons, girlname, girltalk, girlgasp, pantycolor, yneeds,
+// drinklines are defined in quotes.ts (script-style TS, shares global scope).
 
 // ============================================================================
 // Global functions from settings.js
@@ -283,8 +310,8 @@ declare let toldstories: number[];
 declare function showneed(curtext: any[]): any[];
 declare function displayholdquip(curtext: any[]): any[];
 declare function displayneed(curtext: any[]): any[];
-declare function dartSetup(): void;
-declare function fuckHerSetup(): void;
+declare function dartSetup(data: any): void;
+declare function fuckHerSetup(data: any): void;
 declare function sellPanties(): void;
 declare function flirtBarGirl(): void;
 declare function askpee(): void;

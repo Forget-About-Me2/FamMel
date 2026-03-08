@@ -1,5 +1,5 @@
-function dartSetup(){
-    darts = json;
+function dartSetup(data){
+    darts = data;
     darts["play"] = formatAllVarsList(darts["play"]);
     setupScores();
     genScores();
@@ -55,6 +55,8 @@ function genScores(){
 }
 
 //When the score is lower than 60, sees if finishing in one move is valid
+// Dart score result tuples: [throws, totalScored, remainingPoints]
+// remainingPoints=0 means the player finished
 function singleFinish(points){
     if (doubles.includes(points)){
         if (randomchoice(5))
@@ -110,14 +112,15 @@ let playedDarts = false;
 //Play a game of darts with her
 function playDarts() {
     let curtext = [];
-    //Have you played the darts game before.
+    // play: [0]=first time intro, [1]=replay intro, [2]=game setup
+    const [firstPlay, replayIntro, gameSetup] = darts["play"];
     if (!playedDarts) {
-        curtext = printList(curtext, darts["play"][0]);
+        curtext = printList(curtext, firstPlay);
         playedDarts = true;
     } else
-        curtext = printList(curtext, darts["play"][1]);
+        curtext = printList(curtext, replayIntro);
     curtext = showneed(curtext);
-    curtext = printList(curtext, darts["play"][2]);
+    curtext = printList(curtext, gameSetup);
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);
     let dartPoints = {
@@ -137,9 +140,9 @@ function playDarts() {
 
 //Play a round of the dart game
 function dartRound(dartPoints){
-    let curText = printList([], darts["round"][0]);
-    let winner = false; //Flags whether the game has been won
-    let res = [];
+    let curText = printList([], darts["round"][0]); // round narration
+    let winner = false;
+    let res = []; // [throws, totalScored, remainingPoints]
     for (let player in dartPoints) {
         let curPoints = dartPoints[player];
         if (curPoints <= 60){

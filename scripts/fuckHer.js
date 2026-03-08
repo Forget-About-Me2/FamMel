@@ -227,11 +227,12 @@ let sexActions = {
         return this.actions[item].noTub;
     }
 }
-function fuckHerSetup(){
-    sexLines = json;
+function fuckHerSetup(data){
+    sexLines = data;
     Object.keys(sexLines).forEach(loc => {
         if (typeof loc === "object" && (loc !== "clothes" || loc !== "actions")) {
             const obj = sexLines[loc];
+            // intro: [0]=first-time intro variants, [1]=returning intro
             obj["intro"][0] = formatAllVarsList(obj["intro"][0]);
             obj["intro"][1] = formatAllVars(obj["intro"][1]);
             obj["maxKiss"] = formatAllVars(obj["maxKiss"]);
@@ -256,18 +257,21 @@ function haveSex(location){
         kisscounter = 0;
         arousal = 0;
         pushloc("haveSex");
+        // intro[0]: first-time intro variants - [0][0]=hot tub/losing, [0][1]=normal
+        // intro[1]: returning intro
+        const [firstIntroVariants, returningIntro] = sexQuotes["intro"];
         if (location === "theHotTub"){
             sexActions.naked();
-            curtext = printList(curtext, sexQuotes["intro"][0][0]);
+            curtext = printList(curtext, firstIntroVariants[0]);
         } else {
             if (pantycolor === "none") sexActions.takeOff("panties");
             if (bladder > bladlose)
-                curtext = printList(curtext, sexQuotes["intro"][0][0]);
+                curtext = printList(curtext, firstIntroVariants[0]);
             else
-                curtext = printList(curtext, sexQuotes["intro"][0][1]);
+                curtext = printList(curtext, firstIntroVariants[1]);
         }
     } else {
-        curtext = printList(curtext, sexQuotes["intro"][1]);
+        curtext = printList(curtext, sexQuotes["intro"][1]); // returningIntro
     }
     let listenerList = [];
     if (kisscounter > maxkiss){
@@ -341,49 +345,55 @@ function takeOff(item, location){
     if (item === "skirt" && bladder > blademer)
         curtext.push(appearance["clothes"][heroutfit]["sextoskirtquoteemer"].formatVars());
     for (let i = 0; !processed; i++){
+        // clothesInfo tuple: [prerequisite, bladderCheck, failMode]
+        //   prerequisite: "none" or clothing item name
+        //   bladderCheck: "lose" or "emer" - threshold for variant text
+        //   failMode: "fail" if takeoff should be blocked
         let clothesInfo = info.takeOffInfo[i];
-        if (clothesInfo[0] === "none"){
+        const [prerequisite, bladderCheck, failMode] = clothesInfo;
+        // sexLines["clothes"][item][i]: [baseText, desperateText, normalText, extraText]
+        if (prerequisite === "none"){
             let temp;
-            temp = appearance["clothes"][heroutfit]["sex"+item+clothesInfo[0].formatVars()];
+            temp = appearance["clothes"][heroutfit]["sex"+item+prerequisite.formatVars()];
             if (typeof temp !== "undefined")
                 curtext.push(temp);
             if (item === "panties" && bladder > bladlose)
-                curtext = printList(curtext, sexLines["clothes"][item][i][3]);
-            curtext = printList(curtext, sexLines["clothes"][item][i][0]);
-            if (clothesInfo[1] === "lose") {
+                curtext = printList(curtext, sexLines["clothes"][item][i][3]); // extraText
+            curtext = printList(curtext, sexLines["clothes"][item][i][0]); // baseText
+            if (bladderCheck === "lose") {
                 if (bladder > bladlose)
-                    curtext = printList(curtext, sexLines["clothes"][item][i][1]);
+                    curtext = printList(curtext, sexLines["clothes"][item][i][1]); // desperateText
                 else
-                    curtext = printList(curtext, sexLines["clothes"][item][i][2]);
-            } else if (clothesInfo[1] === "emer"){
+                    curtext = printList(curtext, sexLines["clothes"][item][i][2]); // normalText
+            } else if (bladderCheck === "emer"){
                 if (bladder > blademer)
-                    curtext = printList(curtext, sexLines["clothes"][item][i][1]);
+                    curtext = printList(curtext, sexLines["clothes"][item][i][1]); // desperateText
                 else
-                    curtext = printList(curtext, sexLines["clothes"][item][i][2]);
+                    curtext = printList(curtext, sexLines["clothes"][item][i][2]); // normalText
             }
             processed = true;
-        } else if (sexActions.isOn(clothesInfo[0])){
+        } else if (sexActions.isOn(prerequisite)){
             let temp;
-            temp = appearance["clothes"][heroutfit]["sex"+item+clothesInfo[0]];
+            temp = appearance["clothes"][heroutfit]["sex"+item+prerequisite];
             if (typeof temp !== "undefined")
                 curtext.push(temp.formatVars())
-            curtext = printList(curtext, sexLines["clothes"][item][i][0]);
-            failTakeOff = clothesInfo[2] === "fail";
+            curtext = printList(curtext, sexLines["clothes"][item][i][0]); // baseText
+            failTakeOff = failMode === "fail";
             if (item === "panties")
                 curtext.push(appearance["clothes"][heroutfit]["sexPantiesTOSkirt"]);
-            if (clothesInfo[1] === "lose") {
+            if (bladderCheck === "lose") {
                 if (bladder > bladlose)
-                    curtext = printList(curtext, sexLines["clothes"][item][i][1]);
+                    curtext = printList(curtext, sexLines["clothes"][item][i][1]); // desperateText
                 else
-                    curtext = printList(curtext, sexLines["clothes"][item][i][2]);
-            } else if (clothesInfo[1] === "emer"){
+                    curtext = printList(curtext, sexLines["clothes"][item][i][2]); // normalText
+            } else if (bladderCheck === "emer"){
                 if (bladder > blademer)
-                    curtext = printList(curtext, sexLines["clothes"][item][i][1]);
+                    curtext = printList(curtext, sexLines["clothes"][item][i][1]); // desperateText
                 else
-                    curtext = printList(curtext, sexLines["clothes"][item][i][2]);
+                    curtext = printList(curtext, sexLines["clothes"][item][i][2]); // normalText
             }
             if (item === "skirt" && bladder > bladlose)
-                curtext = printList(curtext, sexLines["clothes"][item][i][3]);
+                curtext = printList(curtext, sexLines["clothes"][item][i][3]); // extraText
             processed = true;
         }
     }
@@ -398,11 +408,17 @@ function performAction(action, location){
     let processed = false;
     let curtext = [];
     for (let i = 0; !processed; i++){
+        // arousalInfo tuple: [prerequisite, arousalBonus, bladderCheck]
+        //   prerequisite: "none", clothing item name, or array of items ("notX" means item must be off)
+        //   arousalBonus: number added to arousal
+        //   bladderCheck: "emer" or "lose" - threshold for variant text
         let arousalInfo = info.clothesArousal[i];
-        if (Array.isArray(arousalInfo[0])){
+        const [prerequisite, arousalBonus, bladderCheck] = arousalInfo;
+        // sexLines["actions"][action][i]: [baseText, desperateText, normalText, wetPantiesText, bladderLoseExtraText]
+        if (Array.isArray(prerequisite)){
             let met = true;
-            let sumName = ""; //The name used to query clothing related quotes later on
-            arousalInfo[0].forEach(item => {
+            let sumName = "";
+            prerequisite.forEach(item => {
                 if (item.includes("not")){
                     let temp = item.substring(3);
                     met = met && !sexActions.isOn(temp);
@@ -412,7 +428,7 @@ function performAction(action, location){
                 sumName += item;
             });
             if (met){
-                arousal += arousalInfo[1];
+                arousal += arousalBonus;
                 processed = true;
                 let temp;
                 if (info.clothesArousal.length > 2)
@@ -422,36 +438,36 @@ function performAction(action, location){
                 if (typeof temp !== "undefined")
                     curtext.push(temp)
             }
-        }else if (arousalInfo[0] === "none" || sexActions.isOn(arousalInfo[0])){
-            arousal += arousalInfo[1];
-            if (arousalInfo[0] !== "none"){
+        }else if (prerequisite === "none" || sexActions.isOn(prerequisite)){
+            arousal += arousalBonus;
+            if (prerequisite !== "none"){
                 let temp;
                 if (info.clothesArousal.length > 2)
-                    temp = appearance["clothes"][heroutfit]["sex"+action+arousalInfo[0]];
+                    temp = appearance["clothes"][heroutfit]["sex"+action+prerequisite];
                 else
                     temp = appearance["clothes"][heroutfit]["sex"+action];
                 if (typeof temp !== "undefined")
                     curtext.push(temp)
             }
-            curtext = printList(curtext, sexLines["actions"][action][i][0]);
-            if (arousalInfo[2] === "emer") {
+            curtext = printList(curtext, sexLines["actions"][action][i][0]); // baseText
+            if (bladderCheck === "emer") {
                 if (bladder > blademer)
-                    curtext = printList(curtext, sexLines["actions"][action][i][1]);
+                    curtext = printList(curtext, sexLines["actions"][action][i][1]); // desperateText
                 else {
                     if (action === "kPussy" && wetherpanties)
-                        curtext = printList(curtext, sexLines["actions"][action][i][3]);
-                    curtext = printList(curtext, sexLines["actions"][action][i][2]);
+                        curtext = printList(curtext, sexLines["actions"][action][i][3]); // wetPantiesText
+                    curtext = printList(curtext, sexLines["actions"][action][i][2]); // normalText
                 }
-            } else if (arousalInfo[2] === "lose"){
+            } else if (bladderCheck === "lose"){
                 if (bladder > bladlose)
-                    curtext = printList(curtext, sexLines["actions"][action][i][1]);
+                    curtext = printList(curtext, sexLines["actions"][action][i][1]); // desperateText
                 else
-                    if (action === "kPussy" && wetherpanties && arousalInfo[0]==="none")
-                        curtext = printList(curtext, sexLines["actions"][action][i][3]);
-                    curtext = printList(curtext, sexLines["actions"][action][i][2]);
+                    if (action === "kPussy" && wetherpanties && prerequisite==="none")
+                        curtext = printList(curtext, sexLines["actions"][action][i][3]); // wetPantiesText
+                    curtext = printList(curtext, sexLines["actions"][action][i][2]); // normalText
             }
-            if (action === "kPussy" && bladder > bladlose && arousalInfo[0] === "none")
-                curtext = printList(curtext, sexLines["actions"][action][i][4]);
+            if (action === "kPussy" && bladder > bladlose && prerequisite === "none")
+                curtext = printList(curtext, sexLines["actions"][action][i][4]); // bladderLoseExtraText
 
             processed = true;
         }

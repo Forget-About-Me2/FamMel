@@ -1,7 +1,6 @@
 //TODO make a more general function for handling curtext
 
-const jsonlocs = ["options", "start", "yourhome", "herhome"]; //List of locations that have a corresponding json file
-let calledjsons = {}; //Dictionary list of all location that have already been queried, this saves them being queried multiple times meaning less requests for the server
+let calledjsons = {}; //Cache of fetched JSON files, keyed by tag name
 
 
 //TODO maybe compress this in a list or something?
@@ -239,8 +238,18 @@ Description is formatted if needed.
 */
 function cListenerGenList(list){
     validateListenerList(list)
-    list.forEach(item => cListener(item[0], item[1]));
-    addListenersList(list);
+    // Ensure 'leave' / 'drive out' / 'go back' style choices are always shown last
+    const leaveRegex = /leave|driveout|driveout|goback|exit|leavehm|leaveHm/i;
+    const ordered = [] as any[];
+    const leaves = [] as any[];
+    list.forEach(item => {
+        const tag = (item.length > 1 && typeof item[1] === 'string') ? item[1] : '';
+        if (tag && leaveRegex.test(tag)) leaves.push(item);
+        else ordered.push(item);
+    });
+    const finalList = ordered.concat(leaves);
+    finalList.forEach(item => cListener(item[0], item[1]));
+    addListenersList(finalList);
 }
 
 //print the given lines list on the screen
@@ -279,55 +288,48 @@ function setText(lines){
     document.getElementById('textsp').innerHTML = result;
 }
 
-let json = null;
 let locjson = null; //This is the main json for the current location
 
-//This requests a json from the webserver with a given filename and callback function
-//TODO probably find a way to store this
-async function getjson(fileID, callback){
-    const file = "JSON/" + fileID + ".JSON";
-    const response= await fetch(file);
-    json = await response.json();
-    return callback();
+// Fetch a JSON file and return its parsed contents.
+// path: relative path under JSON/ (without JSON/ prefix or .JSON suffix)
+async function fetchJson(path): Promise<any> {
+    const file = "JSON/" + path + ".JSON";
+    const response = await fetch(file);
+    return response.json();
 }
 
-//This requests a json file from the webserver using the location tag
-async function getjsonT(tag){
-    const file = "JSON/" + tag + ".JSON";
-    const response= await fetch(file);
-    json = await response.json();
-    calledjsons[tag] = json;
-    eval(tag+"()");
+// Fetch a JSON file, cache it in calledjsons for later use by location functions, and return it.
+// tag: the cache key AND the file path under JSON/
+async function fetchAndCacheJson(tag): Promise<any> {
+    const data = await fetchJson(tag);
+    calledjsons[tag] = data;
+    return data;
 }
 
-//This requests a json file from the webserver using the location tag and then calls teh callback function.
-async function getjsonTF(tag, callback){
-    const file = "JSON/" + tag + ".JSON";
-    const response= await fetch(file);
-    json = await response.json();
-    calledjsons[tag] = json;
-    return callback();
-}
 
-//Assign locjson of the given location when there are multiple locations in the json file.
+// Deep-copy a subtag from the cache into locjson without any wildcard replacement.
+// Use this when the location handles its own formatting (e.g. herhome pickup).
 function getMLocations(tag, subtag){
     locjson = JSON.parse(JSON.stringify(calledjsons[tag][subtag]));
 }
 
-//TODO handle formatting differently, probably have a list of indexes that need to be replaced instead
-//This sets up all variables that this location uses.
+// Load a single-subtag location from the cache into locjson and resolve wildcards.
+// Only used for locations whose JSON has no subtags (e.g. "start").
+// After this call, locjson.intro, locjson.always, locjson.choices etc. are ready to use.
 function locationSetup(tag){
     locjson = JSON.parse(JSON.stringify(calledjsons[tag]));
     locjson.girlname = addGirlname(locjson.girlname);
-    //TODO this can be more efficient (arraylist with all options)
     replaceWCI("intro", "girlname");
     replaceWCT("always", "girlname");
     replaceWCI("intro", "money");
     replaceWCT("always", "money");
 }
 
-//Setup of location when there are multiple locations in json file
-function locationMSetup(tag, subtag){
+// Load a subtag from a multi-subtag location into locjson and resolve wildcards.
+// e.g. loadLocationScene("yourhome", "callher") deep-copies calledjsons["yourhome"]["callher"]
+// into locjson, then replaces girlname/money/girltalk placeholders throughout intro, always,
+// choices, and dialogue sections.
+function loadLocationScene(tag, subtag){
     locjson = JSON.parse(JSON.stringify(calledjsons[tag][subtag]));
     if (locjson.hasOwnProperty("girlname"))
         locjson.girlname = addGirlname(locjson.girlname);
@@ -356,7 +358,8 @@ function locationMSetup(tag, subtag){
     }
 }
 
-//Setup of location using a JSON that is not connected to a location
+// Load a scene from a custom (non-cached) JSON object into locjson with wildcard replacement.
+// Used by locations that store their JSON in a module variable rather than calledjsons.
 function locationMCSetup(subtag, customloc){
     locjson = JSON.parse(JSON.stringify(customloc[subtag]));
     if (locjson.hasOwnProperty("girlname"))
@@ -442,42 +445,45 @@ function LreplaceCheck(rpstring, list, tag){
 }
 
 //calls all json requests to get recurring quotes
-function setupQuotes(){
-    getjson("flirting", flirtSetup);
-    getjson("needs", function () {
-        needs = json;
+async function setupQuotes(){
+    const tasks = [
+        fetchJson("flirting").then(flirtSetup),
+        fetchJson("needs").then(function (data) {
+        needs = data;
         toldstories = range(0, needs["peestory"].length - 1);
-    });
-    getjson("youpee", yPeeSetup);
-    getjson("shepee", shePeeSetup);
-    getjson("drinking", function (){
-        drinklines = json;
+    }),
+        fetchJson("youpee").then(yPeeSetup),
+        fetchJson("shepee").then(shePeeSetup),
+        fetchJson("drinking").then(function (data){
+        drinklines = data;
         drinklines["champagne"] = formatAllVarsList(drinklines["champagne"]);
-    });
-    //TODO format this json better?
-    getjson("appearance", function (){
-        appearance = json;
-    } );
-    getjson("drive", function () {
-        drive = json;
-    });
-    getjson("general", function (){
-        general = json;
-    });
-    getjson("games/darts", dartSetup);
-    getjson("fuckHer", fuckHerSetup);
-    getjson("objects", function () {
-        objQuotes = json;
+    }),
+        fetchJson("appearance").then(function (data){
+        appearance = data;
+    }),
+        fetchJson("drive").then(function (data) {
+        drive = data;
+    }),
+        fetchJson("general").then(function (data){
+        general = data;
+    }),
+        fetchJson("games/darts").then(dartSetup),
+        fetchJson("fuckHer").then(fuckHerSetup),
+        fetchJson("objects").then(function (data) {
+        objQuotes = data;
         objQuotes["buyItem2"] = formatAllVarsList(objQuotes["buyItem2"]);
-    });
-    getjson("endScreens", function (){
-        endScreens = json;
-    });
+    }),
+        fetchJson("endScreens").then(function (data){
+        endScreens = data;
+    })
+    ];
+
+    await Promise.all(tasks);
 }
 
-function flirtSetup(){
-    flirtquotes = json["flirt"];
-    let rawresp = json["respons"];
+function flirtSetup(data){
+    flirtquotes = data["flirt"];
+    let rawresp = data["respons"];
     flirtresps = {};
     for (let [key, value] of Object.entries(rawresp)){
         if (key === "bad"){
@@ -486,10 +492,10 @@ function flirtSetup(){
             flirtresps[key] = addGirlname(value);
         }
     }
-    feelUp = json["feel"];
+    feelUp = data["feel"];
     feelUp["resp"] = formatAllVars(feelUp["resp"]);
     feelUp["bad"] = formatAllVars(feelUp["bad"]);
-    kissing = json.kiss;
+    kissing = data.kiss;
     kissing["diag"] = formatAllVarsList(kissing["diag"]);
 }
 
@@ -500,32 +506,32 @@ function voccurse(curtext) {
     return curtext;
 }
 
-function yPeeSetup(){
+function yPeeSetup(data){
     //TODO cleanup like shePeeSetup
-    json["girlname"] = addGirlname(json["girlname"]);
-    json["girltalk"] = addGirlTalk(json["girltalk"]);
-    json["locked"]["girlname"] = addGirlname(json["locked"]["girlname"]);
-    let templist = json["thehome"][0];
+    data["girlname"] = addGirlname(data["girlname"]);
+    data["girltalk"] = addGirlTalk(data["girltalk"]);
+    data["locked"]["girlname"] = addGirlname(data["locked"]["girlname"]);
+    let templist = data["thehome"][0];
     let result = [];
-    templist.forEach(item => result.push(LreplaceCheck(item, json["girlname"], "girlname")));
+    templist.forEach(item => result.push(LreplaceCheck(item, data["girlname"], "girlname")));
     templist = result;
     result = []
-    templist.forEach(item => result.push(LreplaceCheck(item, json["girltalk"], "girltalk")));
-    json["thehome"][0] = result;
+    templist.forEach(item => result.push(LreplaceCheck(item, data["girltalk"], "girltalk")));
+    data["thehome"][0] = result;
     result = [];
-    templist = json["locked"]["urgency"]
-    templist.forEach(item => result.push(LreplaceCheck(item, json["locked"]["girlname"], "girlname")));
-    json["locked"]["urgency"] = result;
+    templist = data["locked"]["urgency"]
+    templist.forEach(item => result.push(LreplaceCheck(item, data["locked"]["girlname"], "girlname")));
+    data["locked"]["urgency"] = result;
     result = [];
-    templist = json["beg"][0];
-    templist.forEach(item => result.push(LreplaceCheck(item, json["girltalk"], "girltalk")));
-    json["beg"][0] = result;
-    ypeelines = json;
+    templist = data["beg"][0];
+    templist.forEach(item => result.push(LreplaceCheck(item, data["girltalk"], "girltalk")));
+    data["beg"][0] = result;
+    ypeelines = data;
     ypeelines["peeOutside"]= formatAllVarsList(ypeelines["peeOutside"]);
 }
 
-function shePeeSetup(){
-    peelines = json;
+function shePeeSetup(data){
+    peelines = data;
     peelines["girlname"] = addGirlname(peelines["girlname"]);
     peelines["girltalk"]= addGirlTalk(peelines["girltalk"]);
     peelines["locked"]["girltalk"] = addGirlTalk(peelines["locked"]["girltalk"]);

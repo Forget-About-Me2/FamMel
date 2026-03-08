@@ -2,7 +2,7 @@ let club;
 let externalflirt = 0; // You flirted with somebody else
 
 function theClubSetup(){
-    getjson("locations/theClub", clubJsonSetup);
+    fetchJson("locations/theClub").then(clubJsonSetup);
     return {
         visit: [theClub, "Go to the nightclub"],
         wantVisit: [theClub, "Stop by the nightclub for her."],
@@ -13,26 +13,28 @@ function theClubSetup(){
     }
 }
 
-function clubJsonSetup(){
-    club = json;
+function clubJsonSetup(data){
+    club = data;
 }
 
 function theClub() {
     allowItems = 1;
     let curtext = [];
     let listenerList = []
+    // theClub: [0]=revisit from drive, [1]=first arrival, [2]=ambient, [3]=go dance intro
+    const [clubRevisit, clubArrival, clubAmbient, goDanceIntro] = club["theClub"];
     if (locations.theClub.visited && locStack[0] === "driveout" && thetime < clubclosingtime) {
-        curtext = printList(curtext, club["theClub"][0]);
+        curtext = printList(curtext, clubRevisit);
         if (haveItem("theClubKey"))
             listenerList.push([[reClub, sharedLoc["choices"]["returnKey"]], "reClub"]);
         listenerList.push([[driveout, general["continue"]], "driveOut"]);
     } else if ((thetime < clubclosingtime) || locStack[0] === "theClub") {
             if (locStack[0] !== "theClub" && locStack[0] !== "doDance") {
-                curtext = printList(curtext, club["theClub"][1]);
+                curtext = printList(curtext, clubArrival);
                 pushloc("theClub");
                 locations.theClub.visited = 1;
             } else {
-                curtext = printList(curtext, club["theClub"][2]);
+                curtext = printList(curtext, clubAmbient);
                 if (randomchoice(3)) curtext = noteholding(curtext);
                 else if (randomchoice(5)) curtext = interpbladder(curtext);
             }
@@ -54,7 +56,7 @@ function theClub() {
                 listenerList.push([[goDance, club["choices"]["goDance"]], "goDance"]);
                 if (!locations.theClub.foundKey)
                     listenerList.push([[function () {lookAround("theClub")}, sharedLoc["choices"]["lookAround"]], "lookAround"]);
-                curtext = standobjs(curtext);
+                curtext = standobjs(curtext, listenerList);
                 if (yourbladder > yourbladurge)
                     listenerList.push([[youpee, club["choices"]["youPee"]], "youpee"]);
                 listenerList.push([[leavehm, club["choices"]["leaveHm"]], "leavehm"]);
@@ -94,7 +96,7 @@ function goDance(){
         listenerList.push([[holdit, "Ask her to hold it."], "holdit"]);
         listenerList.push([[allowpee, "Let her go."], "allowpee"]);
     } else {
-        curtext = printList(curtext, club["theClub"][3]);
+        curtext = printList(curtext, goDanceIntro);
         listenerList.push([[doDance, "Continue..."], "doDance"]);
     }
     sayText(curtext);
@@ -123,7 +125,7 @@ function doDance(){
                 listenerList.push([[youpee, club["choices"]["youPee"]], "youpee"]);
         }
         listenerList.push([[leaveDance, club["choices"]["leaveDance"]], "leaveDance"]);
-        curtext = standobjs(curtext);
+        curtext = standobjs(curtext, listenerList);
         sayText(curtext);
         cListenerGenList(listenerList);
     }
@@ -164,7 +166,7 @@ function darkClub() {
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
         } else {
-            curtext = standobjs(curtext);
+            curtext = standobjs(curtext, listenerList);
             sayText(curtext);
             listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
             listenerList.push([[feelup, general["feelUp"]], "feelUp"]);

@@ -1,5 +1,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using AwesomeAssertions;
 
 namespace UserFlowTests;
 
@@ -29,8 +30,8 @@ public class RandomSeedDeterminismTest
         var seqB = SequenceForSeed(20260307, 12, 1000);
         var seqC = SequenceForSeed(20260308, 12, 1000);
 
-        Assert.That(seqB, Is.EqualTo(seqA), "Same seed should reproduce the same random sequence.");
-        Assert.That(seqC, Is.Not.EqualTo(seqA), "Different seeds should produce a different random sequence.");
+        seqB.Should().Be(seqA, "same seed should reproduce the same random sequence");
+        seqC.Should().NotBe(seqA, "different seeds should produce a different random sequence");
     }
 
     [Test]
@@ -42,7 +43,7 @@ public class RandomSeedDeterminismTest
         _driver.Navigate().Refresh();
         var second = SequenceFromCurrentState(10, 500);
 
-        Assert.That(second, Is.EqualTo(first), "Reloading with the same seed query should replay the same sequence.");
+        second.Should().Be(first, "reloading with the same seed query should replay the same sequence");
     }
 
     private string SequenceForSeed(int seed, int count, int maxExclusive)

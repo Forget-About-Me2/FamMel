@@ -12,8 +12,8 @@ let multiplemoves = 1; //Whether sex moves can be repeated during a make-out ses
 let rstmoves = 0; //Whether the sex moves reset after a make-out session
 
 function setup(){
-    getjson("options", function (){
-        settings=json;
+    fetchJson("options").then(function (data){
+        settings=data;
     })
     if(typeof(Storage) !== "undefined") {
         if (localStorage.girlname) {
@@ -91,8 +91,8 @@ function setup(){
         if (localStorage.playerBladder) {
             if (localStorage.playerBladder === "false") {
                 playerbladder = 0;
-                getjson("statsBars", function () {
-                    statsBars = json;
+                fetchJson("statsBars").then(function (data) {
+                    statsBars = data;
                 });
             }
         }
@@ -188,8 +188,8 @@ function bladOpt() {
     //There is a chance in this menu playerBladder is turned off, if this happens statsBars needs to be known later on
     //So query it, if this hasn't happened before.
     if (!statsBars)
-        getjson("statsBars", function () {
-            statsBars = json;
+        fetchJson("statsBars").then(function (data) {
+            statsBars = data;
         });
     let vars = new Array(23).fill("");
     const checked = [];

@@ -2,7 +2,7 @@ let bar;
 let bartopic = 0; // Topics of discussion at the bar.
 
 function theBarSetup(){
-    getjson("locations/theBar", barJsonSetup);
+    fetchJson("locations/theBar").then(barJsonSetup);
     return {
         "visit": [thebar, "Go to the bar"],
         "wantVisit": [thebar, "Go to the bar like she asked."],
@@ -13,8 +13,8 @@ function theBarSetup(){
     }
 }
 
-function barJsonSetup(){
-    bar = json;
+function barJsonSetup(data){
+    bar = data;
     talkUnused = bar["barTalk"];
 }
 
@@ -22,8 +22,10 @@ function thebar(){
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
+    // theBar: [0]=revisit from drive, [1]=first arrival, [2]=ambient narration
+    const [barRevisit, barArrival, barAmbient] = bar["theBar"];
     if (locStack[0] === "driveout" && locations.theBar.visited && thetime < barclosingtime){
-        curtext = printList(curtext, bar["theBar"][0]);
+        curtext = printList(curtext, barRevisit);
         sayText(curtext);
         if (haveItem("theBarKey")) {
             listenerList.push([[rebar, sharedLoc["choices"]["returnKey"]], "reBar"]);
@@ -32,11 +34,11 @@ function thebar(){
     } else if (!((thetime < barclosingtime) || locStack[0] === "thebar")) itsClosed("theBar", darkBar, "darkBar");
     else {
         if (locStack[0] !== "thebar"){
-            curtext = printList(curtext, bar["theBar"][1]);
+            curtext = printList(curtext, barArrival);
             pushloc("thebar");
             locations.theBar.visited = 1;
         } else
-            curtext = printList(curtext, bar["theBar"][2]);
+            curtext = printList(curtext, barAmbient);
         if (randomchoice(3)) curtext = noteholding(curtext);
         else if (randomchoice(5)) curtext = interpbladder(curtext);
         curtext = displayyourneed(curtext);
@@ -57,7 +59,7 @@ function thebar(){
                         lookAround("theBar")
                     }, sharedLoc["choices"]["lookAround"]], "lookAround"]);
                 }
-                curtext = standobjs([]);
+                curtext = standobjs([], listenerList);
                 addSayText(curtext);
                 if (yourbladder > yourbladurge) {
                     listenerList.push([[youpee, bar["choices"]["youPee"]], "youpee"]);
@@ -83,17 +85,18 @@ function barTalk(curtext){
     if (bartopic < 5){
         curTopicI = randomIndex(talkUnused);
         let curTopic = talkUnused[curTopicI];
-        let order = [1,2,3]; //Used to determine the order of good,bad, med answers.
+        // Response quality: 1=good, 2=neutral, 3=bad (shuffled to randomize button order)
+        let order = [1,2,3];
         curtext.push(girltalk+curTopic[0]);
         let listenerList = [];
         sayText(curtext);
         while (order.length !== 0){
             let i = randomIndex(order);
-            let cur = order[i];
+            let responseQuality = order[i];
             order.splice(i, 1);
             listenerList.push([[function () {
-                barResp(cur);
-            }, curTopic[cur]], "barResp"+cur]);
+                barResp(responseQuality);
+            }, curTopic[responseQuality]], "barResp"+responseQuality]);
         }
         return listenerList;
     } else
@@ -102,10 +105,12 @@ function barTalk(curtext){
 }
 
 function barResp(choice){
+    // barResp: [0]=positive/interested, [1]=neutral, [2]=negative/disinterested
+    const GOOD = 1, NEUTRAL = 2, BAD = 3;
     let curtext = [pickrandom(bar["barResp"][choice-1]).formatVars()];
-    if (choice === 1 && randomchoice(7))
+    if (choice === GOOD && randomchoice(7))
         curtext.push(pickrandom(appearance["girls"][basegirl]["stareather"][heroutfit]));
-    attraction += 6 - 3*choice;
+    attraction += 6 - 3*choice; // good=+3, neutral=0, bad=-3
     bartopic++;
     talkUnused.splice(curTopicI,1);
     sayText(curtext);
@@ -164,21 +169,24 @@ function stealbeer2(){
 function darkBar(){
     allowItems = 1;
    let curtext = [];
+   // darkBar: [0]=rushes to toilet after emergency, [1]=still needs to go badly,
+   //          [2]=first entry into closed bar, [3]=ambient/idle
+   const [rushesToToilet, stillNeedsToPee, enterClosedBar, darkBarAmbient] = bar["darkBar"];
    if (emerBreak || emerHold && bladder < 20) {
-       curtext = printList(curtext, bar["darkBar"][0]);
+       curtext = printList(curtext, rushesToToilet);
        emerHold = 0;
        emerBreak = 0;
    }
    else if (emerHold) {
-       curtext = printList(curtext, bar["darkBar"][1]);
+       curtext = printList(curtext, stillNeedsToPee);
        emerHold = 0;
    }
    else if (locStack[0] !== "darkBar") {
-       curtext = printList(curtext, bar["darkBar"][2]);
+       curtext = printList(curtext, enterClosedBar);
        pushloc("darkBar");
    }
    else {
-       curtext = printList(curtext, bar["darkBar"][3]);
+       curtext = printList(curtext, darkBarAmbient);
    }
    curtext = showneed(curtext);
    curtext = displayyourneed(curtext);
@@ -190,7 +198,7 @@ function darkBar(){
        sayText(curtext);
    }
    else {
-       curtext = standobjs(curtext);
+                curtext = standobjs(curtext, listenerList);
        sayText(curtext);
        listenerList.push(
            [[stealbeer, objQuotes["stealChoices"]["beer"]], "stealBeer"],
@@ -210,15 +218,20 @@ function darkBar(){
 }
 
 function pdrinkinggame() {
-    let curtext = printList([], bar["drinkingGame"][0]);
+    // drinkingGame: [0]=proposal, [1]=she needs to pee first, [2]=rejection,
+    //               [3]=bathroom scene, [4]=rules, [5]=status recap,
+    //               [6]=drink round, [7]=staring/waiting
+    const [gameProposal, needsToPeeFirst, gameRejection, bathroomScene,
+           gameRules, gameStatus, drinkRound, staringWaiting] = bar["drinkingGame"];
+    let curtext = printList([], gameProposal);
     if (attraction >= drinkinggamethreshold) {
         curtext = displayneed(curtext);
-        curtext = printList(curtext, bar["drinkingGame"][1]);
+        curtext = printList(curtext, needsToPeeFirst);
         curtext = displayneed(curtext);
         sayText(curtext);
         cListenerGen([pDrinkingGame2, "Continue..."], "pdrinking");
     } else {
-        curtext = printList(curtext, bar["drinkingGame"][2]);
+        curtext = printList(curtext, gameRejection);
         if (attraction < 50)
             attraction -= 2;
         indepee(curtext);
@@ -227,7 +240,7 @@ function pdrinkinggame() {
 }
 
 function pDrinkingGame2() {
-    let curtext = printList([], bar["drinkingGame"][3]);
+    let curtext = printList([], bar["drinkingGame"][3]); // bathroomScene
     flushyourdrank();
     flushdrank();
     yourbladder = 0;
@@ -237,7 +250,7 @@ function pDrinkingGame2() {
 
 function pDrinkingGame3() {
     pushloc("drinkinggame");
-    let curtext = printList([], bar["drinkingGame"][4]);
+    let curtext = printList([], bar["drinkingGame"][4]); // gameRules
     sayText(curtext);
     cListenerGen([drinkinggame, "Continue..."], "pdrinking");
 }
@@ -248,8 +261,7 @@ let loser;
 //TODO have a chance to have it escalate
 function drinkinggame() {
     allowItems = 1;
-    let curtext = printList([], bar["drinkingGame"][5]);
-    // s("You're playing a drinking game with " + girlname + ".");
+    let curtext = printList([], bar["drinkingGame"][5]); // gameStatus
     if (yourbladder >= yourbladlose) {
         if (!holdself || randomchoice(holdpeethresh)) {
             poploc();
@@ -267,7 +279,7 @@ function drinkinggame() {
     } else {
         curtext = displayneed(curtext);
         curtext = displayyourneed(curtext);
-        curtext = printList(curtext, bar["drinkingGame"][6]);
+        curtext = printList(curtext, bar["drinkingGame"][6]); // drinkRound
         tummy += 40;
         yourtummy += 40;
         holdself = 0;
@@ -293,28 +305,32 @@ function postgame() {
     nothdesperate = 0;
     let curtext = [];
     let situation = "none";
+    // postGame[Her|You]: [0]=already spurted, [1]=didn't spurt, [2]=transition,
+    //   [3]=both desperate, [4]=she's desperate, [5]=you're desperate, [6]=neither desperate
     let quoteList = bar["postGame"+loser];
+    const [spurtedOpener, cleanOpener, transition,
+           bothDesperate, sheDesperate, youDesperate, neitherDesperate] = quoteList;
     if ((shespurted && loser === "Her")||youSpurted && loser === "You")
-        curtext = printList(curtext, quoteList[0]);
+        curtext = printList(curtext, spurtedOpener);
     else
-        curtext = printList(curtext, quoteList[1]);
-    curtext = printList(curtext, quoteList[2]);
+        curtext = printList(curtext, cleanOpener);
+    curtext = printList(curtext, transition);
     if (bladder > blademer && yourbladder > yourblademer) {
         situation = "both";
-        curtext = printList(curtext, quoteList[3]);
+        curtext = printList(curtext, bothDesperate);
         flushdrank();
         flushyourdrank();
     } else if(bladder > blademer){
         situation = "her";
-        curtext = printList(curtext, quoteList[4]);
+        curtext = printList(curtext, sheDesperate);
         flushdrank();
     } else {
         if (yourbladder > yourblademer) {
             situation = "you";
-            curtext = printList(curtext, quoteList[5]);
+            curtext = printList(curtext, youDesperate);
             flushyourdrank();
         } else {
-            curtext = printList(curtext, quoteList[6]);
+            curtext = printList(curtext, neitherDesperate);
             attraction += 5;
             shyness -= 7;
             notdesperate = 1;
@@ -326,25 +342,27 @@ function postgame() {
 
 function postGame2(situation){
     let curtext = [];
+    // postGame: [0]=no one desperate, [1]=she was desperate, [2]=you were desperate, [3]=both desperate (kiss)
+    const [pgNone, pgHerDesperate, pgYouDesperate, pgBothDesperate] = bar["postGame"];
     if (situation === "none") {
-        curtext = printList(curtext, bar["postGame"][0]);
+        curtext = printList(curtext, pgNone);
 
     } else if(situation === "her"){
         //TODO move back to her own chair
-        curtext = printList(curtext, bar["postGame"][1]);
+        curtext = printList(curtext, pgHerDesperate);
         attraction += 5;
         shyness -= 7;
     } else if(situation === "you"){
         //TODO probably have a shyness/attraction check
         //Create a deepCopy of the dialogue that needs to be added so if you insert an element the bar variable itself won't be changed
-        let temp = printList([], bar["postGame"][2]);
+        let temp = printList([], pgYouDesperate);
         if (loser === "her") temp.splice(2, 0, "<em>Yes, you won the game. But it had been a close one.</em>");
         curtext = printList([], temp);
         attraction += 10;
         shyness -= 10;
     }
     else{
-        curtext = printList(curtext, bar["postGame"][3]);
+        curtext = printList(curtext, pgBothDesperate);
         poploc();
         kissher(curtext);
         return;
@@ -356,23 +374,21 @@ function postGame2(situation){
 
 
 function holdYourself() {
-    let curtext = printList([], bar["holdYourself"][0]);
-    // s("You surreptitiously sneak your hand down into your crotch and massage.");
+    // holdYourself: [0]=sneak hand down, [1]=unnoticed, [2]=caught
+    const [sneakHand, holdUnnoticed, holdCaught] = bar["holdYourself"];
+    let curtext = printList([], sneakHand);
     if (randomchoice(7)) {
-        curtext = printList(curtext, bar["holdYourself"][1]);
-        // s(girlname + " doesn't seem to notice.");
+        curtext = printList(curtext, holdUnnoticed);
         holdself = 1;
     } else
-        curtext = printList(curtext, bar["holdYourself"][2]);
-        // s(girlname + " sees you and pulls your hand back away from your dick.");
+        curtext = printList(curtext, holdCaught);
     curtext = showneed(curtext);
     sayText(curtext);
     cListenerGen([drinkinggame, "Continue..."], "pdrinking");
 }
 
 function drinkinggamewait() {
-    let curtext = printList([], bar["drinkinggame"][7]);
-    // s("You and " + girlname + " stare at each other as your feel the beer taking effect.");
+    let curtext = printList([], bar["drinkinggame"][7]); // staringWaiting
     curtext = displayneed(curtext);
     sayText(curtext);
     cListenerGen([drinkinggame, "Continue..."], "pdrinking");

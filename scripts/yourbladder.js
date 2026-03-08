@@ -76,26 +76,30 @@ function youpee() {
     let curtext = [];
     gottagoflag = 0;
     let peed = 0;
-    if (locStack[0] === "yourhome") {
+    const currentLocation = locStack[0];
+    // ypeelines["thehome"]: [0]=asking to use toilet, [1]=peeing description
+    const [askToiletLines, peeDescription] = ypeelines["thehome"];
+
+    if (currentLocation === "yourhome") {
         curtext = printList(curtext, ypeelines["yourhome"]);
         peed = 1
-    } else if (locStack[0] === "theHome" ||
-        locStack[0] === "thebedroom" || locStack[0] === "pickup" || locStack[0] === "fuckher6") {
-        if(locStack[0] !== "fuckher6") {
-            curtext = printList(curtext, ypeelines["thehome"][0]);
+    } else if (currentLocation === "theHome" ||
+        currentLocation === "thebedroom" || currentLocation === "pickup" || currentLocation === "fuckher6") {
+        if(currentLocation !== "fuckher6") {
+            curtext = printList(curtext, askToiletLines);
         }
-        curtext = printList(curtext, ypeelines["thehome"][1]);
+        curtext = printList(curtext, peeDescription);
         peed = 1
     } else {
         curtext = printList(curtext, ypeelines["remaining"]);
     }
 
-    if ((locStack[0] === "thebar" && randomchoice(rrlockedthresh) ) ||
-        ((locStack[0] === "theclub" || locStack[0] === "dodance") && randomchoice(rrlinethresh)) ||
-        (locStack[0] === "themovie" && randomchoice(rrMovieLineThresh) || locStack[0] === "domovie" && randomchoice(rrMovieLineThresh))) {
+    if ((currentLocation === "thebar" && randomchoice(rrlockedthresh) ) ||
+        ((currentLocation === "theclub" || currentLocation === "dodance") && randomchoice(rrlinethresh)) ||
+        (currentLocation === "themovie" && randomchoice(rrMovieLineThresh) || currentLocation === "domovie" && randomchoice(rrMovieLineThresh))) {
         allowItems = 1;
         curtext = youbathroomlocked(curtext);
-    } else if (locStack[0] === "darkBar" || locStack[0] === "darkTheatre" || locStack[0] === "darkclub") {
+    } else if (currentLocation === "darkBar" || currentLocation === "darkTheatre" || currentLocation === "darkclub") {
         //TODO potentially cycle between quotes
         if (yourbladder > yourbladlose - 25)
             curtext.push(ypeelines["youpeeprivate"][0]);
@@ -109,9 +113,9 @@ function youpee() {
             curtext.push(pickrandom(ypeelines["youpeeprivate2"]));
         flushyourdrank();
     }
-    if (yourbladder >= yourbladlose - 25 && locStack[0] !== "thehottub") curtext = youbegtoilet(curtext);
+    if (yourbladder >= yourbladlose - 25 && currentLocation !== "thehottub") curtext = youbegtoilet(curtext);
     else {
-        curtext = c([locStack[0], "Continue..."], curtext);
+        curtext = c([currentLocation, "Continue..."], curtext);
     }
     sayText(curtext);
 }
@@ -124,36 +128,31 @@ function youbathroomlocked(curtext) {
     else {
         curtext = printList(curtext, locked["club"]);
     }
+    const [emergencyReaction, uncomfortableReaction, unfulfilledReaction] = locked["urgency"];
+
     //Description of your reaction, based on how badly you have to go
     if (yourbladder > yourblademer)
-        curtext.push(locked["urgency"][0]);
+        curtext.push(emergencyReaction);
     else if (yourbladder > yourbladneed)
-        curtext.push(locked["urgency"][1]);
+        curtext.push(uncomfortableReaction);
     else
-        curtext.push(locked["urgency"][2]);
-    if(locStack[0] === "thebar") {
-        //Tell her the bathroom was locked, depending on how often you tried already
-        if (yrrlockedflag > 3) {
-            curtext.push(locked["cbar"][0]);
-        } else if (yrrlockedflag > 2) {
-            curtext.push(locked["cbar"][1]);
-        } else if (yrrlockedflag) {
-            curtext.push(locked["cbar"][2]);
-        } else {
-            curtext.push(locked["cbar"][3]);
-        }
+        curtext.push(unfulfilledReaction);
+
+    // Complaint arrays ordered from most frustrated (4+ attempts) to first attempt
+    const isBar = locStack[0] === "thebar";
+    const [fourthPlusAttempt, thirdAttempt, secondAttempt, firstAttempt] =
+        isBar ? locked["cbar"] : locked["cclub"];
+
+    if (yrrlockedflag > 3) {
+        curtext.push(fourthPlusAttempt);
+    } else if (yrrlockedflag > 2) {
+        curtext.push(thirdAttempt);
+    } else if (yrrlockedflag) {
+        curtext.push(secondAttempt);
     } else {
-        //Tell her the line was too long, depending on how often you tried already
-        if (yrrlockedflag > 3) {
-            curtext.push(locked["cclub"][0]);
-        } else if (yrrlockedflag > 2) {
-            curtext.push(locked["cclub"][1]);
-        } else if (yrrlockedflag) {
-            curtext.push(locked["cclub"][2]);
-        } else {
-            curtext.push(locked["cclub"][3]);
-        }
+        curtext.push(firstAttempt);
     }
+
     yrrlockedflag++; //Increase how often you tried
     curtext = displayneed(curtext);
     return curtext;
@@ -161,10 +160,12 @@ function youbathroomlocked(curtext) {
 
 //TODO make this more fancy
 function youbegtoilet(curtext) {
-    curtext = printList(curtext, ypeelines["beg"][0]);
-    if (haveItem("shotglass")) curtext = callChoice(ypeelines["beg"][1][0], curtext);
-    if (haveItem("vase")) curtext = callChoice(ypeelines["beg"][1][1], curtext);
-    curtext = callChoice(ypeelines["beg"][1][2], curtext);
+    const [begDialogue, begChoices] = ypeelines["beg"];
+    const [shotglassChoice, vaseChoice, noIdeasChoice] = begChoices;
+    curtext = printList(curtext, begDialogue);
+    if (haveItem("shotglass")) curtext = callChoice(shotglassChoice, curtext);
+    if (haveItem("vase")) curtext = callChoice(vaseChoice, curtext);
+    curtext = callChoice(noIdeasChoice, curtext);
     return curtext;
 }
 
@@ -189,34 +190,49 @@ function ypeein(item){
     backpackcnt.style.display = "none";
     const list = yneeds[item];
     let curtext = [];
-    let yneedtype = 0;
+
+    // Urgency levels used as indices into per-item dialogue arrays
+    const URGENCY_MILD = 0;        // just an urge
+    const URGENCY_MODERATE = 1;    // needs to go
+    const URGENCY_DESPERATE = 2;   // emergency
+    const URGENCY_ALONE = 3;       // alone, no interaction
+
+    // yneeds[item] structure:
+    //   [0] = initial quotes (indexed by urgency), [1] = driving handoff,
+    //   [2] = non-driving handoff, [3] = unzipping description (indexed by urgency),
+    //   [4] = desperate peeing, [5] = non-desperate peeing,
+    //   [6] = result (indexed by urgency, then [0]=partial/[1]=full)
+    const [initialQuotes, drivingHandoff, standingHandoff, unzipDescription,
+           desperatePeeing, normalPeeing, peeResult] = list;
+
+    let yneedtype = URGENCY_MILD;
     if (yourbladder>yourblademer)
-        yneedtype = 2;
+        yneedtype = URGENCY_DESPERATE;
     else if (yourbladder>yourbladneed)
-        yneedtype = 1;
+        yneedtype = URGENCY_MODERATE;
     //When you're alone you don't have an interaction with her.
     if (playOnly.includes(locStack[0])) {
         //TODO you call out to her when desperate in one of the quotes.
-        curtext.push(list[0][3]);
+        curtext.push(initialQuotes[URGENCY_ALONE]);
         curtext = callChoice(["ypeein2(&quot;" + item + "&quot;," + yneedtype + ")", "Continue..."], curtext);
     } else {
         //Prints a quote about how full you are and what you are planning to do.
-        curtext.push(list[0][yneedtype]);
+        curtext.push(initialQuotes[yneedtype]);
         //If she doesn't like you enough she'll act embarrassed and prevent you from doing this.
-        if (yneedtype === 0 && attraction > 100 ||
-            yneedtype === 1 && attraction > 70 ||
-            yneedtype === 2 && attraction > 30){
-            if (yneedtype === 2) {
+        if (yneedtype === URGENCY_MILD && attraction > 100 ||
+            yneedtype === URGENCY_MODERATE && attraction > 70 ||
+            yneedtype === URGENCY_DESPERATE && attraction > 30){
+            if (yneedtype === URGENCY_DESPERATE) {
                 // if you're desperate print a quote about giving her the item so you can focus on your trousers
                 if (locStack[0] === "driveout")
                     //The quote is slightly different when you're driving
-                    curtext = printList(curtext, list[1]);
+                    curtext = printList(curtext, drivingHandoff);
                 else
-                    curtext = printList(curtext, list[2]);
+                    curtext = printList(curtext, standingHandoff);
 
             }
             //Prints a description of undoing your pants, depending on how bad you have to go.
-            curtext = printList(curtext, list[3][yneedtype]);
+            curtext = printList(curtext, unzipDescription[yneedtype]);
             curtext = callChoice(["ypeein2(&quot;" +item+ "&quot;," + yneedtype + ")", "Continue..."], curtext);
         } else {
             curtext.push("\"Are you out of your mind!?\" She hisses urgently. \"You can't do that! What if someone sees?!\"");
@@ -229,16 +245,19 @@ function ypeein(item){
 }
 
 function ypeein2(item, yneedtype){
+    const URGENCY_DESPERATE = 2;
+    const [, , , , desperatePeeing, normalPeeing] = yneeds[item];
     let curtext = [];
-    if (yneedtype === 2)
-        curtext = printList([], yneeds[item][4]);
+    if (yneedtype === URGENCY_DESPERATE)
+        curtext = printList([], desperatePeeing);
     else
-        curtext = printList(curtext, yneeds[item][5]);
+        curtext = printList(curtext, normalPeeing);
     curtext = callChoice(["ypeein3(&quot;" +item+ "&quot;," + yneedtype + ")", "Continue..."], curtext);
     sayText(curtext);
 }
 
 function ypeein3(item, yneedtype){
+    const URGENCY_DESPERATE = 2;
     let curtext = [];
     if (yourbladder < yourbladurge){
         curtext.push("You try your best, but you just can't manage to push anything out.");
@@ -246,23 +265,25 @@ function ypeein3(item, yneedtype){
         curtext.push("<b>You:</b> It's not happening, I'll try again later when my bladder is a bit fuller.");
     } else {
         const container = backPackItems[item];
-        const list = yneeds[item];
+        const peeResult = yneeds[item][6]; // result text indexed by [urgency][0=partial/1=full]
         if (container.hasOwnProperty("volume")){
             if (container.volume < yourbladder){
-                if (yneedtype === 2)
-                    curtext.push(list[6][yneedtype][1]);
+                const PARTIAL_FILL = 0;
+                const FULL_FILL = 1;
+                if (yneedtype === URGENCY_DESPERATE)
+                    curtext.push(peeResult[yneedtype][FULL_FILL]);
                 else
-                    curtext.push(list[6][yneedtype][0]);
+                    curtext.push(peeResult[yneedtype][PARTIAL_FILL]);
                 if (yourbladder > yourblademer)
                     curtext.push("YOU: Damn. That's not much better.");
                 yourbladder -= container.volume;
             } else {
                 //The item can hold your full bladder contents
-                curtext.push(list[6][yneedtype][1]);
+                curtext.push(peeResult[yneedtype][1]);
                 flushyourdrank();
             }
         } else{
-            curtext = printList(curtext, list[6][yneedtype]);
+            curtext = printList(curtext, peeResult[yneedtype]);
             flushyourdrank();
         }
         attraction += Math.round(10 / (yneedtype + 1));
@@ -278,17 +299,21 @@ function yPeeInTub() {
     cListenerGen([theHotTub, "Continue..."], "theHotTub");
 }
 
-//TODO Different lines when in car
+// peeOutside array indices:
+//   0=casual announcement, 1=desperate announcement, 2=she asks to watch,
+//   3=step out of car, 4=standing unzip, 5=car strip tease, 6=freed + mesmerized,
+//   7=standing strip tease, 8=pee by car, 9=slight turn away, 10=zip-up arousal,
+//   11=watched pee car, 12=she touches you
 function ypeeoutside() {
     let curtext = [];
     if (yourbladder < yourblademer)
-        curtext = printList(curtext, ypeelines["peeOutside"][0]);
+        curtext = printList(curtext, ypeelines["peeOutside"][0]); // casual announcement
     else {
-        curtext = printList(curtext, ypeelines["peeOutside"][1]);
+        curtext = printList(curtext, ypeelines["peeOutside"][1]); // desperate announcement
     }
     let listenerList = [];
     if (attraction > 100 && shyness < 10 && randomchoice(7)){
-        curtext = printList(curtext, ypeelines["peeOutside"][2]);
+        curtext = printList(curtext, ypeelines["peeOutside"][2]); // she asks to watch
         listenerList.push([[ypeeOutsideWatch, "Of Course!"], "peeWatch"]);
     } else {
         listenerList.push([[yPeeOutside2, "Continue..."], "peeOutside"]);
@@ -302,10 +327,10 @@ function yPeeOutside2() {
     let curtext = [];
     let listenerList = [];
     if (locStack[0] === "theMakeOut"){
-        curtext = printList(curtext, ypeelines["peeOutside"][3]);
+        curtext = printList(curtext, ypeelines["peeOutside"][3]); // step out of car
         listenerList.push([[yPeeOutsideCar, "Continue..."], "peeOutCar"]);
     } else {
-        curtext = printList(curtext, ypeelines["peeOutside"][4]);
+        curtext = printList(curtext, ypeelines["peeOutside"][4]); // standing unzip
         listenerList.push([[yPeeOutside3, "Continue..."], "peeOutside"]);
     }
     sayText(curtext);
@@ -313,18 +338,17 @@ function yPeeOutside2() {
 }
 
 function yPeeOutsideCar() {
-    sayText(ypeelines["peeOutside"][8]);
-    // s("You subtly turn towards the car so she could watch if she wanted to. The pee hisses out of your tip and runs in a stream under the car.");
+    sayText(ypeelines["peeOutside"][8]); // pee by car
     flushyourdrank();
     cListenerGen([theMakeOut, "Continue..."], "theMakeOut");
 }
 
 //You're not in the car, either at the beach, dark yard, or on the walk. The text is located in the ypeeline json under the current location.
 function yPeeOutside3(){
-    let curtext = printList([], ypeelines["peeOutside"][9]);
+    let curtext = printList([], ypeelines["peeOutside"][9]); // slight turn away
     //TODO have different quotes for theWalk and theYard
     curtext = printList(curtext, ypeelines[locStack[0]][0]);
-    curtext = printList(curtext, ypeelines["peeOutside"][10]);
+    curtext = printList(curtext, ypeelines["peeOutside"][10]); // zip-up arousal
     curtext = callChoice(["curloc", "Continue..."], curtext);
     flushyourdrank();
     sayText(curtext);
@@ -335,12 +359,12 @@ function ypeeOutsideWatch(){
     let curtext = [];
     let listenerList = [];
     if (locStack[0] === "theMakeOut"){
-        curtext = printList(curtext, ypeelines["peeOutside"][5]);
-        curtext = printList(curtext, ypeelines["peeOutside"][6]);
+        curtext = printList(curtext, ypeelines["peeOutside"][5]); // car strip tease
+        curtext = printList(curtext, ypeelines["peeOutside"][6]); // freed + mesmerized
         listenerList.push([[yPeeOutsideWatchCar, "Continue..."], "peeOutCar"]);
     } else {
-        curtext = printList(curtext, ypeelines["peeOutside"][7]);
-        curtext = printList(curtext, ypeelines["peeOutside"][6]);
+        curtext = printList(curtext, ypeelines["peeOutside"][7]); // standing strip tease
+        curtext = printList(curtext, ypeelines["peeOutside"][6]); // freed + mesmerized
         listenerList.push([[yPeeOutsideWatch2, "Continue..."], "peeOut"]);
     }
     sayText(curtext);
@@ -348,16 +372,16 @@ function ypeeOutsideWatch(){
 }
 
 function yPeeOutsideWatchCar() {
-    sayText(ypeelines["peeOutside"][11]);
+    sayText(ypeelines["peeOutside"][11]); // watched pee car
     flushyourdrank();
     cListenerGen([theMakeOut, "Continue..."], "theMakeOut");
 }
 
 //You're not in the car, either at the beach or on the walk. The text is located in the ypeeline json under the current location.
 function yPeeOutsideWatch2(){
-    let curtext = printList([], ypeelines["peeOutside"][12]);
+    let curtext = printList([], ypeelines["peeOutside"][12]); // she touches you
     curtext = printList(curtext, ypeelines[locStack[0]][1]);
-    curtext = printList(curtext, ypeelines["peeOutside"][13]);
+    curtext = printList(curtext, ypeelines["peeOutside"][13]); // she strokes, arousal
     curtext = callChoice(["curloc", "Continue..."], curtext);
     flushyourdrank();
     sayText(curtext);

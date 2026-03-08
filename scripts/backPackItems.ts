@@ -402,22 +402,22 @@ let allowItems= 1; //Are you currently allowed to use items?
 
 //TODO add a mention need option
 // standobjs function allows one to use the normal objects.
-function standObjs(ListenerList : [[Function, string], string][]) {
+function standobjs(curtext, listenerList = []) {
     if (randomchoice(5) && gottagoflag < 1 && showedneed > 0 && !askholditcounter)
-        ListenerList.push([[askpee, "Ask her if she has to pee."], "askPee"])
+        curtext = c(["askpee", "Ask her if she has to pee."], curtext);
     if (flirtedflag < maxflirts && noflirtflag < 1)
-        ListenerList = handleFlirt(ListenerList);
+        listenerList = handleFlirt(listenerList);
     if (gottagoflag < 1 && askholditcounter)
-        curText = c(["askcanhold", "You ask her how she's doing."],curText);
-    return curText;
+        curtext = c(["askcanhold", "You ask her how she's doing."],curtext);
+    return curtext;
 }
 
 let previousbtn;
 let itemtext;
 function backpack(){
     if (!objQuotes){
-        getjson("objects", function () {
-            objQuotes = json;
+        fetchJson("objects").then(function (data) {
+            objQuotes = data;
             objQuotes["buyItem2"] = formatAllVarsList(objQuotes["buyItem2"]);
             backpack();
         });
@@ -918,7 +918,7 @@ function champagneNow() {
             curtext = showneed(curtext);
             curtext.push(pickrandom(drinklines["fillChampBad"]));
             champagnecounter = 6;
-            curtext = printList(curtext, drinklines[5]);
+            curtext = printList(curtext, drinklines["champagne"][5]);
         }
     } else if (backPackItems["champ-glass"].value >= 2) {
         curtext.push("You get out the glasses and champagne and fill up both glasses");

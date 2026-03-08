@@ -45,6 +45,26 @@ function resolveLegacyTarget(location: unknown): (() => void) | undefined {
         return gamestart;
     }
 
+    // Handle parameterized calls like buyItem("water")
+    const paramMatch = location.toString().match(/^([A-Za-z_$][\w$]*)\s*\((.+)\)\s*;?$/);
+    if (paramMatch) {
+        const funcName = paramMatch[1];
+        const argsRaw = paramMatch[2];
+        const func = (window as any)[funcName];
+        if (typeof func === "function") {
+            // Parse simple quoted string or numeric arguments
+            const args = argsRaw.split(',').map(a => {
+                const trimmed = a.trim().replace(/&quot;/g, '"');
+                // Strip surrounding quotes
+                const unquoted = trimmed.replace(/^["']|["']$/g, '');
+                // If it was originally a number without quotes, parse it
+                if (/^\d+$/.test(trimmed)) return Number(trimmed);
+                return unquoted;
+            });
+            return () => func(...args);
+        }
+    }
+
     return undefined;
 }
 
@@ -136,6 +156,14 @@ export function go(location: unknown) {
         }
 
         gameState.Time.nextTick();
+
+        // Sync legacy globals with gameState
+        thetime = gameState.Time.totalTime;
+        hour = gameState.Time.hour;
+
+        // Keep typed game state in sync with legacy globals modified by JS modules.
+        if (typeof attraction !== "undefined") gameState.Attraction = attraction;
+        if (typeof shyness !== "undefined") gameState.Shyness = shyness;
     }
 
     document.GetRequiredElementById('textsp').innerText = "";
@@ -195,9 +223,13 @@ function shuffle<T>(array: T[]): T[] {
 }
 
 //This sets the game up when you click start
-// TODO probably no longer needed.
-function gamestart(){
+async function gamestart(){
+    if (!gameSettings.PlayerBladder) {
+        gameScreen.StatusBar.TogglePlayerBladder(false);
+    }
     gameScreen.StatusBar.Update();
+    await fetchAndCacheJson("yourhome");
+    await setupQuotes();
     yourHome();
 }
 
@@ -207,21 +239,25 @@ export async function start() {
     gameScreen.PopUps.Disclaimer.displayDisclaimerPopup();
     animationManager.start();
     new SettingsManager().readFromLocalStorage();
+    // Keep legacy global toggle in sync with typed settings
+    try { (globalThis as any).playerbladder = gameSettings.PlayerBladder; } catch {}
     setup();
-    await getjsonTF("start", () => undefined);
+    await fetchAndCacheJson("start");
     pushloc("yourhome");
     locationSetup("start");
     let curtext = locjson["always"];
     curtext = printAllChoices(curtext);
     sayText(curtext);
-    //the start of the game is dependent on yneeds, to save loading time it is called as soon as you move from the main screen
-    //And then the variables will be added when the game actually starts, but that's not necessary for the begin scene so this should be fine.
-    getjson("yneeds", function () {yneeds = json});
+    //yneeds is loaded early to avoid delay when the game actually starts
+    yneeds = await fetchJson("yneeds");
 }
 
 function gameOver() {
     setText(endScreens["gameOver"]);
 }
+
+// Expose legacy-facing functions to global scope for legacy JS modules
+(globalThis as any).gameOver = gameOver;
 
 //TODO maybe combine the game ending function into one
 //Basically you got her into bed but not desperate

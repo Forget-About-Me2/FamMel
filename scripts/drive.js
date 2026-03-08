@@ -14,9 +14,8 @@ function leavehm() {
     let curtext = showneed([]);
 
     if (gottagoflag > 0) {
+        // choices: [0]=hold it, [1]=let her go, [2]=let's go
         curtext = printChoicesList(curtext, [0,1], drive["leavehm"]["choices"]);
-        // c("holdit", "Ask her to hold it.");
-        // c("allowpee", "Let her go.");
     } else {
         flirtedflag = 0;
         curtext.push("<b>YOU</b> " + pickrandom(drive["leavehm"]["outtahere"]));
@@ -24,6 +23,7 @@ function leavehm() {
         curtext.push(girltalk + "Yeah! " + pickrandom(drive["leavehm"]["outtahere"]));
         curtext = displayneed(curtext);
         curtext = displayyourneed(curtext);
+        // choices: [2]=let's go
         curtext = printChoicesList(curtext, [2], drive["leavehm"]["choices"]);
     }
     sayText(curtext);

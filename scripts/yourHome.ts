@@ -1,8 +1,10 @@
-import yourHomeJson from "../Json/yourhome.json"
 import { gameState, LocationCategory } from "./gameState/gameState";
 import { gameSettings } from "./settings/gameSettings";
 
 //This contains everything you can do from your home before you pick-up your date
+
+let onphone = 0; // Flag for being on the phone with her
+// shopping flag is in shims.js (shared with store.ts)
 
 //TODO different scene if you're desperate and go pee at your house
 //TODO you can actually wet yourself in the house
@@ -10,33 +12,33 @@ import { gameSettings } from "./settings/gameSettings";
 //TODO refactor
 export function yourHome() {
     allowItems = 1;
-    let curText: string[] =[];
+    let curtext: string[] = [];
     if (!gameState.DidIntro) {
+        loadLocationScene("yourhome", "yourhome");
         gameState.DidIntro = true;
-        curText.push(...yourHomeJson.intro);
+        curtext = printIntro(curtext, 0);
     } else {
-        if (!gameState.isCurrentLocation(LocationCategory.YourHome)){
-            locationMSetup("yourhome", "yourhome");
+        if (locStack[0] !== "yourhome" || onphone || shopping) {
+            loadLocationScene("yourhome", "yourhome");
+            onphone = 0;
+            shopping = 0;
         }
+        curtext = printIntro(curtext, 1);
     }
-    curText.push(yourHomeJson.actionQuestion);
-    curText = displayyourneed(curText);
-    const listenerList : [[Function, string], string][] = [];
-    listenerList.push([[goStore, yourHomeJson.goStore], "goStore"]);
-    listenerList.push([[callHer, yourHomeJson.callHer], "callHer"]);
+    curtext = printAlways(curtext);
+    curtext = displayyourneed(curtext);
+    if (gameSettings.PlayerBladder && yourbladder > yourbladlose) {
+        wetyourself();
+        return;
+    }
+    // Build choices based on current game state
+    let choices = [0, 1]; // Store, Call her
     if (gameSettings.PlayerBladder) {
-        if (yourbladder > yourbladlose) {
-            wetyourself();
-            return;
-        }
-        if (yourbladder > yourbladurge) {
-            listenerList.push([[youpee, yourHomeJson.youPee], "youPee"]);
-        }
-        listenerList.push([[yPreDrink, yourHomeJson.yPreDrink], "yPreDrink"]);
+        choices.push(2, 3); // Pee, Drink water
     }
-    listenerList.push([[herhome, yourHomeJson.herHome], "pickup"]);
-    sayText(curText)
-    cListenerGenList(listenerList);
+    choices.push(4); // Pick her up
+    curtext = printChoices(curtext, choices);
+    sayText(curtext);
 }
 
 
@@ -69,11 +71,12 @@ function callHer() {
     if (locStack[0] !== "callher") {
         flirtedflag = 0;
         pushloc("callher");
-        locationMSetup("yourhome", "callher")
+        loadLocationScene("yourhome", "callher")
         curtext = printIntro(curtext, 0);
         if (thetime > 75 && bladder < blademer) {
             late = 1;
         }
+        onphone = 1;
     } else {
         curtext = printIntro(curtext, 1);
     }
@@ -99,13 +102,14 @@ function callHer() {
         if (shyness > 80) shyness -= 1;
         //TODO This also prints highflirts while in the original that can't happen over the phone
         if(flirtedflag < maxflirts){
-            curtext = handleFlirt(listenerList);
+            handleFlirt(listenerList);
         }
         incrandom();
         curtext = printChoices(curtext, [1,2]);
     }
 
     sayText(curtext);
+    cListenerGenList(listenerList);
 }
 
 function favor() {
@@ -233,42 +237,93 @@ function predrink() {
 
 function yPreDrink() {
     let curtext = []
+    // Guard against async loading and tolerate legacy/casing key variants
+    const yDrinkLines = (typeof drinklines !== "undefined" && drinklines)
+        ? (drinklines["ypredrink"] || drinklines["yPreDrink"] || [[], []])
+        : [[], []];
     if (yourtummy < ymaxtummy) {
-        curtext = printList(curtext, drinklines["yPreDrink"][0]);
+        curtext = printList(curtext, yDrinkLines[0] || ["You drink some water."]);
         yourtummy += 200;
         backPackItems.water.yDrank += 2;
     } else {
-        curtext = printList(curtext, drinklines["yPreDrink"][1]);
+        curtext = printList(curtext, yDrinkLines[1] || ["Your stomach feels too full to drink more right now."]);
     }
     curtext = c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
 }
 
+function getYourHomeCallData() {
+    const fallback = {
+        getcalled: "Your phone rings.",
+        anscell: "You answer the call.",
+        ignorecell: "You ignore the call for now.",
+        cantwait: "{0} I can't wait much longer!",
+        choices: ["Answer the phone", "Ignore the call", "Ask her to hold it", "Change the subject", "Hang up"]
+    };
+
+    try {
+        const root = calledjsons?.["yourhome"]?.["getcalled"];
+        if (!root) return fallback;
+        return {
+            getcalled: root["getcalled"] ?? fallback.getcalled,
+            anscell: root["anscell"] ?? fallback.anscell,
+            ignorecell: root["ignorecell"] ?? fallback.ignorecell,
+            cantwait: root["cantwait"] ?? fallback.cantwait,
+            choices: Array.isArray(root["choices"]) ? root["choices"] : fallback.choices
+        };
+    } catch {
+        return fallback;
+    }
+}
+
 function cellphone() {
-    let curtext = [calledjsons["yourHome"]["getcalled"]["getcalled"]]
+    const callData = getYourHomeCallData();
+    let curtext = [callData.getcalled]
     waitcounter += 3;
-    curtext = printChoicesList(curtext, [0,1], calledjsons["yourHome"]["getcalled"]["choices"]);
+    curtext = printChoicesList(curtext, [0,1], callData.choices);
     sayText(curtext);
 }
 
 function anscell() {
     //TODO this isn't very elegant
-    let curtext = [calledjsons["yourHome"]["getcalled"]["anscell"]];
+    const callData = getYourHomeCallData();
+    let curtext = [callData.anscell];
     curtext = cantwait(curtext);
     sayText(curtext);
 }
 
 function ignorecell() {
-    let curtext = [calledjsons["yourHome"]["getcalled"]["ignorecell"]];
+    const callData = getYourHomeCallData();
+    let curtext = [callData.ignorecell];
     attraction -= 1;
     curtext = c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
 }
 
 function cantwait(curtext) {
+    const callData = getYourHomeCallData();
     waitcounter += 4;
-    curtext.push(formatString(calledjsons["yourHome"]["getcalled"]["cantwait"], [girltalk]));
+    curtext.push(formatString(callData.cantwait, [girltalk]));
     curtext = displaygottavoc(curtext);
-    curtext = printChoicesList(curtext, [2,3,4], calledjsons["yourHome"]["getcalled"]["choices"]);
+    curtext = printChoicesList(curtext, [2,3,4], callData.choices);
     return curtext;
 }
+
+// Register yourHome-internal functions on window for JSON choice tag routing.
+// The choice tags in yourhome.json use lowercase names (e.g. "callher", "gostore")
+// which go() resolves via window[tag].
+(window as any).yourhome = yourHome;
+(window as any).callher = callHer;
+(window as any).favor = favor;
+(window as any).gotta = gotta;
+(window as any).ohreally = ohreally;
+(window as any).waitpickup = waitpickup;
+(window as any).luckybribe = luckybribe;
+(window as any).declinebribe = declinebribe;
+(window as any).acceptbribe = acceptbribe;
+(window as any).pantyq = pantyq;
+(window as any).predrink = predrink;
+(window as any).ypredrink = yPreDrink;
+(window as any).cellphone = cellphone;
+(window as any).anscell = anscell;
+(window as any).ignorecell = ignorecell;
