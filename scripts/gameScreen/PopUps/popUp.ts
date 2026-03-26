@@ -1,3 +1,5 @@
+import { openPopUp } from '../../pop-up';
+
 export class PopUp{
     protected _popupConfig?: PopupConfig;
     private readonly popUpTitle: HTMLElement;

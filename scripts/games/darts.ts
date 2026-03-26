@@ -1,4 +1,4 @@
-function dartSetup(data: any){
+export function dartSetup(data: any){
     darts = data;
     darts["play"] = formatAllVarsList(darts["play"]);
     setupScores();
@@ -108,9 +108,9 @@ function tripleFinish(points: number){
     return [list, score, endPoints];
 }
 
-let playedDarts = false;
+export let playedDarts = false;
 //Play a game of darts with her
-function playDarts() {
+export function playDarts() {
     let curtext = [];
     // play: [0]=first time intro, [1]=replay intro, [2]=game setup
     const [firstPlay, replayIntro, gameSetup] = darts["play"];
@@ -139,7 +139,7 @@ function playDarts() {
 }
 
 //Play a round of the dart game
-function dartRound(dartPoints: any){
+export function dartRound(dartPoints: any){
     let curText = printList([], darts["round"][0]); // round narration
     let winner = false;
     let res = []; // [throws, totalScored, remainingPoints]
@@ -185,4 +185,11 @@ function dartRound(dartPoints: any){
         addSayText(curText);
         addListenersList(listenerList);
     }
+}
+
+export function exposeDartsOnWindow(): void {
+    const w = window as any;
+    w.dartSetup = dartSetup;
+    w.playDarts = playDarts;
+    w.dartRound = dartRound;
 }

@@ -9,8 +9,6 @@ const scriptEntryPoints = [
     'scripts/store.ts',
     'scripts/bladder.ts',
     'scripts/yourbladder.ts',
-    'scripts/actions.ts',
-    'scripts/clothes.ts',
     'scripts/drive.ts',
     'scripts/herhome.ts',
     'scripts/locations.ts',
@@ -20,11 +18,7 @@ const scriptEntryPoints = [
     'scripts/locations/theatre.ts',
     'scripts/locations/theMakeOut.ts',
     'scripts/fuckHer.ts',
-    'scripts/images.ts',
-    'scripts/pop-up.ts',
     'scripts/settings.ts',
-    'scripts/validation.ts',
-    'scripts/games/darts.ts',
 ];
 
 // Module bundle: main.ts and all its imports bundled into one file

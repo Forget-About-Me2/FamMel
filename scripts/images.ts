@@ -1,4 +1,4 @@
-let imgs = {
+export let imgs = {
     Jennifer:{},
     Karen:{},
     Laura:{},
@@ -6,7 +6,7 @@ let imgs = {
 };
 
 //sets imgs to the local stored version
-function importimgs(){
+export function importimgs(){
     const imgString = localStorage["imgs"];
     imgs = JSON.parse(imgString);
 }
@@ -24,10 +24,10 @@ function resetImg(){
     getUrl();
 }
 
-let picset = 0;
+export let picset = 0;
 // displaypix will set the current picture to be displayed
 //TODO figure out why need is called before urge
-function displaypix(picname: string) {
+export function displaypix(picname: string) {
     const imgssrc = imgs[basegirl][picname];
     if (enableimages && imgssrc !== imageprev && !picset) {
         document.getElementById('thepic').innerHTML = "<img src=" + imgssrc + " alt=" + imagedesc + " class='pic'>";
@@ -37,7 +37,7 @@ function displaypix(picname: string) {
 
 //TODO proper explanation on how setup works
 //TODO show picture of first thing that's called
-function explainimgs() {
+export function explainimgs() {
     setjpgimgs();
     setText(settings["picsetup"]);
     picsetup();
@@ -135,4 +135,17 @@ function picStore(name: string, imgtype: string, url: string){
     if(typeof(Storage) !== "undefined"){
         localStorage.setItem("imgs", JSON.stringify(imgs))
     }
+}
+
+export function exposeImagesOnWindow(): void {
+    const w = window as any;
+    w.displaypix = displaypix;
+    w.explainimgs = explainimgs;
+    w.importimgs = importimgs;
+    Object.defineProperty(w, 'picset', {
+        get: () => picset,
+        set: (v) => { picset = v; },
+        configurable: true,
+        enumerable: true,
+    });
 }

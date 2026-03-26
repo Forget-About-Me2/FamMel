@@ -1,7 +1,7 @@
 //All functions related to opening and closing the pop-up
 
 //Carry out what is needed to set up a pop up once it opens.
-function openPopUp(){
+export function openPopUp(){
     const popUp = document.getElementById("pop-up");
     popUp.style.display= "flex";
     setCloseButton();
@@ -21,7 +21,7 @@ function setCloseButton(){
     }
 }
 
-function setErrorPopup(data: string){
+export function setErrorPopup(data: string){
     const popUp = document.getElementById("pop-up");
     popUp.style.display = "flex";
     const closeButton = document.getElementById("close-pop-up");
@@ -37,7 +37,7 @@ function setErrorPopup(data: string){
         "<br> <button id='copyErrorMessage' onclick='copyErrorText()'>Copy text</button>"
 }
 
-async function copyErrorText(){
+export async function copyErrorText(){
     const errorMessage = document.getElementById("errorMessage");// For mobile devices
 
     navigator.clipboard.writeText(errorMessage.innerText).then(async () => {
@@ -51,6 +51,12 @@ async function copyErrorText(){
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
+export function exposePopUpOnWindow(): void {
+    const w = window as any;
+    w.openPopUp = openPopUp;
+    w.setErrorPopup = setErrorPopup;
+    w.copyErrorText = copyErrorText;
+}
 
 // window.onunhandledrejection = (errorMsg, url, lineNumber, column, errorObj) => {
 //     console.log("fuck");

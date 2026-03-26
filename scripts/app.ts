@@ -11,9 +11,23 @@ import { gameScreen } from './gameScreen/gameScreen';
 import { gameSettings } from './settings/gameSettings';
 import { animationManager } from './gameScreen/animationManager';
 import { exposeQuotesOnWindow } from './quotes';
+import { exposePopUpOnWindow } from './pop-up';
+import { exposeValidationOnWindow } from './validation';
+import { exposeImagesOnWindow } from './images';
+import { exposeClothesOnWindow } from './clothes';
+import { exposeActionsOnWindow } from './actions';
+import { exposeDartsOnWindow } from './games/darts';
 
 // Expose quotes module state and functions on window first — many script files depend on these
 exposeQuotesOnWindow();
+
+// Expose Tier 1 modules on window for script-style callers
+exposePopUpOnWindow();
+exposeValidationOnWindow();
+exposeImagesOnWindow();
+exposeClothesOnWindow();
+exposeActionsOnWindow();
+exposeDartsOnWindow();
 
 // Expose to global scope for JS files and script-style TS files
 (window as any).go = go;

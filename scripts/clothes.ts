@@ -8,7 +8,7 @@ let pantydescriptions = [
 ]
 
 
-function changepanties(choice: number) {
+export function changepanties(choice: number) {
     const newcolor = pantydescriptions[choice];
     let curtext = [];
     if (pantycolor === newcolor) {
@@ -27,5 +27,9 @@ function changepanties(choice: number) {
     pantycolor = newcolor;
     curtext = printChoices(curtext, [10]);
     sayText(curtext);
+}
+
+export function exposeClothesOnWindow(): void {
+    (window as any).changepanties = changepanties;
 }
 

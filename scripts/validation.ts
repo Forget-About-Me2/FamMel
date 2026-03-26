@@ -1,4 +1,4 @@
-function validateListenerList(list: any[]){
+export function validateListenerList(list: any[]){
     const validationResult = isValidListenerList(list);
     if (validationResult.length > 0){
         setErrorPopup("Listener list poorly defined:\n"+ "Errors: "
@@ -29,4 +29,8 @@ function isValidListenerList(list: any[]) {
         }
     }
     return errors;
+}
+
+export function exposeValidationOnWindow(): void {
+    (window as any).validateListenerList = validateListenerList;
 }

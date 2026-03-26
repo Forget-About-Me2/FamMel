@@ -20,20 +20,26 @@ interface String {
 // ============================================================================
 
 // ============================================================================
-// Globals from actions.ts (script-style, needed by quotes module)
+// Globals from actions.ts (now in the bundle, exposed on window)
 // ============================================================================
+// flirt_l, flirt_m, flirt_h, checkherout, feelup, kissher — now module exports
+// Still declared for script-style callers:
 declare function flirt_l(): void;
 declare function flirt_m(): void;
 declare function flirt_h(): void;
+declare function checkherout(): void;
+declare function feelup(): void;
+declare function kissher(curtext?: any[], sexLoc?: string): void;
 
 // ============================================================================
-// Globals from games/darts.ts and fuckHer.ts (script-style, needed by quotes module)
+// Globals from games/darts.ts (now in the bundle) and fuckHer.ts (script-style)
 // ============================================================================
+// dartSetup — now module export, still declared for quotes.ts global reference
 declare function dartSetup(data: any): void;
 declare function fuckHerSetup(data: any): void;
 
 // ============================================================================
-// Globals from validation.ts (script-style, needed by quotes module)
+// Globals from validation.ts (now in the bundle, exposed on window)
 // ============================================================================
 declare function validateListenerList(list: any[]): void;
 
@@ -197,16 +203,24 @@ declare function callHer(): void;
 declare function cellphone(): void;
 
 // ============================================================================
-// Global functions from images.js — now in images.ts
+// Global functions from images.ts (now in the bundle, exposed on window)
 // ============================================================================
+declare function displaypix(picname: string): void;
+declare function explainimgs(): void;
+declare function importimgs(): void;
+declare let picset: number;
 
 // ============================================================================
-// Global functions from pop-up.js — now in pop-up.ts
+// Global functions from pop-up.ts (now in the bundle, exposed on window)
 // ============================================================================
+declare function openPopUp(): void;
+declare function setErrorPopup(data: string): void;
+declare function copyErrorText(): Promise<void>;
 
 // ============================================================================
-// Global functions from validation.js — now in validation.ts
+// Global functions from clothes.ts (now in the bundle, exposed on window)
 // ============================================================================
+declare function changepanties(choice: number): void;
 
 // ============================================================================
 // Global functions from actions.ts / quotes.ts
@@ -276,6 +290,10 @@ declare function gameWon(): void;
 declare let playerGame: number;
 
 // ============================================================================
-// Functions from games/darts.ts
+// Functions from games/darts.ts (now in the bundle)
+// wrapAndFormatAll — called but never defined anywhere; pre-existing bug.
+// Kept as declare so TypeScript compiles. Will crash if darts code path is hit.
 // ============================================================================
 declare function wrapAndFormatAll(template: any, values: any): any;
+declare function playDarts(): void;
+declare function dartRound(dartPoints: any): void;

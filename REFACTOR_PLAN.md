@@ -11,9 +11,9 @@
 
 | World | Files | Output |
 |-------|-------|--------|
-| **Bundle** (IIFE) | `app.ts → main.ts, gameState, gameScreen, settings, models, helpers, yourHome` | `dist/app.js` — private scope, selected exports on `window` |
-| **Scripts** (global) | `store.ts, backPackItems.ts, debugMenu.ts` | `dist/*.js` — all declarations land on `window` |
-| **Raw JS** (global) | settings.js, bladder.js, yourbladder.js, actions.js, clothes.js, drive.js, fuckHer.js, herhome.js, images.js, locations.js, pop-up.js, validation.js, shims.js + location files | Loaded via `<script>` tags — all on `window` |
+| **Bundle** (IIFE) | `app.ts → main.ts, gameState, gameScreen, settings, models, helpers, yourHome, quotes, pop-up, validation, images, clothes, actions, games/darts` | `dist/app.js` — private scope, selected exports on `window` |
+| **Scripts** (global) | `store.ts, backPackItems.ts, debugMenu.ts, bladder.ts, yourbladder.ts, drive.ts, herhome.ts, locations.ts, fuckHer.ts, settings.ts` + location files | `dist/*.js` — all declarations land on `window` |
+| **Raw JS** (global) | shims.js | Loaded via `<script>` tags — all on `window` |
 
 ### Root Causes of Crashes
 
@@ -382,4 +382,58 @@ Converted `bladder.js` and `yourbladder.js` to script-style TypeScript. All 18 S
 ### scripts/globals.d.ts
 - **Removed `declare` blocks** for bladder.js and yourbladder.js variables and functions (now defined in TS files and visible to the compiler directly)
 - **Added `declare` statements** for JS-file globals newly referenced by TS: `externalflirt`, `rrMovieLineThresh`, `gasStation`, `wetthecar`, `owedfavor`, `changevenueflag`, `theatre`, `playerbladder`, `haveherpurse`, `prepeed`, `doDance`, `kissher`, `theHotTub`, `theMakeOut`, `pphotogame`, `pdrinkinggame`, `nextstop`
+
+---
+
+## Changelog — Phase 3 Batch 1: Tier 1 Files into Bundle (2026-03-26)
+
+Moved 6 "leaf" script-style TS files into the app bundle using the same `expose*OnWindow()` bridge pattern as quotes.ts. These files had no dependencies on other script-style files, making them safe to migrate first.
+
+### Files migrated: pop-up.ts, validation.ts, images.ts, clothes.ts, actions.ts, games/darts.ts
+
+### scripts/pop-up.ts
+- **Converted to module** with `export` on `openPopUp`, `setErrorPopup`, `copyErrorText`
+- **Added `exposePopUpOnWindow()` bridge** to register functions on `window` for script-style callers and HTML event handlers
+
+### scripts/validation.ts
+- **Converted to module** with `export` on `validateListenerList`
+- **Added `exposeValidationOnWindow()` bridge** — quotes.ts references this as a global
+
+### scripts/images.ts
+- **Converted to module** with `export` on `displaypix`, `explainimgs`, `importimgs`, `imgs`, `picset`
+- **Added `exposeImagesOnWindow()` bridge** with getter/setter for mutable `picset` state
+
+### scripts/clothes.ts
+- **Converted to module** with `export` on `changepanties`
+- **Added `exposeClothesOnWindow()` bridge** — called from JSON routing via `go()`
+
+### scripts/actions.ts
+- **Converted to module** with `export` on `flirt_l`, `flirt_m`, `flirt_h`, `checkherout`, `feelup`, `kissher`
+- **Added `exposeActionsOnWindow()` bridge** — location files reference these as globals
+
+### scripts/games/darts.ts
+- **Converted to module** with `export` on `dartSetup`, `playDarts`, `dartRound`, `playedDarts`
+- **Added `exposeDartsOnWindow()` bridge** — `dartSetup` called from quotes.ts JSON load callback
+- **Note:** `wrapAndFormatAll` is called but never defined (pre-existing bug); kept `declare` in globals.d.ts
+
+### scripts/app.ts
+- **Added imports and calls** for all 6 `expose*OnWindow()` bridges after `exposeQuotesOnWindow()`
+
+### scripts/gameScreen/PopUps/popUp.ts
+- **Added direct import** of `openPopUp` from `../../pop-up` — replaces implicit global reference now that both are in the bundle
+
+### esbuild.config.mjs
+- **Removed 6 files** from `scriptEntryPoints`: actions.ts, clothes.ts, images.ts, pop-up.ts, validation.ts, games/darts.ts
+
+### index.html
+- **Removed 6 `<script>` tags**: dist/actions.js, dist/clothes.js, dist/images.js, dist/pop-up.js, dist/validation.js, dist/games/darts.js
+
+### scripts/globals.d.ts
+- **Added `declare` statements** for functions newly needed by script-style callers: `playDarts`, `dartRound`, `displaypix`, `explainimgs`, `importimgs`, `picset`, `openPopUp`, `setErrorPopup`, `copyErrorText`, `changepanties`, `checkherout`, `feelup`, `kissher`
+- **Updated comments** to reflect bundle-vs-script-style status
+
+### Validation
+- **Typecheck**: `npx tsc -p . --noEmit` passes
+- **Build**: `node esbuild.config.mjs` emits bundle (238.7kb) + script outputs successfully
+- **Tests**: `dotnet test` (UserFlowTests) passes (18/18 non-explicit tests)
 

@@ -1,4 +1,4 @@
-function flirt_l() {
+export function flirt_l() {
     let curtext = []
     shyness -= 1;
     if (flirtcounter < 1) {
@@ -17,7 +17,7 @@ function flirt_l() {
     sayText(curtext);
 }
 
-function flirt_m() {
+export function flirt_m() {
     let curtext = [];
     shyness -= 2;
     if (flirtcounter < 1) {
@@ -46,7 +46,7 @@ function flirt_m() {
 }
 
 //High level responses only available when attraction is >35.
-function flirt_h() {
+export function flirt_h() {
     let curtext = [];
     if (attraction > 35 && shyness < 70) {
         curtext.push(flirtresps["high"][randcounter]);
@@ -63,14 +63,14 @@ function flirt_h() {
     sayText(curtext);
 }
 
-function checkherout() {
+export function checkherout() {
     checkedherout = 1;
     let curtext = [pickrandom(appearance["girls"][basegirl]["stareather"][heroutfit])];
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
 }
 
-function feelup() {
+export function feelup() {
     feelcounter += 1;
     let curtext = [];
     if (locStack[0] !== "thehottub") {
@@ -113,7 +113,7 @@ function feelup() {
     sayText(curtext);
 }
 
-function kissher(curtext: any[] = [], sexLoc?: string) {
+export function kissher(curtext: any[] = [], sexLoc?: string) {
     kisscounter += 1;
     const [kissAttempt, kissRejected, kissPleasedResponse, kissReturnedKiss, kissPassionateReturn] = kissing["diag"];
     curtext = printList(curtext, kissAttempt);
@@ -178,4 +178,14 @@ function kissher(curtext: any[] = [], sexLoc?: string) {
     }
     sayText(curtext);
     cListenerGenList(listenerList);
+}
+
+export function exposeActionsOnWindow(): void {
+    const w = window as any;
+    w.flirt_l = flirt_l;
+    w.flirt_m = flirt_m;
+    w.flirt_h = flirt_h;
+    w.checkherout = checkherout;
+    w.feelup = feelup;
+    w.kissher = kissher;
 }
