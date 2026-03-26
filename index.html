@@ -9,10 +9,10 @@
     <!-- Shims for missing globals (bridge between old JS and new TS) -->
     <script src="scripts/shims.js"></script>
 
-    <!-- Core utilities (compiled from TS) -->
-    <script src="dist/quotes.js"></script>
+    <!-- Module bundle (main.ts + gameState + gameScreen + settings + helpers + quotes) -->
+    <script src="dist/app.js"></script>
 
-    <!-- Game JS files -->
+    <!-- Game script-style TS files (compiled individually) -->
     <script src="dist/settings.js"></script>
     <script src="dist/images.js"></script>
     <script src="dist/backPackItems.js"></script>
@@ -33,9 +33,6 @@
     <script src="dist/pop-up.js"></script>
     <script src="dist/validation.js"></script>
     <script src="dist/store.js"></script>
-
-    <!-- Module bundle (main.ts + gameState + gameScreen + settings + helpers) -->
-    <script src="dist/app.js"></script>
 
     <!-- Debug menu (needs gameState and go from the bundle) -->
     <script src="dist/debugMenu.js"></script>

@@ -10,6 +10,10 @@ import { gameState } from './gameState/gameState';
 import { gameScreen } from './gameScreen/gameScreen';
 import { gameSettings } from './settings/gameSettings';
 import { animationManager } from './gameScreen/animationManager';
+import { exposeQuotesOnWindow } from './quotes';
+
+// Expose quotes module state and functions on window first — many script files depend on these
+exposeQuotesOnWindow();
 
 // Expose to global scope for JS files and script-style TS files
 (window as any).go = go;
@@ -25,7 +29,10 @@ import { animationManager } from './gameScreen/animationManager';
 (window as any).callHer = callHer;
 (window as any).gamestart = gamestart;
 
-// store.ts currently registers lowercase gostore on window.
-if (typeof (window as any).gostore === 'function') {
-	(window as any).goStore = (window as any).gostore;
-}
+// store.ts registers lowercase gostore on window after loading.
+// Alias is set up at DOMContentLoaded to ensure store.ts has loaded.
+document.addEventListener('DOMContentLoaded', () => {
+	if (typeof (window as any).gostore === 'function') {
+		(window as any).goStore = (window as any).gostore;
+	}
+});

@@ -1,38 +1,38 @@
 //TODO make a more general function for handling curtext
 
-let calledjsons = {}; //Cache of fetched JSON files, keyed by tag name
+export let calledjsons: any = {}; //Cache of fetched JSON files, keyed by tag name
 
 
 //TODO maybe compress this in a list or something?
-let flirtquotes; //This stores all possible flirts called from the JSON
-let flirtresps; //This stores all possible responses called from the JSON
-let feelUp; //This stores all quotes related to feeling her up
-let kissing; //This stores all quotes related to kissing her
-let ypeelines; //This stores all dialogues regarding to you going to the bathroom called from the JSON
-let peelines; //This stores all dialogues regarding to her going to the bathroom called from the JSON
-let needs; //This stores descriptions of her needs called from the JSON
-let yneeds; //This stores descriptions of your needs called from the JSON
-let drinklines; //This stores all lines regarding drinking from the JSON
-let appearance; // This stores the appearance quotes from the JSON
-let drive; //This stores all dialogues regarding driving around from the JSON
-let general; //This stores all general quotes from JSON call
-let darts; //This stores the json quotes for the darts game
-let sexLines; //This stores the json quotes related to fucking scenes
-let objQuotes; //This stores the json quotes related to objects.
-let credits; //This stores the json for the credits
+let flirtquotes: any; //This stores all possible flirts called from the JSON
+export let flirtresps: any; //This stores all possible responses called from the JSON
+export let feelUp: any; //This stores all quotes related to feeling her up
+export let kissing: any; //This stores all quotes related to kissing her
+export let ypeelines: any; //This stores all dialogues regarding to you going to the bathroom called from the JSON
+export let peelines: any; //This stores all dialogues regarding to her going to the bathroom called from the JSON
+export let needs: any; //This stores descriptions of her needs called from the JSON
+export let yneeds: any; //This stores descriptions of your needs called from the JSON
+export let drinklines: any; //This stores all lines regarding drinking from the JSON
+export let appearance: any; // This stores the appearance quotes from the JSON
+export let drive: any; //This stores all dialogues regarding driving around from the JSON
+export let general: any; //This stores all general quotes from JSON call
+export let darts: any; //This stores the json quotes for the darts game
+export let sexLines: any; //This stores the json quotes related to fucking scenes
+export let objQuotes: any; //This stores the json quotes related to objects.
+let credits: any; //This stores the json for the credits
 
-let girlname = "Laura";
-let customgirlname = "Amanda";
-let basegirl = "Laura";
-let girltalk = "<b>" + girlname + ":&nbsp;</b>";
-let girlgasp = "<b>" + girlname + " gasps:&nbsp;</b>";
-let pantycolor = "black";
+export let girlname = "Laura";
+export let customgirlname = "Amanda";
+export let basegirl = "Laura";
+export let girltalk = "<b>" + girlname + ":&nbsp;</b>";
+export let girlgasp = "<b>" + girlname + " gasps:&nbsp;</b>";
+export let pantycolor = "black";
 
 //Formatting Parameters
 // Formatting : flags if string has been placed.
-let imageprev;  // Previous image
-const imagedesc = '"Picture of girl"';
-let comma = 0; // used in formatting possessions.
+export let imageprev: any;  // Previous image
+export const imagedesc = '"Picture of girl"';
+export let comma = 0; // used in formatting possessions.
 
 //Formats a given string with the given list of values.
 //Overwrites the wildcards with the given values in the list.
@@ -68,21 +68,21 @@ String.prototype.formatVars = function() {
 }
 
 //Formats all Strings in exprList to add the variables
-function formatAllVars(exprList){
-    let result = [];
+export function formatAllVars(exprList: any[]){
+    let result = [] as any[];
     exprList.forEach(str => result.push(str.formatVars()));
     return result;
 }
 
 //Formats all String in a list of list to add the variables
-function formatAllVarsList(list){
-    let result = [];
+export function formatAllVarsList(list: any[]){
+    let result = [] as any[];
     list.forEach(exprList => result.push(formatAllVars(exprList)));
     return result;
 }
 
-function addGirlname(quotes){
-    let result = [];
+export function addGirlname(quotes: any[]){
+    let result = [] as any[];
     quotes.forEach(item => result.push(item.format([girlname])));
     return result;
 }
@@ -93,31 +93,31 @@ function addMoney(quotes){
     return result;
 }
 
-function addGirlTalk(quotes){
-    let result = [];
+export function addGirlTalk(quotes: any[]){
+    let result = [] as any[];
     quotes.forEach(item => result.push(item.format([girltalk])));
     return result;
 }
 
-function printIntro(curtext, index){
+export function printIntro(curtext: any[], index: number){
     locjson["intro"][index].forEach(item => curtext.push(item));
     return curtext;
 }
 
-function printAlways(curtext) {
+export function printAlways(curtext: any[]) {
     locjson.always.forEach(item => curtext.push(item));
     return curtext;
 }
 
 //Only prints specified part of dialogue
-function printSDialogue(curtext, loc, index, begin, end){
+export function printSDialogue(curtext: any[], loc: string, index: number, begin: number, end: number){
     for(let i = begin; i <= end; i++){
         curtext.push(locjson.dialogue[loc][index][i]);
     }
     return curtext;
 }
 
-function printFormatDialogue(curtext, loc, index, begin, end, values){
+export function printFormatDialogue(curtext: any[], loc: string, index: number, begin: number, end: number, values: any[]){
     for(let i = begin; i <= end; i++){
         const temp = locjson.dialogue[loc][index][i]
         curtext.push(formatString(temp, values));
@@ -128,47 +128,47 @@ function printFormatDialogue(curtext, loc, index, begin, end, values){
 //Adds a list to the curText. Note this is also used when addind a single list to an empty curtext list
 //Reason for this is that it actually creates a deepcopy of the list, otherwise all changes to curtext is stored
 //In the previous list.
-function printList(curtext, list){
+export function printList(curtext: any[], list: any[]){
     list.forEach(item => curtext.push(item.formatVars()));
     return curtext;
 }
 
-function printListSelection(curtext, list, selection){
+export function printListSelection(curtext: any[], list: any[], selection: number[]){
     selection.forEach(index => curtext.push(list[index]));
     return curtext;
 }
 
 //Of a given list of list print the list at the given index
-function printLList(curtext, list, index){
+export function printLList(curtext: any[], list: any[], index: number){
     list[index].forEach(item => curtext.push(item));
     return curtext;
 }
 
 //Prints the given selection of choices for the current location
-function printChoices(curtext, selection){
+export function printChoices(curtext: any[], selection: number[]){
     selection.forEach(index => curtext = callChoice(locjson.choices[index], curtext));
     return curtext;
 }
 
 //Prints all choices
-function printAllChoices(curtext){
+export function printAllChoices(curtext: any[]){
     locjson.choices.forEach(item => curtext = callChoice(item, curtext) );
     return curtext;
 }
 
 //Prints the given selection of choices for the given choices list
-function printChoicesList(curtext, selection, list){
+export function printChoicesList(curtext: any[], selection: number[], list: any[]){
     selection.forEach(index => curtext = callChoice(list[index], curtext));
     return curtext;
 }
 
 //Prints all the choices for the given choices list
-function printAllChoicesList(curtext, list){
+export function printAllChoicesList(curtext: any[], list: any[]){
     list.forEach(item => curtext = callChoice(item, curtext))
     return curtext;
 }
 
-function callChoice(choice, curtext=[]){
+export function callChoice(choice: any[], curtext: any[]=[]){
     if(choice[0] === "curloc") {
         return c([locStack[0], choice[1]], curtext);
     } else {
@@ -181,7 +181,7 @@ function callChoice(choice, curtext=[]){
 //   tag - function to activate using choice
 //   desc - description of choice to display.
 // curtext - a list of all current lines that will be printed during the scene
-function c(choice, curtext) {
+export function c(choice: any[], curtext: any[]) {
     const html = "<li><a href=\"javascript:go('" + choice[0] + "')\">" + choice[1].formatVars() + "</a>"
     curtext.push(html);
     return curtext;
@@ -190,7 +190,7 @@ function c(choice, curtext) {
 // Cache a choice for a click listener
 // choice - array of length 2 with tag on index 0 and desc on index 1
 // tag - the tag for the choice, for a page with choices all tags need to be unique or things will break
-function cListener(choice, tag){
+export function cListener(choice: any[], tag: string){
     const html = "<p>" + cListenerString(choice, tag) + "</p>";
     document.getElementById('textsp').innerHTML += html;
 }
@@ -202,7 +202,7 @@ function cListenerString(choice, loc){
 
 //Adds an element to a created click listener
 //This is done separately because if the list contains more listeners things break
-function addListeners(choice, loc, go=true){
+export function addListeners(choice: any[], loc: string, go=true){
     let func;
     if (go)
         func = goWrapper(choice[0]);
@@ -211,12 +211,12 @@ function addListeners(choice, loc, go=true){
 }
 
 //Calls the given visit through go, aka it triggers a game tick.
-function goWrapper(func){
-    return function () { go(func);}
+function goWrapper(func: any){
+    return function () { (window as any).go(func);}
 }
 
 //For a given list adds a listener to all created click listeners
-function addListenersList(list){
+export function addListenersList(list: any[]){
     list.forEach(item => {
         if (item.length === 3)
             addListeners(item[0], item[1], item[2]);
@@ -226,7 +226,7 @@ function addListenersList(list){
 }
 
 //For the given choice creates both the element and the listener
-function cListenerGen(choice, loc){
+export function cListenerGen(choice: any[], loc: string){
     cListener(choice, loc);
     addListeners(choice, loc);
 }
@@ -236,7 +236,7 @@ For a given list generates the element and listeners
 expected input: [[function, description], tag]
 Description is formatted if needed.
 */
-function cListenerGenList(list){
+export function cListenerGenList(list: any[]){
     validateListenerList(list)
     // Ensure 'leave' / 'drive out' / 'go back' style choices are always shown last
     const leaveRegex = /leave|driveout|driveout|goback|exit|leavehm|leaveHm/i;
@@ -253,7 +253,7 @@ function cListenerGenList(list){
 }
 
 //print the given lines list on the screen
-function sayText(lines){
+export function sayText(lines: any[]){
     let result = "";
     try {
         lines.forEach(item => {
@@ -276,23 +276,23 @@ function sayText(lines){
 }
 
 //Adds the given line list to the already existing screen.
-function addSayText(lines){
+export function addSayText(lines: any[]){
     let result = "";
     lines.forEach(item => result += "<p>" + item + "</p>");
     document.getElementById('textsp').innerHTML += result;
 }
 
-function setText(lines){
+export function setText(lines: any[]){
     let result = "";
     lines.forEach(item => result += item);
     document.getElementById('textsp').innerHTML = result;
 }
 
-let locjson = null; //This is the main json for the current location
+export let locjson: any = null; //This is the main json for the current location
 
 // Fetch a JSON file and return its parsed contents.
 // path: relative path under JSON/ (without JSON/ prefix or .JSON suffix)
-async function fetchJson(path): Promise<any> {
+export async function fetchJson(path: string): Promise<any> {
     const file = "JSON/" + path + ".JSON";
     const response = await fetch(file);
     return response.json();
@@ -300,7 +300,7 @@ async function fetchJson(path): Promise<any> {
 
 // Fetch a JSON file, cache it in calledjsons for later use by location functions, and return it.
 // tag: the cache key AND the file path under JSON/
-async function fetchAndCacheJson(tag): Promise<any> {
+export async function fetchAndCacheJson(tag: string): Promise<any> {
     const data = await fetchJson(tag);
     calledjsons[tag] = data;
     return data;
@@ -309,14 +309,14 @@ async function fetchAndCacheJson(tag): Promise<any> {
 
 // Deep-copy a subtag from the cache into locjson without any wildcard replacement.
 // Use this when the location handles its own formatting (e.g. herhome pickup).
-function getMLocations(tag, subtag){
+export function getMLocations(tag: string, subtag: string){
     locjson = JSON.parse(JSON.stringify(calledjsons[tag][subtag]));
 }
 
 // Load a single-subtag location from the cache into locjson and resolve wildcards.
 // Only used for locations whose JSON has no subtags (e.g. "start").
 // After this call, locjson.intro, locjson.always, locjson.choices etc. are ready to use.
-function locationSetup(tag){
+export function locationSetup(tag: string){
     locjson = JSON.parse(JSON.stringify(calledjsons[tag]));
     locjson.girlname = addGirlname(locjson.girlname);
     replaceWCI("intro", "girlname");
@@ -329,7 +329,7 @@ function locationSetup(tag){
 // e.g. loadLocationScene("yourhome", "callher") deep-copies calledjsons["yourhome"]["callher"]
 // into locjson, then replaces girlname/money/girltalk placeholders throughout intro, always,
 // choices, and dialogue sections.
-function loadLocationScene(tag, subtag){
+export function loadLocationScene(tag: string, subtag: string){
     locjson = JSON.parse(JSON.stringify(calledjsons[tag][subtag]));
     if (locjson.hasOwnProperty("girlname"))
         locjson.girlname = addGirlname(locjson.girlname);
@@ -360,7 +360,7 @@ function loadLocationScene(tag, subtag){
 
 // Load a scene from a custom (non-cached) JSON object into locjson with wildcard replacement.
 // Used by locations that store their JSON in a module variable rather than calledjsons.
-function locationMCSetup(subtag, customloc){
+export function locationMCSetup(subtag: string, customloc: any){
     locjson = JSON.parse(JSON.stringify(customloc[subtag]));
     if (locjson.hasOwnProperty("girlname"))
         locjson.girlname = addGirlname(locjson.girlname);
@@ -445,12 +445,12 @@ function LreplaceCheck(rpstring, list, tag){
 }
 
 //calls all json requests to get recurring quotes
-async function setupQuotes(){
+export async function setupQuotes(){
     const tasks = [
         fetchJson("flirting").then(flirtSetup),
         fetchJson("needs").then(function (data) {
         needs = data;
-        toldstories = range(0, needs["peestory"].length - 1);
+        (globalThis as any).toldstories = range(0, needs["peestory"].length - 1);
     }),
         fetchJson("youpee").then(yPeeSetup),
         fetchJson("shepee").then(shePeeSetup),
@@ -474,7 +474,10 @@ async function setupQuotes(){
         objQuotes["buyItem2"] = formatAllVarsList(objQuotes["buyItem2"]);
     }),
         fetchJson("endScreens").then(function (data){
-        endScreens = data;
+        (globalThis as any).endScreens = data;
+    }),
+        fetchJson("yneeds").then(function (data){
+        yneeds = data;
     })
     ];
 
@@ -485,7 +488,7 @@ function flirtSetup(data){
     flirtquotes = data["flirt"];
     let rawresp = data["respons"];
     flirtresps = {};
-    for (let [key, value] of Object.entries(rawresp)){
+    for (let [key, value] of Object.entries(rawresp) as [string, any][]){
         if (key === "bad"){
             flirtresps[key] = addGirlTalk(value);
         } else {
@@ -501,7 +504,7 @@ function flirtSetup(data){
 
 //Girl curses
 //TODO implement curses in json
-function voccurse(curtext) {
+export function voccurse(curtext: any[]) {
     curtext.push(girltalk + " " + pickrandom(general["curseWord"]));
     return curtext;
 }
@@ -548,7 +551,7 @@ function shePeeSetup(data){
 }
 
 
-function handleFlirt(listenerList){
+export function handleFlirt(listenerList: any[]){
     let low = "low";
     let med = "med";
     let high = "high";
@@ -570,6 +573,90 @@ function handleFlirt(listenerList){
     return listenerList;
 }
 
-function flirtFormat(quote){
+function flirtFormat(quote: any){
     return "Tell her " + quote + ".";
+}
+
+/**
+ * Expose all quotes module state and functions on `window` so that
+ * script-style TS files (which have no imports) can access them as globals.
+ * Uses Object.defineProperty so that reads/writes from scripts stay in sync
+ * with the module-scoped variables.
+ */
+export function exposeQuotesOnWindow(): void {
+    const w = window as any;
+
+    // Mutable state — defineProperty keeps module and global in sync
+    const props: Array<[string, () => any, (v: any) => void]> = [
+        ['calledjsons', () => calledjsons, (v) => { calledjsons = v; }],
+        ['locjson',     () => locjson,     (v) => { locjson = v; }],
+        ['girlname',    () => girlname,    (v) => { girlname = v; }],
+        ['basegirl',    () => basegirl,    (v) => { basegirl = v; }],
+        ['girltalk',    () => girltalk,    (v) => { girltalk = v; }],
+        ['girlgasp',    () => girlgasp,    (v) => { girlgasp = v; }],
+        ['pantycolor',  () => pantycolor,  (v) => { pantycolor = v; }],
+        ['flirtresps',  () => flirtresps,  (v) => { flirtresps = v; }],
+        ['feelUp',      () => feelUp,      (v) => { feelUp = v; }],
+        ['kissing',     () => kissing,     (v) => { kissing = v; }],
+        ['ypeelines',   () => ypeelines,   (v) => { ypeelines = v; }],
+        ['peelines',    () => peelines,    (v) => { peelines = v; }],
+        ['needs',       () => needs,       (v) => { needs = v; }],
+        ['yneeds',      () => yneeds,      (v) => { yneeds = v; }],
+        ['drinklines',  () => drinklines,  (v) => { drinklines = v; }],
+        ['appearance',  () => appearance,  (v) => { appearance = v; }],
+        ['drive',       () => drive,       (v) => { drive = v; }],
+        ['general',     () => general,     (v) => { general = v; }],
+        ['sexLines',    () => sexLines,    (v) => { sexLines = v; }],
+        ['objQuotes',   () => objQuotes,   (v) => { objQuotes = v; }],
+        ['imageprev',   () => imageprev,   (v) => { imageprev = v; }],
+        ['comma',       () => comma,       (v) => { comma = v; }],
+        ['customgirlname', () => customgirlname, (v) => { customgirlname = v; }],
+        ['darts',       () => darts,       (v) => { darts = v; }],
+        ['imagedesc',   () => imagedesc,   () => { /* const */ }],
+    ];
+
+    for (const [name, getter, setter] of props) {
+        Object.defineProperty(w, name, {
+            get: getter,
+            set: setter,
+            configurable: true,
+            enumerable: true,
+        });
+    }
+
+    // Functions — direct assignment (immutable references)
+    w.sayText = sayText;
+    w.addSayText = addSayText;
+    w.setText = setText;
+    w.printIntro = printIntro;
+    w.printAlways = printAlways;
+    w.printSDialogue = printSDialogue;
+    w.printList = printList;
+    w.printChoices = printChoices;
+    w.printAllChoices = printAllChoices;
+    w.printChoicesList = printChoicesList;
+    w.c = c;
+    w.cListener = cListener;
+    w.cListenerGen = cListenerGen;
+    w.cListenerGenList = cListenerGenList;
+    w.fetchJson = fetchJson;
+    w.fetchAndCacheJson = fetchAndCacheJson;
+    w.locationSetup = locationSetup;
+    w.loadLocationScene = loadLocationScene;
+    w.locationMCSetup = locationMCSetup;
+    w.getMLocations = getMLocations;
+    w.setupQuotes = setupQuotes;
+    w.handleFlirt = handleFlirt;
+    w.voccurse = voccurse;
+    w.callChoice = callChoice;
+    w.printListSelection = printListSelection;
+    w.printLList = printLList;
+    w.addListenersList = addListenersList;
+    w.printAllChoicesList = printAllChoicesList;
+    w.addGirlTalk = addGirlTalk;
+    w.formatAllVarsList = formatAllVarsList;
+    w.printFormatDialogue = printFormatDialogue;
+    w.formatAllVars = formatAllVars;
+    w.addListeners = addListeners;
+    w.addGirlname = addGirlname;
 }

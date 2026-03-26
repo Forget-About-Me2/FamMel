@@ -12,7 +12,7 @@
 | World | Files | Output |
 |-------|-------|--------|
 | **Bundle** (IIFE) | `app.ts → main.ts, gameState, gameScreen, settings, models, helpers, yourHome` | `dist/app.js` — private scope, selected exports on `window` |
-| **Scripts** (global) | `quotes.ts, store.ts, backPackItems.ts, debugMenu.ts` | `dist/*.js` — all declarations land on `window` |
+| **Scripts** (global) | `store.ts, backPackItems.ts, debugMenu.ts` | `dist/*.js` — all declarations land on `window` |
 | **Raw JS** (global) | settings.js, bladder.js, yourbladder.js, actions.js, clothes.js, drive.js, fuckHer.js, herhome.js, images.js, locations.js, pop-up.js, validation.js, shims.js + location files | Loaded via `<script>` tags — all on `window` |
 
 ### Root Causes of Crashes
@@ -72,10 +72,10 @@
 - [ ] Move `bladurge`, `bladneed`, `blademer`, `bladlose` to `Person` or `gameSettings`
 
 ### Batch B: Quotes into Bundle
-- [ ] Move `quotes.ts` from script-style into the bundle (import from main.ts)
-- [ ] Remove from `esbuild.config.mjs` scriptEntryPoints
-- [ ] Remove `<script src="dist/quotes.js">` from index.html
-- [ ] This eliminates the biggest cross-boundary gap
+- [x] Move `quotes.ts` from script-style into the bundle (import from main.ts)
+- [x] Remove from `esbuild.config.mjs` scriptEntryPoints
+- [x] Remove `<script src="dist/quotes.js">` from index.html
+- [x] This eliminates the biggest cross-boundary gap
 
 ### Batch C: Actions & Interactions
 - [x] `actions.js` → `actions.ts`
@@ -316,12 +316,43 @@ Pattern used: destructuring at point of use + inline comments for very large arr
 ### scripts/animation.js
 - **Deleted duplicate legacy animation script** (now only `animationManager.ts` drives picture animation)
 
-### Batch 2B status note
-- **Attempted to move `quotes.ts` into `dist/app.js` in this session, then rolled back** due startup regressions from global initialization/load-order assumptions in legacy script files
-- **Current working state remains**: `quotes.ts` stays script-style (`dist/quotes.js`) and is loaded before raw JS files; full `UserFlowTests` suite is green after rollback
-
 ### scripts/quotes.ts
 - **No remaining `eval()` call sites** (legacy `getjsonT`/`getjsonTF` eval-style path has been retired in favor of explicit JSON helpers like `fetchAndCacheJson`, `loadLocationScene`, and `locationSetup`)
+
+---
+
+## Changelog — Phase 2 Batch B: Quotes into Bundle (2026-03-26)
+
+Moved `quotes.ts` from script-style output (`dist/quotes.js`) into the app bundle (`dist/app.js`) while keeping legacy script-style callers working.
+
+### scripts/quotes.ts
+- **Converted to module exports** for quote state/functions used by bundled code (`main.ts`) and by legacy scripts via window exposure
+- **Added `exposeQuotesOnWindow()` bridge** with getter/setter-backed window properties so module-scoped state stays synchronized with legacy global reads/writes
+- **Moved early `yneeds` load into `setupQuotes()`** so quote-related startup data is loaded in one place
+- **Kept legacy runtime behavior** by exposing helper functions used by script-style files (`callChoice`, `printListSelection`, `printLList`, `addListenersList`, `printAllChoicesList`, etc.)
+
+### scripts/app.ts
+- **Imported and initialized quotes bridge** via `exposeQuotesOnWindow()` during bundle startup
+- **Kept legacy route aliasing** (`goStore`) compatible after startup initialization
+
+### scripts/main.ts
+- **Switched to direct imports from `quotes.ts`** for startup and scene rendering helpers (`setupQuotes`, `fetchAndCacheJson`, `locationSetup`, `printAllChoices`, `sayText`, `printList`, `setText`)
+- **Removed duplicate top-level `yneeds` fetch path** now handled by `setupQuotes()`
+
+### esbuild.config.mjs
+- **Removed `scripts/quotes.ts` from `scriptEntryPoints`** so it no longer emits `dist/quotes.js`
+
+### index.html
+- **Removed `<script src="dist/quotes.js">`**
+- **Loaded `dist/app.js` before script-style TS files** so bridge globals are available for parse-time references (notably `locations.ts` top-level `fetchJson(...)`)
+
+### scripts/globals.d.ts
+- **Updated declarations for quotes-owned globals/functions** to reflect bundle-exposed API instead of script-style implicit scope
+
+### Validation
+- **Typecheck**: `npx tsc -p . --noEmit` passes
+- **Build**: `node esbuild.config.mjs` emits bundle + script outputs successfully
+- **Tests**: `dotnet test` (UserFlowTests) passes (`18/18` non-explicit tests)
 
 ---
 

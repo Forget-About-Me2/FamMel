@@ -4,7 +4,6 @@ const isWatch = process.argv.includes('--watch');
 
 // Script-style TS files that are loaded individually (no import/export)
 const scriptEntryPoints = [
-    'scripts/quotes.ts',
     'scripts/debugMenu.ts',
     'scripts/backPackItems.ts',
     'scripts/store.ts',

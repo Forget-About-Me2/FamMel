@@ -4,6 +4,7 @@ import {gameSettings} from "./settings/gameSettings";
 import {yourHome} from './yourHome';
 import {gameScreen} from "./gameScreen/gameScreen";
 import { animationManager } from "./gameScreen/animationManager";
+import { setupQuotes, fetchAndCacheJson, locationSetup, locjson, printAllChoices, sayText, printList, setText, fetchJson } from "./quotes";
 
 /**
  * Main program loop that handles location transitions and game state updates
@@ -254,8 +255,6 @@ export async function start() {
     let curtext = locjson["always"];
     curtext = printAllChoices(curtext);
     sayText(curtext);
-    //yneeds is loaded early to avoid delay when the game actually starts
-    yneeds = await fetchJson("yneeds");
 }
 
 function gameOver() {
