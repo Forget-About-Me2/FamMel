@@ -8,7 +8,7 @@ let pantydescriptions = [
 ]
 
 
-function changepanties(choice) {
+function changepanties(choice: number) {
     const newcolor = pantydescriptions[choice];
     let curtext = [];
     if (pantycolor === newcolor) {

@@ -113,7 +113,7 @@ function feelup() {
     sayText(curtext);
 }
 
-function kissher(curtext=[], sexLoc) {
+function kissher(curtext: any[] = [], sexLoc?: string) {
     kisscounter += 1;
     const [kissAttempt, kissRejected, kissPleasedResponse, kissReturnedKiss, kissPassionateReturn] = kissing["diag"];
     curtext = printList(curtext, kissAttempt);

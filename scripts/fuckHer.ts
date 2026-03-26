@@ -7,12 +7,12 @@ let fuckingnow = 0; // You are in the middle of fucking.
 let champagnecounter = 0; // Number of glasses of champagne served.
 let drankChamp = 0; // Time since last champagne glass was drunk.
 
-function deepClone(value) {
+function deepClone(value: any) {
     return JSON.parse(JSON.stringify(value));
 }
 
 // Store initial primitive/array/object values and recursively init nested action objects.
-function objInit() {
+function objInit(this: any) {
     this.initVal = {};
     Object.keys(this).forEach(key => {
         const value = this[key];
@@ -27,7 +27,7 @@ function objInit() {
 }
 
 // Reset this object and nested objects back to their initialized state.
-function objReset() {
+function objReset(this: any) {
     if (!this.initVal)
         this.init();
     Object.keys(this.initVal).forEach(key => {
@@ -227,7 +227,7 @@ let sexActions = {
         return this.actions[item].noTub;
     }
 }
-function fuckHerSetup(data){
+function fuckHerSetup(data: any){
     sexLines = data;
     Object.keys(sexLines).forEach(loc => {
         if (typeof loc === "object" && (loc !== "clothes" || loc !== "actions")) {
@@ -250,7 +250,7 @@ function fuckHerSetup(data){
 });
 }
 
-function haveSex(location){
+function haveSex(location: string){
     let curtext = [];
     let sexQuotes = sexLines[location];
     if (locStack[0]!== "haveSex"){
@@ -336,7 +336,7 @@ function haveSex(location){
     cListenerGenList(listenerList);
 }
 
-function takeOff(item, location){
+function takeOff(item: string, location: string){
     arousal += 4;
     let info = sexActions.clothes[item];
     let processed = false;
@@ -403,7 +403,7 @@ function takeOff(item, location){
     cListenerGen([function () {haveSex(location)}, "Continue..."], "haveSex");
 }
 
-function performAction(action, location){
+function performAction(action: string, location: string){
     let info = sexActions.actions[action];
     let processed = false;
     let curtext = [];
@@ -478,7 +478,7 @@ function performAction(action, location){
     cListenerGen([function () {haveSex(location)}, "Continue..."], "haveSex");
 }
 
-function leaveSex(location){
+function leaveSex(location: string){
     let curtext = printList([], sexLines[location]["leaveSex"]);
     curtext = callChoice([location, "Continue..."], curtext);
     sexActions.clothes.reset();
@@ -487,7 +487,7 @@ function leaveSex(location){
     sayText(curtext);
 }
 
-function fuckTry(location) {
+function fuckTry(location: string) {
     let curtext = printList([], sexLines["fuckTry"]);
     sayText(curtext);
     cListenerGen([function(){leaveSex(location)}, "Continue..."], "leaveSex");
@@ -545,14 +545,14 @@ function fuckHer2() {
         sayText(curtext);
         cListenerGen([wetBed, "Continue..."], "wetBed");
     } else {
-        bothCum(curtext);
+        bothCum();
     }
 }
 
 function wetBed() {
     flushdrank();
     sayText(sexLines["fuckNow"][6]);
-    cListenerGen([gameWet, "Continue..."]);
+    cListenerGen([gameWet, "Continue..."], "gameWet");
 }
 
 function bothCum() {
@@ -590,7 +590,7 @@ function fuckHer3() {
     cListenerGenList(listenerList);
 }
 
-function preWet(curtext = []) {
+function preWet(curtext: any[] = []) {
     printList(curtext, sexLines["fuckNow"][15])
     sayText(curtext);
     cListenerGen([wetBed, "Continue..."], "wetBed");

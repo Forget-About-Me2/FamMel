@@ -12,7 +12,7 @@ function makeOutSetup(){
     }
 }
 
-function makeOutJson(data){
+function makeOutJson(data: any){
     makeOut = data;
 }
 
@@ -66,6 +66,7 @@ function theMakeOut() {
 function failMakeOut() {
     shyness += 10;
     attraction -= 10;
+    const makeOutRejection = makeOut["theMakeOut"][3];
     let curtext = printList([], makeOutRejection);
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);
@@ -174,6 +175,7 @@ function exitWalk(){
 }
 
 function examineGate() {
+    const [,,gateExamine, gateLocked, gateInviting, gateToBeach] = makeOut["theWalk"];
     let curtext = printList([], gateExamine);
     let listenerList = [];
     if (walkcounter < 10) {
@@ -194,10 +196,10 @@ function examineGate() {
 function theYard() {
     allowItems = 1;
     let curtext = [];
-    // theYard: [0]=first entry, [1]=ambient, [2]=description, [3]=hot tub invite (willing),
-    //          [4]=hot tub invite (refused), [5]=hot tub entry, [6]=hot tub ambient
-    const [yardEntry, yardAmbient, yardDesc, tubWilling,
-           tubRefused, tubEntry, tubAmbient] = makeOut["theYard"];
+    // theYard: named properties for each quote group
+    const yardEntry = makeOut["theYard"]["entry"];
+    const yardAmbient = makeOut["theYard"]["ambient"];
+    const yardDesc = makeOut["theYard"]["description"];
     if (locStack[0] !== "theYard") {
         curtext = printList(curtext, yardEntry);
         pushloc("theYard");
@@ -239,6 +241,8 @@ function exitYard(){
 }
 
 function preHotTub() {
+    const tubWilling = makeOut["theYard"]["tubWilling"];
+    const tubRefused = makeOut["theYard"]["tubRefused"];
     let curtext = [];
     let listenerList = [];
     if (attraction > hottubthresh && shyness < 12) {
@@ -263,6 +267,8 @@ function preHotTub() {
 //TODO fix need dialogue
 function theHotTub() {
     allowItems = 1;
+    const tubEntry = makeOut["theYard"]["tubEntry"];
+    const tubAmbient = makeOut["theYard"]["tubAmbient"];
     let curtext = []
     if (locStack[0] !== "theHotTub") {
         curtext = printList(curtext, tubEntry);

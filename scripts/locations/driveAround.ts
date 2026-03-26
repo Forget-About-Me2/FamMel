@@ -9,7 +9,7 @@ function driveAroundSetup(){
    }
 }
 
-function driveJsonSetup(data){
+function driveJsonSetup(data: any){
     driveRound = data;
 }
 

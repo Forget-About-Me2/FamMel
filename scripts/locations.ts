@@ -12,7 +12,7 @@ let locations = {
 let sharedLoc;
 fetchJson("locations/locations").then(locJsonSetup);
 
-function locJsonSetup(data){
+function locJsonSetup(data: any){
     sharedLoc = data;
     sharedLoc["itsClosed"] = formatAllVarsList(sharedLoc["itsClosed"]);
     sharedLoc["sayHero"] = formatAllVarsList(sharedLoc["sayHero"]);
@@ -46,7 +46,7 @@ function printLocationMenu(){
     });
 }
 
-function lookAround(loc){
+function lookAround(loc: string){
     const findkey = randomchoice(locations[loc].keyChance);
     let curtext = [];
     curtext.push(pickrandom(sharedLoc["lookAround"]));
@@ -71,7 +71,7 @@ function lookAround(loc){
     addListenersList(listenerList);
 }
 
-function lookKey(loc){
+function lookKey(loc: string){
     let curtext = [pickrandom(sharedLoc["lookKey"])];
     let listenerList = [];
     sayText(curtext);
@@ -82,7 +82,7 @@ function lookKey(loc){
     addListenersList(listenerList);
 }
 
-function getKey(loc){
+function getKey(loc: string){
     locations[loc].foundKey = 1;
     let curtext = [pickrandom(sharedLoc["getKey"])];
     backPackItems[loc+"Key"].value++;
@@ -91,7 +91,7 @@ function getKey(loc){
 }
 
 //TODO fix the double desperate
-function itsClosed(locname, fun, curloc) {
+function itsClosed(locname: string, fun: () => void, curloc: string) {
     let theloc;
     if (locname === "theBar") theloc = "bar";
     else if (locname === "theClub") theloc = "night club";
@@ -128,7 +128,7 @@ function itsClosed(locname, fun, curloc) {
 
 let emerBreak; //True if she rushed to the toilet after you opened the door
 let emerHold; //True if you asked her to hold it.
-function breakLoc(loc, curloc){
+function breakLoc(loc: any, curloc: string){
     // breakLoc: [0]=trying the key, [1]=she rushes past you
     const [tryingKey, sheRushesPast] = sharedLoc["breakLoc"];
     // sayHero: [0]=hero compliments (calm), [1]=rushed hero thanks (urgent)

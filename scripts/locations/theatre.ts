@@ -17,7 +17,7 @@ function theatreSetup(){
     }
 }
 
-function theatreJsonSetup(data){
+function theatreJsonSetup(data: any){
     theatre = data;
 }
 
@@ -167,7 +167,7 @@ function movieArgue() {
 
 let seenmovie = 0;
 //TODO figure out duplicate continue's
-function preMoviePee(curtext=[]) {
+function preMoviePee(curtext: any[] = []) {
     pushloc("domovie");
     moviecounter = 0;
     seenmovie = 0;

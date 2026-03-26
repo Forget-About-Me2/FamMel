@@ -1,4 +1,4 @@
-function dartSetup(data){
+function dartSetup(data: any){
     darts = data;
     darts["play"] = formatAllVarsList(darts["play"]);
     setupScores();
@@ -57,7 +57,7 @@ function genScores(){
 //When the score is lower than 60, sees if finishing in one move is valid
 // Dart score result tuples: [throws, totalScored, remainingPoints]
 // remainingPoints=0 means the player finished
-function singleFinish(points){
+function singleFinish(points: number){
     if (doubles.includes(points)){
         if (randomchoice(5))
             return [[points], points, 0];
@@ -65,7 +65,7 @@ function singleFinish(points){
     return [];
 }
 
-function doubleFinish(points){
+function doubleFinish(points: number){
     if (points in scores2){
         let list = scores2[points];
         //The more ways a score can be created, the bigger the chance.
@@ -78,7 +78,7 @@ function doubleFinish(points){
     return [];
 }
 
-function tripleFinish(points){
+function tripleFinish(points: number){
     if (points in scores.double){
         //If it's possible to finsih with 3 darts there's a 70% chance this succeeds
         if (randomchoice(7)){
@@ -139,7 +139,7 @@ function playDarts() {
 }
 
 //Play a round of the dart game
-function dartRound(dartPoints){
+function dartRound(dartPoints: any){
     let curText = printList([], darts["round"][0]); // round narration
     let winner = false;
     let res = []; // [throws, totalScored, remainingPoints]

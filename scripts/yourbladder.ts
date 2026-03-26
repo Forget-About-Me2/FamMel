@@ -16,6 +16,8 @@ let ymaxtummy = 500; // Drink capacity of stomach
 let ymaxbeer = 1000; // Beer capacity of stomach
 
 let yourcustomurge = 500;
+let yminurge = 375; // min bladder urge
+let ynowpeeing = 0; // flag: you are currently peeing
 
 //  The following are used to keep track of what you drank and when you last went
 // Might be used later on.
@@ -32,12 +34,12 @@ let ydrankbeer = 0; //Did you drink beer? changes capacities and rates.
 let yrrlockedflag = 0; //Restroom was locked last time you went
 
 //Initializes the bladder values for you
-function initYUrge(urge){
+function initYUrge(urge: number){
     yminurge = urge * minperc/100;
     updateyoururge(urge);
 }
 
-function updateyoururge(newurge) {
+function updateyoururge(newurge: number) {
     if (newurge < yminurge) newurge = yminurge;
     newurge = Math.round(newurge);
     yourbladurge = newurge;
@@ -120,7 +122,7 @@ function youpee() {
     sayText(curtext);
 }
 
-function youbathroomlocked(curtext) {
+function youbathroomlocked(curtext: any[]): any[] {
     const locked = ypeelines["locked"];
     //Description of the situation
     if (locStack[0] === "thebar")
@@ -159,7 +161,7 @@ function youbathroomlocked(curtext) {
 }
 
 //TODO make this more fancy
-function youbegtoilet(curtext) {
+function youbegtoilet(curtext: any[]): any[] {
     const [begDialogue, begChoices] = ypeelines["beg"];
     const [shotglassChoice, vaseChoice, noIdeasChoice] = begChoices;
     curtext = printList(curtext, begDialogue);
@@ -169,7 +171,7 @@ function youbegtoilet(curtext) {
     return curtext;
 }
 
-function displayyourneed(curtext) {
+function displayyourneed(curtext: any[]): any[] {
     if (yourbladder >= yourbladlose && !holdself) {
         curtext.push(pickrandom(yneeds["burst"]));
     } else if (yourbladder > yourblademer) {
@@ -184,7 +186,7 @@ function displayyourneed(curtext) {
     return curtext
 }
 
-function ypeein(item){
+function ypeein(item: string){
     //Closes the backpack since a function has been chosen
     const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
@@ -244,7 +246,7 @@ function ypeein(item){
     sayText(curtext);
 }
 
-function ypeein2(item, yneedtype){
+function ypeein2(item: string, yneedtype: number){
     const URGENCY_DESPERATE = 2;
     const [, , , , desperatePeeing, normalPeeing] = yneeds[item];
     let curtext = [];
@@ -256,7 +258,7 @@ function ypeein2(item, yneedtype){
     sayText(curtext);
 }
 
-function ypeein3(item, yneedtype){
+function ypeein3(item: string, yneedtype: number){
     const URGENCY_DESPERATE = 2;
     let curtext = [];
     if (yourbladder < yourbladurge){
@@ -410,7 +412,7 @@ function wetyourself() {
 }
 
 //TODO register you wet your pants
-function wetyourself2(curtext) {
+function wetyourself2(curtext?: any[]) {
     if (!curtext)
         curtext = [];
     curtext = printList(curtext, yneeds["wetyourself"][0]);
@@ -458,7 +460,7 @@ function wetyourself3t() {
 
 let youSpurted = 0;
 //TODO more text options and her reponse
-function spurtedyourself(curtext) {
+function spurtedyourself(curtext: any[]) {
     yourbladder -= 50;
     yspurtthresh -= 0.1 * yspurtthresh;
     youSpurted = 1;

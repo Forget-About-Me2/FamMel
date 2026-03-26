@@ -13,7 +13,7 @@ function theClubSetup(){
     }
 }
 
-function clubJsonSetup(data){
+function clubJsonSetup(data: any){
     club = data;
 }
 
@@ -89,6 +89,7 @@ function reClub() {
 function goDance(){
     pushloc("doDance");
     changevenueflag = 1;
+    const goDanceIntro = club["theClub"][3];
     let curtext = showneed();
     curtext = displayyourneed(curtext);
     let listenerList = [];
@@ -194,7 +195,7 @@ function pphotogame() {
 }
 
 
-function photoConvince(choice) {
+function photoConvince(choice: string) {
     let curtext = [];
     if (attraction >= photoGameThresholds[choice]) {
         curtext = displayneed(curtext);

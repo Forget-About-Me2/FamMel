@@ -14,82 +14,24 @@ interface String {
 }
 
 // ============================================================================
-// Game state variables (from bladder.js)
-// ============================================================================
-declare let bladurge: number;
-declare let bladneed: number;
-declare let blademer: number;
-declare let bladlose: number;
-declare let bladcumlose: number;
-declare let bladsexlose: number;
-declare let bladder: number;
-declare let maxtummy: number;
-declare let maxbeer: number;
-declare let bladDec: number;
-declare let bladDespDec: number;
-declare let seal: number;
-declare let tummy: number;
-declare let peedtowels: number;
-declare let peedvase: number;
-declare let peedshot: number;
-declare let peedoutside: number;
-declare let lastpeetime: number;
-declare let timeheld: number;
-declare let drankbeer: number;
-declare let notdesperate: number;
-declare let notydesperate: number;
-declare let nothdesperate: number;
-declare let askholditcounter: number;
-declare let waitcounter: number;
-declare let rrlockedflag: number;
-declare let shespurted: number;
-declare let gottagoflag: number;
-declare let minperc: number;
-declare let minurge: number;
-declare let customurge: number;
-declare let prepeed: number;
+// Variables and functions from bladder.ts and yourbladder.ts are now
+// defined in script-style TS files and visible to the TS compiler directly.
 
 // ============================================================================
-// Your bladder variables (from yourbladder.js)
+// Settings variables (from shims.js — settings.ts references these)
 // ============================================================================
-declare let yourbladder: number;
-declare let yourbladurge: number;
-declare let yourbladneed: number;
-declare let yourbladlose: number;
-declare let yourtummy: number;
-declare let ydranksodas: number;
-declare let yourcustomurge: number;
-declare let playerbladder: number;
-declare let playerGame: number;
-declare let ylastpeetime: number;
-
-// Quote variables from quotes.ts are already visible to TypeScript
-// (quotes.ts is a script-style TS file in the compilation scope)
-
-// ============================================================================
-// Settings variables (from settings.js)
-// ============================================================================
-declare let showstats: number;
-declare let photoChoice: any;
-declare let favoritemovie: string;
-declare let suggestedloc: string;
-declare let heroutfit: string;
-declare let multiplemoves: number;
-declare let rstmoves: number;
 declare let money: number;
 declare let settings: any;
 declare let statsBars: any;
 
 // ============================================================================
-// Image variables (from images.js)
+// Image variables (implicit globals used by images.ts and settings.ts)
 // ============================================================================
-declare let imgs: any;
-declare let picset: any;
 declare let enableimages: number;
 declare let enableascii: number;
 
 // ============================================================================
-// Action/Flirt variables (from actions.js, fuckHer.js)
+// Action/Flirt variables (from actions.ts — remaining globals from shims.js)
 // ============================================================================
 declare let attraction: number;
 declare let shyness: number;
@@ -98,13 +40,6 @@ declare let flirtedflag: number;
 declare let maxflirts: number;
 declare let noflirtflag: number;
 declare let checkedherout: number;
-declare let feelcounter: number;
-declare let arousal: number;
-declare let kisscounter: number;
-declare let fuckingnow: number;
-declare let champagnecounter: number;
-declare let drankChamp: number;
-declare let sexActions: any;
 
 // ============================================================================
 // Animation variables (from animation.js)
@@ -120,8 +55,6 @@ declare let alphadecode: any;
 // Location/flow variables (from locations.js, herhome.js, etc.)
 // ============================================================================
 declare let locStack: string[];
-declare let locations: any;
-declare let sharedLoc: any;
 // allowItems is declared in backPackItems.ts
 declare let endScreens: any;
 declare let thetime: number;
@@ -129,9 +62,6 @@ declare let hour: number;
 declare let late: number;
 declare let didintro: number;
 declare let shopping: number;
-declare let seenmovie: number;
-declare let elevatorwaitcounter: number;
-declare let floorcounter: number;
 declare let clubclosingtime: number;
 declare let curText: any;
 declare let showedneed: any;
@@ -187,76 +117,42 @@ declare function setupQuotes(): Promise<void>;
 // drinklines are defined in quotes.ts (script-style TS, shares global scope).
 
 // ============================================================================
-// Global functions from settings.js
+// Global functions from settings.js — most moved to settings.ts
 // ============================================================================
-declare function setup(): void;
-declare function setLocal(varName: string, value: any): void;
-declare function setbasegirl(name: string): void;
-declare function setgirl(name: string): void;
-declare function options(): void;
-declare function importimgs(): void;
-declare function initYUrge(urge: any): void;
-declare function bladOpt(): void;
+// initYUrge is in yourbladder.ts
 
 // ============================================================================
-// Global functions from bladder.js
-// ============================================================================
-declare function flushdrank(): void;
-declare function displaygottavoc(curtext: any[], index?: number): any[];
-
-// ============================================================================
-// Global functions from yourbladder.js
-// ============================================================================
-declare function displayyourneed(curtext: any[]): any[];
-declare function wetyourself(): void;
-declare function youpee(): void;
-declare function yPreDrink(): void;
-
 // ============================================================================
 // Global functions from locations.js, herhome.js, drive.js
 // ============================================================================
 declare function pushloc(loc: string): void;
 declare function poploc(): void;
-declare function herhome(): void;
 declare function callHer(): void;
 declare function cellphone(): void;
-declare function peeFun(): void;
-declare function goStore(): void;
 
 // ============================================================================
-// Global functions from images.js
+// Global functions from images.js — now in images.ts
 // ============================================================================
-declare function resetImg(): void;
 
 // ============================================================================
-// Global functions from pop-up.js
+// Global functions from pop-up.js — now in pop-up.ts
 // ============================================================================
-declare function openPopUp(): void;
-declare function setCloseButton(): void;
 
 // ============================================================================
-// Global functions from validation.js
+// Global functions from validation.js — now in validation.ts
 // ============================================================================
-declare function validateListenerList(list: any[]): void;
 
 // ============================================================================
-// Global functions from actions.js
+// Global functions from actions.ts / quotes.ts
 // ============================================================================
-declare function handleFlirt(listenerList: any[]): any;
 declare function pickrandom(list: any[]): any;
 declare function incrandom(): void;
 
 // ============================================================================
-// Debug location objects (from locations.js, used in debugMenu.ts)
-// ============================================================================
-declare let theYard: any;
-declare let exitYard: any;
-declare let theWalk: any;
+// theYard, exitYard, theWalk are now in theMakeOut.ts
 
 // ============================================================================
-// Delay function (from animation.js or similar)
-// ============================================================================
-declare function delay(ms: number): Promise<void>;
+// Delay is now in pop-up.ts
 
 // ============================================================================
 // TS module exports exposed as window globals by app.ts
@@ -275,52 +171,45 @@ declare var gameState: any;
 declare var gameScreen: any;
 
 // ============================================================================
-// Additional bladder / player variables (from yourbladder.js, bladder.js)
+// Additional display / need functions
 // ============================================================================
-declare let ymaxtummy: number;
-declare let ymaxbeer: number;
-declare let ydrankbeer: number;
-declare let peein: any;
-declare let ypeein: any;
-declare let indepee: any;
-declare let wetlegs: number;
-
-// ============================================================================
-// Bribe / phone thresholds (from bladder.js or actions.js)
-// ============================================================================
-declare let bribeAskBase: number;
-declare let bribeaskthresh: number;
-declare let phoneholdthresh: number;
-
-// ============================================================================
-// Location objects (from locations.js)
-// ============================================================================
-declare let bar: any;
-declare let club: any;
-
-// ============================================================================
-// Game flags and counters
-// ============================================================================
-declare let brokeice: number;
-declare let toldstories: number[];
-
-// ============================================================================
-// Additional display / need functions (from bladder.js, actions.js, etc.)
-// ============================================================================
-declare function showneed(curtext: any[]): any[];
-declare function displayholdquip(curtext: any[]): any[];
-declare function displayneed(curtext: any[]): any[];
-declare function dartSetup(data: any): void;
-declare function fuckHerSetup(data: any): void;
-declare function sellPanties(): void;
-declare function flirtBarGirl(): void;
-declare function askpee(): void;
 declare function help(): void;
-declare let haveherpurse: number;
 
 // ============================================================================
-// Flirt levels (from actions.js)
+// Globals from JS files referenced by bladder.ts / yourbladder.ts
 // ============================================================================
-declare let flirt_h: any;
-declare let flirt_l: any;
-declare let flirt_m: any;
+declare let haveherpurse: number;
+declare let owedfavor: number;
+declare let changevenueflag: number;
+declare let playerbladder: any;
+
+// ============================================================================
+// Variables from fuckHer.ts / shims.js
+// ============================================================================
+declare let maxkiss: number;
+declare let maxfeel: number;
+
+// ============================================================================
+// Functions/variables from shims.js
+// ============================================================================
+declare let theaterclosingtime: number;
+declare let barclosingtime: number;
+declare function randomize(list: any[]): any[];
+
+// ============================================================================
+// Functions from main.ts (bundle — exposed as window globals)
+// ============================================================================
+declare function gameOver(): void;
+declare function gameWet(): void;
+declare function gameSexBoth(): void;
+declare function gameWon(): void;
+
+// ============================================================================
+// Implicit globals from shims.js / settings.ts
+// ============================================================================
+declare let playerGame: number;
+
+// ============================================================================
+// Functions from games/darts.ts
+// ============================================================================
+declare function wrapAndFormatAll(template: any, values: any): any;

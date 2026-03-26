@@ -27,7 +27,7 @@ function resetImg(){
 let picset = 0;
 // displaypix will set the current picture to be displayed
 //TODO figure out why need is called before urge
-function displaypix(picname) {
+function displaypix(picname: string) {
     const imgssrc = imgs[basegirl][picname];
     if (enableimages && imgssrc !== imageprev && !picset) {
         document.getElementById('thepic').innerHTML = "<img src=" + imgssrc + " alt=" + imagedesc + " class='pic'>";
@@ -76,12 +76,12 @@ function createSelect(){
 }
 
 function getUrl(){
-    const e = document.getElementById("girlname");
+    const e = document.getElementById("girlname") as HTMLSelectElement;
     const name = e.options[e.selectedIndex].value;
-    const imgtype = $("input[name=imgtype]:checked").val();
-    const urlbox = document.getElementById("imgurl");
+    const imgtype = $("input[name=imgtype]:checked").val() as string;
+    const urlbox = document.getElementById("imgurl") as HTMLInputElement;
     if (imgs[name].hasOwnProperty("pix" + imgtype)){
-        src = imgs[name]["pix" + imgtype];
+        let src = imgs[name]["pix" + imgtype];
         urlbox.value = src;
         document.getElementById('thepic').innerHTML = "<img src=" + src + " alt=" + imagedesc + " class='pic'>";
     } else {
@@ -91,16 +91,16 @@ function getUrl(){
 }
 
 function updateLink(){
-    const e = document.getElementById("girlname");
+    const e = document.getElementById("girlname") as HTMLSelectElement;
     const name = e.options[e.selectedIndex].value;
-    const imgtype = $("input[name=imgtype]:checked").val();
-    const url = document.getElementById('imgurl').value;
+    const imgtype = $("input[name=imgtype]:checked").val() as string;
+    const url = (document.getElementById('imgurl') as HTMLInputElement).value;
     document.getElementById("thepic").innerHTML = "<img src='" + url + "' alt='Picture of girl' class= 'pic'>";
     picStore(name, imgtype, url);
 }
 
 function addGirl(){
-    const field = document.getElementById('cusgirl');
+    const field = document.getElementById('cusgirl') as HTMLInputElement;
     const name = field.value;
     field.value = "";
     if (name === ""){
@@ -116,7 +116,7 @@ function addGirl(){
 }
 
 function delGirl(){
-    const e = document.getElementById("girlname");
+    const e = document.getElementById("girlname") as HTMLSelectElement;
     const name = e.options[e.selectedIndex].value;
     delete imgs[name];
     if(typeof(Storage) !== "undefined"){
@@ -126,7 +126,7 @@ function delGirl(){
     getUrl();
 }
 
-function picStore(name, imgtype, url){
+function picStore(name: string, imgtype: string, url: string){
     if(!imgs[name]){
         imgs[name]={};
     }

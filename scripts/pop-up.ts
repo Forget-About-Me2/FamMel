@@ -21,7 +21,7 @@ function setCloseButton(){
     }
 }
 
-function setErrorPopup(data){
+function setErrorPopup(data: string){
     const popUp = document.getElementById("pop-up");
     popUp.style.display = "flex";
     const closeButton = document.getElementById("close-pop-up");

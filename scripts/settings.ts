@@ -106,7 +106,7 @@ function setup(){
 }
 
 //TODO this is probably called too often(maybe an issue with settings itself)
-function setLocal(varName, value){
+function setLocal(varName: string, value: any){
     if(typeof(Storage) !== "undefined"){
         if(localStorage.getItem(varName) !== value){
             localStorage.setItem(varName, value);
@@ -216,12 +216,12 @@ function bladOpt() {
     setText(curtext);
 }
 
-function setheroutfit(outfitname) {
+function setheroutfit(outfitname: string) {
     setLocal("heroutfit", outfitname);
     heroutfit = outfitname;
 }
 
-function setImagesShow(value){
+function setImagesShow(value: number){
     switch(value){
         case 0:
             enableimages = 0;
@@ -242,7 +242,7 @@ function setImagesShow(value){
     }
 }
 
-function setStatsShow(choice){
+function setStatsShow(choice: number){
     showstats = choice;
     if (showstats){
         setLocal("showstats", "true");
@@ -251,7 +251,7 @@ function setStatsShow(choice){
     }
 }
 
-function setMultipleMoves(choice){
+function setMultipleMoves(choice: number){
     multiplemoves = choice;
     if(multiplemoves){
         setLocal("multiplemoves", "true");
@@ -260,7 +260,7 @@ function setMultipleMoves(choice){
     }
 }
 
-function setRstMoves(choice){
+function setRstMoves(choice: number){
     rstmoves=choice;
     if(rstmoves){
         setLocal("rstmoves", "true");
@@ -269,7 +269,7 @@ function setRstMoves(choice){
     }
 }
 
-function setDisclaimer(choice){
+function setDisclaimer(choice: number){
     if (choice)
         setLocal("disclaimer", "true");
     else
@@ -278,29 +278,29 @@ function setDisclaimer(choice){
 
 
 function setcustgirlname() {
-    customgirlname = document.getElementById('thegirl').value;
+    customgirlname = (document.getElementById('thegirl') as HTMLInputElement).value;
     setbasegirl(basegirl);
 }
 
 function setcustbladurge() {
-    customurge = parseInt(document.getElementById('thebladder').value);
+    customurge = parseInt((document.getElementById('thebladder') as HTMLInputElement).value);
     setLocal("customurge", customurge);
     setbasegirl(basegirl);
 }
 
 function setyourcustbladurge() {
-    yourcustomurge = parseInt(document.getElementById('yourbladder').value);
+    yourcustomurge = parseInt((document.getElementById('yourbladder') as HTMLInputElement).value);
     setLocal("yourcustomurge", yourcustomurge);
     initYUrge(yourcustomurge);
 }
 
 function setyourmoney() {
-    money = parseInt(document.getElementById('yourmoney').value);
+    money = parseInt((document.getElementById('yourmoney') as HTMLInputElement).value);
     setLocal("money", money);
 }
 
 function setBladPer(){
-    const value = parseFloat(document.getElementById("bladPer").value);
+    const value = parseFloat((document.getElementById("bladPer") as HTMLInputElement).value);
     //Show an error if the value is not between 0 and 100
     if (value < 0 || value > 100)
         document.getElementById("perDecErr").style.display = "inline";
@@ -311,7 +311,7 @@ function setBladPer(){
     }
 }
 
-function setBladDecay(choice){
+function setBladDecay(choice: number){
     bladDec = choice;
     if (choice)
         setLocal("bladDec", "true");
@@ -319,7 +319,7 @@ function setBladDecay(choice){
         setLocal("bladDec", "false");
 }
 
-function setBladDespDecay(choice){
+function setBladDespDecay(choice: number){
     bladDespDec = choice;
     if (choice)
         setLocal("bladDespDec", "true");
@@ -327,7 +327,7 @@ function setBladDespDecay(choice){
         setLocal("bladDespDec", "false");
 }
 
-function setSealDec(choice){
+function setSealDec(choice: number){
     seal = choice;
     if (choice)
         setLocal("seal", "true");
@@ -335,7 +335,7 @@ function setSealDec(choice){
         setLocal("seal", "false");
 }
 
-function setPlayBlad(choice){
+function setPlayBlad(choice: number){
     playerbladder = choice;
     if (choice)
         setLocal("playerBladder", "true");
@@ -343,7 +343,7 @@ function setPlayBlad(choice){
         setLocal("playerBladder", "false");
 }
 
-function setPlayGame(choice){
+function setPlayGame(choice: number){
     playerGame = choice;
     if (choice)
         setLocal("playerGame", "true");
@@ -358,7 +358,7 @@ function setjpgimgs() {
 }
 
 //TODO check if these functions can be cleaned up
-function setbasegirl(hername) {
+function setbasegirl(hername: string) {
     basegirl = hername;
     setLocal("basegirl", basegirl);
     const htmlcall = document.getElementById('girlstats');
@@ -431,7 +431,7 @@ function updategirldesc() {
 
 }
 
-function setgirl(hername) {
+function setgirl(hername: string) {
     setLocal("girlname", hername);
     girlname = hername;
     if (document.getElementById('girlstats')) updategirldesc();

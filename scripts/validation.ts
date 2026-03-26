@@ -1,4 +1,4 @@
-function validateListenerList(list){
+function validateListenerList(list: any[]){
     const validationResult = isValidListenerList(list);
     if (validationResult.length > 0){
         setErrorPopup("Listener list poorly defined:\n"+ "Errors: "
@@ -7,7 +7,7 @@ function validateListenerList(list){
     }
 }
 
-function isValidListenerList(list) {
+function isValidListenerList(list: any[]) {
     const errors = [];
     if (!Array.isArray(list)) {
         errors.push("List is not an array");

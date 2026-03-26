@@ -83,6 +83,7 @@ let sawherpee = 0; // You've seen her pee
 
 let wetlegs = 0; // her legs are wet
 let wetherpanties = 0; // did she ever wet herself?
+let nowpeeing = 0; // flag: she is currently peeing
 
 let gottagoflag = 0; // has she just asked to use the restroom
 
@@ -91,13 +92,13 @@ let waitcounter = 0; // how long ago did she ask to pee?
                      //Reset positive when you ask her.
 
 //Initializes the bladder values for the girl
-function initUrge(urge) {
+function initUrge(urge: number) {
     minurge = urge * minperc / 100;
     updateurge(urge);
 }
 
 // noinspection DuplicatedCode
-function updateurge(newurge) {
+function updateurge(newurge: number) {
     if (newurge < minurge) newurge = minurge;
     newurge = Math.round(newurge);
     bladurge = newurge;
@@ -110,7 +111,7 @@ function updateurge(newurge) {
 
 // Slightly randomizes the calculated tuminc
 // so the bladder doesn't fill with a completely fixed amount each time
-function randtuminc(tempinc) {
+function randtuminc(tempinc: number) {
     if (tempinc === 2)
         return tempinc;
     let choicearray = [];
@@ -162,7 +163,8 @@ function flushdrank() {
         }
     }
 
-    Object.keys(backPackItems).forEach(item => {
+    Object.keys(backPackItems).forEach(key => {
+        const item = backPackItems[key];
         if (item.hasOwnProperty("shedrank"))
             item.shedrank = 0;
     });
@@ -179,7 +181,7 @@ function flushdrank() {
 
 // Showneed calculates how she's going to indicate
 // her current level of need ( if at all ) based on her situation
-function showneed(curtext = []) {
+function showneed(curtext: any[] = []): any[] {
 
     // Clear the gottagoflag.  It will be set by displaygottavoc().
     gottagoflag = 0;
@@ -241,7 +243,7 @@ function showneed(curtext = []) {
 // DisplayGottaVoc function prints a quasi-random vocalization from "+girlname+"
 // indication her sincere hope to find a bathroom soon.
 //TODO this probably should only be used by showneed
-function displaygottavoc(curtext, index) {
+function displaygottavoc(curtext: any[], index?: number): any[] {
     let textchoice = [];
     if (askholditcounter > 0 && waitcounter < 3 && bladder > bladurge && randomchoice(3)) {
         textchoice.push(pickrandom(needs["wantHold"]).formatVars());
@@ -291,7 +293,7 @@ function displaygottavoc(curtext, index) {
 // Publish a note about her holding it for you.
 // Depends on whether you asked her to hold it,
 // and emergency bladder state
-function noteholding(curtext) {
+function noteholding(curtext: any[]): any[] {
     if (bladder > blademer && askholditcounter) curtext.push(pickrandom(needs["sheholds"]));
     return curtext;
 }
@@ -299,7 +301,7 @@ function noteholding(curtext) {
 //
 //  Publish a note about her looking like she has to go.
 //
-function interpbladder(curtext) {
+function interpbladder(curtext: any[]): any[] {
     if (bladder > bladlose) curtext.push(pickrandom(needs["interplose"]));
     else if (bladder > blademer) curtext.push(pickrandom(needs["interpemer"]));
     else if (bladder > bladneed) curtext.push(pickrandom(needs["interpneed"]));
@@ -307,7 +309,7 @@ function interpbladder(curtext) {
 }
 
 //TODO lose control when bursting on the way
-function indepee(curtext = [], called = false) {
+function indepee(curtext: any[] = [], called: boolean = false) {
     gottagoflag = 0;
     const currentLocation = locStack[0];
 
@@ -375,7 +377,7 @@ function indepee(curtext = [], called = false) {
 }
 
 //TODO your and her bathroomlocked can probably be intertwened, only difference is start and the locked variable
-function bathroomlocked(curtext) {
+function bathroomlocked(curtext: any[]): any[] {
     const locked = peelines["locked"];
     const [emergencyReaction, uncomfortableReaction, unfulfilledReaction] = locked["urgency"];
 
@@ -409,7 +411,7 @@ function bathroomlocked(curtext) {
 
 //  Displayneed function prints a relatively random
 //  indication of her level of pee urgency.
-function displayneed(curtext) {
+function displayneed(curtext: any[]): any[] {
     showedneed = 1;
     if (locStack[0] === "themakeout" || locStack[0] === "driveout" ||
         locStack[0] === "drivearound" || locStack[0] === "domovie" ||
@@ -478,7 +480,7 @@ function askpee() {
 }
 
 //TODO make her less demanding
-function preventpee(listenerList = []) {
+function preventpee(listenerList: any[] = []): any[] {
 
     // If she's not in obviously dire straits, your
     // admonitions, whatever they are, will effectively
@@ -525,15 +527,15 @@ function preventpee(listenerList = []) {
 //
 //TODO fix it that if you are at her place after you asked her and she doesn't have to go you always fail
 function holdit() {
-    let curtext = [];
+    let curtext: any[] = [];
     curtext.push(pickrandom(needs["askhold"]));
     gottagoflag = 0;
     waitcounter = 6;
+    const [holdUnsure, holdPhonePanic, holdPhoneLosing, holdPhoneWet,
+           holdPhoneSorry, holdPhoneHangUp, holdRefusal] = needs["holdIt"];
     if ((bladder >= bladlose && attraction > holditlosethresh) ||
         (bladder >= blademer && attraction > holditemerthresh) ||
         (bladder >= bladneed && attraction > holditneedthresh)) {
-        const [holdUnsure, holdPhonePanic, holdPhoneLosing, holdPhoneWet,
-               holdPhoneSorry, holdPhoneHangUp, holdRefusal] = needs["holdIt"];
 
         if (bladder >= blademer) {
             curtext.push(girltalk + pickrandom(needs["surpriseexcl"])); //TODO this shouldn't be allowed
@@ -584,7 +586,7 @@ function holdit() {
 
 //  DisplayHoldQuip function prints a quasi-random quip from "+girlname+"
 //  saying she's going to try to hold it for you.
-function displayholdquip(curtext) {
+function displayholdquip(curtext: any[]): any[] {
     //TODO is the noneed ever used?
     let need = "noneed" //How full her bladder is influences what she says
     if (bladder >= bladlose)
@@ -647,7 +649,7 @@ function pstory2() {
 }
 
 // If she begs you, you end up not leaving the venue.
-function begtoilet(curtext) {
+function begtoilet(curtext: any[]): any[] {
     //TODO mention having peed outside before? / autonomously choose that
     let selection = [0];
     if (peedvase)
@@ -669,7 +671,7 @@ function begtoilet(curtext) {
 //
 //  She says how long she's been waiting to pee.
 //
-function displaywaited(curtext) {
+function displaywaited(curtext: any[]): any[] {
     let timewaited = " ";
     let halftimewaited;
     halftimewaited = Math.floor((thetime - lastpeetime) / 30);
@@ -694,7 +696,7 @@ function displaywaited(curtext) {
 //
 //  You try to convince her to hold it.
 //
-function convinceher(curtext) {
+function convinceher(curtext: any[]): any[] {
     let selection = []; //Used to keep track of which options need to be printed
     if (haveItem("roses")) {
         selection.push(0);
@@ -746,7 +748,7 @@ function bribefavor() {
     sayText(curtext);
 }
 
-function allowpee() {
+function allowpee(): void {
     gottagoflag = 0;
     askholditcounter = 0;
     let curtext = [];
@@ -790,12 +792,12 @@ function peephone() {
 }
 
 //Ask her to pee in a given item from your backpack
-function peein(item) {
+function peein(item: string) {
     //Closes the backpack since a function has been chosen
     const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
     const list = needs[item];
-    var object = backPackItems[item];
+    let object = backPackItems[item];
     let curtext = [needs["suggestPeeIn"].format([object.bpname])];
     let itemAttr = 30;
     if (object.hasOwnProperty("attrThresh"))
@@ -857,7 +859,7 @@ function peein(item) {
     sayText(curtext);
 }
 
-function peein2(item) {
+function peein2(item: string) {
     let curtext = [];
     //print quote depending on the panties she wears.
     if (pantycolor !== "none")
@@ -873,7 +875,7 @@ function peein2(item) {
     sayText(curtext);
 }
 
-function peein3(item) {
+function peein3(item: string) {
     const list = needs[item];
     let curtext = [];
     //If her bladder is virtually empty she can't go even if she tries.
@@ -1065,7 +1067,7 @@ function wetherself() {
     cListenerGenList(listenerList);
 }
 
-function wetherself2(curtext) {
+function wetherself2(curtext?: any[]) {
     if (!curtext)
         curtext = [];
     const wetHissing = needs["wetherself"][0]; // loud hissing as her bladder empties
@@ -1129,7 +1131,7 @@ function wetherself3() {
         shyness += 15;
         if (shyness > 100) shyness = 100;
     }
-    let listenerList = [[[scoldher, "Scold her for wetting herself"]]];
+    let listenerList: any[] = [[[scoldher, "Scold her for wetting herself"]]];
     if (haveItem("ptowels")) {
         listenerList.push([[function () {
             giveHer("ptowels");
@@ -1156,7 +1158,7 @@ function wetherself3t() {
     sayText(curtext);
 }
 
-function spurtedherself(curtext, listenerList) {
+function spurtedherself(curtext: any[], listenerList: any[]): [any[], any[]] {
     console.log("test: spurtedherself");
     bladder -= 50;
     spurtthresh -= 0.1 * spurtthresh;
@@ -1238,7 +1240,7 @@ function comforther() {
 //  It's coming out and she can't stop it
 //  used to help describe various pees.
 //
-function itscomingout(curtext) {
+function itscomingout(curtext: any[]): any[] {
     if (!sawherpee)
         curtext.push(girltalk + pickrandom(needs["outpeelook"]));
     else
@@ -1493,7 +1495,7 @@ function pnorestroom() {
     }
 }
 
-function noToiletPee(choice) {
+function noToiletPee(choice: string) {
     let quotes = theatre["noToilet"][choice]["quotes"];
     let curtext = printList([], quotes[0]);
     curtext = displayneed(curtext);
@@ -1507,7 +1509,7 @@ function noToiletPee(choice) {
     sayText(curtext);
     sawherpee = 1;
     flushdrank();
-    cListenerGen([noToiletPee2, "Continue..."]);
+    cListenerGen([noToiletPee2, "Continue..."], "noToiletPee2");
 }
 
 function noToiletPee2() {

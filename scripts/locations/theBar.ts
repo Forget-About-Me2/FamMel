@@ -13,7 +13,7 @@ function theBarSetup(){
     }
 }
 
-function barJsonSetup(data){
+function barJsonSetup(data: any){
     bar = data;
     talkUnused = bar["barTalk"];
 }
@@ -81,7 +81,7 @@ function rebar(){
 let talkUnused; //Bar talk topics that have not been covered yet
 let curTopicI; //The current chosen index.
 //This generates the conversation returns the listeners and prints the curtext
-function barTalk(curtext){
+function barTalk(curtext: any[]){
     if (bartopic < 5){
         curTopicI = randomIndex(talkUnused);
         let curTopic = talkUnused[curTopicI];
@@ -104,7 +104,7 @@ function barTalk(curtext){
     return [];
 }
 
-function barResp(choice){
+function barResp(choice: number){
     // barResp: [0]=positive/interested, [1]=neutral, [2]=negative/disinterested
     const GOOD = 1, NEUTRAL = 2, BAD = 3;
     let curtext = [pickrandom(bar["barResp"][choice-1]).formatVars()];
@@ -340,7 +340,7 @@ function postgame() {
     cListenerGen([function () {postGame2(situation)}, "Continue..."], "goback");
 }
 
-function postGame2(situation){
+function postGame2(situation: string){
     let curtext = [];
     // postGame: [0]=no one desperate, [1]=she was desperate, [2]=you were desperate, [3]=both desperate (kiss)
     const [pgNone, pgHerDesperate, pgYouDesperate, pgBothDesperate] = bar["postGame"];
