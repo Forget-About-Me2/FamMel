@@ -1,7 +1,9 @@
-let club;
-let externalflirt = 0; // You flirted with somebody else
+import { fetchJson } from '../quotes';
 
-function theClubSetup(){
+export let club;
+export let externalflirt = 0; // You flirted with somebody else
+
+export function theClubSetup(){
     fetchJson("locations/theClub").then(clubJsonSetup);
     return {
         visit: [theClub, "Go to the nightclub"],
@@ -17,7 +19,7 @@ function clubJsonSetup(data: any){
     club = data;
 }
 
-function theClub() {
+export function theClub() {
     allowItems = 1;
     let curtext = [];
     let listenerList = []
@@ -70,7 +72,7 @@ function theClub() {
 }
 
 
-function flirtBarGirl() {
+export function flirtBarGirl() {
     let curtext = [pickrandom(club["barGirlFlirt"])];
     curtext.push(pickrandom(club["barGirlDesc"]));
     curtext.push(pickrandom(club["barGirlResp"]));
@@ -80,13 +82,13 @@ function flirtBarGirl() {
     cListenerGen([theClub, "Continue..."], "theClub");
 }
 
-function reClub() {
+export function reClub() {
     backPackItems.theClubKey.value = 0;
     pushloc("theClub");
     theClub();
 }
 
-function goDance(){
+export function goDance(){
     pushloc("doDance");
     changevenueflag = 1;
     const goDanceIntro = club["theClub"][3];
@@ -104,7 +106,7 @@ function goDance(){
     cListenerGenList(listenerList);
 }
 
-function doDance(){
+export function doDance(){
     allowItems = 1;
     let curtext = [club["Dancing"].formatVars()];
     curtext = showneed(curtext);
@@ -132,7 +134,7 @@ function doDance(){
     }
 }
 
-function leaveDance(){
+export function leaveDance(){
     let curtext = [club["leaveDance"].formatVars()];
     curtext = showneed(curtext);
     sayText(curtext);
@@ -140,7 +142,7 @@ function leaveDance(){
     cListenerGen([theClub, "Continue..."], "club");
 }
 
-function darkClub() {
+export function darkClub() {
     allowItems = 1;
     let curtext = [];
     if (emerBreak || emerHold && bladder < 20){
@@ -182,7 +184,7 @@ function darkClub() {
     }
 }
 
-function pphotogame() {
+export function pphotogame() {
     let curtext = [club["photoGameConvince"]];
     curtext = displayneed(curtext);
     curtext.push(club["questPic"].formatVars());
@@ -195,7 +197,7 @@ function pphotogame() {
 }
 
 
-function photoConvince(choice: string) {
+export function photoConvince(choice: string) {
     let curtext = [];
     if (attraction >= photoGameThresholds[choice]) {
         curtext = displayneed(curtext);
@@ -216,15 +218,15 @@ function photoConvince(choice: string) {
     }
 }
 
-let wetPhoto = 0;
-let isNude = 0;
+export let wetPhoto = 0;
+export let isNude = 0;
 
-let posectr = 0; // keep track of which pose is next/last.
+export let posectr = 0; // keep track of which pose is next/last.
 const posemax = 5; // Maximum value of pose counter
 
-let outfitctr = 0; // keep track of the outfit being worn.
+export let outfitctr = 0; // keep track of the outfit being worn.
 const outfitmax = 5; // maximum count of outfits
-function photoGame() {
+export function photoGame() {
     let curtext = [];
     if (wetPhoto) {
         wetPhoto = 0;
@@ -273,7 +275,7 @@ function photoGame() {
     }
 }
 
-function photoPose() {
+export function photoPose() {
     let curtext = [club["askPose"]];
     // s("<b>YOU:</b> How about striking a pose?");
     if (photoChoice === "nudes")
@@ -290,7 +292,7 @@ function photoPose() {
     cListenerGen([photoGame, club["choices"]["takePhoto"]], "takePhoto");
 }
 
-function photoChange() {
+export function photoChange() {
     let curtext = [club["photoChange"]["common"]];
     // s("<b>YOU:</b> How about changing into a costume?");
     if (bladder > blademer) {
@@ -309,7 +311,7 @@ function photoChange() {
     cListenerGen([photoGame, "Continue..."], "Cont");
 }
 
-function photoNude() {
+export function photoNude() {
     let curtext = [club["photoNude"]["common"]];
     // s("<b>YOU:</b> Okay - so you can take off your clothes.");
     if (bladder > blademer) {
@@ -341,7 +343,7 @@ function photoNude() {
     cListenerGen([photoGame, "Continue..."], "Cont");
 }
 
-function photoFinish(){
+export function photoFinish(){
     let curtext = [];
     if (isNude){
         if (bladder > blademer)
@@ -360,4 +362,34 @@ function photoFinish(){
         cListenerGen([indepee, "Continue..."], "indepee");
     else
         cListenerGen([darkClub, "Continue..."], "darkClub");
+}
+
+export function exposeTheClubOnWindow(): void {
+    const w = window as any;
+    const props: Array<[string, () => any, (v: any) => void]> = [
+        ['club', () => club, (v) => { club = v; }],
+        ['externalflirt', () => externalflirt, (v) => { externalflirt = v; }],
+        ['wetPhoto', () => wetPhoto, (v) => { wetPhoto = v; }],
+        ['isNude', () => isNude, (v) => { isNude = v; }],
+        ['posectr', () => posectr, (v) => { posectr = v; }],
+        ['outfitctr', () => outfitctr, (v) => { outfitctr = v; }],
+    ];
+    for (const [name, getter, setter] of props) {
+        Object.defineProperty(w, name, { get: getter, set: setter, configurable: true, enumerable: true });
+    }
+    w.theClubSetup = theClubSetup;
+    w.theClub = theClub;
+    w.flirtBarGirl = flirtBarGirl;
+    w.reClub = reClub;
+    w.goDance = goDance;
+    w.doDance = doDance;
+    w.leaveDance = leaveDance;
+    w.darkClub = darkClub;
+    w.pphotogame = pphotogame;
+    w.photoConvince = photoConvince;
+    w.photoGame = photoGame;
+    w.photoPose = photoPose;
+    w.photoChange = photoChange;
+    w.photoNude = photoNude;
+    w.photoFinish = photoFinish;
 }

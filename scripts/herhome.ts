@@ -1,9 +1,11 @@
-// All functions connected to her house. This is both pickup and endgame
-let herHome; //Json with quotes for herHome.
-let prepeed = 0; // did she pee before you picked her up
-let elevatorwaitcounter = 0;
+import { fetchJson, fetchAndCacheJson } from './quotes';
 
-function herHomeSetup() {
+// All functions connected to her house. This is both pickup and endgame
+export let herHome; //Json with quotes for herHome.
+export let prepeed = 0; // did she pee before you picked her up
+export let elevatorwaitcounter = 0;
+
+export function herHomeSetup() {
     fetchAndCacheJson("herhome").then(function(data) {
         herHome = data["theHome"];
         locations.theHome.visit = [herhome, herHome["choices"]["visit"]];
@@ -16,12 +18,12 @@ function herHomeSetup() {
     }
 }
 
-function homeConditions() {
+export function homeConditions() {
     return shyness < 50 && attraction > 100 && locations.makeOut.visited &&
         locations.theBar.visited && locations.theClub.visited && seenmovie;
 }
 
-function herhome() {
+export function herhome() {
     //This chooses the appropriate function to continue in the location herhome
     if (locStack[0] === "yourhome")
         fetchJson("appearance").then(function(data) {
@@ -33,7 +35,7 @@ function herhome() {
 
 //TODO fix this scene
 //The dialogues is fucked if you asked her to hold it
-function pickup() {
+export function pickup() {
     allowItems = 1;
     let curtext = [];
     if (locStack[0] !== "pickup") { // happens first time only.
@@ -104,7 +106,7 @@ function pickup() {
 
 }
 
-function takeHerHome(){
+export function takeHerHome(){
     let curtext = printList([], herHome["arrive"]);
     let listenerList = [];
     if (homeConditions()){
@@ -117,8 +119,8 @@ function takeHerHome(){
     cListenerGenList(listenerList);
 }
 
-let floorcounter = 0;
-function elevatorWait() {
+export let floorcounter = 0;
+export function elevatorWait() {
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
@@ -150,7 +152,7 @@ function elevatorWait() {
     cListenerGenList(listenerList);
 }
 
-function theElevator(){
+export function theElevator(){
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
@@ -182,7 +184,7 @@ function theElevator(){
     }
 }
 
-function stolenKeys(){
+export function stolenKeys(){
     let curtext = [herHome["searchKeys"].formatVars()];
     curtext = displayneed(curtext);
     curtext = voccurse(curtext);
@@ -196,7 +198,7 @@ function stolenKeys(){
     ]);
 }
 
-function giveKeys() {
+export function giveKeys() {
     backPackItems.herKeys.value=0;
     let curtext = [herHome["getKeys"]];
     let listenerList = [];
@@ -217,27 +219,27 @@ function giveKeys() {
     cListenerGenList(listenerList);
 }
 
-function keyNevermind() {
+export function keyNevermind() {
     let curtext = printList([], herHome["keysNvm"])
     sayText(curtext);
     cListenerGen([theHome, "Continue..."], "theHome");
 }
 
-function keyGoodExcuse(){
+export function keyGoodExcuse(){
     let curtext = printList([], herHome["keysGood"]);
     sayText(curtext);
     attraction += 10;
     cListenerGen([theHome, "Continue..."], "theHome");
 }
 
-function keyBadExcuse(){
+export function keyBadExcuse(){
     let curtext = printList([], herHome["keysBad"]);
     sayText(curtext);
     attraction = 0;
     cListenerGen([gameOver, herHome["choices"]["keySlap"]], "gameOver");
 }
 
-function lookForKeys() {
+export function lookForKeys() {
     let curtext = [];
     if (locStack[0] !== "lookForKeys"){
         pushloc("lookForKeys");
@@ -261,7 +263,7 @@ function lookForKeys() {
     ]);
 }
 
-function theHome() {
+export function theHome() {
     allowItems = 1;
     if (locStack[0] !== "theHome")
         pushloc("theHome")
@@ -293,4 +295,23 @@ function theHome() {
     }
     sayText(curtext);
     cListenerGenList(listerList);
+}
+
+export function exposeHerHomeOnWindow() {
+    const mutableVars: [string, () => any, (v: any) => void][] = [
+        ["herHome", () => herHome, (v) => { herHome = v; }],
+        ["prepeed", () => prepeed, (v) => { prepeed = v; }],
+        ["elevatorwaitcounter", () => elevatorwaitcounter, (v) => { elevatorwaitcounter = v; }],
+        ["floorcounter", () => floorcounter, (v) => { floorcounter = v; }],
+    ];
+    for (const [name, getter, setter] of mutableVars) {
+        Object.defineProperty(window, name, { get: getter, set: setter, configurable: true });
+    }
+
+    Object.assign(window, {
+        herHomeSetup, herhome, pickup, takeHerHome, theElevator,
+        elevatorWait, theHome, homeConditions,
+        lookForKeys, giveKeys, stolenKeys,
+        keyGoodExcuse, keyBadExcuse, keyNevermind,
+    });
 }

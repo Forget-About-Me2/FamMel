@@ -1,11 +1,13 @@
-let theatre; //Json with quotes for theatre
-let rrMovieLineThresh = 7; // Likelihood of line for restroom in the movie theatre.
+import { fetchJson } from '../quotes';
 
-let moviecounter = 0; // Keep track of location in movie
-let moviechoice; //  Which movie are we showing
-let askedfavourite = 0; //asked her which movie to watch
+export let theatre; //Json with quotes for theatre
+export let rrMovieLineThresh = 7; // Likelihood of line for restroom in the movie theatre.
 
-function theatreSetup(){
+export let moviecounter = 0; // Keep track of location in movie
+export let moviechoice; //  Which movie are we showing
+export let askedfavourite = 0; //asked her which movie to watch
+
+export function theatreSetup(){
     fetchJson("locations/theatre").then(theatreJsonSetup);
     return {
         "visit": [theTheatre, "Go to the theatre"],
@@ -21,7 +23,7 @@ function theatreJsonSetup(data: any){
     theatre = data;
 }
 
-function theTheatre(){
+export function theTheatre(){
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
@@ -63,13 +65,13 @@ function theTheatre(){
     cListenerGenList(listenerList);
 }
 
-function reTheatre() {
+export function reTheatre() {
     backPackItems.theTheatreKey.value = 0;
     pushloc("theTheatre");
     theTheatre();
 }
 
-function askMovie() {
+export function askMovie() {
     let curtext = [];
     let listenerList = [];
     // watchMovie: [0]=ask favourite, [1]=already watching, [2]=choose other prompt,
@@ -98,7 +100,7 @@ function askMovie() {
     cListenerGenList(listenerList);
 }
 
-function chooseOtherMovie() {
+export function chooseOtherMovie() {
     let curtext = printList([], theatre["watchMovie"][2]); // chooseOtherPrompt
     let listenerList = [];
     Object.keys(theatre["favouriteMovie"]).forEach(id => {
@@ -114,7 +116,7 @@ function chooseOtherMovie() {
 
 }
 
-function chooseMovie() {
+export function chooseMovie() {
     let curtext = [];
     let listenerList = [];
     if (moviecounter === 0) {
@@ -141,7 +143,7 @@ function chooseMovie() {
     cListenerGenList(listenerList);
 }
 
-function movieArgue() {
+export function movieArgue() {
     let curtext = [];
     if (askedfavourite) {
         //You asked her which movie she wanted to watch and then deliberately chose a different one.
@@ -165,9 +167,9 @@ function movieArgue() {
     }
 }
 
-let seenmovie = 0;
+export let seenmovie = 0;
 //TODO figure out duplicate continue's
-function preMoviePee(curtext: any[] = []) {
+export function preMoviePee(curtext: any[] = []) {
     pushloc("domovie");
     moviecounter = 0;
     seenmovie = 0;
@@ -189,7 +191,7 @@ function preMoviePee(curtext: any[] = []) {
 }
 
 //TODO you can go to the bathroom if you're desperate
-function domovie() {
+export function domovie() {
     allowItems = 1;
     let curtext = [];
     if (seenmovie === 0) {
@@ -243,7 +245,7 @@ function domovie() {
 //             7 : End
 
 // Hold her hand
-function movieRomance() {
+export function movieRomance() {
     allowItems = 1;
     let curtext = [];
     const [attempt, success, failure] = theatre["movieRomance"];
@@ -263,7 +265,7 @@ function movieRomance() {
 }
 
 // Touch her thigh
-function movieSex() {
+export function movieSex() {
     allowItems = 1;
     let curtext = [];
     const [attempt, success] = theatre["movieSex"];
@@ -283,7 +285,7 @@ function movieSex() {
 }
 
 // Lean closer to her
-function movieScary() {
+export function movieScary() {
     allowItems = 1;
     const [attempt, success, failure] = theatre["movieScary"];
     let curtext = printList([], attempt);
@@ -302,7 +304,7 @@ function movieScary() {
 }
 
 // look her in the eyes
-function movieDoh() {
+export function movieDoh() {
     allowItems = 1;
     const [attempt, success, failure] = theatre["movieDoh"];
     let curtext = printList([], attempt);
@@ -321,7 +323,7 @@ function movieDoh() {
 }
 
 //TODO fix thehold my purse
-function darkTheatre() {
+export function darkTheatre() {
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
@@ -354,7 +356,7 @@ function darkTheatre() {
     cListenerGenList(listenerList);
 }
 
-function stealSoda() {
+export function stealSoda() {
     // stealSoda: [0]=first steal, [1]=steal another
     const [firstSteal, stealAnother] = theatre["stealSoda"];
     let curtext = printList([], firstSteal);
@@ -369,7 +371,7 @@ function stealSoda() {
 
 //TODO put a limit on this/ Game update
 //TODO randomize quotes
-function stealSoda2(){
+export function stealSoda2(){
     let curtext = printList([], theatre["stealSoda"][1]); // stealAnother
     backPackItems.soda.value += 1;
     let listenerList = [
@@ -378,4 +380,34 @@ function stealSoda2(){
     ];
     sayText(curtext);
     cListenerGenList(listenerList);
+}
+export function exposeTheatreOnWindow(): void {
+    const w = window as any;
+    const props: Array<[string, () => any, (v: any) => void]> = [
+        ['theatre', () => theatre, (v) => { theatre = v; }],
+        ['rrMovieLineThresh', () => rrMovieLineThresh, (v) => { rrMovieLineThresh = v; }],
+        ['moviecounter', () => moviecounter, (v) => { moviecounter = v; }],
+        ['moviechoice', () => moviechoice, (v) => { moviechoice = v; }],
+        ['askedfavourite', () => askedfavourite, (v) => { askedfavourite = v; }],
+        ['seenmovie', () => seenmovie, (v) => { seenmovie = v; }],
+    ];
+    for (const [name, getter, setter] of props) {
+        Object.defineProperty(w, name, { get: getter, set: setter, configurable: true, enumerable: true });
+    }
+    w.theatreSetup = theatreSetup;
+    w.theTheatre = theTheatre;
+    w.reTheatre = reTheatre;
+    w.askMovie = askMovie;
+    w.chooseOtherMovie = chooseOtherMovie;
+    w.chooseMovie = chooseMovie;
+    w.movieArgue = movieArgue;
+    w.preMoviePee = preMoviePee;
+    w.domovie = domovie;
+    w.movieRomance = movieRomance;
+    w.movieSex = movieSex;
+    w.movieScary = movieScary;
+    w.movieDoh = movieDoh;
+    w.darkTheatre = darkTheatre;
+    w.stealSoda = stealSoda;
+    w.stealSoda2 = stealSoda2;
 }

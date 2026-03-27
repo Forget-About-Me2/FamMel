@@ -2,6 +2,34 @@
 
 export let calledjsons: any = {}; //Cache of fetched JSON files, keyed by tag name
 
+// Delegated click handler: maps action IDs to function callbacks.
+// Cleared on every screen refresh (sayText/setText) so stale closures get GC'd.
+const actionRegistry = new Map<string, Function>();
+let actionIdCounter = 0;
+
+function nextActionId(): string {
+    return `_a${actionIdCounter++}`;
+}
+
+export function clearActionRegistry() {
+    actionRegistry.clear();
+}
+
+// Set up once at startup: single delegated listener on document handles all choice clicks
+export function initDelegatedClickHandler() {
+    document.addEventListener('click', function(e) {
+        const target = (e.target as HTMLElement).closest('[data-action], [data-action-fn]') as HTMLElement;
+        if (!target) return;
+        e.preventDefault();
+        if (target.dataset.action) {
+            (window as any).go(target.dataset.action);
+        } else if (target.dataset.actionFn) {
+            const fn = actionRegistry.get(target.dataset.actionFn);
+            if (fn) fn();
+        }
+    });
+}
+
 
 //TODO maybe compress this in a list or something?
 let flirtquotes: any; //This stores all possible flirts called from the JSON
@@ -178,63 +206,69 @@ export function callChoice(choice: any[], curtext: any[]=[]){
 
 // Cache a choice
 // choice - array of length 2 with tag on index 0 and desc on index 1
-//   tag - function to activate using choice
+//   tag - route string to pass to go()
 //   desc - description of choice to display.
 // curtext - a list of all current lines that will be printed during the scene
 export function c(choice: any[], curtext: any[]) {
-    const html = "<li><a href=\"javascript:go('" + choice[0] + "')\">" + choice[1].formatVars() + "</a>"
+    const html = "<li><a href=\"#\" data-action=\"" + choice[0] + "\">" + choice[1].formatVars() + "</a>";
     curtext.push(html);
     return curtext;
 }
 
-// Cache a choice for a click listener
-// choice - array of length 2 with tag on index 0 and desc on index 1
-// tag - the tag for the choice, for a page with choices all tags need to be unique or things will break
+// Cache a choice for a click listener.
+// choice[0] is the function callback, choice[1] is the label.
+// tag is used as an element ID for legacy compatibility.
+// The function is registered in the actionRegistry and wired via event delegation.
 export function cListener(choice: any[], tag: string){
-    const html = "<p>" + cListenerString(choice, tag) + "</p>";
-    document.getElementById('textsp').innerHTML += html;
+    const id = nextActionId();
+    actionRegistry.set(id, function() { (window as any).go(choice[0]); });
+    const html = "<p><li class='cListener' id='" + tag + "' data-action-fn='" + id + "'>" + choice[1].formatVars() + "</li></p>";
+    document.getElementById('textsp')!.innerHTML += html;
 }
 
-//Gets the string html for the given choice, formats it if neccesarry
-function cListenerString(choice, loc){
-    return "<li class='cListener' id='"+loc+"'>"+choice[1].formatVars()+"</li>";
+// Variant that registers a raw function callback (no go() wrapper).
+function cListenerRaw(choice: any[], tag: string){
+    const id = nextActionId();
+    actionRegistry.set(id, choice[0]);
+    const html = "<p><li class='cListener' id='" + tag + "' data-action-fn='" + id + "'>" + choice[1].formatVars() + "</li></p>";
+    document.getElementById('textsp')!.innerHTML += html;
 }
 
-//Adds an element to a created click listener
-//This is done separately because if the list contains more listeners things break
+//Adds an element to a created click listener.
+//For elements without data-action-fn (e.g. manually created HTML), falls back to addEventListener.
 export function addListeners(choice: any[], loc: string, go=true){
+    const el = document.getElementById(loc);
+    if (!el) return;
+    // Skip if already wired via delegation
+    if (el.dataset.actionFn) return;
     let func;
     if (go)
-        func = goWrapper(choice[0]);
-    else func = choice[0]
-    document.getElementById(loc).addEventListener("click", func);
+        func = function () { (window as any).go(choice[0]); };
+    else func = choice[0];
+    el.addEventListener("click", func);
 }
 
-//Calls the given visit through go, aka it triggers a game tick.
-function goWrapper(func: any){
-    return function () { (window as any).go(func);}
-}
-
-//For a given list adds a listener to all created click listeners
+//For a given list adds a listener to all created click listeners.
+//Skips elements already wired via data-action-fn delegation.
 export function addListenersList(list: any[]){
     list.forEach(item => {
         if (item.length === 3)
             addListeners(item[0], item[1], item[2]);
         else
-            addListeners(item[0], item[1])
+            addListeners(item[0], item[1]);
     });
 }
 
 //For the given choice creates both the element and the listener
 export function cListenerGen(choice: any[], loc: string){
     cListener(choice, loc);
-    addListeners(choice, loc);
 }
 
 /*
 For a given list generates the element and listeners
 expected input: [[function, description], tag]
 Description is formatted if needed.
+If item has a third element set to false, the callback is registered directly (no go() wrapper).
 */
 export function cListenerGenList(list: any[]){
     validateListenerList(list)
@@ -248,12 +282,17 @@ export function cListenerGenList(list: any[]){
         else ordered.push(item);
     });
     const finalList = ordered.concat(leaves);
-    finalList.forEach(item => cListener(item[0], item[1]));
-    addListenersList(finalList);
+    finalList.forEach(item => {
+        if (item.length >= 3 && item[2] === false)
+            cListenerRaw(item[0], item[1]);
+        else
+            cListener(item[0], item[1]);
+    });
 }
 
 //print the given lines list on the screen
 export function sayText(lines: any[]){
+    clearActionRegistry();
     let result = "";
     try {
         lines.forEach(item => {
@@ -267,7 +306,7 @@ export function sayText(lines: any[]){
             }
             result += "<p>" + item.formatVars() + "</p>";
         });
-        document.getElementById('textsp').innerHTML = result;
+        document.getElementById('textsp')!.innerHTML = result;
     } catch (e) {
         console.error("Something went wrong while saying text");
         console.error(e);
@@ -279,13 +318,14 @@ export function sayText(lines: any[]){
 export function addSayText(lines: any[]){
     let result = "";
     lines.forEach(item => result += "<p>" + item + "</p>");
-    document.getElementById('textsp').innerHTML += result;
+    document.getElementById('textsp')!.innerHTML += result;
 }
 
 export function setText(lines: any[]){
+    clearActionRegistry();
     let result = "";
     lines.forEach(item => result += item);
-    document.getElementById('textsp').innerHTML = result;
+    document.getElementById('textsp')!.innerHTML = result;
 }
 
 export let locjson: any = null; //This is the main json for the current location

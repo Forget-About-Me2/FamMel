@@ -1,18 +1,18 @@
 // Fucking Parameters
-let arousal = 0;
-let kisscounter = 0;
-let feelcounter = 0;
-let fuckingnow = 0; // You are in the middle of fucking.
+export let arousal = 0;
+export let kisscounter = 0;
+export let feelcounter = 0;
+export let fuckingnow = 0; // You are in the middle of fucking.
 
-let champagnecounter = 0; // Number of glasses of champagne served.
-let drankChamp = 0; // Time since last champagne glass was drunk.
+export let champagnecounter = 0; // Number of glasses of champagne served.
+export let drankChamp = 0; // Time since last champagne glass was drunk.
 
-function deepClone(value: any) {
+export function deepClone(value: any) {
     return JSON.parse(JSON.stringify(value));
 }
 
 // Store initial primitive/array/object values and recursively init nested action objects.
-function objInit(this: any) {
+export function objInit(this: any) {
     this.initVal = {};
     Object.keys(this).forEach(key => {
         const value = this[key];
@@ -27,7 +27,7 @@ function objInit(this: any) {
 }
 
 // Reset this object and nested objects back to their initialized state.
-function objReset(this: any) {
+export function objReset(this: any) {
     if (!this.initVal)
         this.init();
     Object.keys(this.initVal).forEach(key => {
@@ -42,7 +42,7 @@ function objReset(this: any) {
 }
 
 //This object is used to keep track of everything related to the sexActions
-let sexActions = {
+export let sexActions = {
     clothes:{
         skirt:{
             on: 1,
@@ -227,7 +227,7 @@ let sexActions = {
         return this.actions[item].noTub;
     }
 }
-function fuckHerSetup(data: any){
+export function fuckHerSetup(data: any){
     sexLines = data;
     Object.keys(sexLines).forEach(loc => {
         if (typeof loc === "object" && (loc !== "clothes" || loc !== "actions")) {
@@ -250,7 +250,7 @@ function fuckHerSetup(data: any){
 });
 }
 
-function haveSex(location: string){
+export function haveSex(location: string){
     let curtext = [];
     let sexQuotes = sexLines[location];
     if (locStack[0]!== "haveSex"){
@@ -336,7 +336,7 @@ function haveSex(location: string){
     cListenerGenList(listenerList);
 }
 
-function takeOff(item: string, location: string){
+export function takeOff(item: string, location: string){
     arousal += 4;
     let info = sexActions.clothes[item];
     let processed = false;
@@ -403,7 +403,7 @@ function takeOff(item: string, location: string){
     cListenerGen([function () {haveSex(location)}, "Continue..."], "haveSex");
 }
 
-function performAction(action: string, location: string){
+export function performAction(action: string, location: string){
     let info = sexActions.actions[action];
     let processed = false;
     let curtext = [];
@@ -478,7 +478,7 @@ function performAction(action: string, location: string){
     cListenerGen([function () {haveSex(location)}, "Continue..."], "haveSex");
 }
 
-function leaveSex(location: string){
+export function leaveSex(location: string){
     let curtext = printList([], sexLines[location]["leaveSex"]);
     curtext = callChoice([location, "Continue..."], curtext);
     sexActions.clothes.reset();
@@ -487,13 +487,13 @@ function leaveSex(location: string){
     sayText(curtext);
 }
 
-function fuckTry(location: string) {
+export function fuckTry(location: string) {
     let curtext = printList([], sexLines["fuckTry"]);
     sayText(curtext);
     cListenerGen([function(){leaveSex(location)}, "Continue..."], "leaveSex");
 }
 
-function theBedroom() {
+export function theBedroom() {
     let curtext = [];
     if (locStack[0] !== "theBedroom") {
         pushloc("theBedroom");
@@ -519,7 +519,7 @@ function theBedroom() {
 
 
 //TODO chance of failure upon pausing(still cuming)
-function fuckNow() {
+export function fuckNow() {
     fuckingnow = 1;
     let curtext = printList([], sexLines["fuckNow"][0]);
     if (bladder > bladlose) {
@@ -538,7 +538,7 @@ function fuckNow() {
     cListenerGenList(listenerList);
 }
 
-function fuckHer2() {
+export function fuckHer2() {
     let curtext = printList([], sexLines["fuckNow"][4]);
     if (bladder > blademer) {
         curtext = printList(curtext, sexLines["fuckNow"][5]);
@@ -549,13 +549,13 @@ function fuckHer2() {
     }
 }
 
-function wetBed() {
+export function wetBed() {
     flushdrank();
     sayText(sexLines["fuckNow"][6]);
     cListenerGen([gameWet, "Continue..."], "gameWet");
 }
 
-function bothCum() {
+export function bothCum() {
     let curtext = printList([], sexLines["fuckNow"][7]);
     if (bladder > bladneed)
         curtext = printList(curtext, sexLines["fuckNow"][8]);
@@ -565,7 +565,7 @@ function bothCum() {
     cListenerGen([gameSexBoth, "Continue..."], "gameSex");
 }
 
-function fuckHer2b() {
+export function fuckHer2b() {
     let curtext = printList([], sexLines["fuckNow"][10]);
     if (bladder > blademer)
         curtext = printList(curtext, sexLines["fuckNow"][11]);
@@ -575,7 +575,7 @@ function fuckHer2b() {
     cListenerGen([fuckHer3, "Continue..."], "fuckHer");
 }
 
-function fuckHer3() {
+export function fuckHer3() {
     let curtext = [], listenerList = [];
     if (bladder > blademer) {
         curtext = printList(curtext, sexLines["fuckNow"][13]);
@@ -590,13 +590,13 @@ function fuckHer3() {
     cListenerGenList(listenerList);
 }
 
-function preWet(curtext: any[] = []) {
+export function preWet(curtext: any[] = []) {
     printList(curtext, sexLines["fuckNow"][15])
     sayText(curtext);
     cListenerGen([wetBed, "Continue..."], "wetBed");
 }
 
-function fuckHer4() {
+export function fuckHer4() {
     pushloc("fuckher6");
     sayText(sexLines["fuckNow"][16]);
     let listenerList = [];
@@ -611,17 +611,17 @@ function fuckHer4() {
     cListenerGenList(listenerList);
 }
 
-function fuckHer5() {
+export function fuckHer5() {
     sayText(sexLines["fuckNow"][17]);
     cListenerGen([fuckHer6, "I promise..."], "fuckHer");
 }
 
-function fuckHer5b() {
+export function fuckHer5b() {
     let curtext = printList([], sexLines["fuckNow"][18]);
     preWet(curtext);
 }
 
-function fuckHer6() {
+export function fuckHer6() {
     let curtext = [];
     let listenerList = [];
     if (bladder < bladneed) {
@@ -641,9 +641,47 @@ function fuckHer6() {
     cListenerGenList(listenerList);
 }
 
-function fuckHer7() {
+export function fuckHer7() {
     let curtext = printList([], sexLines["fuckNow"][18]);
     sayText(curtext);
     timeheld = thetime - lastpeetime;
     cListenerGen([gameWon, "Continue..."], "gameWon");
+}
+
+export function exposeFuckHerOnWindow(): void {
+    const w = window as any;
+    const props: Array<[string, () => any, (v: any) => void]> = [
+        ['arousal', () => arousal, (v) => { arousal = v; }],
+        ['kisscounter', () => kisscounter, (v) => { kisscounter = v; }],
+        ['feelcounter', () => feelcounter, (v) => { feelcounter = v; }],
+        ['fuckingnow', () => fuckingnow, (v) => { fuckingnow = v; }],
+        ['champagnecounter', () => champagnecounter, (v) => { champagnecounter = v; }],
+        ['drankChamp', () => drankChamp, (v) => { drankChamp = v; }],
+        ['sexActions', () => sexActions, (v) => { sexActions = v; }],
+    ];
+    for (const [name, getter, setter] of props) {
+        Object.defineProperty(w, name, { get: getter, set: setter, configurable: true, enumerable: true });
+    }
+    w.deepClone = deepClone;
+    w.objInit = objInit;
+    w.objReset = objReset;
+    w.fuckHerSetup = fuckHerSetup;
+    w.haveSex = haveSex;
+    w.takeOff = takeOff;
+    w.performAction = performAction;
+    w.leaveSex = leaveSex;
+    w.fuckTry = fuckTry;
+    w.theBedroom = theBedroom;
+    w.fuckNow = fuckNow;
+    w.fuckHer2 = fuckHer2;
+    w.wetBed = wetBed;
+    w.bothCum = bothCum;
+    w.fuckHer2b = fuckHer2b;
+    w.fuckHer3 = fuckHer3;
+    w.preWet = preWet;
+    w.fuckHer4 = fuckHer4;
+    w.fuckHer5 = fuckHer5;
+    w.fuckHer5b = fuckHer5b;
+    w.fuckHer6 = fuckHer6;
+    w.fuckHer7 = fuckHer7;
 }

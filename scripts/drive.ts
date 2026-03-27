@@ -1,9 +1,9 @@
-let wetthecar = 0; // Seat of the car is wet
+export let wetthecar = 0; // Seat of the car is wet
 
 //
 //  This function is used to leave ANY location and drive off.
 //
-function leavehm() {
+export function leavehm() {
     changevenueflag = 1;
     checkedherout = 0;
     kisscounter = 0;
@@ -31,7 +31,7 @@ function leavehm() {
 }
 
 //TODO fix the go to the bar like she asked
-function driveout() {
+export function driveout() {
     allowItems = 1;
     let curtext = [];
     if (locStack[0] !== "driveout") {
@@ -60,4 +60,15 @@ function driveout() {
     curtext = printAlways(curtext);
     sayText(curtext);
     printLocationMenu();
+}
+
+export function exposeDriveOnWindow(): void {
+    const w = window as any;
+    Object.defineProperty(w, 'wetthecar', {
+        get() { return wetthecar; },
+        set(v) { wetthecar = v; },
+        configurable: true, enumerable: true,
+    });
+    w.leavehm = leavehm;
+    w.driveout = driveout;
 }

@@ -14,10 +14,202 @@ interface String {
 }
 
 // ============================================================================
-// Globals from bladder.ts / yourbladder.ts (script-style, visible to all files)
-// Note: bladlose, bladder, timeheld, toldstories are declared in bladder.ts
-// (script-style TS) so they're already in the global scope. Do NOT redeclare here.
+// Globals from bladder.ts (now in the bundle, exposed on window)
 // ============================================================================
+declare let customurge: number;
+declare let minperc: number;
+declare let bladurge: number;
+declare let bladneed: number;
+declare let blademer: number;
+declare let bladlose: number;
+declare let bladcumlose: number;
+declare let bladsexlose: number;
+declare let maxtummy: number;
+declare let maxbeer: number;
+declare let tummy: number;
+declare let bladder: number;
+declare let bladDec: number;
+declare let bladDespDec: number;
+declare let seal: number;
+declare let ybeerdecCounter: number;
+declare let drankbeer: number;
+declare let lastpeetime: number;
+declare let timeheld: number;
+declare let notdesperate: number;
+declare let notydesperate: number;
+declare let nothdesperate: number;
+declare let bribeaskthresh: number;
+declare let bribeAskBase: number;
+declare let rrlockedflag: number;
+declare let shespurted: number;
+declare let brokeice: number;
+declare let wetlegs: number;
+declare let wetherpanties: number;
+declare let gottagoflag: number;
+declare let askholditcounter: number;
+declare let waitcounter: number;
+declare const rrlockedthresh: number;
+declare const rrlinethresh: number;
+declare const phoneholdthresh: number;
+declare const drinkinggamethreshold: number;
+declare const photoGameThresholds: any;
+declare const hottubthresh: number;
+declare const gomakeoutthresh: number;
+declare function initUrge(urge: number): void;
+declare function interpbladder(curtext: any[]): any[];
+declare function flushdrank(): void;
+declare function showneed(curtext?: any[]): any[];
+declare function displayneed(curtext: any[]): any[];
+declare function displaygottavoc(curtext: any[], index?: number): any[];
+declare function displayholdquip(curtext: any[]): any[];
+declare function noteholding(curtext: any[]): any[];
+declare function peein(item: string): void;
+declare function indepee(curtext?: any[], called?: boolean): void;
+declare function holdit(): void;
+declare function askcanhold(): void;
+declare function allowpee(): void;
+declare function preventpee(listenerList?: any[]): any[];
+declare function wetherself(curtext?: any[]): void;
+declare function pstory(): void;
+
+// ============================================================================
+// Globals from yourbladder.ts (now in the bundle, exposed on window)
+// ============================================================================
+declare let yourbladder: number;
+declare let yourtummy: number;
+declare let holdself: number;
+declare const holdpeethresh: number;
+declare let yourbladurge: number;
+declare let yourbladneed: number;
+declare let yourblademer: number;
+declare let yourbladlose: number;
+declare let yourcustomurge: number;
+declare let ymaxtummy: number;
+declare let ymaxbeer: number;
+declare let ydrankbeer: number;
+declare let ydranksodas: number;
+declare let yspurtthresh: number;
+declare let youSpurted: number;
+declare function displayyourneed(curtext: any[]): any[];
+declare function initYUrge(urge: number): void;
+declare function flushyourdrank(): void;
+declare function youpee(): void;
+declare function ypeein(item: string): void;
+declare function yPeeInTub(): void;
+declare function ypeeoutside(): void;
+declare function wetyourself(): void;
+
+// ============================================================================
+// Globals from settings.ts (now in the bundle, exposed on window)
+// ============================================================================
+declare let heroutfit: string;
+declare let favoritemovie: any;
+declare let suggestedloc: string;
+declare let multiplemoves: number;
+declare let rstmoves: number;
+declare let photoChoice: any;
+declare function setup(): void;
+declare function setjpgimgs(): void;
+
+// ============================================================================
+// Globals from fuckHer.ts (now in the bundle, exposed on window)
+// ============================================================================
+declare let arousal: number;
+declare let kisscounter: number;
+declare let feelcounter: number;
+declare let fuckingnow: number;
+declare let champagnecounter: number;
+declare let drankChamp: number;
+declare function haveSex(location: string): void;
+
+// ============================================================================
+// Globals from drive.ts (now in the bundle, exposed on window)
+// ============================================================================
+declare let wetthecar: number;
+declare function driveout(): void;
+declare function leavehm(): void;
+
+// ============================================================================
+// Globals from locations/driveAround.ts (now in the bundle, exposed on window)
+// ============================================================================
+declare let gasStation: any;
+declare function nextstop(): void;
+
+// ============================================================================
+// Globals from locations/theBar.ts (now in the bundle, exposed on window)
+// ============================================================================
+declare let bar: any;
+declare function sellPanties(): void;
+declare function flirtBarGirl(): void;
+declare function pdrinkinggame(): void;
+declare function pphotogame(): void;
+
+// ============================================================================
+// Globals from locations/theClub.ts (now in the bundle, exposed on window)
+// ============================================================================
+declare let club: any;
+declare let externalflirt: number;
+declare function doDance(): void;
+
+// ============================================================================
+// Globals from locations/theatre.ts (now in the bundle, exposed on window)
+// ============================================================================
+declare let theatre: any;
+declare let seenmovie: number;
+declare let rrMovieLineThresh: number;
+
+// ============================================================================
+// Globals from locations/theMakeOut.ts (now in the bundle, exposed on window)
+// ============================================================================
+declare let theMakeOut: any;
+declare function theYard(): void;
+declare function exitYard(): void;
+declare function theWalk(): void;
+declare function theBedroom(): void;
+declare function theHotTub(): void;
+
+// ============================================================================
+// Globals from herhome.ts (now in the bundle, exposed on window)
+// ============================================================================
+declare let herHome: any;
+declare let prepeed: number;
+declare function homeConditions(): boolean;
+
+// ============================================================================
+// Globals from locations.ts (now in the bundle, exposed on window)
+// ============================================================================
+declare let locations: any;
+declare let sharedLoc: any;
+declare let emerBreak: any;
+declare let emerHold: any;
+declare function printLocationMenu(): void;
+declare function updateSuggestedLocation(): void;
+declare function lookAround(loc: string): void;
+declare function itsClosed(locname: string, fun: () => void, curloc: string): void;
+
+// ============================================================================
+// Globals from backPackItems.ts (now in the bundle, exposed on window)
+// ============================================================================
+declare let allowItems: number;
+declare const backPackItems: any;
+declare const playOnly: any;
+declare function standobjs(curtext: any[], listenerList?: any[]): any[];
+declare function buyItem(item: any): void;
+declare function giveHer(item: string): void;
+declare function holdpurse(): void;
+declare function haveItem(key: string): boolean;
+declare function displaydrank(curtext: any[]): any[];
+interface IBackpackItem {
+    name: string;
+    price: number;
+    value: number;
+    [key: string]: any;
+}
+interface IDrink extends IBackpackItem {
+    bladInc: number;
+    tumInc: number;
+    [key: string]: any;
+}
 
 // ============================================================================
 // Globals from actions.ts (now in the bundle, exposed on window)
@@ -75,7 +267,7 @@ declare let imagedesc: string;
 
 // ============================================================================
 // Variables and functions from bladder.ts and yourbladder.ts are now
-// defined in script-style TS files and visible to the TS compiler directly.
+// in the bundle, exposed on window. Declarations are above.
 
 // ============================================================================
 // Settings variables (from shims.js — settings.ts references these)
@@ -128,7 +320,7 @@ declare let showedneed: any;
 declare let randcounter: number;
 declare let randomchoice: any;
 
-// backPackItems and allowItems are declared in backPackItems.ts (script-style TS file)
+// backPackItems, allowItems — now in the bundle, declared above
 
 // ============================================================================
 // Person type for debug menu (simplified)

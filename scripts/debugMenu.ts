@@ -12,7 +12,7 @@ type DebugFunctions = {
     yardTest: (times?: number) => void
 };
 
-const Debug: DebugFunctions = function () {
+export const Debug: DebugFunctions = function () {
 
     function help() {
         OpenDebugMenu();
@@ -81,10 +81,10 @@ const Debug: DebugFunctions = function () {
 
 }();
 
-let debugCounter = 0;
-let lastDebugMessage = "";
+export let debugCounter = 0;
+export let lastDebugMessage = "";
 
-function setDebugVersionHandler() {
+export function setDebugVersionHandler() {
     GetRequiredElementById('version').onclick = function(){
         debugCounter++;
         if (debugCounter === 3) {
@@ -99,13 +99,13 @@ if (document.readyState === 'loading') {
     setDebugVersionHandler();
 }
 
-function enableDebugMenuButton(){
+export function enableDebugMenuButton(){
     const debugButton = GetRequiredElementById('debugmenubutton');
     debugButton.style.display = 'flex';
     debugButton.onclick = OpenDebugMenu;
 }
 
-function OpenDebugMenu() {
+export function OpenDebugMenu() {
     openPopUp();
     const title = GetRequiredElementById('pop-up-title');
     title.innerText = "Debug Menu";
@@ -172,13 +172,13 @@ function OpenDebugMenu() {
     infoDiv.appendChild(dump);
 }
 
-function CreateValueRow(table: HTMLTableElement, label: string, value: string) {
+export function CreateValueRow(table: HTMLTableElement, label: string, value: string) {
     const row = table.insertRow();
     row.insertCell().innerText = label;
     row.insertCell().innerText = value;
 }
 
-function CreatePersonRows(person: person | undefined, tag : string, table: HTMLTableElement){
+export function CreatePersonRows(person: person | undefined, tag : string, table: HTMLTableElement){
     let row = table.insertRow();
     const cell = row.insertCell();
     cell.innerHTML = `<b>${tag}</b>`;
@@ -227,18 +227,18 @@ function CreatePersonRows(person: person | undefined, tag : string, table: HTMLT
     row.insertCell().innerText = person.bladderSexLose.toString();
 }
 
-function SetDebugMessage(message: string) {
+export function SetDebugMessage(message: string) {
     lastDebugMessage = message;
 }
 
-function CreateSectionHeading(container: HTMLElement, title: string) {
+export function CreateSectionHeading(container: HTMLElement, title: string) {
     const heading = document.createElement('h4');
     heading.innerText = title;
     heading.style.margin = '6px 0';
     container.appendChild(heading);
 }
 
-function CreateLocationButtons(container: HTMLElement, stack: string[]) {
+export function CreateLocationButtons(container: HTMLElement, stack: string[]) {
     if (!stack.length) {
         const empty = document.createElement('div');
         empty.innerText = '(empty)';
@@ -261,7 +261,7 @@ function CreateLocationButtons(container: HTMLElement, stack: string[]) {
     });
 }
 
-function CreateTypedLocationButtons(container: HTMLElement, stack: any[]) {
+export function CreateTypedLocationButtons(container: HTMLElement, stack: any[]) {
     if (!stack.length) {
         const empty = document.createElement('div');
         empty.innerText = '(empty)';
@@ -284,7 +284,7 @@ function CreateTypedLocationButtons(container: HTMLElement, stack: any[]) {
     });
 }
 
-function CreateQuickActions(container: HTMLElement) {
+export function CreateQuickActions(container: HTMLElement) {
     CreateQuickActionButton(container, 'Set Time 22:00', function () {
         gameState.Time.hour = 22;
         gameState.Time.minute = 0;
@@ -335,7 +335,7 @@ function CreateQuickActions(container: HTMLElement) {
     });
 }
 
-function CreateQuickActionButton(container: HTMLElement, label: string, action: () => void) {
+export function CreateQuickActionButton(container: HTMLElement, label: string, action: () => void) {
     const button = document.createElement('button');
     button.innerText = label;
     button.className = 'itembtn';
@@ -348,19 +348,19 @@ function CreateQuickActionButton(container: HTMLElement, label: string, action: 
     container.appendChild(button);
 }
 
-function GetTypedLocationLabel(location: any): string {
+export function GetTypedLocationLabel(location: any): string {
     if (!location) return '(none)';
     const category = location.category ?? '?';
     const functionName = typeof location.function === 'function' ? (location.function.name || 'anonymous') : 'unknown';
     return `${functionName} (category ${category})`;
 }
 
-function GetTypedLocationStackLabel(stack: any[]): string {
+export function GetTypedLocationStackLabel(stack: any[]): string {
     if (!stack.length) return '(empty)';
     return stack.map(GetTypedLocationLabel).join(' -> ');
 }
 
-function BuildDebugDump() {
+export function BuildDebugDump() {
     return {
         randomSeed: getRandomSeed(),
         gameTime: {
@@ -406,14 +406,18 @@ function BuildDebugDump() {
     };
 }
 
-function getLegacyGlobalValue(name: string): unknown {
+export function getLegacyGlobalValue(name: string): unknown {
     const store = globalThis as Record<string, unknown>;
     return store[name];
 }
 
-function setLegacyGlobalValue(name: string, value: unknown): void {
+export function setLegacyGlobalValue(name: string, value: unknown): void {
     const store = globalThis as Record<string, unknown>;
     if (name in store) {
         store[name] = value;
     }
+}
+
+export function exposeDebugMenuOnWindow() {
+    (window as any).Debug = Debug;
 }

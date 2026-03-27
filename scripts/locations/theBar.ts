@@ -1,7 +1,9 @@
-let bar;
-let bartopic = 0; // Topics of discussion at the bar.
+import { fetchJson } from '../quotes';
 
-function theBarSetup(){
+export let bar;
+export let bartopic = 0; // Topics of discussion at the bar.
+
+export function theBarSetup(){
     fetchJson("locations/theBar").then(barJsonSetup);
     return {
         "visit": [thebar, "Go to the bar"],
@@ -18,7 +20,7 @@ function barJsonSetup(data: any){
     talkUnused = bar["barTalk"];
 }
 
-function thebar(){
+export function thebar(){
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
@@ -72,16 +74,16 @@ function thebar(){
 }
 
 //You use the key you found as excuse to go to the bar another time
-function rebar(){
+export function rebar(){
     backPackItems.theBarKey.value = 0;
     pushloc("thebar");
     thebar();
 }
 
-let talkUnused; //Bar talk topics that have not been covered yet
-let curTopicI; //The current chosen index.
+export let talkUnused; //Bar talk topics that have not been covered yet
+export let curTopicI; //The current chosen index.
 //This generates the conversation returns the listeners and prints the curtext
-function barTalk(curtext: any[]){
+export function barTalk(curtext: any[]){
     if (bartopic < 5){
         curTopicI = randomIndex(talkUnused);
         let curTopic = talkUnused[curTopicI];
@@ -104,7 +106,7 @@ function barTalk(curtext: any[]){
     return [];
 }
 
-function barResp(choice: number){
+export function barResp(choice: number){
     // barResp: [0]=positive/interested, [1]=neutral, [2]=negative/disinterested
     const GOOD = 1, NEUTRAL = 2, BAD = 3;
     let curtext = [pickrandom(bar["barResp"][choice-1]).formatVars()];
@@ -117,7 +119,7 @@ function barResp(choice: number){
     cListenerGen([thebar, "Continue..."], "theBar");
 }
 
-function sellPanties(){
+export function sellPanties(){
     const price = 20 + randomInt(20);
     sayText(["BARTENDER: I'll give you $" + price + " for those."]);
     money += price;
@@ -133,7 +135,7 @@ function sellPanties(){
     addListenersList(listenerList);
 }
 
-function stealbeer() {
+export function stealbeer() {
     let curtext = [];
     curtext.push(bar["stealBeer"]);
     backPackItems.beer.value++;
@@ -147,7 +149,7 @@ function stealbeer() {
 
 //TODO put a limit on this/ Game update
 //TODO Randomize quotes
-function stealbeer2(){
+export function stealbeer2(){
     let curtext = [];
     if (randomchoice(3)) curtext = noteholding(curtext);
     else if (randomchoice(5)) curtext = interpbladder(curtext);
@@ -166,7 +168,7 @@ function stealbeer2(){
     }
 }
 
-function darkBar(){
+export function darkBar(){
     allowItems = 1;
    let curtext = [];
    // darkBar: [0]=rushes to toilet after emergency, [1]=still needs to go badly,
@@ -217,7 +219,7 @@ function darkBar(){
     cListenerGenList(listenerList);
 }
 
-function pdrinkinggame() {
+export function pdrinkinggame() {
     // drinkingGame: [0]=proposal, [1]=she needs to pee first, [2]=rejection,
     //               [3]=bathroom scene, [4]=rules, [5]=status recap,
     //               [6]=drink round, [7]=staring/waiting
@@ -239,7 +241,7 @@ function pdrinkinggame() {
 
 }
 
-function pDrinkingGame2() {
+export function pDrinkingGame2() {
     let curtext = printList([], bar["drinkingGame"][3]); // bathroomScene
     flushyourdrank();
     flushdrank();
@@ -248,18 +250,18 @@ function pDrinkingGame2() {
     cListenerGen([pDrinkingGame3, "Continue..."], "pdrinking");
 }
 
-function pDrinkingGame3() {
+export function pDrinkingGame3() {
     pushloc("drinkinggame");
     let curtext = printList([], bar["drinkingGame"][4]); // gameRules
     sayText(curtext);
     cListenerGen([drinkinggame, "Continue..."], "pdrinking");
 }
 
-let loser;
+export let loser;
 //TODO more interactions
 //TODO  choose what happenes when both lose at the same time
 //TODO have a chance to have it escalate
-function drinkinggame() {
+export function drinkinggame() {
     allowItems = 1;
     let curtext = printList([], bar["drinkingGame"][5]); // gameStatus
     if (yourbladder >= yourbladlose) {
@@ -299,7 +301,7 @@ function drinkinggame() {
 }
 
 //TODO don't pee with her if you're not desperate
-function postgame() {
+export function postgame() {
     notdesperate = 0;
     notydesperate = 0;
     nothdesperate = 0;
@@ -340,7 +342,7 @@ function postgame() {
     cListenerGen([function () {postGame2(situation)}, "Continue..."], "goback");
 }
 
-function postGame2(situation: string){
+export function postGame2(situation: string){
     let curtext = [];
     // postGame: [0]=no one desperate, [1]=she was desperate, [2]=you were desperate, [3]=both desperate (kiss)
     const [pgNone, pgHerDesperate, pgYouDesperate, pgBothDesperate] = bar["postGame"];
@@ -373,7 +375,7 @@ function postGame2(situation: string){
 }
 
 
-function holdYourself() {
+export function holdYourself() {
     // holdYourself: [0]=sneak hand down, [1]=unnoticed, [2]=caught
     const [sneakHand, holdUnnoticed, holdCaught] = bar["holdYourself"];
     let curtext = printList([], sneakHand);
@@ -387,9 +389,39 @@ function holdYourself() {
     cListenerGen([drinkinggame, "Continue..."], "pdrinking");
 }
 
-function drinkinggamewait() {
+export function drinkinggamewait() {
     let curtext = printList([], bar["drinkinggame"][7]); // staringWaiting
     curtext = displayneed(curtext);
     sayText(curtext);
     cListenerGen([drinkinggame, "Continue..."], "pdrinking");
+}
+export function exposeTheBarOnWindow(): void {
+    const w = window as any;
+    const props: Array<[string, () => any, (v: any) => void]> = [
+        ['bar', () => bar, (v) => { bar = v; }],
+        ['bartopic', () => bartopic, (v) => { bartopic = v; }],
+        ['talkUnused', () => talkUnused, (v) => { talkUnused = v; }],
+        ['curTopicI', () => curTopicI, (v) => { curTopicI = v; }],
+        ['loser', () => loser, (v) => { loser = v; }],
+    ];
+    for (const [name, getter, setter] of props) {
+        Object.defineProperty(w, name, { get: getter, set: setter, configurable: true, enumerable: true });
+    }
+    w.theBarSetup = theBarSetup;
+    w.thebar = thebar;
+    w.rebar = rebar;
+    w.barTalk = barTalk;
+    w.barResp = barResp;
+    w.sellPanties = sellPanties;
+    w.stealbeer = stealbeer;
+    w.stealbeer2 = stealbeer2;
+    w.darkBar = darkBar;
+    w.pdrinkinggame = pdrinkinggame;
+    w.pDrinkingGame2 = pDrinkingGame2;
+    w.pDrinkingGame3 = pDrinkingGame3;
+    w.drinkinggame = drinkinggame;
+    w.postgame = postgame;
+    w.postGame2 = postGame2;
+    w.holdYourself = holdYourself;
+    w.drinkinggamewait = drinkinggamewait;
 }

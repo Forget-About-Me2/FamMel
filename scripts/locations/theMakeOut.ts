@@ -1,8 +1,10 @@
-let makeOut; //This stores the JSON quotes regarding the makeOut
-let askedswim = 0; // She's asked about a swim
-let walkcounter = 0; // How far have you walked
+import { fetchJson } from '../quotes';
 
-function makeOutSetup(){
+export let makeOut; //This stores the JSON quotes regarding the makeOut
+export let askedswim = 0; // She's asked about a swim
+export let walkcounter = 0; // How far have you walked
+
+export function makeOutSetup(){
     fetchJson("locations/makeOut").then(makeOutJson);
     return {
         "visit": [theMakeOut, "Go to the make-out spot"],
@@ -16,7 +18,7 @@ function makeOutJson(data: any){
     makeOut = data;
 }
 
-function theMakeOut() {
+export function theMakeOut() {
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
@@ -63,7 +65,7 @@ function theMakeOut() {
     }
 }
 
-function failMakeOut() {
+export function failMakeOut() {
     shyness += 10;
     attraction -= 10;
     const makeOutRejection = makeOut["theMakeOut"][3];
@@ -77,7 +79,7 @@ function failMakeOut() {
 //Watch the stars with her.
 //When watching the stars a bladder will be filled to emergency if the tummy is sufficiently filled
 //When playerbladder is turned on, there's a 30% chance your bladder will be filled.
-function viewStars() {
+export function viewStars() {
     // viewStars: [0]=stargazing, [1]=her bladder reacts to cold, [2]=your bladder reacts to cold
     const [stargazing, herBladderCold, yourBladderCold] = makeOut["viewStars"];
     let curtext = printList([], stargazing);
@@ -120,7 +122,7 @@ function viewStars() {
     cListenerGen([theMakeOut, "Continue..."], "Continue...");
 }
 
-function theWalk() {
+export function theWalk() {
     allowItems = 1;
     let curtext = [];
     // theWalk: [0]=first walk, [1]=ambient, [2]=examine gate, [3]=gate locked,
@@ -165,7 +167,7 @@ function theWalk() {
     }
 }
 
-function exitWalk(){
+export function exitWalk(){
     let curtext = [makeOut["exitWalk"].formatVars()];
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);
@@ -174,7 +176,7 @@ function exitWalk(){
     cListenerGen([theMakeOut, "Continue..."], "theMakeOut");
 }
 
-function examineGate() {
+export function examineGate() {
     const [,,gateExamine, gateLocked, gateInviting, gateToBeach] = makeOut["theWalk"];
     let curtext = printList([], gateExamine);
     let listenerList = [];
@@ -193,7 +195,7 @@ function examineGate() {
     cListenerGenList(listenerList);
 }
 
-function theYard() {
+export function theYard() {
     allowItems = 1;
     let curtext = [];
     // theYard: named properties for each quote group
@@ -231,7 +233,7 @@ function theYard() {
     }
 }
 
-function exitYard(){
+export function exitYard(){
     let curtext = [makeOut["exitYard"].formatVars()];
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);
@@ -240,7 +242,7 @@ function exitYard(){
     cListenerGen([theWalk, "Continue..."], "theWalk");
 }
 
-function preHotTub() {
+export function preHotTub() {
     const tubWilling = makeOut["theYard"]["tubWilling"];
     const tubRefused = makeOut["theYard"]["tubRefused"];
     let curtext = [];
@@ -265,7 +267,7 @@ function preHotTub() {
 
 //TODO she can pee in the hottub if she's not about to burst
 //TODO fix need dialogue
-function theHotTub() {
+export function theHotTub() {
     allowItems = 1;
     const tubEntry = makeOut["theYard"]["tubEntry"];
     const tubAmbient = makeOut["theYard"]["tubAmbient"];
@@ -301,7 +303,7 @@ function theHotTub() {
     }
 }
 
-function exitHotTub(){
+export function exitHotTub(){
     let curtext = printList([], makeOut["exitHotTub"]);
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
@@ -321,7 +323,7 @@ function exitHotTub(){
 //  [16]=she swims away, [17]=pees naked, [18]=pees in panties,
 //  [19]=hold her close (she pees against you), [20]=dry off,
 //  [21]=she gives you wet panties
-function theBeach() {
+export function theBeach() {
     allowItems = 1;
     let curtext = [];
     const [beachArrival, beachAmbient, askSwim] = makeOut["theBeach"];
@@ -371,7 +373,7 @@ function theBeach() {
     cListenerGenList(listenerList);
 }
 
-function beachSwim() {
+export function beachSwim() {
     let curtext = [girlname + appearance["clothes"][heroutfit]["swimstripquote"]];
     if (pantycolor === "none")
         curtext.push(appearance["clothes"][heroutfit]["swimstripquotebare"]);
@@ -386,7 +388,7 @@ function beachSwim() {
     cListenerGenList(listenerList);
 }
 
-function beachSwim2() {
+export function beachSwim2() {
     let curtext = printList([], makeOut["theBeach"][3]); // you join swim
     // s("You peel off your clothes and take her hand, walking slowly into the warm water.");
     curtext = displayneed(curtext);
@@ -400,7 +402,7 @@ function beachSwim2() {
     cListenerGenList(listenerList);
 }
 
-function beachSwim2b() {
+export function beachSwim2b() {
     sayText(makeOut["theBeach"][4]); // panty warning response
     // s("<b>YOU:</b> But your panties - they'll get wet!");
     // s(girltalk + " How do you know they're not already wet?");
@@ -408,7 +410,7 @@ function beachSwim2b() {
     cListenerGen([beachSwim2, "Continue..."], "beachSwim");
 }
 
-function beachSwim2c() {
+export function beachSwim2c() {
     let curtext = [];
     if (pantycolor === "none")
         curtext = printList(curtext, makeOut["theBeach"][5]); // standing naked
@@ -425,7 +427,7 @@ function beachSwim2c() {
     cListenerGen([beachSwim2, "Of course I'll come with you."], "ofCourse");
 }
 
-function beachSwim3() {
+export function beachSwim3() {
     let curtext = printList([], makeOut["theBeach"][8]); // waist-deep walk
     if (pantycolor === "none")
         curtext = printList(curtext, makeOut["theBeach"][9]); // wave hits bare crotch
@@ -443,7 +445,7 @@ function beachSwim3() {
 }
 
 //TODO tell her you got to go too.
-function beachSwim3b() {
+export function beachSwim3b() {
     let curtext = printList([], makeOut["theBeach"][12]); // take her in arms
     if (pantycolor === "none")
         curtext = printList(curtext, makeOut["theBeach"][13]); // bare pressed against leg
@@ -458,7 +460,7 @@ function beachSwim3b() {
     cListenerGenList(listenerList);
 }
 
-function beachSwim4() {
+export function beachSwim4() {
     let curtext = printList([], makeOut["theBeach"][16]); // she swims away
     flushdrank();
     if (pantycolor === "none")
@@ -469,14 +471,14 @@ function beachSwim4() {
     cListenerGen([beachSwim5, "Continue..."], "beachSwim");
 }
 
-function beachSwim4b() {
+export function beachSwim4b() {
     let curtext = printList([], makeOut["theBeach"][19]); // hold her close (pees against you)
     flushdrank();
     sayText(curtext);
     cListenerGen([beachSwim5, "Continue..."], "beachSwim");
 }
 
-function beachSwim5() {
+export function beachSwim5() {
     let curtext = printList([], makeOut["theBeach"][20]); // dry off
     if (pantycolor !== "none") {
         curtext = printList(curtext, makeOut["theBeach"][21]); // gives you wet panties
@@ -487,11 +489,46 @@ function beachSwim5() {
     cListenerGen([theBeach, "Continue..."], "theBeach");
 }
 
-function leaveBeach(){
+export function leaveBeach(){
     let curtext = [makeOut["leaveBeach"].formatVars()];
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
     sayText(curtext);
     poploc();
     cListenerGen([theWalk, "Continue..."], "theWalk");
+}
+
+export function exposeTheMakeOutOnWindow(): void {
+    const w = window as any;
+    const props: Array<[string, () => any, (v: any) => void]> = [
+        ['makeOut', () => makeOut, (v) => { makeOut = v; }],
+        ['askedswim', () => askedswim, (v) => { askedswim = v; }],
+        ['walkcounter', () => walkcounter, (v) => { walkcounter = v; }],
+    ];
+    for (const [name, getter, setter] of props) {
+        Object.defineProperty(w, name, { get: getter, set: setter, configurable: true, enumerable: true });
+    }
+    w.makeOutSetup = makeOutSetup;
+    w.theMakeOut = theMakeOut;
+    w.failMakeOut = failMakeOut;
+    w.viewStars = viewStars;
+    w.theWalk = theWalk;
+    w.exitWalk = exitWalk;
+    w.examineGate = examineGate;
+    w.theYard = theYard;
+    w.exitYard = exitYard;
+    w.preHotTub = preHotTub;
+    w.theHotTub = theHotTub;
+    w.exitHotTub = exitHotTub;
+    w.theBeach = theBeach;
+    w.beachSwim = beachSwim;
+    w.beachSwim2 = beachSwim2;
+    w.beachSwim2b = beachSwim2b;
+    w.beachSwim2c = beachSwim2c;
+    w.beachSwim3 = beachSwim3;
+    w.beachSwim3b = beachSwim3b;
+    w.beachSwim4 = beachSwim4;
+    w.beachSwim4b = beachSwim4b;
+    w.beachSwim5 = beachSwim5;
+    w.leaveBeach = leaveBeach;
 }

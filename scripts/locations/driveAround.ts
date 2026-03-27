@@ -1,6 +1,8 @@
+import { fetchJson } from '../quotes';
+
 let driveRound; //JSON quotes for location
 
-function driveAroundSetup(){
+export function driveAroundSetup(){
     fetchJson("locations/driveAround").then(driveJsonSetup)
     return {
         "visit": [driveAround, "Just drive around"],
@@ -14,9 +16,9 @@ function driveJsonSetup(data: any){
 }
 
 const gasChance = 3; //Chance you'll encounter a gas station
-let gasStation;
+export let gasStation;
 
-function driveAround(){
+export function driveAround(){
     allowItems = 1;
     // driveAround: [0]=driving narration, [1]=gas station spotted
     const [drivingNarration, gasStationSpotted] = driveRound["driveAround"];
@@ -54,14 +56,14 @@ function driveAround(){
     }
 }
 
-function nextstop() {
+export function nextstop() {
     let curtext = printList([], driveRound["nextStop"]);
     curtext = displayneed(curtext);
     sayText(curtext);
     cListenerGen([driveout, "Continue..."], "driveAround");
 }
 
-function drivetell() {
+export function drivetell() {
     allowItems = 1;
     let curtext = printList([], driveRound["driveTell"]);
     curtext = displayyourneed(curtext);
@@ -73,7 +75,7 @@ function drivetell() {
 }
 
 //TODO maybe have an attraction cut for this?
-function drivePee() {
+export function drivePee() {
     let curtext = [driveRound["drivePee"]];
     let listenerList = []
     if (haveItem("shotglass"))
@@ -91,10 +93,25 @@ function drivePee() {
     cListenerGenList(listenerList);
 }
 
-function station(){
+export function station(){
     allowItems = 1;
     //TODO create properly
     let curtext = printList([], driveRound["station"]);
     curtext = callChoice(["curloc", "Continue ..."], curtext);
     sayText(curtext);
+}
+
+export function exposeDriveAroundOnWindow(): void {
+    const w = window as any;
+    Object.defineProperty(w, 'gasStation', {
+        get() { return gasStation; },
+        set(v) { gasStation = v; },
+        configurable: true, enumerable: true,
+    });
+    w.driveAroundSetup = driveAroundSetup;
+    w.driveAround = driveAround;
+    w.nextstop = nextstop;
+    w.drivetell = drivetell;
+    w.drivePee = drivePee;
+    w.station = station;
 }

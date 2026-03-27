@@ -1,6 +1,14 @@
+import { driveAroundSetup } from './locations/driveAround';
+import { theBarSetup } from './locations/theBar';
+import { theClubSetup } from './locations/theClub';
+import { theatreSetup } from './locations/theatre';
+import { makeOutSetup } from './locations/theMakeOut';
+import { herHomeSetup } from './herhome';
+import { fetchJson, formatAllVarsList } from './quotes';
+
 //Object containing all locations and information connected to that location
 //Initialised with all locations to be iterated over later.
-let locations = {
+export let locations = {
     "driveAround": driveAroundSetup(),
     "theBar" :theBarSetup(),
     "theClub": theClubSetup(),
@@ -9,17 +17,17 @@ let locations = {
     "theHome": herHomeSetup()
 };
 
-let sharedLoc;
+export let sharedLoc;
 fetchJson("locations/locations").then(locJsonSetup);
 
-function locJsonSetup(data: any){
+export function locJsonSetup(data: any){
     sharedLoc = data;
     sharedLoc["itsClosed"] = formatAllVarsList(sharedLoc["itsClosed"]);
     sharedLoc["sayHero"] = formatAllVarsList(sharedLoc["sayHero"]);
 }
 
 //Determines whether the wants to visit a location.
-function updateSuggestedLocation(){
+export function updateSuggestedLocation(){
     if (shyness < 30 && attraction > 50 && !locations.makeOut.visited) {
         suggestedloc = "themakeout";
     } else if (homeConditions()) {
@@ -34,7 +42,7 @@ function updateSuggestedLocation(){
 }
 
 // Prints all locations that can be visited
-function printLocationMenu(){
+export function printLocationMenu(){
     Object.keys(locations).forEach(loc => {
         if (suggestedloc === loc.toLowerCase())
             cListener(locations[loc].wantVisit, loc);
@@ -46,7 +54,7 @@ function printLocationMenu(){
     });
 }
 
-function lookAround(loc: string){
+export function lookAround(loc: string){
     const findkey = randomchoice(locations[loc].keyChance);
     let curtext = [];
     curtext.push(pickrandom(sharedLoc["lookAround"]));
@@ -71,7 +79,7 @@ function lookAround(loc: string){
     addListenersList(listenerList);
 }
 
-function lookKey(loc: string){
+export function lookKey(loc: string){
     let curtext = [pickrandom(sharedLoc["lookKey"])];
     let listenerList = [];
     sayText(curtext);
@@ -82,7 +90,7 @@ function lookKey(loc: string){
     addListenersList(listenerList);
 }
 
-function getKey(loc: string){
+export function getKey(loc: string){
     locations[loc].foundKey = 1;
     let curtext = [pickrandom(sharedLoc["getKey"])];
     backPackItems[loc+"Key"].value++;
@@ -91,7 +99,7 @@ function getKey(loc: string){
 }
 
 //TODO fix the double desperate
-function itsClosed(locname: string, fun: () => void, curloc: string) {
+export function itsClosed(locname: string, fun: () => void, curloc: string) {
     let theloc;
     if (locname === "theBar") theloc = "bar";
     else if (locname === "theClub") theloc = "night club";
@@ -126,9 +134,9 @@ function itsClosed(locname: string, fun: () => void, curloc: string) {
     addListenersList(listenerList);
 }
 
-let emerBreak; //True if she rushed to the toilet after you opened the door
-let emerHold; //True if you asked her to hold it.
-function breakLoc(loc: any, curloc: string){
+export let emerBreak; //True if she rushed to the toilet after you opened the door
+export let emerHold; //True if you asked her to hold it.
+export function breakLoc(loc: any, curloc: string){
     // breakLoc: [0]=trying the key, [1]=she rushes past you
     const [tryingKey, sheRushesPast] = sharedLoc["breakLoc"];
     // sayHero: [0]=hero compliments (calm), [1]=rushed hero thanks (urgent)
@@ -166,4 +174,21 @@ function breakLoc(loc: any, curloc: string){
     curtext = displayyourneed(curtext);
     sayText(curtext);
     cListenerGen([loc, "Continue..."], "curloc");
+}
+
+export function exposeLocationsOnWindow() {
+    const mutableVars: [string, () => any, (v: any) => void][] = [
+        ["locations", () => locations, (v) => { locations = v; }],
+        ["sharedLoc", () => sharedLoc, (v) => { sharedLoc = v; }],
+        ["emerBreak", () => emerBreak, (v) => { emerBreak = v; }],
+        ["emerHold", () => emerHold, (v) => { emerHold = v; }],
+    ];
+    for (const [name, getter, setter] of mutableVars) {
+        Object.defineProperty(window, name, { get: getter, set: setter, configurable: true });
+    }
+
+    Object.assign(window, {
+        locJsonSetup, updateSuggestedLocation, printLocationMenu,
+        lookAround, lookKey, getKey, itsClosed, breakLoc,
+    });
 }

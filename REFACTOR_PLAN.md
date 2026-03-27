@@ -1,5 +1,10 @@
 # FamMel TypeScript Refactor Plan
 
+## Workflow Note
+
+- During refactor work, also suggest updates to this plan: add newly discovered tasks, mark completed/blocked items, append changelog notes for implemented refactors, and call out sequencing or scope changes when the plan is stale.
+- When the correct plan update is clear from the refactor work, apply it directly instead of only suggesting it.
+
 ## Current State
 
 - ~22 files converted to TypeScript, ~25 JavaScript files remain
@@ -11,9 +16,10 @@
 
 | World | Files | Output |
 |-------|-------|--------|
-| **Bundle** (IIFE) | `app.ts → main.ts, gameState, gameScreen, settings, models, helpers, yourHome, quotes, pop-up, validation, images, clothes, actions, games/darts` | `dist/app.js` — private scope, selected exports on `window` |
-| **Scripts** (global) | `store.ts, backPackItems.ts, debugMenu.ts, bladder.ts, yourbladder.ts, drive.ts, herhome.ts, locations.ts, fuckHer.ts, settings.ts` + location files | `dist/*.js` — all declarations land on `window` |
+| **Bundle** (IIFE) | `app.ts → main.ts, gameState, gameScreen, settings, models, helpers, yourHome, quotes, pop-up, validation, images, clothes, actions, games/darts, bladder, yourbladder, settings, fuckHer, drive, locations/*, herhome, locations, backPackItems, store, debugMenu` | `dist/app.js` — private scope, selected exports on `window` |
 | **Raw JS** (global) | shims.js | Loaded via `<script>` tags — all on `window` |
+
+**Note:** All script-style TS files have been migrated into the bundle as of Phase 3 Batch 2. The `scriptEntryPoints` array in esbuild.config.mjs is now empty.
 
 ### Root Causes of Crashes
 
@@ -104,11 +110,16 @@
 ## Phase 3 — Architecture Cleanup
 
 - [ ] Remove `globals.d.ts` — no more `declare` hacks
-- [ ] Move everything into bundle — remove `scriptEntryPoints` from esbuild config
+- [x] Move everything into bundle — remove `scriptEntryPoints` from esbuild config
 - [ ] Remove `shims.js` — move RNG, locStack into proper TS modules
 - [x] Replace `eval()` calls in `getjsonT()` with function registry
 - [ ] Enable `strictNullChecks` in tsconfig.json
 - [ ] Eliminate duplicate state (single source of truth per variable)
+- [x] Replace `javascript:go()` hrefs with delegated data-attribute pattern
+
+### 3a: Delegated click handler — eliminate `javascript:` hrefs ✓
+
+Replaced `href="javascript:go(...)"` with `data-action` / `data-action-fn` attributes + document-level event delegation. See changelog below for details.
 
 ---
 
@@ -435,5 +446,100 @@ Moved 6 "leaf" script-style TS files into the app bundle using the same `expose*
 ### Validation
 - **Typecheck**: `npx tsc -p . --noEmit` passes
 - **Build**: `node esbuild.config.mjs` emits bundle (238.7kb) + script outputs successfully
+- **Tests**: `dotnet test` (UserFlowTests) passes (18/18 non-explicit tests)
+
+---
+
+## Changelog — Phase 3a: Delegated Click Handler (2026-03-27)
+
+Replaced `javascript:go()` hrefs with `data-action` attributes and converted the listener-based choice system to use a centralized action registry with document-level event delegation. All 18 Selenium tests pass.
+
+### scripts/quotes.ts
+- **Added `actionRegistry` Map** + `nextActionId()` counter for registering function-based click callbacks
+- **Added `clearActionRegistry()`** — called by `sayText()` and `setText()` on screen refresh to GC stale closures
+- **Added `initDelegatedClickHandler()`** — single `document`-level click listener handles both `data-action` (calls `go()`) and `data-action-fn` (calls registered function)
+- **Changed `c()`** to emit `<a href="#" data-action="target">` instead of `<a href="javascript:go('target')">`
+- **Changed `cListener()`** to register function in `actionRegistry` and emit `<li data-action-fn="id">` — no longer requires post-render `addEventListener`
+- **Added `cListenerRaw()`** — variant that registers callback directly (no `go()` wrapper), used when `listenerList` item has `false` as third element
+- **Changed `cListenerGen()`** — simplified to just call `cListener()` (no separate `addListeners` call needed)
+- **Changed `cListenerGenList()`** — routes to `cListener()` or `cListenerRaw()` based on third element; no longer calls `addListenersList()`
+- **Kept `addListeners()` / `addListenersList()` functional** — needed for external callers (e.g. `backPackItems.ts` `buyItem()`) where HTML is generated manually without `cListener`; skips elements that already have `data-action-fn`
+
+### scripts/app.ts
+- **Imported `initDelegatedClickHandler`** from quotes.ts
+- **Called `initDelegatedClickHandler()`** at bundle startup (before DOMContentLoaded — document-level delegation works immediately)
+
+### Key design decisions
+- **Delegation on `document`** not `#textsp` — `#textsp` is created dynamically by ContentScreen, so it may not exist at bundle startup time
+- **`data-action-fn` on `<li>` not nested `<a>`** — Selenium tests use `By.Id()` which targets the `<li>` element; `.closest()` searches UP the DOM, not down to children
+- **`addListeners`/`addListenersList` kept functional** — `buyItem()` in backPackItems.ts creates `<li id="buy">` manually and relies on `addListenersList` to attach the handler; making it a no-op broke the store buy flow
+
+### Validation
+- **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)
+- **Build**: `node esbuild.config.mjs` emits bundle (239.8kb) + script outputs successfully
+- **Tests**: `dotnet test` (UserFlowTests) passes (18/18 non-explicit tests)
+
+---
+
+## Changelog — Phase 3 Batch 2: All Script-Style Files into Bundle
+
+Migrated all 15 remaining script-style TS files into the esbuild IIFE app bundle. The `scriptEntryPoints` array is now empty — every TS file is bundled through `app.ts`. All 18 Selenium tests pass.
+
+### Pattern used for each file:
+1. Added `export` keyword to all top-level `let`, `const`, and `function` declarations
+2. Added `expose*OnWindow()` bridge function with getter/setter for mutable `let` variables and `Object.assign` for constants and functions
+3. Imported expose function in `app.ts` and called it after Tier 1 exposes
+
+### Files migrated (15 total):
+
+**Core game systems:**
+- **scripts/bladder.ts** — 45 mutable variables, 14 constants, 73 functions. Largest expose function in the project.
+- **scripts/yourbladder.ts** — 24 mutable variables, 1 constant, 27 functions.
+- **scripts/settings.ts** — 7 mutable variables, 26 functions.
+- **scripts/fuckHer.ts** — 7 mutable variables, 21 functions.
+- **scripts/drive.ts** — 1 mutable variable, 2 functions.
+
+**Location files:**
+- **scripts/locations/driveAround.ts** — 1 mutable variable, 7 functions. Added `import { fetchJson } from '../quotes'`.
+- **scripts/locations/theBar.ts** — 5 mutable variables, 18 functions. Added `import { fetchJson } from '../quotes'`.
+- **scripts/locations/theClub.ts** — 6 mutable variables, 15 functions. Added `import { fetchJson } from '../quotes'`.
+- **scripts/locations/theatre.ts** — 6 mutable variables, 17 functions. Added `import { fetchJson } from '../quotes'`.
+- **scripts/locations/theMakeOut.ts** — 3 mutable variables, 25 functions. Added `import { fetchJson } from '../quotes'`.
+
+**Higher-level systems (depend on location files):**
+- **scripts/herhome.ts** — 4 mutable variables, 14 functions. Added `import { fetchJson, fetchAndCacheJson } from './quotes'`.
+- **scripts/locations.ts** — 4 mutable variables, 8 functions. Added `import` for all 6 setup functions + `fetchJson`/`formatAllVarsList` from quotes.
+- **scripts/backPackItems.ts** — 4 mutable variables, 5 constants, 26 functions.
+- **scripts/store.ts** — 1 function (`goStore`).
+- **scripts/debugMenu.ts** — IIFE `Debug` object + 17 helper functions.
+
+### scripts/locations.ts — critical import addition
+- **Added ES module imports** for `driveAroundSetup`, `theBarSetup`, `theClubSetup`, `theatreSetup`, `makeOutSetup`, `herHomeSetup`, `fetchJson`, `formatAllVarsList`
+- Previously these were globals from separate `<script>` tags; now they must be explicit module imports since the file is bundled
+
+### scripts/locations/*.ts, herhome.ts — fetchJson imports
+- **Added `import { fetchJson }` from quotes.ts** to all 6 files that call `fetchJson()` in their setup functions
+- Without this, the setup functions would reference `window.fetchJson` which isn't set yet during IIFE initialization
+
+### scripts/app.ts
+- **Added 15 new imports** for all `expose*OnWindow()` bridges
+- **Added 15 expose calls** in correct dependency order (bladder → yourbladder → settings → fuckHer → drive → locations/* → herhome → locations → backPackItems → store → debugMenu)
+- **Removed stale `DOMContentLoaded` goStore alias listener** — store is now in the bundle
+
+### esbuild.config.mjs
+- **Emptied `scriptEntryPoints` array** — all 15 entries removed
+
+### index.html
+- **Removed 16 `<script>` tags** (15 dist/*.js files + debug menu)
+- **Updated comment** to reflect "all TS files bundled via app.ts"
+
+### scripts/globals.d.ts
+- **Added ~180 `declare` statements** for all variables/functions/constants from the 15 migrated files
+- **Fixed 11 function signatures** to match actual code: `interpbladder`, `preventpee`, `standobjs`, `itsClosed`, `haveSex`, `indepee`, `peein`, `ypeein`, `giveHer`, `showneed`, `displaygottavoc`
+- **Added `IBackpackItem` and `IDrink` interface declarations** for cross-file references
+
+### Validation
+- **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)
+- **Build**: `node esbuild.config.mjs` emits single bundle (465.4kb) — no separate script outputs
 - **Tests**: `dotnet test` (UserFlowTests) passes (18/18 non-explicit tests)
 

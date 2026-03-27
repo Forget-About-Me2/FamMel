@@ -1,45 +1,45 @@
 //Your bladder variables
-let yourbladder = 500;
-let yourtummy = 200;
-let yourtumavg = yourtummy;
-let holdself = 0;
-const holdpeethresh = 3; //Chance you'll still pee yourself even though you're holding your dick.
+export let yourbladder = 500;
+export let yourtummy = 200;
+export let yourtumavg = yourtummy;
+export let holdself = 0;
+export const holdpeethresh = 3; //Chance you'll still pee yourself even though you're holding your dick.
 
-let yourbladurge = 500; // Level where you feel the first urge
-let yourbladneed = yourbladurge * 2; // Level where you continuously needs to go
-let yourblademer = yourbladurge * 3; // Level where it becomes an emergency
-let yourbladlose = yourbladurge * 3 + 150; // Level where you lose control
-let yourbladcumlose = yourbladurge * 4; // Level where you lose it as you cum
-let yourbladsexlose = yourbladurge * 5; // Level where you can't control it during sex
+export let yourbladurge = 500; // Level where you feel the first urge
+export let yourbladneed = yourbladurge * 2; // Level where you continuously needs to go
+export let yourblademer = yourbladurge * 3; // Level where it becomes an emergency
+export let yourbladlose = yourbladurge * 3 + 150; // Level where you lose control
+export let yourbladcumlose = yourbladurge * 4; // Level where you lose it as you cum
+export let yourbladsexlose = yourbladurge * 5; // Level where you can't control it during sex
 
-let ymaxtummy = 500; // Drink capacity of stomach
-let ymaxbeer = 1000; // Beer capacity of stomach
+export let ymaxtummy = 500; // Drink capacity of stomach
+export let ymaxbeer = 1000; // Beer capacity of stomach
 
-let yourcustomurge = 500;
-let yminurge = 375; // min bladder urge
-let ynowpeeing = 0; // flag: you are currently peeing
+export let yourcustomurge = 500;
+export let yminurge = 375; // min bladder urge
+export let ynowpeeing = 0; // flag: you are currently peeing
 
 //  The following are used to keep track of what you drank and when you last went
 // Might be used later on.
-let ylastpeetime = 0;  // When did you last go?
-let ytimeheld = 0; // for stats
+export let ylastpeetime = 0;  // When did you last go?
+export let ytimeheld = 0; // for stats
 
-let ydrankcocktails = 0;
-let ydranksodas = 0;
-let ydrankwaters = 0;
-let ydrankbeers;
+export let ydrankcocktails = 0;
+export let ydranksodas = 0;
+export let ydrankwaters = 0;
+export let ydrankbeers;
 
-let ydrankbeer = 0; //Did you drink beer? changes capacities and rates.
+export let ydrankbeer = 0; //Did you drink beer? changes capacities and rates.
 
-let yrrlockedflag = 0; //Restroom was locked last time you went
+export let yrrlockedflag = 0; //Restroom was locked last time you went
 
 //Initializes the bladder values for you
-function initYUrge(urge: number){
+export function initYUrge(urge: number){
     yminurge = urge * minperc/100;
     updateyoururge(urge);
 }
 
-function updateyoururge(newurge: number) {
+export function updateyoururge(newurge: number) {
     if (newurge < yminurge) newurge = yminurge;
     newurge = Math.round(newurge);
     yourbladurge = newurge;
@@ -50,7 +50,7 @@ function updateyoururge(newurge: number) {
     yourbladsexlose = newurge * 5
 }
 
-function flushyourdrank() {
+export function flushyourdrank() {
     //  Derate bladder capacity if you loses it...
     if (bladDec) {
         if (yourbladder >= yourbladlose) updateyoururge(yourbladurge * 9 / 10);
@@ -74,7 +74,7 @@ function flushyourdrank() {
 
 //TODO lose control when bursting on the way
 //TODO add a chance of her denying you
-function youpee() {
+export function youpee() {
     let curtext = [];
     gottagoflag = 0;
     let peed = 0;
@@ -122,7 +122,7 @@ function youpee() {
     sayText(curtext);
 }
 
-function youbathroomlocked(curtext: any[]): any[] {
+export function youbathroomlocked(curtext: any[]): any[] {
     const locked = ypeelines["locked"];
     //Description of the situation
     if (locStack[0] === "thebar")
@@ -161,7 +161,7 @@ function youbathroomlocked(curtext: any[]): any[] {
 }
 
 //TODO make this more fancy
-function youbegtoilet(curtext: any[]): any[] {
+export function youbegtoilet(curtext: any[]): any[] {
     const [begDialogue, begChoices] = ypeelines["beg"];
     const [shotglassChoice, vaseChoice, noIdeasChoice] = begChoices;
     curtext = printList(curtext, begDialogue);
@@ -171,7 +171,7 @@ function youbegtoilet(curtext: any[]): any[] {
     return curtext;
 }
 
-function displayyourneed(curtext: any[]): any[] {
+export function displayyourneed(curtext: any[]): any[] {
     if (yourbladder >= yourbladlose && !holdself) {
         curtext.push(pickrandom(yneeds["burst"]));
     } else if (yourbladder > yourblademer) {
@@ -186,7 +186,7 @@ function displayyourneed(curtext: any[]): any[] {
     return curtext
 }
 
-function ypeein(item: string){
+export function ypeein(item: string){
     //Closes the backpack since a function has been chosen
     const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
@@ -246,7 +246,7 @@ function ypeein(item: string){
     sayText(curtext);
 }
 
-function ypeein2(item: string, yneedtype: number){
+export function ypeein2(item: string, yneedtype: number){
     const URGENCY_DESPERATE = 2;
     const [, , , , desperatePeeing, normalPeeing] = yneeds[item];
     let curtext = [];
@@ -258,7 +258,7 @@ function ypeein2(item: string, yneedtype: number){
     sayText(curtext);
 }
 
-function ypeein3(item: string, yneedtype: number){
+export function ypeein3(item: string, yneedtype: number){
     const URGENCY_DESPERATE = 2;
     let curtext = [];
     if (yourbladder < yourbladurge){
@@ -295,7 +295,7 @@ function ypeein3(item: string, yneedtype: number){
 }
 
 //TODO better scene
-function yPeeInTub() {
+export function yPeeInTub() {
     sayText(ypeelines["peeTub"]);
     flushyourdrank();
     cListenerGen([theHotTub, "Continue..."], "theHotTub");
@@ -306,7 +306,7 @@ function yPeeInTub() {
 //   3=step out of car, 4=standing unzip, 5=car strip tease, 6=freed + mesmerized,
 //   7=standing strip tease, 8=pee by car, 9=slight turn away, 10=zip-up arousal,
 //   11=watched pee car, 12=she touches you
-function ypeeoutside() {
+export function ypeeoutside() {
     let curtext = [];
     if (yourbladder < yourblademer)
         curtext = printList(curtext, ypeelines["peeOutside"][0]); // casual announcement
@@ -325,7 +325,7 @@ function ypeeoutside() {
 }
 
 //She didn't ask to watch
-function yPeeOutside2() {
+export function yPeeOutside2() {
     let curtext = [];
     let listenerList = [];
     if (locStack[0] === "theMakeOut"){
@@ -339,14 +339,14 @@ function yPeeOutside2() {
     cListenerGenList(listenerList);
 }
 
-function yPeeOutsideCar() {
+export function yPeeOutsideCar() {
     sayText(ypeelines["peeOutside"][8]); // pee by car
     flushyourdrank();
     cListenerGen([theMakeOut, "Continue..."], "theMakeOut");
 }
 
 //You're not in the car, either at the beach, dark yard, or on the walk. The text is located in the ypeeline json under the current location.
-function yPeeOutside3(){
+export function yPeeOutside3(){
     let curtext = printList([], ypeelines["peeOutside"][9]); // slight turn away
     //TODO have different quotes for theWalk and theYard
     curtext = printList(curtext, ypeelines[locStack[0]][0]);
@@ -357,7 +357,7 @@ function yPeeOutside3(){
 }
 
 //She asked to watch
-function ypeeOutsideWatch(){
+export function ypeeOutsideWatch(){
     let curtext = [];
     let listenerList = [];
     if (locStack[0] === "theMakeOut"){
@@ -373,14 +373,14 @@ function ypeeOutsideWatch(){
     cListenerGenList(listenerList);
 }
 
-function yPeeOutsideWatchCar() {
+export function yPeeOutsideWatchCar() {
     sayText(ypeelines["peeOutside"][11]); // watched pee car
     flushyourdrank();
     cListenerGen([theMakeOut, "Continue..."], "theMakeOut");
 }
 
 //You're not in the car, either at the beach or on the walk. The text is located in the ypeeline json under the current location.
-function yPeeOutsideWatch2(){
+export function yPeeOutsideWatch2(){
     let curtext = printList([], ypeelines["peeOutside"][12]); // she touches you
     curtext = printList(curtext, ypeelines[locStack[0]][1]);
     curtext = printList(curtext, ypeelines["peeOutside"][13]); // she strokes, arousal
@@ -393,7 +393,7 @@ function yPeeOutsideWatch2(){
 //Here's where we decide if you wet yourself or if you just spurted.
 //TODO more original quotes (most are now stolen from her)
 //TODO fix timings
-function wetyourself() {
+export function wetyourself() {
     let curtext = [pickrandom(yneeds["wetquote"])];
     sayText(curtext);
     if (randomchoice(yspurtthresh) && locStack[0] !== "thehottub") {
@@ -412,7 +412,7 @@ function wetyourself() {
 }
 
 //TODO register you wet your pants
-function wetyourself2(curtext?: any[]) {
+export function wetyourself2(curtext?: any[]) {
     if (!curtext)
         curtext = [];
     curtext = printList(curtext, yneeds["wetyourself"][0]);
@@ -422,13 +422,13 @@ function wetyourself2(curtext?: any[]) {
 }
 
 //You're in the make out spot
-function wetyourself2m() {
+export function wetyourself2m() {
     let curtext = yneeds["wetyourself"][1];
     wetyourself2(curtext);
 }
 
 //You're in the hottub
-function wetyourself2t() {
+export function wetyourself2t() {
     let curtext = yneeds["wetyourself"][2];
     sayText(curtext);
     flushyourdrank();
@@ -437,14 +437,14 @@ function wetyourself2t() {
 
 //You're in the car
 //TODO register you wet the car
-function wetyourself2c() {
+export function wetyourself2c() {
     let curtext = yneeds["wetyourself"][3];
     sayText(curtext);
     flushyourdrank();
     cListenerGen([wetyourself3c, "Continue ..."], "wetyourself");
 }
 
-function wetyourself3c() {
+export function wetyourself3c() {
     let curtext = yneeds["wetyourself"][4];
     curtext = callChoice(["curloc", "Continue ..."], curtext);
     sayText(curtext);
@@ -452,19 +452,63 @@ function wetyourself3c() {
 
 
 //In the tub
-function wetyourself3t() {
+export function wetyourself3t() {
     let curtext = yneeds["wetyourself"][5];
     curtext = callChoice(["curloc", "Continue ..."], curtext);
     sayText(curtext);
 }
 
-let youSpurted = 0;
+export let youSpurted = 0;
 //TODO more text options and her reponse
-function spurtedyourself(curtext: any[]) {
+export function spurtedyourself(curtext: any[]) {
     yourbladder -= 50;
     yspurtthresh -= 0.1 * yspurtthresh;
     youSpurted = 1;
     curtext.push(yneeds["spurtquote"]);
     curtext = callChoice(["curloc", "Continue ..."], curtext);
     sayText(curtext);
+}
+
+export function exposeYourBladderOnWindow() {
+    const mutableVars: [string, () => any, (v: any) => void][] = [
+        ["yourbladder", () => yourbladder, (v) => { yourbladder = v; }],
+        ["yourtummy", () => yourtummy, (v) => { yourtummy = v; }],
+        ["yourtumavg", () => yourtumavg, (v) => { yourtumavg = v; }],
+        ["holdself", () => holdself, (v) => { holdself = v; }],
+        ["yourbladurge", () => yourbladurge, (v) => { yourbladurge = v; }],
+        ["yourbladneed", () => yourbladneed, (v) => { yourbladneed = v; }],
+        ["yourblademer", () => yourblademer, (v) => { yourblademer = v; }],
+        ["yourbladlose", () => yourbladlose, (v) => { yourbladlose = v; }],
+        ["yourbladcumlose", () => yourbladcumlose, (v) => { yourbladcumlose = v; }],
+        ["yourbladsexlose", () => yourbladsexlose, (v) => { yourbladsexlose = v; }],
+        ["ymaxtummy", () => ymaxtummy, (v) => { ymaxtummy = v; }],
+        ["ymaxbeer", () => ymaxbeer, (v) => { ymaxbeer = v; }],
+        ["yourcustomurge", () => yourcustomurge, (v) => { yourcustomurge = v; }],
+        ["yminurge", () => yminurge, (v) => { yminurge = v; }],
+        ["ynowpeeing", () => ynowpeeing, (v) => { ynowpeeing = v; }],
+        ["ylastpeetime", () => ylastpeetime, (v) => { ylastpeetime = v; }],
+        ["ytimeheld", () => ytimeheld, (v) => { ytimeheld = v; }],
+        ["ydrankcocktails", () => ydrankcocktails, (v) => { ydrankcocktails = v; }],
+        ["ydranksodas", () => ydranksodas, (v) => { ydranksodas = v; }],
+        ["ydrankwaters", () => ydrankwaters, (v) => { ydrankwaters = v; }],
+        ["ydrankbeers", () => ydrankbeers, (v) => { ydrankbeers = v; }],
+        ["ydrankbeer", () => ydrankbeer, (v) => { ydrankbeer = v; }],
+        ["yrrlockedflag", () => yrrlockedflag, (v) => { yrrlockedflag = v; }],
+        ["youSpurted", () => youSpurted, (v) => { youSpurted = v; }],
+    ];
+    for (const [name, getter, setter] of mutableVars) {
+        Object.defineProperty(window, name, { get: getter, set: setter, configurable: true });
+    }
+
+    Object.assign(window, {
+        holdpeethresh,
+        initYUrge, updateyoururge, flushyourdrank, displayyourneed,
+        youpee, ypeein, ypeein2, ypeein3,
+        ypeeoutside, yPeeOutside2, yPeeOutside3, yPeeOutsideCar,
+        ypeeOutsideWatch, yPeeOutsideWatch2, yPeeOutsideWatchCar,
+        yPeeInTub, youbathroomlocked, youbegtoilet,
+        wetyourself, wetyourself2, wetyourself2c, wetyourself2m, wetyourself2t,
+        wetyourself3c, wetyourself3t,
+        spurtedyourself,
+    });
 }

@@ -1,5 +1,5 @@
 // Buy stuff at the store.
-function goStore() {
+export function goStore() {
     allowItems = 1;
     if (locStack[0] !== "gostore") {
         pushloc("gostore");
@@ -24,5 +24,8 @@ function goStore() {
     }
 }
 
-// Register lowercase alias for JSON choice tag routing
-(window as any).gostore = goStore;
+export function exposeStoreOnWindow(): void {
+    const w = window as any;
+    w.goStore = goStore;
+    w.gostore = goStore;
+}

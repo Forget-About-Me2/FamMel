@@ -10,7 +10,7 @@ import { gameState } from './gameState/gameState';
 import { gameScreen } from './gameScreen/gameScreen';
 import { gameSettings } from './settings/gameSettings';
 import { animationManager } from './gameScreen/animationManager';
-import { exposeQuotesOnWindow } from './quotes';
+import { exposeQuotesOnWindow, initDelegatedClickHandler } from './quotes';
 import { exposePopUpOnWindow } from './pop-up';
 import { exposeValidationOnWindow } from './validation';
 import { exposeImagesOnWindow } from './images';
@@ -18,8 +18,28 @@ import { exposeClothesOnWindow } from './clothes';
 import { exposeActionsOnWindow } from './actions';
 import { exposeDartsOnWindow } from './games/darts';
 
+// Batch 2 — former script-style files now bundled
+import { exposeBladderOnWindow } from './bladder';
+import { exposeYourBladderOnWindow } from './yourbladder';
+import { exposeSettingsOnWindow } from './settings';
+import { exposeFuckHerOnWindow } from './fuckHer';
+import { exposeDriveOnWindow } from './drive';
+import { exposeDriveAroundOnWindow } from './locations/driveAround';
+import { exposeTheBarOnWindow } from './locations/theBar';
+import { exposeTheClubOnWindow } from './locations/theClub';
+import { exposeTheatreOnWindow } from './locations/theatre';
+import { exposeTheMakeOutOnWindow } from './locations/theMakeOut';
+import { exposeHerHomeOnWindow } from './herhome';
+import { exposeLocationsOnWindow } from './locations';
+import { exposeBackPackItemsOnWindow } from './backPackItems';
+import { exposeStoreOnWindow } from './store';
+import { exposeDebugMenuOnWindow } from './debugMenu';
+
 // Expose quotes module state and functions on window first — many script files depend on these
 exposeQuotesOnWindow();
+
+// Set up delegated click handler for data-action/data-action-fn attributes
+initDelegatedClickHandler();
 
 // Expose Tier 1 modules on window for script-style callers
 exposePopUpOnWindow();
@@ -28,6 +48,23 @@ exposeImagesOnWindow();
 exposeClothesOnWindow();
 exposeActionsOnWindow();
 exposeDartsOnWindow();
+
+// Expose Batch 2 — former script-style files
+exposeBladderOnWindow();
+exposeYourBladderOnWindow();
+exposeSettingsOnWindow();
+exposeFuckHerOnWindow();
+exposeDriveOnWindow();
+exposeDriveAroundOnWindow();
+exposeTheBarOnWindow();
+exposeTheClubOnWindow();
+exposeTheatreOnWindow();
+exposeTheMakeOutOnWindow();
+exposeHerHomeOnWindow();
+exposeLocationsOnWindow();
+exposeBackPackItemsOnWindow();
+exposeStoreOnWindow();
+exposeDebugMenuOnWindow();
 
 // Expose to global scope for JS files and script-style TS files
 (window as any).go = go;
@@ -42,11 +79,3 @@ exposeDartsOnWindow();
 (window as any).yourHome = yourHome;
 (window as any).callHer = callHer;
 (window as any).gamestart = gamestart;
-
-// store.ts registers lowercase gostore on window after loading.
-// Alias is set up at DOMContentLoaded to ensure store.ts has loaded.
-document.addEventListener('DOMContentLoaded', () => {
-	if (typeof (window as any).gostore === 'function') {
-		(window as any).goStore = (window as any).gostore;
-	}
-});

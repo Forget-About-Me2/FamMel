@@ -51,7 +51,7 @@ interface IContainer extends IBackpackItem{
 }
 
 //TODO add keys and phone
-const backPackItems: { [key: string]: IBackpackItem } = {
+export const backPackItems: { [key: string]: IBackpackItem } = {
     "water": {
         bpName: "Water bottle",
         price: 10,
@@ -369,7 +369,7 @@ const backPackItems: { [key: string]: IBackpackItem } = {
     }
 }
 
-const herpurse = {
+export const herpurse = {
     "herKeys": {
         "desc": "set of keys",
         "funDesc": "her keys"
@@ -387,22 +387,22 @@ const herpurse = {
 }
 
 //List of locations where there is never an opportunity to use an item
-const noItemLoc = ["start2", "beachsex", "tubsex", "pnorestroom", "thebed"]
+export const noItemLoc = ["start2", "beachsex", "tubsex", "pnorestroom", "thebed"]
 
 //List of locations where just the playerrelated options work
-const playOnly = ["yourhome", "gostore", "callher"]
+export const playOnly = ["yourhome", "gostore", "callher"]
 
 //Locations where drinkitems can be used
 //This isn't used, but it's a handy list, might be useful for later
-const drinkLoc = ["pickup", "driveout", "domovie",
+export const drinkLoc = ["pickup", "driveout", "domovie",
     "thebar", "theclub", "themakeout", "thewalk", "thebeach", "theyard",
     "thehottub", "darkmovie", "photogame", "drinkinggame", "thehome"]
 
-let allowItems= 1; //Are you currently allowed to use items?
+export let allowItems= 1; //Are you currently allowed to use items?
 
 //TODO add a mention need option
 // standobjs function allows one to use the normal objects.
-function standobjs(curtext, listenerList = []) {
+export function standobjs(curtext, listenerList = []) {
     if (randomchoice(5) && gottagoflag < 1 && showedneed > 0 && !askholditcounter)
         curtext = c(["askpee", "Ask her if she has to pee."], curtext);
     if (flirtedflag < maxflirts && noflirtflag < 1)
@@ -412,9 +412,9 @@ function standobjs(curtext, listenerList = []) {
     return curtext;
 }
 
-let previousbtn;
-let itemtext;
-function backpack(){
+export let previousbtn;
+export let itemtext;
+export function backpack(){
     if (!objQuotes){
         fetchJson("objects").then(function (data) {
             objQuotes = data;
@@ -441,7 +441,7 @@ function backpack(){
     itemtext.innerHTML = "";
 }
 
-function buyItem(item){
+export function buyItem(item){
     let html = printList([], objQuotes["buyItem"]);
     let formatList = [[item],[], []];
     let temp = [item, item];
@@ -493,7 +493,7 @@ function buyItem(item){
     addListenersList(listenerList);
 }
 
-function buyItem2(item, value, price){
+export function buyItem2(item, value, price){
     let curtext = [];
     let listenerList = [];
     let again = function (){
@@ -528,13 +528,13 @@ function buyItem2(item, value, price){
     addListenersList(listenerList);  //because of change in html all listeners are reset so re-add them,
 }
 
-function haveItem(item){
+export function haveItem(item){
     return backPackItems[item].value > 0;
 }
 
 // displaypos function prints the given object.
 //TODO probably combine with getOwned
-function displaypos(itemobj, number, buy=false) {
+export function displaypos(itemobj, number, buy=false) {
     if (typeof number === "undefined")
         number = itemobj.value;
     let description = ""
@@ -563,7 +563,7 @@ function displaypos(itemobj, number, buy=false) {
     return description;
 }
 
-function displaydrank(curtext){
+export function displaydrank(curtext){
     let sentence = " ";
     comma = 0;
     Object.keys(backPackItems).forEach(item => sentence += displayDrankItem(item));
@@ -573,7 +573,7 @@ function displaydrank(curtext){
     return curtext;
 }
 
-function displayDrankItem(item){
+export function displayDrankItem(item){
     const backpackItem = backPackItems[item];
     if (backpackItem && backpackItem.hasOwnProperty("sheDrank")){
         return displaypos(backpackItem, backpackItem.sheDrank);
@@ -582,7 +582,7 @@ function displayDrankItem(item){
 }
 
 //TODO combine bribeRoses and bribEarrings
-function briberoses() {
+export function briberoses() {
     let curtext = [];
     curtext = printList(curtext, needs["briberoses"]);
     askholditcounter++;
@@ -592,7 +592,7 @@ function briberoses() {
     sayText(curtext);
 }
 
-function bribeearrings() {
+export function bribeearrings() {
     let curtext = [];
     curtext = printList(curtext, needs["bribeearrings"]);
     askholditcounter++;
@@ -602,7 +602,7 @@ function bribeearrings() {
     sayText(curtext);
 }
 
-function holdpurse() {
+export function holdpurse() {
     haveherpurse = 1;
     let curtext = printListSelection([], needs["holdpurse"], [0,1]);
     let listenerList = [
@@ -613,7 +613,7 @@ function holdpurse() {
     cListenerGenList(listenerList);
 }
 
-function lookinsidepurse() {
+export function lookinsidepurse() {
     let curtext = [];
     curtext.push(needs["holdpurse"][2]);
     let tempstring = "A ";
@@ -648,7 +648,7 @@ function lookinsidepurse() {
 }
 
 //You steal the given item from her purse
-function takeHerItem(item){
+export function takeHerItem(item){
     let curtext = [];
     curtext.push(needs["holdpurse"][3].format([herpurse[item].funDesc]));
     backPackItems[item].value += 1;
@@ -661,7 +661,7 @@ function takeHerItem(item){
 
 }
 
-function giveHer(item){
+export function giveHer(item){
     //Closes the backpack since a function has been chosen
     const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
@@ -708,7 +708,7 @@ function giveHer(item){
     addListenersList(listenerList);
 }
 
-function createItemButtonList(){
+export function createItemButtonList(){
     const obj = Object.keys(backPackItems);
     let itemlist = [];
     for (let i =0; i< obj.length; i++) {
@@ -728,7 +728,7 @@ function createItemButtonList(){
 }
 
 //When an item is selected in the backpack print the info and related functions
-function selectitem(selecteditem){
+export function selectitem(selecteditem){
     const clickedbtn = document.getElementById(selecteditem);
     const clickedObj = backPackItems[selecteditem];
     clickedbtn.style.backgroundColor = "#4bb6c3";
@@ -757,7 +757,7 @@ function selectitem(selecteditem){
 }
 
 //Returns text saying how much you own of an item.
-function getAmountOwned(selected) {
+export function getAmountOwned(selected) {
     let number = selected.value;
     let description = selected.owned
     let formatlist = [number.toString()];
@@ -804,7 +804,7 @@ function getAmountOwned(selected) {
 }
 
 //TODO combine the if statements from dink/beer/cocktail/soda
-function drinkNow(item) {
+export function drinkNow(item) {
     //Closes the backpack since a function has been chosen
     const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
@@ -849,7 +849,7 @@ function drinkNow(item) {
     sayText(curtext);
 }
 
-function yDrinkNow(item){
+export function yDrinkNow(item){
     //Closes the backpack since a function has been chosen
     const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
@@ -884,9 +884,9 @@ function yDrinkNow(item){
     sayText(curtext);
 }
 
-let homeChampagne = 0; //Flag whether champagne has been drunk at her home before (aka whether she needs to get the glasses)
+export let homeChampagne = 0; //Flag whether champagne has been drunk at her home before (aka whether she needs to get the glasses)
 //TODO turn into JSON
-function champagneNow() {
+export function champagneNow() {
     const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
     let obj = backPackItems.champagne;
@@ -943,7 +943,7 @@ function champagneNow() {
     sayText(curtext);
 }
 
-function drinkTogether(item){
+export function drinkTogether(item){
     //Closes the backpack since a function has been chosen
     const backpackcnt = document.getElementById("pop-up");
     backpackcnt.style.display = "none";
@@ -993,4 +993,25 @@ function drinkTogether(item){
     }
     curtext = c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
+}
+
+export function exposeBackPackItemsOnWindow() {
+    const mutableVars: [string, () => any, (v: any) => void][] = [
+        ["allowItems", () => allowItems, (v) => { allowItems = v; }],
+        ["homeChampagne", () => homeChampagne, (v) => { homeChampagne = v; }],
+        ["itemtext", () => itemtext, (v) => { itemtext = v; }],
+        ["previousbtn", () => previousbtn, (v) => { previousbtn = v; }],
+    ];
+    for (const [name, getter, setter] of mutableVars) {
+        Object.defineProperty(window, name, { get: getter, set: setter, configurable: true });
+    }
+
+    Object.assign(window, {
+        backPackItems, herpurse, drinkLoc, noItemLoc, playOnly,
+        backpack, selectitem, createItemButtonList, standobjs,
+        buyItem, buyItem2, giveHer, takeHerItem, holdpurse, lookinsidepurse,
+        haveItem, getAmountOwned, displaypos,
+        drinkNow, yDrinkNow, drinkTogether, champagneNow,
+        displaydrank, displayDrankItem, bribeearrings, briberoses,
+    });
 }

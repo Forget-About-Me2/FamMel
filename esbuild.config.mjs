@@ -3,22 +3,8 @@ import * as esbuild from 'esbuild';
 const isWatch = process.argv.includes('--watch');
 
 // Script-style TS files that are loaded individually (no import/export)
+// All former script-style files have been migrated into the app.ts bundle.
 const scriptEntryPoints = [
-    'scripts/debugMenu.ts',
-    'scripts/backPackItems.ts',
-    'scripts/store.ts',
-    'scripts/bladder.ts',
-    'scripts/yourbladder.ts',
-    'scripts/drive.ts',
-    'scripts/herhome.ts',
-    'scripts/locations.ts',
-    'scripts/locations/driveAround.ts',
-    'scripts/locations/theBar.ts',
-    'scripts/locations/theClub.ts',
-    'scripts/locations/theatre.ts',
-    'scripts/locations/theMakeOut.ts',
-    'scripts/fuckHer.ts',
-    'scripts/settings.ts',
 ];
 
 // Module bundle: main.ts and all its imports bundled into one file

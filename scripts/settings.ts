@@ -1,17 +1,17 @@
-let showstats = 1; // 1 = Show her bladder state, etc.
+export let showstats = 1; // 1 = Show her bladder state, etc.
 // Girl Selection Parameters
-let photoChoice; //How she's dressed for photogame
+export let photoChoice; //How she's dressed for photogame
 
-let favoritemovie = "theurge";
-let suggestedloc = "thebar";
+export let favoritemovie = "theurge";
+export let suggestedloc = "thebar";
 
-let heroutfit = "jeans";  //  Her clothing choice for the date
+export let heroutfit = "jeans";  //  Her clothing choice for the date
                           //  Possible values: skirt, jeans
 
-let multiplemoves = 1; //Whether sex moves can be repeated during a make-out session
-let rstmoves = 0; //Whether the sex moves reset after a make-out session
+export let multiplemoves = 1; //Whether sex moves can be repeated during a make-out session
+export let rstmoves = 0; //Whether the sex moves reset after a make-out session
 
-function setup(){
+export function setup(){
     fetchJson("options").then(function (data){
         settings=data;
     })
@@ -106,7 +106,7 @@ function setup(){
 }
 
 //TODO this is probably called too often(maybe an issue with settings itself)
-function setLocal(varName: string, value: any){
+export function setLocal(varName: string, value: any){
     if(typeof(Storage) !== "undefined"){
         if(localStorage.getItem(varName) !== value){
             localStorage.setItem(varName, value);
@@ -117,7 +117,7 @@ function setLocal(varName: string, value: any){
 //TODO fix so you can't choose 0 or lower
 //TODO maybe introduce bladder limits to protect users
 //TODO option to turn off playerbladder
-function options() {
+export function options() {
     //When this function is called the var json will be set to the json used for options
 
     let vars = new Array(31).fill([""]); //This array is used to format the html with values
@@ -166,7 +166,7 @@ function options() {
 }
 
 
-function customgirl() {
+export function customgirl() {
     let vars = new Array(14).fill("");
     if (basegirl === "Jennifer") vars[4] = ["checked"];
     else if (basegirl === "Jennifer") vars[5] = ["checked"];
@@ -179,12 +179,12 @@ function customgirl() {
     setbasegirl(basegirl);
 }
 
-function exitcustomgirl() {
+export function exitcustomgirl() {
     setgirl(customgirlname);
     options();
 }
 
-function bladOpt() {
+export function bladOpt() {
     //There is a chance in this menu playerBladder is turned off, if this happens statsBars needs to be known later on
     //So query it, if this hasn't happened before.
     if (!statsBars)
@@ -216,12 +216,12 @@ function bladOpt() {
     setText(curtext);
 }
 
-function setheroutfit(outfitname: string) {
+export function setheroutfit(outfitname: string) {
     setLocal("heroutfit", outfitname);
     heroutfit = outfitname;
 }
 
-function setImagesShow(value: number){
+export function setImagesShow(value: number){
     switch(value){
         case 0:
             enableimages = 0;
@@ -242,7 +242,7 @@ function setImagesShow(value: number){
     }
 }
 
-function setStatsShow(choice: number){
+export function setStatsShow(choice: number){
     showstats = choice;
     if (showstats){
         setLocal("showstats", "true");
@@ -251,7 +251,7 @@ function setStatsShow(choice: number){
     }
 }
 
-function setMultipleMoves(choice: number){
+export function setMultipleMoves(choice: number){
     multiplemoves = choice;
     if(multiplemoves){
         setLocal("multiplemoves", "true");
@@ -260,7 +260,7 @@ function setMultipleMoves(choice: number){
     }
 }
 
-function setRstMoves(choice: number){
+export function setRstMoves(choice: number){
     rstmoves=choice;
     if(rstmoves){
         setLocal("rstmoves", "true");
@@ -269,7 +269,7 @@ function setRstMoves(choice: number){
     }
 }
 
-function setDisclaimer(choice: number){
+export function setDisclaimer(choice: number){
     if (choice)
         setLocal("disclaimer", "true");
     else
@@ -277,29 +277,29 @@ function setDisclaimer(choice: number){
 }
 
 
-function setcustgirlname() {
+export function setcustgirlname() {
     customgirlname = (document.getElementById('thegirl') as HTMLInputElement).value;
     setbasegirl(basegirl);
 }
 
-function setcustbladurge() {
+export function setcustbladurge() {
     customurge = parseInt((document.getElementById('thebladder') as HTMLInputElement).value);
     setLocal("customurge", customurge);
     setbasegirl(basegirl);
 }
 
-function setyourcustbladurge() {
+export function setyourcustbladurge() {
     yourcustomurge = parseInt((document.getElementById('yourbladder') as HTMLInputElement).value);
     setLocal("yourcustomurge", yourcustomurge);
     initYUrge(yourcustomurge);
 }
 
-function setyourmoney() {
+export function setyourmoney() {
     money = parseInt((document.getElementById('yourmoney') as HTMLInputElement).value);
     setLocal("money", money);
 }
 
-function setBladPer(){
+export function setBladPer(){
     const value = parseFloat((document.getElementById("bladPer") as HTMLInputElement).value);
     //Show an error if the value is not between 0 and 100
     if (value < 0 || value > 100)
@@ -311,7 +311,7 @@ function setBladPer(){
     }
 }
 
-function setBladDecay(choice: number){
+export function setBladDecay(choice: number){
     bladDec = choice;
     if (choice)
         setLocal("bladDec", "true");
@@ -319,7 +319,7 @@ function setBladDecay(choice: number){
         setLocal("bladDec", "false");
 }
 
-function setBladDespDecay(choice: number){
+export function setBladDespDecay(choice: number){
     bladDespDec = choice;
     if (choice)
         setLocal("bladDespDec", "true");
@@ -327,7 +327,7 @@ function setBladDespDecay(choice: number){
         setLocal("bladDespDec", "false");
 }
 
-function setSealDec(choice: number){
+export function setSealDec(choice: number){
     seal = choice;
     if (choice)
         setLocal("seal", "true");
@@ -335,7 +335,7 @@ function setSealDec(choice: number){
         setLocal("seal", "false");
 }
 
-function setPlayBlad(choice: number){
+export function setPlayBlad(choice: number){
     playerbladder = choice;
     if (choice)
         setLocal("playerBladder", "true");
@@ -343,7 +343,7 @@ function setPlayBlad(choice: number){
         setLocal("playerBladder", "false");
 }
 
-function setPlayGame(choice: number){
+export function setPlayGame(choice: number){
     playerGame = choice;
     if (choice)
         setLocal("playerGame", "true");
@@ -351,14 +351,14 @@ function setPlayGame(choice: number){
         setLocal("playerGame", "false");
 }
 
-function setjpgimgs() {
+export function setjpgimgs() {
     enableimages = 1;
     enableascii = 0;
     displaypix("pixurge");
 }
 
 //TODO check if these functions can be cleaned up
-function setbasegirl(hername: string) {
+export function setbasegirl(hername: string) {
     basegirl = hername;
     setLocal("basegirl", basegirl);
     const htmlcall = document.getElementById('girlstats');
@@ -401,7 +401,7 @@ function setbasegirl(hername: string) {
     initUrge(urge);
 }
 
-function updategirldesc() {
+export function updategirldesc() {
     if (girlname === "Jennifer") {
         document.getElementById('girlstats').innerHTML = girlname +
             " is a statuesque blonde with a slightly larger than average bladder.";
@@ -431,7 +431,7 @@ function updategirldesc() {
 
 }
 
-function setgirl(hername: string) {
+export function setgirl(hername: string) {
     setLocal("girlname", hername);
     girlname = hername;
     if (document.getElementById('girlstats')) updategirldesc();
@@ -466,4 +466,46 @@ function setgirl(hername: string) {
     //  Have to reset all preset strings.
     girltalk = "<b>" + girlname + ":&nbsp;</b>";
     girlgasp = "<b>" + girlname + " gasps:&nbsp;</b>";
+}
+
+export function exposeSettingsOnWindow(): void {
+    const w = window as any;
+    const props: Array<[string, () => any, (v: any) => void]> = [
+        ['showstats', () => showstats, (v) => { showstats = v; }],
+        ['photoChoice', () => photoChoice, (v) => { photoChoice = v; }],
+        ['favoritemovie', () => favoritemovie, (v) => { favoritemovie = v; }],
+        ['suggestedloc', () => suggestedloc, (v) => { suggestedloc = v; }],
+        ['heroutfit', () => heroutfit, (v) => { heroutfit = v; }],
+        ['multiplemoves', () => multiplemoves, (v) => { multiplemoves = v; }],
+        ['rstmoves', () => rstmoves, (v) => { rstmoves = v; }],
+    ];
+    for (const [name, getter, setter] of props) {
+        Object.defineProperty(w, name, { get: getter, set: setter, configurable: true, enumerable: true });
+    }
+    w.setup = setup;
+    w.setLocal = setLocal;
+    w.options = options;
+    w.customgirl = customgirl;
+    w.exitcustomgirl = exitcustomgirl;
+    w.bladOpt = bladOpt;
+    w.setheroutfit = setheroutfit;
+    w.setImagesShow = setImagesShow;
+    w.setStatsShow = setStatsShow;
+    w.setMultipleMoves = setMultipleMoves;
+    w.setRstMoves = setRstMoves;
+    w.setDisclaimer = setDisclaimer;
+    w.setcustgirlname = setcustgirlname;
+    w.setcustbladurge = setcustbladurge;
+    w.setyourcustbladurge = setyourcustbladurge;
+    w.setyourmoney = setyourmoney;
+    w.setBladPer = setBladPer;
+    w.setBladDecay = setBladDecay;
+    w.setBladDespDecay = setBladDespDecay;
+    w.setSealDec = setSealDec;
+    w.setPlayBlad = setPlayBlad;
+    w.setPlayGame = setPlayGame;
+    w.setjpgimgs = setjpgimgs;
+    w.setbasegirl = setbasegirl;
+    w.updategirldesc = updategirldesc;
+    w.setgirl = setgirl;
 }
