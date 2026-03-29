@@ -1,13 +1,11 @@
 {
   "dependencies": {
     "class-transformer": "^0.5.1",
-    "jquery": "^3.7.1",
     "showdown": "^2.1.0",
     "typedoc": "^0.28.7",
     "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.32",
     "@types/showdown": "^2.0.6",
     "concurrently": "^8.2.0",
     "esbuild": "^0.27.3",

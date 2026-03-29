@@ -804,7 +804,7 @@ export function peephone() {
 //Ask her to pee in a given item from your backpack
 export function peein(item: string) {
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("pop-up")!;
+    const backpackcnt = document.GetRequiredElementById<HTMLElement>("pop-up");
     backpackcnt.style.display = "none";
     const list = needs[item];
     let object = backPackItems[item];
@@ -872,10 +872,11 @@ export function peein(item: string) {
 export function peein2(item: string) {
     let curtext: any[] = [];
     //print quote depending on the panties she wears.
+    const quoteKey = backPackItems[item].quote ?? "";
     if (pantycolor !== "none")
-        curtext.push(appearance["clothes"][heroutfit][backPackItems[item].quote].format([pantycolor]));
+        curtext.push(appearance["clothes"][heroutfit][quoteKey].format([pantycolor]));
     else
-        curtext.push(appearance["clothes"][heroutfit][backPackItems[item].quote + "bare"]);
+        curtext.push(appearance["clothes"][heroutfit][quoteKey + "bare"]);
     //prints certain quotes about it coming out if she is actually able to pee
     if (bladder > blademer)
         curtext = itscomingout(curtext);
@@ -895,15 +896,16 @@ export function peein3(item: string) {
         shyness += 1;
     } else {
         const container = backPackItems[item];
-        if (container.hasOwnProperty("volume")) {
-            if (container.volume < bladder) {
+        const containerVolume = container.volume;
+        if (containerVolume != null) {
+            if (containerVolume < bladder) {
                 if (bladder > blademer)
                     //She's desperate and it shows
                     curtext = printList(curtext, list[7]);
                 else
                     //Not desperate but the item is too small to hold it all
                     curtext = printList(curtext, list[9]);
-                bladder -= container.volume;
+                bladder -= containerVolume;
                 waitcounter = 4;
             } else {
                 //The item can hold her full bladder content

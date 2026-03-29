@@ -288,29 +288,29 @@ export function setDisclaimer(choice: number){
 
 
 export function setcustgirlname() {
-    customgirlname = (document.getElementById('thegirl') as HTMLInputElement).value;
+    customgirlname = document.GetRequiredElementById<HTMLInputElement>('thegirl').value;
     setbasegirl(basegirl);
 }
 
 export function setcustbladurge() {
-    customurge = parseInt((document.getElementById('thebladder') as HTMLInputElement).value);
+    customurge = parseInt(document.GetRequiredElementById<HTMLInputElement>('thebladder').value);
     setLocal("customurge", customurge);
     setbasegirl(basegirl);
 }
 
 export function setyourcustbladurge() {
-    yourcustomurge = parseInt((document.getElementById('yourbladder') as HTMLInputElement).value);
+    yourcustomurge = parseInt(document.GetRequiredElementById<HTMLInputElement>('yourbladder').value);
     setLocal("yourcustomurge", yourcustomurge);
     initYUrge(yourcustomurge);
 }
 
 export function setyourmoney() {
-    money = parseInt((document.getElementById('yourmoney') as HTMLInputElement).value);
+    money = parseInt(document.GetRequiredElementById<HTMLInputElement>('yourmoney').value);
     setLocal("money", money);
 }
 
 export function setBladPer(){
-    const value = parseFloat((document.getElementById("bladPer") as HTMLInputElement).value);
+    const value = parseFloat(document.GetRequiredElementById<HTMLInputElement>("bladPer").value);
     const perDecErr = document.getElementById("perDecErr");
     if (!perDecErr) return;
     //Show an error if the value is not between 0 and 100

@@ -81,7 +81,7 @@ function createSelect(){
 function getUrl(){
     const e = document.GetRequiredElementById<HTMLSelectElement>("girlname");
     const name = e.options[e.selectedIndex].value;
-    const imgtype = $("input[name=imgtype]:checked").val() as string;
+    const imgtype = (document.querySelector<HTMLInputElement>("input[name=imgtype]:checked")?.value) ?? "";
     const urlbox = document.GetRequiredElementById<HTMLInputElement>("imgurl");
     if (imgs[name].hasOwnProperty("pix" + imgtype)){
         let src = imgs[name]["pix" + imgtype];
@@ -96,7 +96,7 @@ function getUrl(){
 function updateLink(){
     const e = document.GetRequiredElementById<HTMLSelectElement>("girlname");
     const name = e.options[e.selectedIndex].value;
-    const imgtype = $("input[name=imgtype]:checked").val() as string;
+    const imgtype = (document.querySelector<HTMLInputElement>("input[name=imgtype]:checked")?.value) ?? "";
     const url = document.GetRequiredElementById<HTMLInputElement>('imgurl').value;
     document.GetRequiredElementById<HTMLElement>("thepic").innerHTML = "<img src='" + url + "' alt='Picture of girl' class= 'pic'>";
     picStore(name, imgtype, url);

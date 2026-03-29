@@ -238,7 +238,7 @@ export function cListener(choice: any[], tag: string){
     const id = nextActionId();
     actionRegistry.set(id, function() { (window as any).go(choice[0]); });
     const html = "<p><li class='cListener' id='" + tag + "' data-action-fn='" + id + "'>" + choice[1].formatVars() + "</li></p>";
-    document.getElementById('textsp')!.innerHTML += html;
+    document.GetRequiredElementById<HTMLElement>('textsp').innerHTML += html;
 }
 
 // Variant that registers a raw function callback (no go() wrapper).
@@ -246,7 +246,7 @@ function cListenerRaw(choice: any[], tag: string){
     const id = nextActionId();
     actionRegistry.set(id, choice[0]);
     const html = "<p><li class='cListener' id='" + tag + "' data-action-fn='" + id + "'>" + choice[1].formatVars() + "</li></p>";
-    document.getElementById('textsp')!.innerHTML += html;
+    document.GetRequiredElementById<HTMLElement>('textsp').innerHTML += html;
 }
 
 //Adds an element to a created click listener.
@@ -321,7 +321,7 @@ export function sayText(lines: any[]){
             }
             result += "<p>" + item.formatVars() + "</p>";
         });
-        document.getElementById('textsp')!.innerHTML = result;
+        document.GetRequiredElementById<HTMLElement>('textsp').innerHTML = result;
     } catch (e) {
         console.error("Something went wrong while saying text");
         console.error(e);
@@ -333,14 +333,14 @@ export function sayText(lines: any[]){
 export function addSayText(lines: any[]){
     let result = "";
     lines.forEach(item => result += "<p>" + item + "</p>");
-    document.getElementById('textsp')!.innerHTML += result;
+    document.GetRequiredElementById<HTMLElement>('textsp').innerHTML += result;
 }
 
 export function setText(lines: any[]){
     clearActionRegistry();
     let result = "";
     lines.forEach(item => result += item);
-    document.getElementById('textsp')!.innerHTML = result;
+    document.GetRequiredElementById<HTMLElement>('textsp').innerHTML = result;
 }
 
 export let locjson: any = null; //This is the main json for the current location

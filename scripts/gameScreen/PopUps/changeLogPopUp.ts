@@ -26,11 +26,9 @@ export class ChangeLogPopUp extends PopUp{
     }
 
     private async fetchMarkdownContent(url: string): Promise<string> {
-        return $.ajax({
-            url,
-            type: 'get',
-            dataType: 'html'
-        });
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+        return response.text();
     }
 
     convertMarkdownToHtml(markdown: string): string {

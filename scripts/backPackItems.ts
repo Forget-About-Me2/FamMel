@@ -59,7 +59,7 @@ export interface IContainer extends IBackpackItem{
 }
 
 //TODO add keys and phone
-export const backPackItems: { [key: string]: any } = {
+export const backPackItems: { [key: string]: IBackpackItem } = {
     "water": {
         bpName: "Water bottle",
         price: 10,
@@ -431,13 +431,13 @@ export function backpack(){
         });
         return;
     }
-    const popUpCnt = document.getElementById("pop-up-text")!;
-    document.getElementById("pop-up-title")!.innerText = "backpack";
+    const popUpCnt = document.GetRequiredElementById<HTMLElement>("pop-up-text");
+    document.GetRequiredElementById<HTMLElement>("pop-up-title").innerText = "backpack";
     popUpCnt.innerHTML = "";
     objQuotes["backpack"].forEach(item => popUpCnt.innerHTML += item);
     let itemlist = createItemButtonList();
     let items = "";
-    const backpackitem = document.getElementById("backpackitems")!;
+    const backpackitem = document.GetRequiredElementById<HTMLElement>("backpackitems");
     if (itemlist.length > 0) {
         itemlist.forEach(item => items += item);
         backpackitem.innerHTML = items;
@@ -445,7 +445,7 @@ export function backpack(){
         backpackitem.innerHTML = "<b>Your backpack is empty :(</b>";
     }
     openPopUp();
-    itemtext = document.getElementById("item-text")!;
+    itemtext = document.GetRequiredElementById<HTMLElement>("item-text");
     itemtext.innerHTML = "";
 }
 
@@ -455,7 +455,7 @@ export function buyItem(item){
     let temp = [item, item];
     let obj = backPackItems[item];
     let value = 1;
-    let price = obj.price;
+    let price = obj.price ?? 0;
     temp.push(displaypos(obj, value, true));
     formatList.push(temp);
     formatList.push([price]);
@@ -464,27 +464,27 @@ export function buyItem(item){
     formatList.push([]);
     html = formatAll(html, formatList);
     setText(html);
-    const itemElem = document.getElementById(item+"Am") as HTMLInputElement;
+    const itemElem = document.GetRequiredElementById<HTMLInputElement>(item+"Am");
     let listenerList: any[] = [];
     if (item === "beer"){
         const i = randomIndex(bar["barQuotes"]);
-        document.getElementById("addQuote")!.innerHTML = bar["barQuotes"][i].formatVars();
+        document.GetRequiredElementById<HTMLElement>("addQuote").innerHTML = bar["barQuotes"][i].formatVars();
         if (haveItem("wetPanties") && i === 3) {
-            document.getElementById("extraList")!.innerHTML= "<li class='cListener' id=sellPanties>Sell wet panties to the bartender.</li>";
+            document.GetRequiredElementById<HTMLElement>("extraList").innerHTML= "<li class='cListener' id=sellPanties>Sell wet panties to the bartender.</li>";
             listenerList.push([[sellPanties, "Sell wet panties to the bartender."], "sellPanties"]);
         }
     } else if (item === "cocktail"){
-        document.getElementById("preQuote")!.innerHTML = pickrandom(club["barGirlDesc"]);
-        document.getElementById("addQuote")!.innerHTML= pickrandom(club["barGirlQuotes"]);
-        document.getElementById("extraList")!.innerHTML= "<li class='cListener' id=flirtBar>Flirt with the bar girl.</li>";
+        document.GetRequiredElementById<HTMLElement>("preQuote").innerHTML = pickrandom(club["barGirlDesc"]);
+        document.GetRequiredElementById<HTMLElement>("addQuote").innerHTML= pickrandom(club["barGirlQuotes"]);
+        document.GetRequiredElementById<HTMLElement>("extraList").innerHTML= "<li class='cListener' id=flirtBar>Flirt with the bar girl.</li>";
         listenerList.push([[flirtBarGirl, "Flirt with the bar girl."], "flirtBar"]);
     }
     itemElem.addEventListener("input", function () {
         value = parseInt(itemElem.value);
-        price = value*obj.price;
-        const itemIndic = document.getElementById("itemIndic")!;
+        price = value * (obj.price ?? 0);
+        const itemIndic = document.GetRequiredElementById<HTMLElement>("itemIndic");
         itemIndic.innerText = displaypos(obj, value, true);
-        const moneyElem = document.getElementById("monAmount")!;
+        const moneyElem = document.GetRequiredElementById<HTMLElement>("monAmount");
         if (price < 0)
             moneyElem.innerText = "NaN";
         else
@@ -493,7 +493,7 @@ export function buyItem(item){
     listenerList.push([[function(){
         buyItem2(item, value, price);
     }], "buy", false]);
-    let form = document.getElementById("buy"+item)!;
+    let form = document.GetRequiredElementById<HTMLElement>("buy"+item);
     form.onsubmit = function (event) {
         event.preventDefault();
         buyItem2(item, value, price);
@@ -671,11 +671,11 @@ export function takeHerItem(item){
 
 export function giveHer(item){
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("pop-up")!;
+    const backpackcnt = document.GetRequiredElementById<HTMLElement>("pop-up");
     backpackcnt.style.display = "none";
     let obj = backPackItems[item];
     obj.value -= 1;
-    let quotes = formatAllVarsList(obj.giveQuotes);
+    let quotes = formatAllVarsList(obj.giveQuotes ?? []);
     let curtext = printList([], quotes[0]);
     let listenerList: any[] = [];
     if (item === "sexyPanties"){
@@ -692,7 +692,7 @@ export function giveHer(item){
     } else {
         if (bladder < blademer) {
             curtext = printList(curtext, quotes[1]);
-            attraction += obj.attr;
+            attraction += obj.attr ?? 0;
             if (item === "earrings"){
                 //Giving earrings increases the chance she will hold it when desperate and you just ask.
                 // Up to a maximum of 90%
@@ -702,13 +702,11 @@ export function giveHer(item){
             }
         } else {
             curtext = printList(curtext, quotes[2]);
-            attraction += obj.emerAttr;
-            askholditcounter += obj.holdCount;
+            attraction += obj.emerAttr ?? 0;
+            askholditcounter += obj.holdCount ?? 0;
         }
     }
-    if (obj.hasOwnProperty("attraction")){
-        attraction += obj.attraction;
-    }
+    attraction += obj.attraction ?? 0;
     sayText(curtext);
     listenerList.forEach(item => cListener(item[0], item[1]));
     curtext = callChoice(["curloc", "Continue..."] );
@@ -737,7 +735,7 @@ export function createItemButtonList(){
 
 //When an item is selected in the backpack print the info and related functions
 export function selectitem(selecteditem){
-    const clickedbtn = document.getElementById(selecteditem)!;
+    const clickedbtn = document.GetRequiredElementById<HTMLElement>(selecteditem);
     const clickedObj = backPackItems[selecteditem];
     clickedbtn.style.backgroundColor = "#4bb6c3";
     clickedbtn.style.color = "#e52222";
@@ -746,18 +744,18 @@ export function selectitem(selecteditem){
     let tobeprinted = "<p class='title'>"+ clickedObj.bpName +"</p>";
     if(clickedObj.owned)
         tobeprinted += "<b><i>You have " + getAmountOwned(clickedObj) + "</i></b><br><br>";
-    tobeprinted += clickedObj.description.format([girlname]);
-    if (!noItemLoc.includes(locStack[0]) && locStack.length !== 0 && clickedObj.hasOwnProperty("functions") && allowItems){
-        if (!clickedObj.hasOwnProperty("locations") && !(clickedObj.hasOwnProperty("banLocs") && clickedObj.banLocs.includes(locStack[0]))){
+    tobeprinted += (clickedObj.description ?? "").format([girlname]);
+    if (!noItemLoc.includes(locStack[0]) && locStack.length !== 0 && clickedObj.functions && allowItems){
+        if (!clickedObj.locations && !clickedObj.banLocs?.includes(locStack[0])){
             //If the girl isn't with you, you can't ask her to use a certain item
             if (!playOnly.includes(locStack[0]))
                 printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
-            if (playerbladder && clickedObj.hasOwnProperty("yFunctions")){
+            if (playerbladder && clickedObj.yFunctions){
                 printAllChoicesList([], clickedObj.yFunctions).forEach(item => tobeprinted += item);
-                if (clickedObj.hasOwnProperty("togFunctions") && !playOnly.includes(locStack[0]) && clickedObj.value > 1)
+                if (clickedObj.togFunctions && !playOnly.includes(locStack[0]) && clickedObj.value > 1)
                     printAllChoicesList([], clickedObj.togFunctions).forEach(item => tobeprinted += item);
             }
-        } else if (clickedObj.hasOwnProperty("locations") && clickedObj.locations.includes(locStack[0]))
+        } else if (clickedObj.locations?.includes(locStack[0]))
             printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
     }
     itemtext.innerHTML= tobeprinted;
@@ -814,7 +812,7 @@ export function getAmountOwned(selected) {
 //TODO combine the if statements from dink/beer/cocktail/soda
 export function drinkNow(item) {
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("pop-up")!;
+    const backpackcnt = document.GetRequiredElementById<HTMLElement>("pop-up");
     backpackcnt.style.display = "none";
     let curtext: any[] = [];
     if (((tummy > maxtummy && (item !== "beer"|| tummy > maxbeer)) && item !== "cocktail")||
@@ -827,30 +825,22 @@ export function drinkNow(item) {
             curtext.push(pickrandom(needs["drinkquote"]));
             curtext.push("She drinks the " + (drink.bpName.toLowerCase()) + ".");
         } else {
-            if (drink.hasOwnProperty("cDrinkQuote")) {
+            if (drink.cDrinkQuote) {
                 curtext = printList(curtext, addGirlTalk(drink.cDrinkQuote));
             } else {
                 curtext.push(girltalk + drink.drinkQuote);
                 curtext.push("She drinks the " + drink.bpName.toLowerCase() + ".");
             }
         }
-        tummy += drink.volume;
+        tummy += drink.volume ?? 0;
         drink.value -= 1;
-        drink.sheDrank += 1;
-        if (drink.hasOwnProperty("drankBeer")){
-            drankbeer += drink.drankBeer;
-        }
-        if (drink.hasOwnProperty("attraction")){
-            attraction += drink.attraction;
-        }
-        if (drink.hasOwnProperty("shyness")){
-            shyness -= drink.shyness;
-        }
-        if (drink.hasOwnProperty("tumInc")){
-            if (maxtummy < 1250) {
-                maxtummy += drink.tumInc;
-                maxbeer += drink.tumInc;
-            }
+        drink.sheDrank = (drink.sheDrank ?? 0) + 1;
+        drankbeer += drink.drankBeer ?? 0;
+        attraction += drink.attraction ?? 0;
+        shyness -= drink.shyness ?? 0;
+        if (drink.tumInc && maxtummy < 1250) {
+            maxtummy += drink.tumInc;
+            maxbeer += drink.tumInc;
         }
     }
     curtext = c([locStack[0], "Continue..."], curtext);
@@ -859,14 +849,14 @@ export function drinkNow(item) {
 
 export function yDrinkNow(item){
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("pop-up")!;
+    const backpackcnt = document.GetRequiredElementById<HTMLElement>("pop-up");
     backpackcnt.style.display = "none";
     let drink = backPackItems[item];
     let curtext: any[] = [];
     if (item !== "cocktail" && (yourtummy > ymaxtummy && yourtummy > ymaxbeer)){
         curtext.push("You consider drinking the " + drink.bpName.toLowerCase() + ", but you have drunk way too much already.");
     } else {
-        if (drink.hasOwnProperty("cYouDrinkQuote")) {
+        if (drink.cYouDrinkQuote) {
             curtext = printList(curtext, drink.cYouDrinkQuote);
         } else {
             if (drink.hasOwnProperty("yDrinkQuote"))
@@ -875,17 +865,13 @@ export function yDrinkNow(item){
                 curtext.push("<b>YOU: </b>" + drink.drinkQuote);
             curtext.push("You drink the " + drink.bpName.toLowerCase() + ".");
         }
-        yourtummy += drink.volume;
+        yourtummy += drink.volume ?? 0;
         drink.value -= 1;
-        drink.yDrank += 1;
-        if (drink.hasOwnProperty("drankBeer")){
-            ydrankbeer += drink.drankBeer;
-        }
-        if (drink.hasOwnProperty("tumInc")){
-            if (ymaxtummy < 1250) {
-                ymaxtummy += drink.tumInc;
-                ymaxbeer += drink.tumInc;
-            }
+        drink.yDrank = (drink.yDrank ?? 0) + 1;
+        ydrankbeer += drink.drankBeer ?? 0;
+        if (drink.tumInc && ymaxtummy < 1250) {
+            ymaxtummy += drink.tumInc;
+            ymaxbeer += drink.tumInc;
         }
     }
     curtext = c([locStack[0], "Continue..."], curtext);
@@ -895,9 +881,10 @@ export function yDrinkNow(item){
 export let homeChampagne = 0; //Flag whether champagne has been drunk at her home before (aka whether she needs to get the glasses)
 //TODO turn into JSON
 export function champagneNow() {
-    const backpackcnt = document.getElementById("pop-up")!;
+    const backpackcnt = document.GetRequiredElementById<HTMLElement>("pop-up");
     backpackcnt.style.display = "none";
     let obj = backPackItems.champagne;
+    const bottles = obj.bottles;
     let curtext: any[] = [];
     if (locStack[0] === "theHome"){
         curtext = printList(curtext, drinklines["champagne"][0]);
@@ -910,7 +897,7 @@ export function champagneNow() {
             curtext.push(pickrandom(appearance["clothes"][heroutfit]["fillchampok"]));
             champagnecounter += 2;
             drankChamp = 0;
-            obj.bottles[0] -= 2;
+            if (bottles) bottles[0] -= 2;
             curtext = printList(curtext, drinklines["champagne"][2]);
         } else if (bladder < bladlose){
             curtext.push(girltalk + pickrandom(drinklines["wonderWhy"]));
@@ -918,7 +905,7 @@ export function champagneNow() {
             curtext.push(pickrandom(drinklines["fillChamp"]));
             champagnecounter += 2;
             drankChamp = 0;
-            obj.bottles[0] -= 2;
+            if (bottles) bottles[0] -= 2;
             curtext= printList(curtext, drinklines["champagne"][3]);
         } else {
             curtext.push(girltalk + pickrandom(drinklines["cantDo"]));
@@ -937,12 +924,12 @@ export function champagneNow() {
         }
         champagnecounter+=2;
         drankChamp = 0;
-        obj.bottles[0] -= 2;
+        if (bottles) bottles[0] -= 2;
     } else {
         curtext.push("Unfortunately you don't have any champagne glasses, so you can't drink champagne.");
     }
-    if (obj.bottles[0] === 0) {
-        obj.bottles.shift();
+    if (bottles && bottles[0] === 0) {
+        bottles.shift();
         obj.value--;
     }
     tummy += 50;
@@ -953,7 +940,7 @@ export function champagneNow() {
 
 export function drinkTogether(item){
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("pop-up")!;
+    const backpackcnt = document.GetRequiredElementById<HTMLElement>("pop-up");
     backpackcnt.style.display = "none";
     let curtext: any[] = [];
     if (((tummy > maxtummy && (item !== "beer"|| tummy > maxbeer)) && item !== "cocktail")||
@@ -966,29 +953,23 @@ export function drinkTogether(item){
             curtext.push(pickrandom(needs["drinkquote"]));
             curtext.push("You both drink your " + (drink.bpName.toLowerCase()) + ".");
         } else {
-            if (drink.hasOwnProperty("cTogDrinkQuote")) {
+            if (drink.cTogDrinkQuote) {
                 curtext = printList(curtext, addGirlTalk(drink.cTogDrinkQuote));
             } else {
                 curtext.push(girltalk + drink.drinkQuote);
                 curtext.push("After a toast you both drink your " + drink.bpName.toLowerCase() + ".");
             }
         }
-        tummy += drink.volume;
-        yourtummy += drink.volume;
+        tummy += drink.volume ?? 0;
+        yourtummy += drink.volume ?? 0;
         drink.value -= 2;
-        drink.sheDrank += 1;
-        drink.yDrank += 1;
-        if (drink.hasOwnProperty("drankBeer")){
-            drankbeer += drink.drankBeer;
-            ydrankbeer += drink.drankBeer;
-        }
-        if (drink.hasOwnProperty("attraction")){
-            attraction += drink.attraction;
-        }
-        if (drink.hasOwnProperty("shyness")){
-            shyness -= drink.shyness;
-        }
-        if (drink.hasOwnProperty("tumInc")){
+        drink.sheDrank = (drink.sheDrank ?? 0) + 1;
+        drink.yDrank = (drink.yDrank ?? 0) + 1;
+        drankbeer += drink.drankBeer ?? 0;
+        ydrankbeer += drink.drankBeer ?? 0;
+        attraction += drink.attraction ?? 0;
+        shyness -= drink.shyness ?? 0;
+        if (drink.tumInc) {
             if (maxtummy < 1000) {
                 maxtummy += drink.tumInc;
                 maxbeer += drink.tumInc;

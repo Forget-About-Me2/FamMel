@@ -163,10 +163,12 @@ Move module-scoped `let` variables into `gameState` properties, updating all ref
 ## Phase 4 — Polish & Testing
 
 - [x] Wire up Selenium tests (PickherupTest, RandomSeedDeterminismTest)
-- [] Add smoke test: load game → start → navigate each location
-- [ ] Replace required `document.getElementById(...)` call sites with `document.GetRequiredElementById(...)` where the element is expected to exist; keep nullable lookups only where absence is a valid runtime state
-- [ ] Replace temporary `any` escape hatches with narrower types, starting with `backPackItems`; preserve base guarantees like `IBackpackItem` even when subtype-specific fields still need narrowing
-- [ ] Remove jQuery dependency (only used for simple DOM ops)
+- [ ] Add smoke test: load game → start → navigate each location
+- [x] Replace required `document.getElementById(...)` call sites with `document.GetRequiredElementById(...)` where the element is expected to exist; keep nullable lookups only where absence is a valid runtime state (quotes.ts, backPackItems.ts, bladder.ts, settings.ts)
+- [x] Replace temporary `any` escape hatches with narrower types — `backPackItems` map restored to `IBackpackItem`; all `!` assertions replaced with proper narrowing (`?? 0`, truthiness checks, optional chaining, local variable extraction)
+- [x] Remove jQuery dependency — replaced `$()` radio queries in images.ts with `querySelector`, replaced `$.ajax()` in changeLogPopUp.ts with `fetch()`, removed jQuery from index.html and package.json
+- [ ] Audit null-fallback strategy: some `?? 0` / `?? ""` defaults are correct for genuinely optional counters (e.g. `sheDrank`, `tumInc`), but properties like `description`, `quote`, `giveQuotes` that are expected to exist for any item reaching that code path should throw on absence rather than fail silently — consider a runtime assert helper or making those properties required on sub-interfaces
+- [ ] Improve readability of dense functions: many functions (especially in `backPackItems.ts`, `bladder.ts`, `quotes.ts`) pack too much into deeply nested conditionals with inline mutations, making them hard to follow. Break these into smaller named helpers, extract early-return guards, and reduce nesting depth. Good candidates: `selectitem()`, `drinkNow()`/`yDrinkNow()`/`drinkTogether()` (near-identical — DRY into shared helper), `champagneNow()`, `giveHer()`, `buyItem()`, `getAmountOwned()`
 - [ ] Clean up dead code
 - [ ] Condense refactor changelogs below into a concise "current architecture" summary — the per-session changelogs have grown unwieldy; replace them with a compact overview of how the app works now, what patterns are used (expose bridges, delegated clicks, etc.), and key decisions made during migration
 
@@ -724,7 +726,33 @@ Enabled `strictNullChecks` in tsconfig and fixed compile errors across the migra
 - `scripts/yourHome.ts`
 - `scripts/yourbladder.ts`
 
+- **Tests**: `dotnet test` (UserFlowTests) passes (20/20 non-explicit tests)
+
+---
+
+## Changelog — Phase 4: Polish (GetRequiredElementById, IBackpackItem, jQuery Removal)
+
+### GetRequiredElementById migration
+Replaced `document.getElementById(...)!` with `document.GetRequiredElementById<T>(...)` at all call sites where the element is expected to exist at runtime:
+- **scripts/quotes.ts** — 5 sites (`textsp` lookups in `sayText`, `addSayText`, `setText`, `cListener`, `addListeners`)
+- **scripts/backPackItems.ts** — 15 sites (inventory UI elements, volume displays, item containers)
+- **scripts/bladder.ts** — 1 site (`popup-close` button)
+- **scripts/settings.ts** — 5 sites (input elements for custom names, bladder settings, money)
+
+### backPackItems typing tightened
+- Restored `backPackItems` map type from `{ [key: string]: any }` back to `{ [key: string]: IBackpackItem }`
+- Fixed 48 strict-null errors caused by optional properties on `IBackpackItem`:
+  - Added `!` assertions after `hasOwnProperty()` guards (TS doesn't narrow from these)
+  - Added `?? 0` fallbacks for arithmetic on optional counters (`sheDrank`, `youDrank`, volume)
+- Fixed 3 related errors in `bladder.ts` (container volume access, backpack item quote access)
+
+### jQuery removed
+- **scripts/images.ts** — Replaced 2 `$("input[name=imgtype]:checked").val()` calls with `document.querySelector<HTMLInputElement>(...)?.value ?? ""`
+- **scripts/gameScreen/PopUps/changeLogPopUp.ts** — Replaced `$.ajax()` with native `fetch()` API
+- **index.html** — Removed jQuery CDN `<script>` tag
+- **package.json** — Removed `jquery` and `@types/jquery` from dependencies
+
 ### Validation
 - **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)
-- **Build**: `node esbuild.config.mjs` emits single bundle (479.5kb)
+- **Build**: `node esbuild.config.mjs` emits bundle (480.0kb)
 - **Tests**: `dotnet test` (UserFlowTests) passes (20/20 non-explicit tests)
