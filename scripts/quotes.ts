@@ -130,8 +130,8 @@ export function addGirlname(quotes: any[]){
     return result;
 }
 
-function addMoney(quotes){
-    let result = [];
+function addMoney(quotes: any[]){
+    let result: any[] = [];
     quotes.forEach(item => result.push(item.format([money])));
     return result;
 }
@@ -402,7 +402,7 @@ export function loadLocationScene(tag: string, subtag: string){
     replaceWCT("always", "girltalk");
     replaceChoices("girlname");
     if (locjson.hasOwnProperty("dialogue")){
-        for (let [key, value] of Object.entries(locjson.dialogue)){
+        for (let [key, value] of Object.entries(locjson.dialogue) as [string, any][]) {
             if(locjson.dialogue.hasOwnProperty(key)){
                 value = replaceWCLI(value, "girlname");
                 value = replaceWCLI(value, "money");
@@ -424,7 +424,7 @@ export function locationMCSetup(subtag: string, customloc: any){
     replaceWCI("intro", "girlname");
     replaceChoices("girlname");
     if (locjson.hasOwnProperty("dialogue")){
-        for (let [key, value] of Object.entries(locjson.dialogue)){
+        for (let [key, value] of Object.entries(locjson.dialogue) as [string, any][]) {
             if(locjson.dialogue.hasOwnProperty(key)){
                 value = replaceWCLI(value, "girltalk");
                 locjson.dialogue[key] = value;
@@ -434,53 +434,53 @@ export function locationMCSetup(subtag: string, customloc: any){
 }
 
 //Replacing the variable wildcards of the given tag for the given json value
-function replaceWCT(jsontag,tag){
-    let result = [];
+function replaceWCT(jsontag: string, tag: string){
+    let result: any[] = [];
     locjson[jsontag].forEach(item => result.push(replaceCheck(item, tag)));
     locjson[jsontag] = result;
 }
 
 //Replacing the variable wildcards of the given tag for the given json value, where this is a list of lists
-function replaceWCI(jsontag, tag){
-    let result = [];
+function replaceWCI(jsontag: string, tag: string){
+    let result: any[] = [];
     locjson[jsontag].forEach(item => result.push(replaceWCL(item, tag)));
     locjson[jsontag] = result;
 }
 
 //Replacing the variable wildcards of the given tag for the given list
-function replaceWCL(strlist, tag){
-    let result = [];
+function replaceWCL(strlist: any[], tag: string){
+    let result: any[] = [];
     strlist.forEach(item => result.push(replaceCheck(item, tag)));
     return result;
 }
 
 //Replacing the variable wildcards of the given tag for the given list of lists
-function replaceWCLI(strlist, tag){
-    let result = [];
+function replaceWCLI(strlist: any[], tag: string){
+    let result: any[] = [];
     strlist.forEach(item => result.push(replaceWCL(item, tag)));
     return result;
 }
 
 //Replacing the variable wildcard of the given tag for the given list, using the given checklist
-function replaceWCLC(strlist, checklist, tag){
-    let result = [];
+function replaceWCLC(strlist: any[], checklist: any[], tag: string){
+    let result: any[] = [];
     strlist.forEach(item => result.push(LreplaceCheck(item,checklist, tag)));
     return result;
 }
 
-function replaceChoices(tag){
-    let result = [];
+function replaceChoices(tag: string){
+    let result: any[] = [];
     locjson["choices"].forEach(item => result.push(replaceChoice(item, tag)));
     locjson["choices"] = result
 }
 
-function replaceChoice(choice, tag){
-    let result = [choice[0]];
+function replaceChoice(choice: any[], tag: string){
+    let result: any[] = [choice[0]];
     result.push(replaceCheck(choice[1], tag));
     return result
 }
 
-function replaceCheck(rpstring, tag){
+function replaceCheck(rpstring: string, tag: string){
     const list = locjson[tag];
     if (rpstring.includes(tag)){
         rpstring = rpstring.replace(tag, "");
@@ -490,7 +490,7 @@ function replaceCheck(rpstring, tag){
     }
 }
 
-function LreplaceCheck(rpstring, list, tag){
+function LreplaceCheck(rpstring: string, list: any[], tag: string){
     if (rpstring.includes(tag)){
         rpstring = rpstring.replace(tag, "");
         return list[Number(rpstring)];
@@ -539,7 +539,7 @@ export async function setupQuotes(){
     await Promise.all(tasks);
 }
 
-function flirtSetup(data){
+function flirtSetup(data: any){
     flirtquotes = data["flirt"];
     let rawresp = data["respons"];
     flirtresps = {};
@@ -564,13 +564,13 @@ export function voccurse(curtext: any[]) {
     return curtext;
 }
 
-function yPeeSetup(data){
+function yPeeSetup(data: any){
     //TODO cleanup like shePeeSetup
     data["girlname"] = addGirlname(data["girlname"]);
     data["girltalk"] = addGirlTalk(data["girltalk"]);
     data["locked"]["girlname"] = addGirlname(data["locked"]["girlname"]);
     let templist = data["thehome"][0];
-    let result = [];
+    let result: any[] = [];
     templist.forEach(item => result.push(LreplaceCheck(item, data["girlname"], "girlname")));
     templist = result;
     result = []
@@ -596,7 +596,7 @@ function shePeeSetup(data){
     peelines["thehome"] = replaceWCLC(peelines["thehome"], peelines["girlname"], "girlname");
     peelines["noneavailable"] = replaceWCLC(peelines["noneavailable"], peelines["girlname"], "girlname");
     peelines["remaining"] = replaceWCLC(peelines["remaining"], peelines["girlname"], "girlname");
-    let temp = [];
+    let temp: any[] = [];
     peelines["peephone"].forEach(item => temp.push(replaceWCLC(item, peelines["girltalk"], "girltalk")));
     peelines["peephone"] = temp;
     peelines["locked"]["cbar"] = replaceWCLC(peelines["locked"]["cbar"], peelines["locked"]["girltalk"], "girltalk");

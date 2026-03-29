@@ -123,7 +123,7 @@ export function updateurge(newurge: number) {
 export function randtuminc(tempinc: number) {
     if (tempinc === 2)
         return tempinc;
-    let choicearray = [];
+    let choicearray: any[] = [];
     for (let i = 0; i < 10; i++) {
         if (i === 0)
             choicearray.push(tempinc - 2);
@@ -253,7 +253,7 @@ export function showneed(curtext: any[] = []): any[] {
 // indication her sincere hope to find a bathroom soon.
 //TODO this probably should only be used by showneed
 export function displaygottavoc(curtext: any[], index?: number): any[] {
-    let textchoice = [];
+    let textchoice: any[] = [];
     if (askholditcounter > 0 && waitcounter < 3 && bladder > bladurge && randomchoice(3)) {
         textchoice.push(pickrandom(needs["wantHold"]).formatVars());
     }
@@ -285,13 +285,14 @@ export function displaygottavoc(curtext: any[], index?: number): any[] {
     }
     if (bladder >= bladneed) gottagoflag = 1;
     if (bladder >= bladurge) brokeice = 1;
-    if (index) {
+    if (typeof index === "number") {
+        let insertIndex = index;
         if (textchoice.length === 1) {
-            curtext.splice(index, 0, textchoice[0]);
+            curtext.splice(insertIndex, 0, textchoice[0]);
         } else {
             textchoice.forEach(text => {
-                curtext.splice(index, 0, text);
-                index++
+                curtext.splice(insertIndex, 0, text);
+                insertIndex++
             });
         }
     } else
@@ -465,7 +466,7 @@ export function displayneed(curtext: any[]): any[] {
 export function askpee() {
     const [askQuestion, shyBlush, casualResponse, consideringIt] = needs["askpee"];
     let curtext = [askQuestion];
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (shyness > 60) curtext.push(shyBlush);
     else curtext.push(casualResponse);
     if (bladder > bladneed && bladder < blademer)
@@ -587,7 +588,7 @@ export function holdit() {
             curtext.push(holdRefusal);
             // she's not holding it for you
             attraction -= 5;
-            curtext = indepee(curtext, true);
+            curtext = indepee(curtext, true) ?? curtext;
         }
     }
     sayText(curtext);
@@ -627,13 +628,13 @@ export function askcanhold() {
     sayText(curtext);
 }
 
-export let toldstories = [];
+export let toldstories: any[] = [];
 export let lastStory;
 
 export function pstory() {
     const askPeeStory = needs["pstory"][0]; // "Have you ever waited too long?"
     let curtext = [askPeeStory];
-    let listenerList = [];
+    let listenerList: any[] = [];
     curtext = displayneed(curtext);
     if (toldstories.length === 0) {
         toldstories = range(0, needs["peestory"].length - 1);
@@ -706,7 +707,7 @@ export function displaywaited(curtext: any[]): any[] {
 //  You try to convince her to hold it.
 //
 export function convinceher(curtext: any[]): any[] {
-    let selection = []; //Used to keep track of which options need to be printed
+    let selection: any[] = []; //Used to keep track of which options need to be printed
     if (haveItem("roses")) {
         selection.push(0);
     }
@@ -723,8 +724,8 @@ export function convinceher(curtext: any[]): any[] {
 }
 
 export function bribeask() {
-    let curtext = []
-    let listenerList = [];
+    let curtext: any[] = []
+    let listenerList: any[] = [];
     curtext = printList(curtext, needs["bribeask"]);
     if (!randomInt(askholditcounter) && (
         (bladder >= bladlose && attraction > holditlosethresh) ||
@@ -760,8 +761,8 @@ export function bribefavor() {
 export function allowpee(): void {
     gottagoflag = 0;
     askholditcounter = 0;
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     const [allowResponse, allowRelief, allowOfferPurse] = needs["allowpee"];
     curtext.push(allowResponse);
     curtext.push(allowRelief);
@@ -779,7 +780,7 @@ export function allowpee(): void {
 }
 
 export function peephone() {
-    let curtext = [];
+    let curtext: any[] = [];
     gottagoflag = 0;
     const PHONE_PEE_OPEN = 0;    // she pees openly on the phone
     const PHONE_PEE_PRIVATE = 1; // she excuses herself to pee
@@ -803,7 +804,7 @@ export function peephone() {
 //Ask her to pee in a given item from your backpack
 export function peein(item: string) {
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("pop-up");
+    const backpackcnt = document.getElementById("pop-up")!;
     backpackcnt.style.display = "none";
     const list = needs[item];
     let object = backPackItems[item];
@@ -869,7 +870,7 @@ export function peein(item: string) {
 }
 
 export function peein2(item: string) {
-    let curtext = [];
+    let curtext: any[] = [];
     //print quote depending on the panties she wears.
     if (pantycolor !== "none")
         curtext.push(appearance["clothes"][heroutfit][backPackItems[item].quote].format([pantycolor]));
@@ -886,7 +887,7 @@ export function peein2(item: string) {
 
 export function peein3(item: string) {
     const list = needs[item];
-    let curtext = [];
+    let curtext: any[] = [];
     //If her bladder is virtually empty she can't go even if she tries.
     if (bladder < bladurge) {
         curtext.push(girltalk + "I'm sorry. I really don't have to go.");
@@ -927,8 +928,8 @@ export function peein3(item: string) {
 }
 
 export function peeintub() {
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     const tubConsent = needs["peeintub"][0];  // "Sure you're okay with it?"
     const tubRefusal = needs["peeintub"][1];  // "I'll just wait, thank you very much."
     if (bladder > blademer) {
@@ -955,8 +956,8 @@ export function peeintub2() {
 //TODO she pees outside if she's not bursting
 //TODO fix the duplicate code
 export function peeoutside() {
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     const outsideRepeat = needs["peeoutside"][0]; // embarrassed to pee outside again
     const outsideFirst = needs["peeoutside"][1];  // never gone outside before
     if (attraction > 30) {
@@ -992,7 +993,7 @@ export function peeoutside() {
 // In the car
 export function peeoutside2() {
     console.log("test");
-    let curtext = [];
+    let curtext: any[] = [];
     if (pantycolor !== "none") curtext.push(appearance["clothes"][heroutfit]["peeoutsidequote"].format([pantycolor]));
     else curtext.push(appearance["clothes"][heroutfit]["peeoutsidequotebare"]);
     // if (pantycolor !== "none") s(peeoutsidequote);
@@ -1006,11 +1007,11 @@ export function peeoutside2() {
 
 // Not in the car
 export function peeoutside2b() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (pantycolor !== "none") curtext.push(appearance["clothes"][heroutfit]["peeoutsidebquote"]);
     else curtext.push(appearance["clothes"][heroutfit]["peeoutsidebquotebare"]);
     curtext.push(needs["peeoutside"][7]); // "Are you sure it's safe?"
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (locStack[0] === "thebeach") listenerList.push([[peeoutside3c, "Continue..."], "peeoutisde3c"]);
     else listenerList.push([[peeoutside3b, "Continue..."], "peeoutside3b"]);
     sayText(curtext);
@@ -1058,7 +1059,7 @@ export function peeoutside3c() {
 //Here's actually where we decide if she wet or just spurted
 export function wetherself() {
     let curtext = [pickrandom(needs["wetquote"])];
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (randomchoice(spurtthresh) && locStack[0] !== "thehottub" && !shespurted) {
         [curtext, listenerList] = spurtedherself(curtext, listenerList);
     } else {
@@ -1125,7 +1126,7 @@ export function wetherself3c() {
 
 //TODO check this, for unfilled in variables
 export function wetherself3() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (pantycolor !== "none" && shyness < 70) {
         curtext.push(appearance["clothes"][heroutfit]["wetherselfquote"].format([pantycolor]));
         if (attraction > 40) {
@@ -1186,7 +1187,7 @@ export function askspurted() {
     curtext.push(pickrandom(needs["spurtquote"]));
     curtext.push(pickrandom(needs["spurtdenyquote"]));
     curtext = displayneed(curtext);
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (locStack[0] !== "thehottub")
         listenerList.push([[checkspurted, needs["choices"]["checkSpurted"]], "checkSpurted"]);
     curtext = callChoice(["curloc", "Continue..."], curtext);
@@ -1197,7 +1198,7 @@ export function askspurted() {
 export function checkspurted() {
     const dontBelieveYou = needs["askspurted"][1]; // "I'm not sure I believe you."
     let curtext = [dontBelieveYou];
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (attraction < 75) {
         curtext = printListSelection(curtext, needs["askspurted"], [2, 3]);
         curtext = displayneed(curtext);
@@ -1262,7 +1263,7 @@ export function itscomingout(curtext: any[]): any[] {
 export function pgirlsroom() {
     // pgirlsroom indices: 0=request to watch, 1=she agrees, 2=she refuses, 3=leads to stall, 4=toilet urgency
     let curtext = printList([], peelines["pgirlsroom"][0]); // Player asks "Can I watch?"
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (attraction >= pwatchthreshold) {
         curtext = displayneed(curtext);
         curtext = printList(curtext, peelines["pgirlsroom"][1]); // She agrees, takes hand
@@ -1290,7 +1291,7 @@ export function pGirlsRoom2() {
 //                    4=peeks into stall, 5=toilet urgency, 6=long line + can't hold it
 export function ptogether() {
     let curtext = printList([], peelines["ptogether"][0]); // Ask her not to leave alone
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (attraction >= ptogetherthreshold) {
         pushloc("ptogether");
         curtext = displayneed(curtext);
@@ -1310,7 +1311,7 @@ export function ptogether() {
 //TODO Actually check if she's desperate in the situation where the line's too long
 export function pTogether2() {
     let curtext = printList([], peelines["ptogether"][3]); // She leads to restrooms
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (!randomchoice(rrlockedthresh)) {
         curtext = printList(curtext, peelines["ptogether"][4]); // Peeks into stall
         if (bladder < bladlose - 10) bladder = bladlose - 10;
@@ -1328,7 +1329,7 @@ export function pTogether2() {
 }
 
 export function pTogether3() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (pantycolor !== "none")
         curtext.push(girlname + appearance["clothes"][heroutfit]["ptogetherquote"].format([pantycolor]));
     else
@@ -1361,7 +1362,7 @@ export function pTogether3d() {
 }
 
 export function pTogether3e() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (locStack[0] === "pmensroom") {
         curtext = printList(curtext, peelines["ptogether"][19]);
         poploc();
@@ -1489,7 +1490,7 @@ export function pnorestroom() {
         curtext = printList(curtext, theatre["noRest"][1]);
         curtext = displayneed(curtext);
         sayText(curtext);
-        let listenerList = [];
+        let listenerList: any[] = [];
         Object.keys(theatre["noToilet"]).forEach(option => {
             const temp = function () {
                 noToiletPee(option);

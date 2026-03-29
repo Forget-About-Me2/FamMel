@@ -6,7 +6,7 @@ export let imgs = {
     Karen:{},
     Laura:{},
     Melissa:{}
-};
+} as Record<string, Record<string, string>>;
 
 //sets imgs to the local stored version
 export function importimgs(){
@@ -33,7 +33,7 @@ export let picset = 0;
 export function displaypix(picname: string) {
     const imgssrc = imgs[basegirl][picname];
     if (enableimages && imgssrc !== imageprev && !picset) {
-        document.getElementById('thepic').innerHTML = "<img src=" + imgssrc + " alt=" + imagedesc + " class='pic'>";
+        document.GetRequiredElementById<HTMLElement>('thepic').innerHTML = "<img src=" + imgssrc + " alt=" + imagedesc + " class='pic'>";
     }
     imageprev = imgssrc;
 }
@@ -52,19 +52,19 @@ function picsetup(){
         importimgs();
     }
     createSelect();
-    const girls = document.getElementById("girlname");
+    const girls = document.GetRequiredElementById<HTMLSelectElement>("girlname");
     girls.onchange = getUrl;
-    const cusgirl = document.getElementById("addgirl");
+    const cusgirl = document.GetRequiredElementById<HTMLButtonElement>("addgirl");
     cusgirl.onclick = addGirl;
     const imgtypes = document.getElementsByName("imgtype");
     for(let i=0; i<imgtypes.length; i++ ){
         imgtypes.item(i).onclick = getUrl;
     }
-    const update = document.getElementById('update');
+    const update = document.GetRequiredElementById<HTMLButtonElement>('update');
     update.onclick = updateLink;
-    const delgirl = document.getElementById('deletename');
+    const delgirl = document.GetRequiredElementById<HTMLButtonElement>('deletename');
     delgirl.onclick = delGirl;
-    const picReset = document.getElementById('picreset');
+    const picReset = document.GetRequiredElementById<HTMLButtonElement>('picreset');
     picReset.onclick = resetImg;
     picset = 1;
     getUrl();
@@ -75,18 +75,18 @@ function createSelect(){
     for (let girlname in imgs){
         result += `<option value=${girlname} name="girl">${girlname}`;
     }
-    document.getElementById("girlname").innerHTML=result;
+    document.GetRequiredElementById<HTMLElement>("girlname").innerHTML=result;
 }
 
 function getUrl(){
-    const e = document.getElementById("girlname") as HTMLSelectElement;
+    const e = document.GetRequiredElementById<HTMLSelectElement>("girlname");
     const name = e.options[e.selectedIndex].value;
     const imgtype = $("input[name=imgtype]:checked").val() as string;
-    const urlbox = document.getElementById("imgurl") as HTMLInputElement;
+    const urlbox = document.GetRequiredElementById<HTMLInputElement>("imgurl");
     if (imgs[name].hasOwnProperty("pix" + imgtype)){
         let src = imgs[name]["pix" + imgtype];
         urlbox.value = src;
-        document.getElementById('thepic').innerHTML = "<img src=" + src + " alt=" + imagedesc + " class='pic'>";
+        document.GetRequiredElementById<HTMLElement>('thepic').innerHTML = "<img src=" + src + " alt=" + imagedesc + " class='pic'>";
     } else {
         urlbox.value = name + "-" + imgtype;
     }
@@ -94,16 +94,16 @@ function getUrl(){
 }
 
 function updateLink(){
-    const e = document.getElementById("girlname") as HTMLSelectElement;
+    const e = document.GetRequiredElementById<HTMLSelectElement>("girlname");
     const name = e.options[e.selectedIndex].value;
     const imgtype = $("input[name=imgtype]:checked").val() as string;
-    const url = (document.getElementById('imgurl') as HTMLInputElement).value;
-    document.getElementById("thepic").innerHTML = "<img src='" + url + "' alt='Picture of girl' class= 'pic'>";
+    const url = document.GetRequiredElementById<HTMLInputElement>('imgurl').value;
+    document.GetRequiredElementById<HTMLElement>("thepic").innerHTML = "<img src='" + url + "' alt='Picture of girl' class= 'pic'>";
     picStore(name, imgtype, url);
 }
 
 function addGirl(){
-    const field = document.getElementById('cusgirl') as HTMLInputElement;
+    const field = document.GetRequiredElementById<HTMLInputElement>('cusgirl');
     const name = field.value;
     field.value = "";
     if (name === ""){
@@ -119,7 +119,7 @@ function addGirl(){
 }
 
 function delGirl(){
-    const e = document.getElementById("girlname") as HTMLSelectElement;
+    const e = document.GetRequiredElementById<HTMLSelectElement>("girlname");
     const name = e.options[e.selectedIndex].value;
     delete imgs[name];
     if(typeof(Storage) !== "undefined"){

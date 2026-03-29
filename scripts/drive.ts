@@ -39,7 +39,7 @@ export function leavehm() {
 //TODO fix the go to the bar like she asked
 export function driveout() {
     allowItems = 1;
-    let curtext = [];
+    let curtext: any[] = [];
     if (locStack[0] !== "driveout") {
         pushloc("driveout");
         locationMCSetup("driveout", drive);

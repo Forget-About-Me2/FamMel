@@ -1,4 +1,4 @@
-import { fetchJson, printList, sayText, cListener, cListenerGen, cListenerGenList, addListenersList, addSayText, callChoice } from '../quotes';
+﻿import { fetchJson, printList, sayText, cListener, cListenerGen, cListenerGenList, addListenersList, addSayText, callChoice } from '../quotes';
 import { pickrandom, randomchoice, randomIndex, randomInt, pushloc, poploc } from '../shims';
 import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, flushdrank, drinkinggamethreshold, askcanhold, pstory } from '../bladder';
 import { displayyourneed, wetyourself, youpee, flushyourdrank, holdpeethresh } from '../yourbladder';
@@ -30,8 +30,8 @@ function barJsonSetup(data: any){
 
 export function thebar(){
     allowItems = 1;
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     // theBar: [0]=revisit from drive, [1]=first arrival, [2]=ambient narration
     const [barRevisit, barArrival, barAmbient] = bar["theBar"];
     if (locStack[0] === "driveout" && locations.theBar.visited && thetime < barclosingtime){
@@ -98,7 +98,7 @@ export function barTalk(curtext: any[]){
         // Response quality: 1=good, 2=neutral, 3=bad (shuffled to randomize button order)
         let order = [1,2,3];
         curtext.push(girltalk+curTopic[0]);
-        let listenerList = [];
+        let listenerList: any[] = [];
         sayText(curtext);
         while (order.length !== 0){
             let i = randomIndex(order);
@@ -144,7 +144,7 @@ export function sellPanties(){
 }
 
 export function stealbeer() {
-    let curtext = [];
+    let curtext: any[] = [];
     curtext.push(bar["stealBeer"]);
     backPackItems.beer.value++;
     sayText(curtext);
@@ -158,7 +158,7 @@ export function stealbeer() {
 //TODO put a limit on this/ Game update
 //TODO Randomize quotes
 export function stealbeer2(){
-    let curtext = [];
+    let curtext: any[] = [];
     if (randomchoice(3)) curtext = noteholding(curtext);
     else if (randomchoice(5)) curtext = interpbladder(curtext);
     curtext = displayyourneed(curtext);
@@ -178,7 +178,7 @@ export function stealbeer2(){
 
 export function darkBar(){
     allowItems = 1;
-   let curtext = [];
+   let curtext: any[] = [];
    // darkBar: [0]=rushes to toilet after emergency, [1]=still needs to go badly,
    //          [2]=first entry into closed bar, [3]=ambient/idle
    const [rushesToToilet, stillNeedsToPee, enterClosedBar, darkBarAmbient] = bar["darkBar"];
@@ -200,7 +200,7 @@ export function darkBar(){
    }
    curtext = showneed(curtext);
    curtext = displayyourneed(curtext);
-   let listenerList = []
+    let listenerList: any[] = []
    if (bladder > bladlose) wetherself();
    else if (yourbladder > yourbladlose) wetyourself();
    else if (gottagoflag > 0) {
@@ -295,7 +295,7 @@ export function drinkinggame() {
         holdself = 0;
         drankbeer = 2;
         ydrankbeer = 2;
-        let listenerList = [];
+        let listenerList: any[] = [];
         if (yourbladder > yourblademer)
             listenerList.push([[holdYourself, "You grab your dick"], "grabDick"]);
         listenerList.push([[feelup, "You feel her up."], "feelUp"]);
@@ -313,7 +313,7 @@ export function postgame() {
     notdesperate = 0;
     notydesperate = 0;
     nothdesperate = 0;
-    let curtext = [];
+    let curtext: any[] = [];
     let situation = "none";
     // postGame[Her|You]: [0]=already spurted, [1]=didn't spurt, [2]=transition,
     //   [3]=both desperate, [4]=she's desperate, [5]=you're desperate, [6]=neither desperate
@@ -351,7 +351,7 @@ export function postgame() {
 }
 
 export function postGame2(situation: string){
-    let curtext = [];
+    let curtext: any[] = [];
     // postGame: [0]=no one desperate, [1]=she was desperate, [2]=you were desperate, [3]=both desperate (kiss)
     const [pgNone, pgHerDesperate, pgYouDesperate, pgBothDesperate] = bar["postGame"];
     if (situation === "none") {
@@ -433,3 +433,4 @@ export function exposeTheBarOnWindow(): void {
     w.holdYourself = holdYourself;
     w.drinkinggamewait = drinkinggamewait;
 }
+

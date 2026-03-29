@@ -130,8 +130,8 @@ export function setLocal(varName: string, value: any){
 export function options() {
     //When this function is called the var json will be set to the json used for options
 
-    let vars = new Array(31).fill([""]); //This array is used to format the html with values
-    let checked = []; //This is a list to keep track of which options are checked
+    let vars: any[] = new Array(31).fill([""]); //This array is used to format the html with values
+    let checked: number[] = []; //This is a list to keep track of which options are checked
 
     let cusgirl=[customgirlname];
 
@@ -170,14 +170,14 @@ export function options() {
     let curtext = formatAll(settings.html, vars);
     curtext = c(["gamestart()", "Continue..."], curtext);
     setText(curtext);
-    const bladderOpt = document.getElementById('bladOpt');
+    const bladderOpt = document.GetRequiredElementById('bladOpt');
     bladderOpt.onclick = bladOpt;
     setgirl(girlname);
 }
 
 
 export function customgirl() {
-    let vars = new Array(14).fill("");
+    let vars: any[] = new Array(14).fill("");
     if (basegirl === "Jennifer") vars[4] = ["checked"];
     else if (basegirl === "Jennifer") vars[5] = ["checked"];
     else if (basegirl === "Laura") vars[6] = ["checked"];
@@ -201,8 +201,8 @@ export function bladOpt() {
         fetchJson("statsBars").then(function (data) {
             statsBars = data;
         });
-    let vars = new Array(23).fill("");
-    const checked = [];
+    let vars: any[] = new Array(23).fill("");
+    const checked: number[] = [];
     vars[3] = [yourcustomurge];
     vars[4] = [minperc];
 
@@ -311,11 +311,13 @@ export function setyourmoney() {
 
 export function setBladPer(){
     const value = parseFloat((document.getElementById("bladPer") as HTMLInputElement).value);
+    const perDecErr = document.getElementById("perDecErr");
+    if (!perDecErr) return;
     //Show an error if the value is not between 0 and 100
     if (value < 0 || value > 100)
-        document.getElementById("perDecErr").style.display = "inline";
+        perDecErr.style.display = "inline";
     else {
-        document.getElementById("perDecErr").style.display = "none";
+        perDecErr.style.display = "none";
         minperc = value;
         setLocal("minPerc", minperc);
     }
@@ -412,17 +414,19 @@ export function setbasegirl(hername: string) {
 }
 
 export function updategirldesc() {
+    const girlStats = document.getElementById('girlstats');
+    if (!girlStats) return;
     if (girlname === "Jennifer") {
-        document.getElementById('girlstats').innerHTML = girlname +
+        girlStats.innerHTML = girlname +
             " is a statuesque blonde with a slightly larger than average bladder.";
     } else if (girlname === "Laura") {
-        document.getElementById('girlstats').innerHTML = girlname +
+        girlStats.innerHTML = girlname +
             " is a cute girl-next-door type with average bladder capacity.";
     } else if (girlname === "Karen") {
-        document.getElementById('girlstats').innerHTML = girlname +
+        girlStats.innerHTML = girlname +
             " is a petite and slim Asian girl with an equally petite bladder.";
     } else if (girlname === "Melissa") {
-        document.getElementById('girlstats').innerHTML = girlname +
+        girlStats.innerHTML = girlname +
             " is a red headed college girl who knows how to hold her pee.";
     } else {
         let bladquote;
@@ -436,7 +440,7 @@ export function updategirldesc() {
             bladquote = "She has a big bladder.";
         else
             bladquote = "She has a bladder the size of Texas.";
-        document.getElementById('girlstats').innerHTML = customgirlname + " is a custom girl based on " + basegirl + ".  " + bladquote;
+        girlStats.innerHTML = customgirlname + " is a custom girl based on " + basegirl + ".  " + bladquote;
     }
 
 }

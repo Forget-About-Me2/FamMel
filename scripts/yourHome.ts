@@ -1,4 +1,4 @@
-import { gameState, LocationCategory } from "./gameState/gameState";
+﻿import { gameState, LocationCategory } from "./gameState/gameState";
 import { getLegacyBladderThresholds } from "./gameState/bladderThresholds";
 import { gameSettings } from "./settings/gameSettings";
 import { loadLocationScene, printIntro, printAlways, printChoices, printChoicesList, printSDialogue, sayText, c, handleFlirt, cListenerGenList, printList } from './quotes';
@@ -52,14 +52,14 @@ export function yourHome() {
 function buy(number){
     const item = locjson["buying"][number];
     const price = Number(item[1]);
-    let curtext = [];
+    let curtext: any[] = [];
     let obj = backPackItems[item[2]];
     if (money >= price){
         curtext.push("You buy a "+ item[0]+ ".")
         obj.value += 1;
         money -= price;
         if (obj.hasOwnProperty("bottles"))
-            obj.bottles.push(6);
+            obj.bottles?.push(6);
     } else curtext.push("You don't have enough money!");
     curtext = c(["gostore", "Back to store"], curtext);
     sayText(curtext);
@@ -74,7 +74,7 @@ function buy(number){
 export function callHer() {
     const thresholds = getLegacyBladderThresholds();
     allowItems = 1;
-    let curtext = [];
+    let curtext: any[] = [];
     if (locStack[0] !== "callher") {
         flirtedflag = 0;
         pushloc("callher");
@@ -88,7 +88,7 @@ export function callHer() {
         curtext = printIntro(curtext, 1);
     }
 
-    var listenerList = [];
+    var listenerList: any[] = [];
     if (late) {
         let startI = curtext.length;
         curtext = printDialogue(curtext, "callher",0);
@@ -127,7 +127,7 @@ function favor() {
 
 function gotta() {
     const thresholds = getLegacyBladderThresholds();
-    let curtext = []
+    let curtext: any[] = []
     if (shyness > 80) {
         curtext = printSDialogue(curtext, "gotta", 0, 0, 0);
         attraction -= 2;
@@ -157,7 +157,7 @@ function ohreally() {
 
 //TODO maybe option to bluff about bribe with consequences later
 function waitpickup() {
-    let curtext = []
+    let curtext: any[] = []
     if (attraction > 13) {
         curtext = printSDialogue(curtext, "gotta", 2, 0, 1);
         let choice = [12]
@@ -201,7 +201,7 @@ function acceptbribe() {
 
 
 function pantyq() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (attraction < 10 || shyness > 85) {
         curtext = printDialogue(curtext, "panties", 0);
         curtext = printChoices(curtext, [10])
@@ -211,7 +211,7 @@ function pantyq() {
             curtext = printChoices(curtext, [10])
         } else {
             curtext = printDialogue(curtext, "panties", 2);
-            let choices = [];
+            let choices: any[] = [];
             for (let i = 16;i < 21; i++){
                 choices.push(i);
             }
@@ -222,7 +222,7 @@ function pantyq() {
 }
 
 function predrink() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (attraction < 10) {
         curtext = printDialogue(curtext, "predrink", 0);
         attraction = 0;
@@ -230,11 +230,11 @@ function predrink() {
         if (tummy < maxtummy / 2 && attraction > 12) {
             curtext = printDialogue(curtext, "predrink", 1);
             tummy += 200;
-            backPackItems.water.sheDrank += 2;
+            backPackItems.water.sheDrank = (backPackItems.water.sheDrank ?? 0) + 2;
         } else if (tummy < maxtummy && attraction > 15) {
             curtext = printDialogue(curtext, "predrink", 2);
             tummy += 200;
-            backPackItems.water.sheDrank += 2;
+            backPackItems.water.sheDrank = (backPackItems.water.sheDrank ?? 0) + 2;
         } else {
             curtext = printDialogue(curtext, "predrink", 3);
         }
@@ -244,7 +244,7 @@ function predrink() {
 }
 
 function yPreDrink() {
-    let curtext = []
+    let curtext: any[] = []
     // Guard against async loading and tolerate legacy/casing key variants
     const yDrinkLines = (typeof drinklines !== "undefined" && drinklines)
         ? (drinklines["ypredrink"] || drinklines["yPreDrink"] || [[], []])
@@ -252,7 +252,7 @@ function yPreDrink() {
     if (yourtummy < ymaxtummy) {
         curtext = printList(curtext, yDrinkLines[0] || ["You drink some water."]);
         yourtummy += 200;
-        backPackItems.water.yDrank += 2;
+        backPackItems.water.yDrank = (backPackItems.water.yDrank ?? 0) + 2;
     } else {
         curtext = printList(curtext, yDrinkLines[1] || ["Your stomach feels too full to drink more right now."]);
     }
@@ -335,3 +335,4 @@ function cantwait(curtext) {
 (window as any).cellphone = cellphone;
 (window as any).anscell = anscell;
 (window as any).ignorecell = ignorecell;
+

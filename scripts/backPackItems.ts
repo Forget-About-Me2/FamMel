@@ -59,7 +59,7 @@ export interface IContainer extends IBackpackItem{
 }
 
 //TODO add keys and phone
-export const backPackItems: { [key: string]: IBackpackItem } = {
+export const backPackItems: { [key: string]: any } = {
     "water": {
         bpName: "Water bottle",
         price: 10,
@@ -410,7 +410,7 @@ export let allowItems= 1; //Are you currently allowed to use items?
 
 //TODO add a mention need option
 // standobjs function allows one to use the normal objects.
-export function standobjs(curtext, listenerList = []) {
+export function standobjs(curtext: any[], listenerList: any[] = []) {
     if (randomchoice(5) && gottagoflag < 1 && showedneed > 0 && !askholditcounter)
         curtext = c(["askpee", "Ask her if she has to pee."], curtext);
     if (flirtedflag < maxflirts && noflirtflag < 1)
@@ -431,13 +431,13 @@ export function backpack(){
         });
         return;
     }
-    const popUpCnt = document.getElementById("pop-up-text");
-    document.getElementById("pop-up-title").innerText = "backpack";
+    const popUpCnt = document.getElementById("pop-up-text")!;
+    document.getElementById("pop-up-title")!.innerText = "backpack";
     popUpCnt.innerHTML = "";
     objQuotes["backpack"].forEach(item => popUpCnt.innerHTML += item);
     let itemlist = createItemButtonList();
     let items = "";
-    const backpackitem = document.getElementById("backpackitems");
+    const backpackitem = document.getElementById("backpackitems")!;
     if (itemlist.length > 0) {
         itemlist.forEach(item => items += item);
         backpackitem.innerHTML = items;
@@ -445,7 +445,7 @@ export function backpack(){
         backpackitem.innerHTML = "<b>Your backpack is empty :(</b>";
     }
     openPopUp();
-    itemtext= document.getElementById("item-text");
+    itemtext = document.getElementById("item-text")!;
     itemtext.innerHTML = "";
 }
 
@@ -465,26 +465,26 @@ export function buyItem(item){
     html = formatAll(html, formatList);
     setText(html);
     const itemElem = document.getElementById(item+"Am") as HTMLInputElement;
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (item === "beer"){
         const i = randomIndex(bar["barQuotes"]);
-        document.getElementById("addQuote").innerHTML = bar["barQuotes"][i].formatVars();
+        document.getElementById("addQuote")!.innerHTML = bar["barQuotes"][i].formatVars();
         if (haveItem("wetPanties") && i === 3) {
-            document.getElementById("extraList").innerHTML= "<li class='cListener' id=sellPanties>Sell wet panties to the bartender.</li>";
+            document.getElementById("extraList")!.innerHTML= "<li class='cListener' id=sellPanties>Sell wet panties to the bartender.</li>";
             listenerList.push([[sellPanties, "Sell wet panties to the bartender."], "sellPanties"]);
         }
     } else if (item === "cocktail"){
-        document.getElementById("preQuote").innerHTML = pickrandom(club["barGirlDesc"]);
-        document.getElementById("addQuote").innerHTML= pickrandom(club["barGirlQuotes"]);
-        document.getElementById("extraList").innerHTML= "<li class='cListener' id=flirtBar>Flirt with the bar girl.</li>";
+        document.getElementById("preQuote")!.innerHTML = pickrandom(club["barGirlDesc"]);
+        document.getElementById("addQuote")!.innerHTML= pickrandom(club["barGirlQuotes"]);
+        document.getElementById("extraList")!.innerHTML= "<li class='cListener' id=flirtBar>Flirt with the bar girl.</li>";
         listenerList.push([[flirtBarGirl, "Flirt with the bar girl."], "flirtBar"]);
     }
     itemElem.addEventListener("input", function () {
         value = parseInt(itemElem.value);
         price = value*obj.price;
-        const itemIndic = document.getElementById("itemIndic");
+        const itemIndic = document.getElementById("itemIndic")!;
         itemIndic.innerText = displaypos(obj, value, true);
-        const moneyElem = document.getElementById("monAmount");
+        const moneyElem = document.getElementById("monAmount")!;
         if (price < 0)
             moneyElem.innerText = "NaN";
         else
@@ -493,7 +493,7 @@ export function buyItem(item){
     listenerList.push([[function(){
         buyItem2(item, value, price);
     }], "buy", false]);
-    let form = document.getElementById("buy"+item);
+    let form = document.getElementById("buy"+item)!;
     form.onsubmit = function (event) {
         event.preventDefault();
         buyItem2(item, value, price);
@@ -502,12 +502,12 @@ export function buyItem(item){
 }
 
 export function buyItem2(item, value, price){
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     let again = function (){
         buyItem(item);
     }
-    let choice = []
+    let choice: any[] = []
     //Check if you have the money to buy as many as you indicated.
     if (money < price){
         curtext = printList(curtext, objQuotes["buyItem2"][0]);
@@ -550,7 +550,7 @@ export function displaypos(itemobj, number, buy=false) {
         if (!buy)
             if (comma > 0) description += ",&nbsp;"
         description += itemobj.owned;
-        let formatList = []
+        let formatList: any[] = []
             if (buy)
                 formatList.push("");
             else
@@ -591,7 +591,7 @@ export function displayDrankItem(item){
 
 //TODO combine bribeRoses and bribEarrings
 export function briberoses() {
-    let curtext = [];
+    let curtext: any[] = [];
     curtext = printList(curtext, needs["briberoses"]);
     askholditcounter++;
     curtext = displayholdquip(curtext);
@@ -601,7 +601,7 @@ export function briberoses() {
 }
 
 export function bribeearrings() {
-    let curtext = [];
+    let curtext: any[] = [];
     curtext = printList(curtext, needs["bribeearrings"]);
     askholditcounter++;
     curtext = displayholdquip(curtext);
@@ -622,7 +622,7 @@ export function holdpurse() {
 }
 
 export function lookinsidepurse() {
-    let curtext = [];
+    let curtext: any[] = [];
     curtext.push(needs["holdpurse"][2]);
     let tempstring = "A ";
     let first = false;
@@ -642,7 +642,7 @@ export function lookinsidepurse() {
     }
 
     curtext.push(tempstring);
-    var listenerList = [];
+    var listenerList: any[] = [];
     keys.forEach(key => {
             const item = herpurse[key];
             if ("funDesc" in item && !haveItem(key))
@@ -657,7 +657,7 @@ export function lookinsidepurse() {
 
 //You steal the given item from her purse
 export function takeHerItem(item){
-    let curtext = [];
+    let curtext: any[] = [];
     curtext.push(needs["holdpurse"][3].format([herpurse[item].funDesc]));
     backPackItems[item].value += 1;
     let listenerList =[
@@ -671,13 +671,13 @@ export function takeHerItem(item){
 
 export function giveHer(item){
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("pop-up");
+    const backpackcnt = document.getElementById("pop-up")!;
     backpackcnt.style.display = "none";
     let obj = backPackItems[item];
     obj.value -= 1;
     let quotes = formatAllVarsList(obj.giveQuotes);
     let curtext = printList([], quotes[0]);
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (item === "sexyPanties"){
         pantycolor = "sexy";
         if (!wetlegs) attraction += 5;
@@ -718,7 +718,7 @@ export function giveHer(item){
 
 export function createItemButtonList(){
     const obj = Object.keys(backPackItems);
-    let itemlist = [];
+    let itemlist: any[] = [];
     for (let i =0; i< obj.length; i++) {
         const curobj = backPackItems[obj[i]];
         if (curobj.value !== 0) {
@@ -737,7 +737,7 @@ export function createItemButtonList(){
 
 //When an item is selected in the backpack print the info and related functions
 export function selectitem(selecteditem){
-    const clickedbtn = document.getElementById(selecteditem);
+    const clickedbtn = document.getElementById(selecteditem)!;
     const clickedObj = backPackItems[selecteditem];
     clickedbtn.style.backgroundColor = "#4bb6c3";
     clickedbtn.style.color = "#e52222";
@@ -814,9 +814,9 @@ export function getAmountOwned(selected) {
 //TODO combine the if statements from dink/beer/cocktail/soda
 export function drinkNow(item) {
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("pop-up");
+    const backpackcnt = document.getElementById("pop-up")!;
     backpackcnt.style.display = "none";
-    let curtext = [];
+    let curtext: any[] = [];
     if (((tummy > maxtummy && (item !== "beer"|| tummy > maxbeer)) && item !== "cocktail")||
         (attraction < 10 && bladder > bladneed) ||
         (attraction < 20 && bladder > blademer)) {
@@ -859,10 +859,10 @@ export function drinkNow(item) {
 
 export function yDrinkNow(item){
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("pop-up");
+    const backpackcnt = document.getElementById("pop-up")!;
     backpackcnt.style.display = "none";
     let drink = backPackItems[item];
-    let curtext = [];
+    let curtext: any[] = [];
     if (item !== "cocktail" && (yourtummy > ymaxtummy && yourtummy > ymaxbeer)){
         curtext.push("You consider drinking the " + drink.bpName.toLowerCase() + ", but you have drunk way too much already.");
     } else {
@@ -895,10 +895,10 @@ export function yDrinkNow(item){
 export let homeChampagne = 0; //Flag whether champagne has been drunk at her home before (aka whether she needs to get the glasses)
 //TODO turn into JSON
 export function champagneNow() {
-    const backpackcnt = document.getElementById("pop-up");
+    const backpackcnt = document.getElementById("pop-up")!;
     backpackcnt.style.display = "none";
     let obj = backPackItems.champagne;
-    let curtext = [];
+    let curtext: any[] = [];
     if (locStack[0] === "theHome"){
         curtext = printList(curtext, drinklines["champagne"][0]);
         if (!homeChampagne){
@@ -953,9 +953,9 @@ export function champagneNow() {
 
 export function drinkTogether(item){
     //Closes the backpack since a function has been chosen
-    const backpackcnt = document.getElementById("pop-up");
+    const backpackcnt = document.getElementById("pop-up")!;
     backpackcnt.style.display = "none";
-    let curtext = [];
+    let curtext: any[] = [];
     if (((tummy > maxtummy && (item !== "beer"|| tummy > maxbeer)) && item !== "cocktail")||
         (attraction < 10 && bladder > bladneed) ||
         (attraction < 20 && bladder > blademer)) {

@@ -3,7 +3,7 @@ import { pickrandom, incrandom } from './shims';
 import { haveSex } from './fuckHer';
 
 export function flirt_l() {
-    let curtext = []
+    let curtext: any[] = []
     shyness -= 1;
     if (flirtcounter < 1) {
         if (locStack[0] === "callher")
@@ -22,7 +22,7 @@ export function flirt_l() {
 }
 
 export function flirt_m() {
-    let curtext = [];
+    let curtext: any[] = [];
     shyness -= 2;
     if (flirtcounter < 1) {
         if (locStack[0] === "callher")
@@ -51,7 +51,7 @@ export function flirt_m() {
 
 //High level responses only available when attraction is >35.
 export function flirt_h() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (attraction > 35 && shyness < 70) {
         curtext.push(flirtresps["high"][randcounter]);
         incrandom();
@@ -76,7 +76,7 @@ export function checkherout() {
 
 export function feelup() {
     feelcounter += 1;
-    let curtext = [];
+    let curtext: any[] = [];
     if (locStack[0] !== "thehottub") {
         curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelher"]));
         if (bladder > blademer) curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelpee"]));
@@ -174,7 +174,7 @@ export function kissher(curtext: any[] = [], sexLoc?: string) {
         }
     }
     arousal += 2;
-    let listenerList = [];
+    let listenerList: any[] = [];
     //If sexLoc is defined then this kiss is happening in the middle of a sexual encounter and therefore handled accordingly
     if (!sexLoc) curtext = callChoice(["curloc", "Continue..."], curtext);
     else {

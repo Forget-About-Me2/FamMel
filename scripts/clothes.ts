@@ -13,7 +13,7 @@ let pantydescriptions = [
 
 export function changepanties(choice: number) {
     const newcolor = pantydescriptions[choice];
-    let curtext = [];
+    let curtext: any[] = [];
     if (pantycolor === newcolor) {
         curtext = printDialogue(curtext, "changepanties", 1);
     } else {

@@ -32,8 +32,8 @@ function theatreJsonSetup(data: any){
 
 export function theTheatre(){
     allowItems = 1;
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     // theatre: [0]=revisit from drive, [1]=first arrival, [2]=ambient
     const [theatreRevisit, theatreArrival, theatreAmbient] = theatre["theatre"];
     if (locations.theTheatre.visited && locStack[0] === "driveout" && thetime < theaterclosingtime){
@@ -79,8 +79,8 @@ export function reTheatre() {
 }
 
 export function askMovie() {
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     // watchMovie: [0]=ask favourite, [1]=already watching, [2]=choose other prompt,
     //   [3]=choose movie (you pick), [4]=argue (asked then chose different),
     //   [5]=argue (she suggests favourite), [6]=movie starts, [7]=next scene,
@@ -109,7 +109,7 @@ export function askMovie() {
 
 export function chooseOtherMovie() {
     let curtext = printList([], theatre["watchMovie"][2]); // chooseOtherPrompt
-    let listenerList = [];
+    let listenerList: any[] = [];
     Object.keys(theatre["favouriteMovie"]).forEach(id => {
         if (id !== favoritemovie) {
             listenerList.push([[function () {
@@ -124,8 +124,8 @@ export function chooseOtherMovie() {
 }
 
 export function chooseMovie() {
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     if (moviecounter === 0) {
         curtext = printList(curtext, theatre["watchMovie"][3]); // youPickPrompt
         Object.keys(theatre["favouriteMovie"]).forEach(id => {
@@ -151,7 +151,7 @@ export function chooseMovie() {
 }
 
 export function movieArgue() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (askedfavourite) {
         //You asked her which movie she wanted to watch and then deliberately chose a different one.
         curtext = printList(curtext, theatre["watchMovie"][4]); // argueBadFaith
@@ -163,7 +163,7 @@ export function movieArgue() {
         let temp = formatAll(theatre["watchMovie"][5], list); // argueSuggestsFavourite
         curtext = printList(curtext, temp);
         sayText(curtext);
-        let listenerList = [];
+        let listenerList: any[] = [];
         listenerList.push([[function (){
             owedfavor += 1;
             moviechoice = favoritemovie;
@@ -185,7 +185,7 @@ export function preMoviePee(curtext: any[] = []) {
     curtext = showneed(curtext);
     curtext = printList(curtext, theatre["watchMovie"][10]); // preMovieBathroom
     sayText(curtext);
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (gottagoflag > 0) {
         listenerList.push([[holdit, "Ask her to hold it."], "holdIt"]);
         listenerList.push([[allowpee, "Let her go."], "allowPee"]);
@@ -200,7 +200,7 @@ export function preMoviePee(curtext: any[] = []) {
 //TODO you can go to the bathroom if you're desperate
 export function domovie() {
     allowItems = 1;
-    let curtext = [];
+    let curtext: any[] = [];
     if (seenmovie === 0) {
         curtext = printList(curtext, theatre["watchMovie"][6]); // movieStarts
         seenmovie = 1;
@@ -222,7 +222,7 @@ export function domovie() {
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
 
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
@@ -254,7 +254,7 @@ export function domovie() {
 // Hold her hand
 export function movieRomance() {
     allowItems = 1;
-    let curtext = [];
+    let curtext: any[] = [];
     const [attempt, success, failure] = theatre["movieRomance"];
     curtext = printList(curtext, attempt);
     if (moviecounter === 4 || moviecounter === 6 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 30)) {
@@ -274,7 +274,7 @@ export function movieRomance() {
 // Touch her thigh
 export function movieSex() {
     allowItems = 1;
-    let curtext = [];
+    let curtext: any[] = [];
     const [attempt, success] = theatre["movieSex"];
     curtext = printList(curtext, attempt);
     if (moviecounter === 3 || moviecounter === 5 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 70)) {
@@ -332,8 +332,8 @@ export function movieDoh() {
 //TODO fix thehold my purse
 export function darkTheatre() {
     allowItems = 1;
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     // darkTheatre: [0]=first entry, [1]=ambient
     const [darkEntry, darkAmbient] = theatre["darkTheatre"];
     if (locStack[0] !== "darkTheatre") {

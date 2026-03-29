@@ -10,7 +10,7 @@ export function validateListenerList(list: any[]){
 }
 
 function isValidListenerList(list: any[]) {
-    const errors = [];
+    const errors: string[] = [];
     if (!Array.isArray(list)) {
         errors.push("List is not an array");
     } else {

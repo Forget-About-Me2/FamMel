@@ -1,4 +1,4 @@
-import { formatAllVarsList, formatAllVars, printList, sayText, cListenerGen, cListenerGenList, callChoice } from './quotes';
+﻿import { formatAllVarsList, formatAllVars, printList, sayText, cListenerGen, cListenerGenList, callChoice } from './quotes';
 import { pickrandom, pushloc, poploc } from './shims';
 import { showneed, displayneed, flushdrank, holdit, allowpee } from './bladder';
 import { displayyourneed } from './yourbladder';
@@ -200,7 +200,7 @@ export let sexActions = {
         init: objInit,
         reset: objReset,
         actionList: function (){
-            let result = [];
+            let result: any[] = [];
             Object.keys(this).forEach(item => {
                 if (typeof this[item] === "object" && item !== "initVal")
                     result.push(item);
@@ -258,7 +258,7 @@ export function fuckHerSetup(data: any){
 }
 
 export function haveSex(location: string){
-    let curtext = [];
+    let curtext: any[] = [];
     let sexQuotes = sexLines[location];
     if (locStack[0]!== "haveSex"){
         kisscounter = 0;
@@ -280,7 +280,7 @@ export function haveSex(location: string){
     } else {
         curtext = printList(curtext, sexQuotes["intro"][1]); // returningIntro
     }
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (kisscounter > maxkiss){
         curtext = printList(curtext, sexQuotes["maxKiss"]);
         if (location === "theBed")
@@ -348,7 +348,7 @@ export function takeOff(item: string, location: string){
     let info = sexActions.clothes[item];
     let processed = false;
     let failTakeOff = false;
-    let curtext = [];
+    let curtext: any[] = [];
     if (item === "skirt" && bladder > blademer)
         curtext.push(appearance["clothes"][heroutfit]["sextoskirtquoteemer"].formatVars());
     for (let i = 0; !processed; i++){
@@ -413,7 +413,7 @@ export function takeOff(item: string, location: string){
 export function performAction(action: string, location: string){
     let info = sexActions.actions[action];
     let processed = false;
-    let curtext = [];
+    let curtext: any[] = [];
     for (let i = 0; !processed; i++){
         // arousalInfo tuple: [prerequisite, arousalBonus, bladderCheck]
         //   prerequisite: "none", clothing item name, or array of items ("notX" means item must be off)
@@ -501,7 +501,7 @@ export function fuckTry(location: string) {
 }
 
 export function theBedroom() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (locStack[0] !== "theBedroom") {
         pushloc("theBedroom");
         curtext.push(sexLines["followBed"]);
@@ -513,7 +513,7 @@ export function theBedroom() {
         curtext.push(sexLines["areBedroom"]);
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (gottagoflag) {
         listenerList.push([[allowpee, sexLines["choices"]["allowPee"]], "allowPee"]);
         listenerList.push([[holdit, sexLines["choices"]["holdIt"]], "holdIt"])
@@ -583,7 +583,7 @@ export function fuckHer2b() {
 }
 
 export function fuckHer3() {
-    let curtext = [], listenerList = [];
+    let curtext: any[] = [], listenerList: any[] = [];
     if (bladder > blademer) {
         curtext = printList(curtext, sexLines["fuckNow"][13]);
         listenerList.push([[preWet, "Keep fucking her"], "preWet"]);
@@ -606,7 +606,7 @@ export function preWet(curtext: any[] = []) {
 export function fuckHer4() {
     pushloc("fuckher6");
     sayText(sexLines["fuckNow"][16]);
-    let listenerList = [];
+    let listenerList: any[] = [];
     let func;
     if (bladder < bladsexlose)
         func = fuckHer5;
@@ -629,8 +629,8 @@ export function fuckHer5b() {
 }
 
 export function fuckHer6() {
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     if (bladder < bladneed) {
         curtext = printList(curtext, sexLines["fuckNow"][19]);
         listenerList.push([[gameSexBoth, "Continue..."], "gameSex"]);
@@ -692,3 +692,4 @@ export function exposeFuckHerOnWindow(): void {
     w.fuckHer6 = fuckHer6;
     w.fuckHer7 = fuckHer7;
 }
+

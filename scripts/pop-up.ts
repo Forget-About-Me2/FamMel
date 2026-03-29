@@ -2,14 +2,14 @@
 
 //Carry out what is needed to set up a pop up once it opens.
 export function openPopUp(){
-    const popUp = document.getElementById("pop-up");
+    const popUp = document.GetRequiredElementById<HTMLElement>("pop-up");
     popUp.style.display= "flex";
     setCloseButton();
 }
 
 function setCloseButton(){
-    const popUp = document.getElementById("pop-up");
-    const btn = document.getElementById("close-pop-up");
+    const popUp = document.GetRequiredElementById<HTMLElement>("pop-up");
+    const btn = document.GetRequiredElementById<HTMLElement>("close-pop-up");
     btn.style.display = "flex"
     btn.onclick = function(){
         popUp.style.display = "none";
@@ -22,13 +22,15 @@ function setCloseButton(){
 }
 
 export function setErrorPopup(data: string){
-    const popUp = document.getElementById("pop-up");
+    const popUp = document.GetRequiredElementById<HTMLElement>("pop-up");
     popUp.style.display = "flex";
-    const closeButton = document.getElementById("close-pop-up");
+    const closeButton = document.GetRequiredElementById<HTMLElement>("close-pop-up");
     closeButton.style.display = "none";
     window.onclick = null; // Remove the event listener to prevent closing on click outside
-    document.getElementById("pop-up-title").innerText = "Error page";
-    document.getElementById("pop-up-text").innerHTML = "<p>Oh oh, Something went wrong running the game.</p>" +
+    const title = document.GetRequiredElementById<HTMLElement>("pop-up-title");
+    const text = document.GetRequiredElementById<HTMLElement>("pop-up-text");
+    title.innerText = "Error page";
+    text.innerHTML = "<p>Oh oh, Something went wrong running the game.</p>" +
         "<p>Sorry for the inconvenience.</p>" +
         "<p>Issues with the game can be reported through <a href='https://github.com/Forget-About-Me2/FamMel/issues'>github</a></p>"+
         "<p>When doing so please be as detailed as possible about what caused the error.</p>"+
@@ -38,10 +40,10 @@ export function setErrorPopup(data: string){
 }
 
 export async function copyErrorText(){
-    const errorMessage = document.getElementById("errorMessage");// For mobile devices
+    const errorMessage = document.GetRequiredElementById<HTMLElement>("errorMessage");// For mobile devices
 
     navigator.clipboard.writeText(errorMessage.innerText).then(async () => {
-            const button = document.getElementById("copyErrorMessage");
+            const button = document.GetRequiredElementById<HTMLElement>("copyErrorMessage");
             button.innerText = "Copied successfully";
             await delay(1000);
             button.innerText = "Copy text";

@@ -1,4 +1,4 @@
-import { fetchJson, printList, sayText, cListenerGen, cListenerGenList } from '../quotes';
+﻿import { fetchJson, printList, sayText, cListenerGen, cListenerGenList } from '../quotes';
 import { pickrandom, randomchoice, pushloc, poploc } from '../shims';
 import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, holdit, allowpee, displayholdquip, photoGameThresholds } from '../bladder';
 import { displayyourneed, wetyourself, youpee } from '../yourbladder';
@@ -29,8 +29,8 @@ function clubJsonSetup(data: any){
 
 export function theClub() {
     allowItems = 1;
-    let curtext = [];
-    let listenerList = []
+    let curtext: any[] = [];
+    let listenerList: any[] = []
     // theClub: [0]=revisit from drive, [1]=first arrival, [2]=ambient, [3]=go dance intro
     const [clubRevisit, clubArrival, clubAmbient, goDanceIntro] = club["theClub"];
     if (locations.theClub.visited && locStack[0] === "driveout" && thetime < clubclosingtime) {
@@ -102,7 +102,7 @@ export function goDance(){
     const goDanceIntro = club["theClub"][3];
     let curtext = showneed();
     curtext = displayyourneed(curtext);
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (gottagoflag > 0) {
         listenerList.push([[holdit, "Ask her to hold it."], "holdit"]);
         listenerList.push([[allowpee, "Let her go."], "allowpee"]);
@@ -125,7 +125,7 @@ export function doDance(){
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
-        let listenerList = [];
+        let listenerList: any[] = [];
         if (gottagoflag > 0)
             listenerList = preventpee(listenerList);
         else{
@@ -152,7 +152,7 @@ export function leaveDance(){
 
 export function darkClub() {
     allowItems = 1;
-    let curtext = [];
+    let curtext: any[] = [];
     if (emerBreak || emerHold && bladder < 20){
         curtext = printList(curtext, club["emerBreak"]);
         emerHold = 0;
@@ -173,7 +173,7 @@ export function darkClub() {
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
-        let listenerList = [];
+        let listenerList: any[] = [];
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
         } else {
@@ -206,7 +206,7 @@ export function pphotogame() {
 
 
 export function photoConvince(choice: string) {
-    let curtext = [];
+    let curtext: any[] = [];
     if (attraction >= photoGameThresholds[choice]) {
         curtext = displayneed(curtext);
         curtext.push(club["gameAccept"][choice].formatVars());
@@ -235,7 +235,7 @@ const posemax = 5; // Maximum value of pose counter
 export let outfitctr = 0; // keep track of the outfit being worn.
 const outfitmax = 5; // maximum count of outfits
 export function photoGame() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (wetPhoto) {
         wetPhoto = 0;
         go("goback");
@@ -271,7 +271,7 @@ export function photoGame() {
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         sayText(curtext);
-        let listenerList = [];
+        let listenerList: any[] = [];
         if (posectr <= posemax)
             listenerList.push([[photoPose, club["choices"]["photoPose"]], "photoPose"]);
         if (photoChoice === "costume" && outfitctr < outfitmax)
@@ -352,7 +352,7 @@ export function photoNude() {
 }
 
 export function photoFinish(){
-    let curtext = [];
+    let curtext: any[] = [];
     if (isNude){
         if (bladder > blademer)
             curtext.push(club["photoFinish"]["nudeDesp"]);
@@ -401,3 +401,4 @@ export function exposeTheClubOnWindow(): void {
     w.photoNude = photoNude;
     w.photoFinish = photoFinish;
 }
+

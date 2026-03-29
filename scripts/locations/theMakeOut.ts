@@ -1,4 +1,4 @@
-import { fetchJson, printList, sayText, cListenerGen, cListenerGenList } from '../quotes';
+﻿import { fetchJson, printList, sayText, cListenerGen, cListenerGenList } from '../quotes';
 import { pickrandom, randomchoice, pushloc, poploc, formatAll } from '../shims';
 import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, gomakeoutthresh, hottubthresh, flushdrank } from '../bladder';
 import { displayyourneed, wetyourself, ypeeoutside, yPeeInTub } from '../yourbladder';
@@ -28,8 +28,8 @@ function makeOutJson(data: any){
 
 export function theMakeOut() {
     allowItems = 1;
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     // theMakeOut: [0]=arrival (attraction high enough), [1]=attraction too low, [2]=ambient, [3]=rejection
     const [makeOutArrival, attractionLow, makeOutAmbient, makeOutRejection] = makeOut["theMakeOut"];
     if (locStack[0] !== "theMakeOut") {
@@ -132,7 +132,7 @@ export function viewStars() {
 
 export function theWalk() {
     allowItems = 1;
-    let curtext = [];
+    let curtext: any[] = [];
     // theWalk: [0]=first walk, [1]=ambient, [2]=examine gate, [3]=gate locked,
     //          [4]=gate inviting, [5]=gate leads to beach
     const [walkStart, walkAmbient, gateExamine, gateLocked,
@@ -154,7 +154,7 @@ export function theWalk() {
     else
         curtext.push(pickrandom(makeOut["walkDesc"][0]));
     walkcounter++;
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
@@ -187,7 +187,7 @@ export function exitWalk(){
 export function examineGate() {
     const [,,gateExamine, gateLocked, gateInviting, gateToBeach] = makeOut["theWalk"];
     let curtext = printList([], gateExamine);
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (walkcounter < 10) {
         curtext = printList(curtext, gateLocked);
         if (shyness < 30 && attraction > 75) {
@@ -205,7 +205,7 @@ export function examineGate() {
 
 export function theYard() {
     allowItems = 1;
-    let curtext = [];
+    let curtext: any[] = [];
     // theYard: named properties for each quote group
     const yardEntry = makeOut["theYard"]["entry"];
     const yardAmbient = makeOut["theYard"]["ambient"];
@@ -221,7 +221,7 @@ export function theYard() {
 
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
@@ -253,8 +253,8 @@ export function exitYard(){
 export function preHotTub() {
     const tubWilling = makeOut["theYard"]["tubWilling"];
     const tubRefused = makeOut["theYard"]["tubRefused"];
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     if (attraction > hottubthresh && shyness < 12) {
         curtext = printList(curtext, tubWilling);
         // s(girltalk + "Are you sure it's going to be alright?  What if somebody sees us?");
@@ -279,7 +279,7 @@ export function theHotTub() {
     allowItems = 1;
     const tubEntry = makeOut["theYard"]["tubEntry"];
     const tubAmbient = makeOut["theYard"]["tubAmbient"];
-    let curtext = []
+    let curtext: any[] = []
     if (locStack[0] !== "theHotTub") {
         curtext = printList(curtext, tubEntry);
         pushloc("theHotTub");
@@ -289,7 +289,7 @@ export function theHotTub() {
 
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
@@ -333,7 +333,7 @@ export function exitHotTub(){
 //  [21]=she gives you wet panties
 export function theBeach() {
     allowItems = 1;
-    let curtext = [];
+    let curtext: any[] = [];
     const [beachArrival, beachAmbient, askSwim] = makeOut["theBeach"];
     if (locStack[0] !== "theBeach") {
         curtext = printList(curtext, beachArrival);
@@ -344,7 +344,7 @@ export function theBeach() {
         if (askedswim > 0) askedswim--;
     }
 
-    let listenerList = [];
+    let listenerList: any[] = [];
     if ((bladder > blademer && (shyness > 15 || randomchoice(1)) && !askedswim)) {
         curtext = displayneed(curtext);
         askedswim = 7;
@@ -387,7 +387,7 @@ export function beachSwim() {
         curtext.push(appearance["clothes"][heroutfit]["swimstripquotebare"]);
     else
         curtext.push(appearance["clothes"][heroutfit]["swimstripquotepanties"].format([pantycolor]));
-    let listenerList = [];
+    let listenerList: any[] = [];
     listenerList.push([[beachSwim2, "Join her."], "join"]);
     if (pantycolor !== "none")
         listenerList.push([[beachSwim2b, "Tell her that her panties are going to get wet."], "panties"]);
@@ -419,7 +419,7 @@ export function beachSwim2b() {
 }
 
 export function beachSwim2c() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (pantycolor === "none")
         curtext = printList(curtext, makeOut["theBeach"][5]); // standing naked
     else {
@@ -540,3 +540,4 @@ export function exposeTheMakeOutOnWindow(): void {
     w.beachSwim5 = beachSwim5;
     w.leaveBeach = leaveBeach;
 }
+

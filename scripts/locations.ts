@@ -60,12 +60,12 @@ export function printLocationMenu(){
 
 export function lookAround(loc: string){
     const findkey = randomchoice(locations[loc].keyChance);
-    let curtext = [];
+    let curtext: any[] = [];
     curtext.push(pickrandom(sharedLoc["lookAround"]));
     // Location data: [0]=random observations array, [1]=key discovery text
     const randomObservations = sharedLoc[loc][0];
     const keyDiscoveryText = sharedLoc[loc][1];
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (findkey){
         curtext.push(keyDiscoveryText);
         sayText(curtext);
@@ -85,7 +85,7 @@ export function lookAround(loc: string){
 
 export function lookKey(loc: string){
     let curtext = [pickrandom(sharedLoc["lookKey"])];
-    let listenerList = [];
+    let listenerList: any[] = [];
     sayText(curtext);
     listenerList.push([[function () {getKey(loc)}], "getKey"]);
     cListener(["", "Pick it up."], "getKey");
@@ -112,7 +112,7 @@ export function itsClosed(locname: string, fun: () => void, curloc: string) {
     // itsClosed: [0]=arrival text, [1]=bladder emergency quote, [2]=confirmed closed text
     const [arrivalLines, emergencyQuote, confirmedClosedLines] = sharedLoc["itsClosed"];
 
-    let curtext = []
+    let curtext: any[] = []
     let list = new Array(arrivalLines.length).fill([theloc]);
     let temp = formatAll(arrivalLines, list);
     curtext = printList(curtext, temp);
@@ -126,7 +126,7 @@ export function itsClosed(locname: string, fun: () => void, curloc: string) {
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
     sayText(curtext);
-    let listenerList = []
+    let listenerList: any[] = []
     if (haveItem(locname+"Key")){
         let breakFun = function () {
             breakLoc(fun, curloc);
@@ -146,8 +146,8 @@ export function breakLoc(loc: any, curloc: string){
     // sayHero: [0]=hero compliments (calm), [1]=rushed hero thanks (urgent)
     const [heroCompliments, heroThanksUrgent] = sharedLoc["sayHero"];
 
-    let curtext = printList(tryingKey, []);
-    let listenerList = [];
+    let curtext = printList(tryingKey, [] as any[]);
+    let listenerList: any[] = [];
     if (bladder > blademer){
         //There's a 30% chance she'll run to the bathroom as soon as you break in.
         if (randomchoice(3)) {

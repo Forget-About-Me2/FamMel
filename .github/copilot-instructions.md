@@ -159,10 +159,13 @@ CHANGELOG.md tracks **player-facing changes only** (bug fixes, new features, gam
 ## Refactor plan
 When working on refactors, be proactive about keeping REFACTOR_PLAN.md up to date.
 
-- Suggest plan updates when you discover new tasks, blockers, sequencing changes, or scope changes.
-- Update item statuses when refactor work clearly completes or blocks a planned step.
-- Add changelog entries for substantial refactor work when appropriate.
+- Treat REFACTOR_PLAN.md updates as part of the refactor itself, not as an optional follow-up.
+- Update REFACTOR_PLAN.md in the same task whenever refactor work changes status, sequencing, scope, blockers, or newly discovered follow-up work.
+- If you complete part of a larger refactor, record that partial completion explicitly instead of leaving the plan unchanged.
+- If the next logical refactor step becomes clear while doing the work, add it to REFACTOR_PLAN.md without waiting to be asked.
 - When the correct REFACTOR_PLAN.md update is clear from the work performed, apply it directly instead of only suggesting it.
+- Only leave REFACTOR_PLAN.md untouched when the work genuinely has no impact on the plan.
+- Add changelog entries for substantial refactor work when appropriate.
 
 ## Testing
 Be proactive about running tests and update the integration tests

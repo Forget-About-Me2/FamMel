@@ -11,7 +11,7 @@ export function dartSetup(data: any){
 }
 
 let possibleScores = [25, 50];
-let doubles = [];
+let doubles: number[] = [];
 //Generates the list of all possible scores that can be scored.
 function setupScores(){
     range(1,20).forEach(i => {
@@ -25,9 +25,9 @@ function setupScores(){
 let scores = {
     "double": {},
     "normal": {}
-};
+} as { double: Record<number, number[][]>; normal: Record<number, number[][]> };
 //All possible points gained with 2 throws, with a double at the end
-let scores2 ={
+let scores2: Record<number, number[][]> = {
 }
 function genScores(){
     possibleScores.forEach(first => {
@@ -67,7 +67,7 @@ function singleFinish(points: number){
         if (randomchoice(5))
             return [[points], points, 0];
     }
-    return [];
+    return [] as any[];
 }
 
 function doubleFinish(points: number){
@@ -80,7 +80,7 @@ function doubleFinish(points: number){
             return [pickrandom(list), points, 0];
         }
     }
-    return [];
+    return [] as any[];
 }
 
 function tripleFinish(points: number){
@@ -116,7 +116,7 @@ function tripleFinish(points: number){
 export let playedDarts = false;
 //Play a game of darts with her
 export function playDarts() {
-    let curtext = [];
+    let curtext: any[] = [];
     // play: [0]=first time intro, [1]=replay intro, [2]=game setup
     const [firstPlay, replayIntro, gameSetup] = darts["play"];
     if (!playedDarts) {
@@ -128,7 +128,7 @@ export function playDarts() {
     curtext = printList(curtext, gameSetup);
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);
-    let dartPoints = {
+    let dartPoints: Record<string, number> = {
         "you": 301,
         "her": 301
     }
@@ -147,7 +147,7 @@ export function playDarts() {
 export function dartRound(dartPoints: any){
     let curText = printList([], darts["round"][0]); // round narration
     let winner = false;
-    let res = []; // [throws, totalScored, remainingPoints]
+    let res: any[] = []; // [throws, totalScored, remainingPoints]
     for (let player in dartPoints) {
         let curPoints = dartPoints[player];
         if (curPoints <= 60){
@@ -178,7 +178,7 @@ export function dartRound(dartPoints: any){
     else if (yourbladder > yourbladlose) wetyourself();
     else {
         sayText(curText);
-        let listenerList = [];
+        let listenerList: any[] = [];
         if (!winner) {
             let round = function () {
                 dartRound(dartPoints);

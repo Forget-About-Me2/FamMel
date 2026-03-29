@@ -1,4 +1,4 @@
-import { printList, callChoice, sayText, c, cListenerGen, cListenerGenList } from './quotes';
+﻿import { printList, callChoice, sayText, c, cListenerGen, cListenerGenList } from './quotes';
 import { pickrandom, randomchoice } from './shims';
 import { displayneed, rrlockedthresh, rrlinethresh } from './bladder';
 import { haveItem, backPackItems, playOnly } from './backPackItems';
@@ -81,7 +81,7 @@ export function flushyourdrank() {
 //TODO lose control when bursting on the way
 //TODO add a chance of her denying you
 export function youpee() {
-    let curtext = [];
+    let curtext: any[] = [];
     gottagoflag = 0;
     let peed = 0;
     const currentLocation = locStack[0];
@@ -195,9 +195,9 @@ export function displayyourneed(curtext: any[]): any[] {
 export function ypeein(item: string){
     //Closes the backpack since a function has been chosen
     const backpackcnt = document.getElementById("pop-up");
-    backpackcnt.style.display = "none";
+    if (backpackcnt) backpackcnt.style.display = "none";
     const list = yneeds[item];
-    let curtext = [];
+    let curtext: any[] = [];
 
     // Urgency levels used as indices into per-item dialogue arrays
     const URGENCY_MILD = 0;        // just an urge
@@ -255,7 +255,7 @@ export function ypeein(item: string){
 export function ypeein2(item: string, yneedtype: number){
     const URGENCY_DESPERATE = 2;
     const [, , , , desperatePeeing, normalPeeing] = yneeds[item];
-    let curtext = [];
+    let curtext: any[] = [];
     if (yneedtype === URGENCY_DESPERATE)
         curtext = printList([], desperatePeeing);
     else
@@ -266,7 +266,7 @@ export function ypeein2(item: string, yneedtype: number){
 
 export function ypeein3(item: string, yneedtype: number){
     const URGENCY_DESPERATE = 2;
-    let curtext = [];
+    let curtext: any[] = [];
     if (yourbladder < yourbladurge){
         curtext.push("You try your best, but you just can't manage to push anything out.");
         curtext.push("With a sigh, you zip your trousers back up.");
@@ -275,7 +275,8 @@ export function ypeein3(item: string, yneedtype: number){
         const container = backPackItems[item];
         const peeResult = yneeds[item][6]; // result text indexed by [urgency][0=partial/1=full]
         if (container.hasOwnProperty("volume")){
-            if (container.volume < yourbladder){
+            const containerVolume = container.volume ?? 0;
+            if (containerVolume < yourbladder){
                 const PARTIAL_FILL = 0;
                 const FULL_FILL = 1;
                 if (yneedtype === URGENCY_DESPERATE)
@@ -284,7 +285,7 @@ export function ypeein3(item: string, yneedtype: number){
                     curtext.push(peeResult[yneedtype][PARTIAL_FILL]);
                 if (yourbladder > yourblademer)
                     curtext.push("YOU: Damn. That's not much better.");
-                yourbladder -= container.volume;
+                yourbladder -= containerVolume;
             } else {
                 //The item can hold your full bladder contents
                 curtext.push(peeResult[yneedtype][1]);
@@ -313,13 +314,13 @@ export function yPeeInTub() {
 //   7=standing strip tease, 8=pee by car, 9=slight turn away, 10=zip-up arousal,
 //   11=watched pee car, 12=she touches you
 export function ypeeoutside() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (yourbladder < yourblademer)
         curtext = printList(curtext, ypeelines["peeOutside"][0]); // casual announcement
     else {
         curtext = printList(curtext, ypeelines["peeOutside"][1]); // desperate announcement
     }
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (attraction > 100 && shyness < 10 && randomchoice(7)){
         curtext = printList(curtext, ypeelines["peeOutside"][2]); // she asks to watch
         listenerList.push([[ypeeOutsideWatch, "Of Course!"], "peeWatch"]);
@@ -332,8 +333,8 @@ export function ypeeoutside() {
 
 //She didn't ask to watch
 export function yPeeOutside2() {
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     if (locStack[0] === "theMakeOut"){
         curtext = printList(curtext, ypeelines["peeOutside"][3]); // step out of car
         listenerList.push([[yPeeOutsideCar, "Continue..."], "peeOutCar"]);
@@ -364,8 +365,8 @@ export function yPeeOutside3(){
 
 //She asked to watch
 export function ypeeOutsideWatch(){
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     if (locStack[0] === "theMakeOut"){
         curtext = printList(curtext, ypeelines["peeOutside"][5]); // car strip tease
         curtext = printList(curtext, ypeelines["peeOutside"][6]); // freed + mesmerized
@@ -518,3 +519,5 @@ export function exposeYourBladderOnWindow() {
         spurtedyourself,
     });
 }
+
+

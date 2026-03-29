@@ -1,4 +1,4 @@
-import { fetchJson, fetchAndCacheJson, getMLocations, printList, sayText, cListenerGen, cListenerGenList, addSayText, voccurse } from './quotes';
+﻿import { fetchJson, fetchAndCacheJson, getMLocations, printList, sayText, cListenerGen, cListenerGenList, addSayText, voccurse } from './quotes';
 import { pushloc, poploc, pickrandom, randomchoice, randomize } from './shims';
 import { showneed, displayneed, displaygottavoc, noteholding, preventpee, flushdrank, allowpee, wetherself } from './bladder';
 import { displayyourneed, wetyourself, youpee } from './yourbladder';
@@ -45,7 +45,7 @@ export function herhome() {
 //The dialogues is fucked if you asked her to hold it
 export function pickup() {
     allowItems = 1;
-    let curtext = [];
+    let curtext: any[] = [];
     if (locStack[0] !== "pickup") { // happens first time only.
         getMLocations("herhome", "pickup");
         pushloc("pickup");
@@ -96,7 +96,7 @@ export function pickup() {
     curtext = displayyourneed(curtext);
     sayText(curtext);
     curtext = [];
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (bladder > bladlose) wetherself();
     else if (yourbladder > yourbladlose) wetyourself();
     else {
@@ -116,7 +116,7 @@ export function pickup() {
 
 export function takeHerHome(){
     let curtext = printList([], herHome["arrive"]);
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (homeConditions()){
         curtext.push(herHome["inviteUp"]);
         listenerList.push([[elevatorWait, herHome["choices"]["elevator"]], "elevator"]);
@@ -130,8 +130,8 @@ export function takeHerHome(){
 export let floorcounter = 0;
 export function elevatorWait() {
     allowItems = 1;
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     if (locStack[0] !== "theElevator") {
         pushloc("theElevator");
         curtext.push(herHome["goElevator"].formatVars());
@@ -162,8 +162,8 @@ export function elevatorWait() {
 
 export function theElevator(){
     allowItems = 1;
-    let curtext = [];
-    let listenerList = [];
+    let curtext: any[] = [];
+    let listenerList: any[] = [];
     if (floorcounter === 3) {
         curtext = printList(curtext, herHome["elev3rdFloor"])
         if (!haveItem("herKeys")) {
@@ -209,7 +209,7 @@ export function stolenKeys(){
 export function giveKeys() {
     backPackItems.herKeys.value=0;
     let curtext = [herHome["getKeys"]];
-    let listenerList = [];
+    let listenerList: any[] = [];
     if (bladder >= blademer) {
         curtext = displayneed(curtext);
         curtext.push(herHome["giveKeysDesp"].formatVars());
@@ -248,7 +248,7 @@ export function keyBadExcuse(){
 }
 
 export function lookForKeys() {
-    let curtext = [];
+    let curtext: any[] = [];
     if (locStack[0] !== "lookForKeys"){
         pushloc("lookForKeys");
         curtext = printList(curtext, herHome["offersPurse"]);
@@ -276,7 +276,7 @@ export function theHome() {
     if (locStack[0] !== "theHome")
         pushloc("theHome")
     let curtext = [herHome["atHome"].formatVars()];
-    let listerList = [];
+    let listerList: any[] = [];
     if (kisscounter > maxkiss) {
         curtext = printList(curtext, herHome["kissExceeded"]);
         listerList.push([[gameOver, "Continue..."], "gameOver"]);
@@ -323,3 +323,4 @@ export function exposeHerHomeOnWindow() {
         keyGoodExcuse, keyBadExcuse, keyNevermind,
     });
 }
+

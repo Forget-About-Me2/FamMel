@@ -114,7 +114,7 @@
 - [x] Move everything into bundle — remove `scriptEntryPoints` from esbuild config
 - [x] Remove `shims.js` — move RNG, locStack into proper TS modules
 - [x] Replace `eval()` calls in `getjsonT()` with function registry
-- [ ] Enable `strictNullChecks` in tsconfig.json
+- [x] Enable `strictNullChecks` in tsconfig.json
 - [ ] Eliminate duplicate state (single source of truth per variable)
 - [x] Replace `javascript:go()` hrefs with delegated data-attribute pattern
 
@@ -164,6 +164,8 @@ Move module-scoped `let` variables into `gameState` properties, updating all ref
 
 - [x] Wire up Selenium tests (PickherupTest, RandomSeedDeterminismTest)
 - [] Add smoke test: load game → start → navigate each location
+- [ ] Replace required `document.getElementById(...)` call sites with `document.GetRequiredElementById(...)` where the element is expected to exist; keep nullable lookups only where absence is a valid runtime state
+- [ ] Replace temporary `any` escape hatches with narrower types, starting with `backPackItems`; preserve base guarantees like `IBackpackItem` even when subtype-specific fields still need narrowing
 - [ ] Remove jQuery dependency (only used for simple DOM ops)
 - [ ] Clean up dead code
 - [ ] Condense refactor changelogs below into a concise "current architecture" summary — the per-session changelogs have grown unwieldy; replace them with a compact overview of how the app works now, what patterns are used (expose bridges, delegated clicks, etc.), and key decisions made during migration
@@ -682,4 +684,47 @@ Added a save/load system that snapshots and restores all ~130 module-scoped muta
 ### Validation
 - **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)
 - **Build**: `node esbuild.config.mjs` emits single bundle (479.0kb)
+- **Tests**: `dotnet test` (UserFlowTests) passes (20/20 non-explicit tests)
+
+---
+
+## Changelog — Phase 3: strictNullChecks Enabled
+
+Enabled `strictNullChecks` in tsconfig and fixed compile errors across the migrated TS bundle. Typecheck now passes with strict null checking on.
+
+### tsconfig.json
+- **Enabled** `"strictNullChecks": true`
+
+### Broad cleanup strategy
+- Added explicit array typings (`any[]`) where empty arrays previously inferred as `never[]`
+- Added targeted null guards/non-null assertions around required DOM elements used by legacy UI code
+- Added optional-value guards for item/drink counters (e.g. `x = (x ?? 0) + n`)
+- Kept migration-safe typing in legacy-heavy item maps by loosening `backPackItems` map values to `any` during transition; this should be treated as temporary refactor debt and narrowed again once the remaining item-shape access is cleaned up
+
+### Main files updated for strict-null compatibility
+- `scripts/actions.ts`
+- `scripts/backPackItems.ts`
+- `scripts/bladder.ts`
+- `scripts/clothes.ts`
+- `scripts/drive.ts`
+- `scripts/fuckHer.ts`
+- `scripts/games/darts.ts`
+- `scripts/herhome.ts`
+- `scripts/images.ts`
+- `scripts/locations.ts`
+- `scripts/locations/driveAround.ts`
+- `scripts/locations/theBar.ts`
+- `scripts/locations/theClub.ts`
+- `scripts/locations/theMakeOut.ts`
+- `scripts/locations/theatre.ts`
+- `scripts/pop-up.ts`
+- `scripts/quotes.ts`
+- `scripts/settings.ts`
+- `scripts/validation.ts`
+- `scripts/yourHome.ts`
+- `scripts/yourbladder.ts`
+
+### Validation
+- **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)
+- **Build**: `node esbuild.config.mjs` emits single bundle (479.5kb)
 - **Tests**: `dotnet test` (UserFlowTests) passes (20/20 non-explicit tests)

@@ -5,7 +5,7 @@ import { displayyourneed, wetyourself, ypeein } from '../yourbladder';
 import { standobjs, haveItem } from '../backPackItems';
 import { driveout } from '../drive';
 
-let driveRound; //JSON quotes for location
+let driveRound: any; //JSON quotes for location
 
 export function driveAroundSetup(){
     fetchJson("locations/driveAround").then(driveJsonSetup)
@@ -43,9 +43,9 @@ export function driveAround(){
     }
     else {
         //list of locations that need a listener added.
-        let listenerList = []
+        let listenerList: any[] = []
         sayText(curtext);
-        curtext = []
+        curtext = [] as any[]
         if (yourbladder > yourblademer) {
             listenerList.push([[drivetell, "Tell her you need to go."], "drivetell"]);
         }
@@ -82,7 +82,7 @@ export function drivetell() {
 //TODO maybe have an attraction cut for this?
 export function drivePee() {
     let curtext = [driveRound["drivePee"]];
-    let listenerList = []
+    let listenerList: any[] = []
     if (haveItem("shotglass"))
         listenerList.push([[function () {
             ypeein("shotglass");
