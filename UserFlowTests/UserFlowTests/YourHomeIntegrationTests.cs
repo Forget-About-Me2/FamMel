@@ -96,6 +96,97 @@ public class YourHomeIntegrationTests
         AssertNoRuntimeErrors();
     }
 
+    [Test]
+    public void SaveAndLoad_PreservesGameState_WithoutErrors()
+    {
+        StartGameAtYourHome();
+
+        // Advance the game: drink some water to change state
+        _driver.ClickWhenInteractable(By.LinkText("Drink some water"));
+        WaitForStoryText();
+        _driver.ClickWhenInteractable(By.LinkText("Continue..."));
+
+        // Save the game and capture key state values
+        var stateBeforeSave = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            window.saveGame(0);
+            return JSON.stringify({
+                money: window.money,
+                attraction: window.attraction,
+                bladder: window.bladder,
+                locStack: window.locStack,
+                hour: window.hour,
+                minute: window.minute,
+                hasSaveSlot: window.hasSave(0)
+            });
+        ")?.ToString();
+
+        stateBeforeSave.Should().NotBeNullOrWhiteSpace("saveGame should execute and return state");
+        stateBeforeSave.Should().Contain("\"hasSaveSlot\":true", "hasSave(0) should return true after saving");
+
+        // Modify state to prove load restores it
+        ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            window.money = 999;
+            window.attraction = 99;
+        ");
+
+        var moneyAfterModify = ((IJavaScriptExecutor)_driver).ExecuteScript("return window.money;");
+        moneyAfterModify.Should().Be(999L, "money should be modified before load");
+
+        // Load the save
+        var loadResult = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            var success = window.loadGame(0);
+            return JSON.stringify({
+                success: success,
+                money: window.money,
+                attraction: window.attraction,
+                gameStateMoney: window.gameState.Money,
+                gameStateAttraction: window.gameState.Attraction
+            });
+        ")?.ToString();
+
+        loadResult.Should().NotBeNullOrWhiteSpace("loadGame should execute and return state");
+        loadResult.Should().Contain("\"success\":true", "loadGame(0) should return true");
+        loadResult.Should().NotContain("\"money\":999", "money should be restored to pre-save value, not 999");
+        loadResult.Should().NotContain("\"attraction\":99", "attraction should be restored to pre-save value, not 99");
+
+        // Verify gameState was synced
+        loadResult.Should().NotContain("\"gameStateMoney\":999", "gameState.Money should be synced from restored globals");
+
+        AssertNoRuntimeErrors();
+    }
+
+    [Test]
+    public void ExportAndImport_RoundTrips_WithoutErrors()
+    {
+        StartGameAtYourHome();
+
+        // Export the save as JSON
+        var exportedJson = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            return window.exportSave();
+        ")?.ToString();
+
+        exportedJson.Should().NotBeNullOrWhiteSpace("exportSave should return a JSON string");
+        exportedJson.Should().Contain("\"version\":", "exported JSON should have a version field");
+
+        // Modify state
+        ((IJavaScriptExecutor)_driver).ExecuteScript("window.money = 777;");
+
+        // Import the saved JSON
+        var importResult = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            try {
+                window.importSave(arguments[0]);
+                return 'ok:' + window.money;
+            } catch (e) {
+                return 'fail:' + e.message;
+            }
+        ", exportedJson)?.ToString();
+
+        importResult.Should().StartWith("ok:", $"importSave should succeed (actual: {importResult})");
+        importResult.Should().NotContain("777", "money should be restored from import, not 777");
+
+        AssertNoRuntimeErrors();
+    }
+
     private void StartGameAtYourHome()
     {
         _driver.Navigate().GoToUrl(BaseUrl);

@@ -134,15 +134,29 @@ Replaced `href="javascript:go(...)"` with `data-action` / `data-action-fn` attri
 
 Goal: all mutable game state lives in a single `gameState` object that can be serialized for save/load.
 
-- [ ] Expand `gameState` to absorb shims state (money, attraction, shyness, time, closing times, etc.)
-- [ ] Absorb bladder state into gameState (bladder, tummy, thresholds, flags)
+### 5a: Save/load API ✓
+
+Save/load system implemented in `saveLoad.ts`. Reads ~130 module-scoped variables via `window` property bridges (defineProperty getter/setter), deep-clones objects/arrays, and restores through the same bridge setters. No game logic files changed.
+
+- [x] Add save/load API (`saveToSlot`, `loadFromSlot`, `exportSave`, `importSave`)
+- [x] Expose on `window` via app.ts (`saveGame`, `loadGame`, `hasSave`, `deleteSave`, `exportSave`, `importSave`)
+- [x] Handle deep-mutable const objects (`backPackItems`, `herpurse`) with deep-merge on load
+- [x] Sync `gameState` backing fields from restored globals after load
+- [x] Integration tests: save/load round-trip + export/import round-trip
+
+### 5b: Absorb state into gameState (incremental)
+
+Move module-scoped `let` variables into `gameState` properties, updating all references. This removes the need for window bridges and makes `gameState` the canonical runtime source of truth.
+
+- [ ] Absorb shims state (money, attraction, shyness, time, closing times, etc.)
+- [ ] Absorb bladder state (bladder, tummy, thresholds, flags)
 - [ ] Absorb yourbladder state
 - [ ] Absorb fuckHer state (arousal, counters)
 - [ ] Absorb location state (locStack, venue flags, closing times)
 - [ ] Absorb flirt/action state (flirtcounter, checkedherout, etc.)
 - [ ] Remove remaining `declare let` from globals.d.ts → delete the file
 - [ ] Remove `expose*OnWindow()` bridges (no more bare global reads)
-- [ ] Add save/load API on gameState (serialize to JSON, restore from JSON)
+- [ ] Add save/load UI (buttons in game, not just console API)
 
 ---
 
@@ -637,3 +651,35 @@ Other files with new imports: validation.ts, clothes.ts, images.ts, drive.ts, st
 - **Build**: `node esbuild.config.mjs` emits single bundle (472.1kb)
 - **Tests**: `dotnet test` (UserFlowTests) passes (18/18 non-explicit tests)
 
+---
+
+## Changelog — Phase 5a: Save/Load API
+
+Added a save/load system that snapshots and restores all ~130 module-scoped mutable state variables via the existing `window` property bridges. Zero changes to game logic files. All 20 Selenium tests pass (18 existing + 2 new).
+
+### scripts/saveLoad.ts (NEW)
+- **`createSave()`** — reads all window-exposed state via defineProperty getters, deep-clones objects/arrays, returns a plain serializable object with version and timestamp
+- **`loadSave(save)`** — writes all state back through window setters (which update module-scoped lets), deep-merges const objects (`backPackItems`, `herpurse`), syncs `gameState` backing fields
+- **`saveToSlot(slot)`** / **`loadFromSlot(slot)`** — localStorage persistence (key: `fammel_save_{slot}`)
+- **`hasSave(slot)`** / **`deleteSave(slot)`** — slot management
+- **`exportSave()`** / **`importSave(json)`** — file-based save/load via JSON strings
+- **Field coverage**: 93 scalar fields (SIMPLE_FIELDS), 25 deep-clone fields (DEEP_FIELDS), 2 const-object fields (`backPackItems`, `herpurse`)
+- **`syncGameState()`** — reverse-syncs gameState's private backing fields (Money, Attraction, Shyness, Time, DidIntro, FlirtCounter, etc.) from restored window globals
+
+### scripts/app.ts
+- **Added imports** from saveLoad.ts
+- **Exposed on window** as `saveGame`, `loadGame`, `hasSave`, `deleteSave`, `exportSave`, `importSave`
+
+### UserFlowTests/YourHomeIntegrationTests.cs
+- **`SaveAndLoad_PreservesGameState_WithoutErrors`** — saves game, modifies money/attraction, loads save, verifies values restored and gameState synced
+- **`ExportAndImport_RoundTrips_WithoutErrors`** — exports JSON, modifies money, imports JSON, verifies restored
+
+### Design decisions
+- **Window bridges as the save/load mechanism** — all `expose*OnWindow()` bridges use `Object.defineProperty` with getter/setter pairs that read/write the module-scoped lets. This means reading `window.X` returns the current module value, and writing `window.X = v` updates the module variable. No game logic changes needed.
+- **JSON caches saved too** — dialogue data (`bar`, `club`, etc.) and `calledjsons` are included so restore doesn't require async re-fetches
+- **Const objects use deep-merge** — `backPackItems` and `herpurse` are `export const` (exposed via `Object.assign`, not `defineProperty`), so the module reference can't be replaced. `deepMerge` clears and repopulates the existing object.
+
+### Validation
+- **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)
+- **Build**: `node esbuild.config.mjs` emits single bundle (479.0kb)
+- **Tests**: `dotnet test` (UserFlowTests) passes (20/20 non-explicit tests)

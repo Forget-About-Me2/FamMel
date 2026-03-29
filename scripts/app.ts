@@ -35,6 +35,7 @@ import { exposeLocationsOnWindow } from './locations';
 import { exposeBackPackItemsOnWindow } from './backPackItems';
 import { exposeStoreOnWindow } from './store';
 import { exposeDebugMenuOnWindow } from './debugMenu';
+import { saveToSlot, loadFromSlot, hasSave, deleteSave, exportSave, importSave } from './saveLoad';
 
 // Shims FIRST — state variables and RNG that all other modules depend on
 exposeShimsOnWindow();
@@ -83,3 +84,11 @@ exposeDebugMenuOnWindow();
 (window as any).yourHome = yourHome;
 (window as any).callHer = callHer;
 (window as any).gamestart = gamestart;
+
+// Save/load API — available from console or future UI
+(window as any).saveGame = saveToSlot;
+(window as any).loadGame = loadFromSlot;
+(window as any).hasSave = hasSave;
+(window as any).deleteSave = deleteSave;
+(window as any).exportSave = exportSave;
+(window as any).importSave = importSave;
