@@ -1,3 +1,13 @@
+import { fetchJson, c, setText } from './quotes';
+import { formatAll } from './shims';
+import { initUrge } from './bladder';
+import { initYUrge } from './yourbladder';
+import { displaypix, importimgs } from './images';
+
+export let enableimages: number = 1;
+export let enableascii: number = 0;
+export let playerGame: number = 0;
+
 export let showstats = 1; // 1 = Show her bladder state, etc.
 // Girl Selection Parameters
 export let photoChoice; //How she's dressed for photogame
@@ -478,6 +488,9 @@ export function exposeSettingsOnWindow(): void {
         ['heroutfit', () => heroutfit, (v) => { heroutfit = v; }],
         ['multiplemoves', () => multiplemoves, (v) => { multiplemoves = v; }],
         ['rstmoves', () => rstmoves, (v) => { rstmoves = v; }],
+        ['enableimages', () => enableimages, (v) => { enableimages = v; }],
+        ['enableascii', () => enableascii, (v) => { enableascii = v; }],
+        ['playerGame', () => playerGame, (v) => { playerGame = v; }],
     ];
     for (const [name, getter, setter] of props) {
         Object.defineProperty(w, name, { get: getter, set: setter, configurable: true, enumerable: true });

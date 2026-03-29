@@ -1,4 +1,12 @@
-import { fetchJson } from '../quotes';
+import { fetchJson, printList, sayText, cListenerGen, cListenerGenList } from '../quotes';
+import { pickrandom, randomchoice, pushloc, poploc } from '../shims';
+import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, holdit, allowpee, displayholdquip, photoGameThresholds } from '../bladder';
+import { displayyourneed, wetyourself, youpee } from '../yourbladder';
+import { standobjs, haveItem, buyItem, backPackItems } from '../backPackItems';
+import { kissher, feelup, checkherout } from '../actions';
+import { leavehm, driveout } from '../drive';
+import { lookAround, itsClosed } from '../locations';
+import { go } from '../main';
 
 export let club;
 export let externalflirt = 0; // You flirted with somebody else

@@ -1,3 +1,5 @@
+import { setErrorPopup } from './pop-up';
+
 export function validateListenerList(list: any[]){
     const validationResult = isValidListenerList(list);
     if (validationResult.length > 0){

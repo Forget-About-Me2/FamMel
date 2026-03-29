@@ -154,7 +154,7 @@ scripts/
 - `quotes.ts` line 186 uses `<a href="#" data-action="locationName">` with a delegated click handler on `document` — clicking triggers `go()`. Function-based callbacks use `data-action-fn` attributes mapped via an `actionRegistry` in `quotes.ts`.
 
 ## The changelog
-There is a changelog to keep changes, this should be updated when appropriate
+CHANGELOG.md tracks **player-facing changes only** (bug fixes, new features, gameplay tweaks). Do not add entries for internal refactors, build system changes, or code reorganisation that don't affect the player experience. Update it when player-facing changes are made.
 
 ## Refactor plan
 When working on refactors, be proactive about keeping REFACTOR_PLAN.md up to date.

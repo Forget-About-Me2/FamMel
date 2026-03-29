@@ -1,3 +1,7 @@
+import { loadLocationScene, printAlways, printAllChoices, sayText } from './quotes';
+import { pushloc } from './shims';
+import { displayyourneed } from './yourbladder';
+
 // Buy stuff at the store.
 export function goStore() {
     allowItems = 1;

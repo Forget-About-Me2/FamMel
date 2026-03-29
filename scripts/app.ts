@@ -3,6 +3,7 @@
  * as window globals so that legacy JS scripts and script-style TS files
  * can access them.
  */
+import { exposeShimsOnWindow } from './shims';
 import './helperFiles/documentFunctions';
 import { go, start, gamestart } from './main';
 import { callHer, yourHome } from './yourHome';
@@ -35,7 +36,10 @@ import { exposeBackPackItemsOnWindow } from './backPackItems';
 import { exposeStoreOnWindow } from './store';
 import { exposeDebugMenuOnWindow } from './debugMenu';
 
-// Expose quotes module state and functions on window first — many script files depend on these
+// Shims FIRST — state variables and RNG that all other modules depend on
+exposeShimsOnWindow();
+
+// Expose quotes module state and functions on window — many other modules depend on these
 exposeQuotesOnWindow();
 
 // Set up delegated click handler for data-action/data-action-fn attributes

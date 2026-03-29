@@ -1,3 +1,6 @@
+import { printFormatDialogue, printChoices, sayText } from './quotes';
+import { printDialogue } from './shims';
+
 //TODO implement option to match colours to descriptions (maybe type it in yourself?)
 let pantydescriptions = [
     "lacy black",

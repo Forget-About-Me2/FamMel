@@ -3,8 +3,12 @@ import { theBarSetup } from './locations/theBar';
 import { theClubSetup } from './locations/theClub';
 import { theatreSetup } from './locations/theatre';
 import { makeOutSetup } from './locations/theMakeOut';
-import { herHomeSetup } from './herhome';
-import { fetchJson, formatAllVarsList } from './quotes';
+import { herHomeSetup, homeConditions } from './herhome';
+import { fetchJson, formatAllVarsList, printList, callChoice, sayText, cListener, cListenerGen, addSayText, addListenersList, addListeners } from './quotes';
+import { pickrandom, randomchoice, pushloc, formatAll } from './shims';
+import { displayneed, displaygottavoc, showneed, holdit, indepee } from './bladder';
+import { displayyourneed } from './yourbladder';
+import { backPackItems, haveItem } from './backPackItems';
 
 //Object containing all locations and information connected to that location
 //Initialised with all locations to be iterated over later.

@@ -2,6 +2,7 @@ import {gameSettings, PersonSettings} from "../settings/gameSettings";
 import {getRandomValueFromNormalDistribution} from "../helperFiles/helperFunctions";
 import {gameState} from "./gameState";
 import {BladderState} from "./bladderState";
+import { IBackpackItem, IDrink } from "../backPackItems";
 
 export class Person {
     private _bladderUrge: number;

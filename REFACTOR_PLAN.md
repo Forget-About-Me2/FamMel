@@ -16,8 +16,8 @@
 
 | World | Files | Output |
 |-------|-------|--------|
-| **Bundle** (IIFE) | `app.ts → main.ts, gameState, gameScreen, settings, models, helpers, yourHome, quotes, pop-up, validation, images, clothes, actions, games/darts, bladder, yourbladder, settings, fuckHer, drive, locations/*, herhome, locations, backPackItems, store, debugMenu` | `dist/app.js` — private scope, selected exports on `window` |
-| **Raw JS** (global) | shims.js | Loaded via `<script>` tags — all on `window` |
+| **Bundle** (IIFE) | `app.ts → shims, main.ts, gameState, gameScreen, settings, models, helpers, yourHome, quotes, pop-up, validation, images, clothes, actions, games/darts, bladder, yourbladder, settings, fuckHer, drive, locations/*, herhome, locations, backPackItems, store, debugMenu` | `dist/app.js` — private scope, selected exports on `window` |
+| *(none)* | All script-style TS and JS files have been absorbed into the bundle | |
 
 **Note:** All script-style TS files have been migrated into the bundle as of Phase 3 Batch 2. The `scriptEntryPoints` array in esbuild.config.mjs is now empty.
 
@@ -109,17 +109,40 @@
 
 ## Phase 3 — Architecture Cleanup
 
-- [ ] Remove `globals.d.ts` — no more `declare` hacks
+- [x] Remove function/const/interface/type declares from `globals.d.ts` — only mutable state `declare let`/`declare var` remain (~120 entries)
+- [ ] Remove remaining `globals.d.ts` entirely (Phase 5 — when mutable state is absorbed into gameState)
 - [x] Move everything into bundle — remove `scriptEntryPoints` from esbuild config
-- [ ] Remove `shims.js` — move RNG, locStack into proper TS modules
+- [x] Remove `shims.js` — move RNG, locStack into proper TS modules
 - [x] Replace `eval()` calls in `getjsonT()` with function registry
 - [ ] Enable `strictNullChecks` in tsconfig.json
 - [ ] Eliminate duplicate state (single source of truth per variable)
 - [x] Replace `javascript:go()` hrefs with delegated data-attribute pattern
 
+### 3b: Replace bare-global functions/constants with ES imports ✓
+
+All cross-module **function** and **constant** references now use proper `import { fn }` statements (~22 consumer files updated). globals.d.ts was rewritten to remove all ~130 function declares, ~10 const declares, all interface/type declares. Only ~120 mutable state `declare let`/`declare var` entries remain, plus 3 window-only function declares.
+
+**Remaining** (Phase 5): Move mutable state into `gameState` object → all modules read/write through `gameState.*` → remaining declares disappear → `globals.d.ts` deleted entirely → `gameState` becomes the single serializable save object.
+
 ### 3a: Delegated click handler — eliminate `javascript:` hrefs ✓
 
 Replaced `href="javascript:go(...)"` with `data-action` / `data-action-fn` attributes + document-level event delegation. See changelog below for details.
+
+---
+
+## Phase 5 — Unified Game State & Save System
+
+Goal: all mutable game state lives in a single `gameState` object that can be serialized for save/load.
+
+- [ ] Expand `gameState` to absorb shims state (money, attraction, shyness, time, closing times, etc.)
+- [ ] Absorb bladder state into gameState (bladder, tummy, thresholds, flags)
+- [ ] Absorb yourbladder state
+- [ ] Absorb fuckHer state (arousal, counters)
+- [ ] Absorb location state (locStack, venue flags, closing times)
+- [ ] Absorb flirt/action state (flirtcounter, checkedherout, etc.)
+- [ ] Remove remaining `declare let` from globals.d.ts → delete the file
+- [ ] Remove `expose*OnWindow()` bridges (no more bare global reads)
+- [ ] Add save/load API on gameState (serialize to JSON, restore from JSON)
 
 ---
 
@@ -129,6 +152,7 @@ Replaced `href="javascript:go(...)"` with `data-action` / `data-action-fn` attri
 - [] Add smoke test: load game → start → navigate each location
 - [ ] Remove jQuery dependency (only used for simple DOM ops)
 - [ ] Clean up dead code
+- [ ] Condense refactor changelogs below into a concise "current architecture" summary — the per-session changelogs have grown unwieldy; replace them with a compact overview of how the app works now, what patterns are used (expose bridges, delegated clicks, etc.), and key decisions made during migration
 
 ---
 
@@ -541,5 +565,75 @@ Migrated all 15 remaining script-style TS files into the esbuild IIFE app bundle
 ### Validation
 - **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)
 - **Build**: `node esbuild.config.mjs` emits single bundle (465.4kb) — no separate script outputs
+- **Tests**: `dotnet test` (UserFlowTests) passes (18/18 non-explicit tests)
+
+---
+
+## Changelog — Phase 3: Absorb shims.js into Bundle
+
+Converted `shims.js` (the last remaining `<script>`-loaded file) into a TS module within the app bundle. All global state variables, RNG system, and utility functions now live in `scripts/shims.ts` with the standard `exposeShimsOnWindow()` bridge.
+
+### scripts/shims.ts (NEW — replaces shims.js)
+- **35 mutable state variables** with typed exports: `locStack`, `money`, `thetime`, `hour`, `minute`, `meridian`, `late`, `playerbladder`, `attraction`, `shyness`, `flirtedflag`, `flirtcounter`, `noflirtflag`, `checkedherout`, `haveherpurse`, `owedfavor`, `changevenueflag`, `shopping`, `maxflirts`, `maxkiss`, `maxfeel`, `randmax`, `clubclosingtime`, `theaterclosingtime`, `barclosingtime`, `timespeed`, `didintro`, `lastmoney`, `lastattraction`, `lastshyness`, `settings`, `statsBars`, `showedneed`, `endScreens`, `randcounter`
+- **Seedable RNG system**: `setRandomSeed()`, `clearRandomSeed()`, `getRandomSeed()`, `gameRandom()`, `randomInt()` — identical LCG implementation with `?seed=` URL param support for deterministic Selenium tests
+- **Utility functions**: `pushloc()`, `poploc()`, `randomchoice()`, `incrandom()`, `pickrandom()`, `randomIndex()`, `range()`, `formatString()`, `formatAll()`, `printDialogue()`, `randomize()`
+- **Added `randomize()` implementation** (Fisher-Yates shuffle) — was declared in globals.d.ts but never defined (pre-existing bug)
+- **`printDialogue()` uses `(window as any).locjson`** to avoid circular dependency with quotes.ts
+- **Self-invoking bridge**: `exposeShimsOnWindow()` is called at module load time (bottom of file) so window globals are available before any other module in the bundle initializes
+
+### scripts/app.ts
+- **Added `import { exposeShimsOnWindow } from './shims'`** as first import
+- **Called `exposeShimsOnWindow()`** as first bridge call (idempotent with self-invocation)
+
+### index.html
+- **Removed `<script src="scripts/shims.js">` tag** — shims are now part of the bundle
+
+### scripts/globals.d.ts
+- **Updated section comments** to reflect shims.ts source (was "from shims.js")
+- **Kept `declare` statements** — still needed because bundled modules reference shims globals as bare names (resolved through window at runtime)
+
+### Validation
+- **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)
+- **Build**: `node esbuild.config.mjs` emits single bundle (472.5kb)
+- **Tests**: `dotnet test` (UserFlowTests) passes (18/18 non-explicit tests)
+
+---
+
+## Changelog — Phase 3b: Replace Bare-Global Functions/Constants with ES Imports
+
+Replaced all cross-module bare-global function and constant references with proper ES `import` statements across ~22 consumer files. Rewrote `globals.d.ts` to remove all function/const/interface/type declares — only mutable state remains. All 18 Selenium tests pass.
+
+### Import additions (~22 files)
+
+Every bundled TS module now imports the functions and constants it uses directly from their source modules, rather than relying on `window` globals set by `expose*OnWindow()` bridges. Examples of the heaviest importers:
+
+- **scripts/bladder.ts** — 8 import lines: quotes (13 functions + voccurse), shims (8 functions), backPackItems (5 functions), driveAround (nextstop), theBar (pdrinkinggame), theClub (doDance, pphotogame), yourbladder (displayyourneed), actions (kissher)
+- **scripts/herhome.ts** — 8 import lines: quotes (9 functions), shims (5 functions), bladder (8 functions), yourbladder (3 functions), backPackItems (3 functions), drive (leavehm), actions (kissher), fuckHer (theBedroom), main (gameOver)
+- **scripts/locations/theBar.ts** — 9 import lines: quotes (9 functions), shims (6 functions), bladder (11 functions/constants), yourbladder (5 functions/constants), backPackItems (4 functions/constants), actions (3 functions), games/darts (playDarts), drive (2 functions), locations (2 functions)
+- **scripts/backPackItems.ts** — 7 import lines: quotes (15 functions), shims (4 functions), bladder (5 functions), yourbladder (ypeein), pop-up (openPopUp), theBar (sellPanties), theClub (flirtBarGirl)
+
+Other files with new imports: validation.ts, clothes.ts, images.ts, drive.ts, store.ts, actions.ts, games/darts.ts, settings.ts, fuckHer.ts, yourbladder.ts, debugMenu.ts, main.ts, yourHome.ts, locations.ts, driveAround.ts, theClub.ts, theatre.ts, theMakeOut.ts, gameScreen/animationManager.ts, gameState/gameState.ts, gameState/Person.ts, helperFiles/helperFunctions.ts
+
+### scripts/main.ts
+- **Exported 4 functions**: `gameOver()`, `gameSexBoth()`, `gameWet()`, `gameWon()` — previously local, needed by fuckHer.ts and herhome.ts
+
+### scripts/locations/theMakeOut.ts
+- **Fixed pre-existing type error**: `let rand: number | boolean = 1;` (randomchoice returns boolean, was assigned to number var)
+
+### scripts/globals.d.ts — rewritten
+- **Removed all ~130 `declare function` entries** — now imported directly via ES modules
+- **Removed all ~10 `declare const` entries** — now imported directly
+- **Removed `String` interface augmentation** — now `declare global` in quotes.ts
+- **Removed `IBackpackItem` and `IDrink` interface declarations** — now exported from backPackItems.ts
+- **Removed `declare type person`** — now local type in debugMenu.ts
+- **Kept ~120 `declare let`/`declare var` entries** for mutable state variables shared via window bridges
+- **Kept 3 window-only function declares**: `cellphone` (local in yourHome.ts, exposed on window), `wrapAndFormatAll` (pre-existing bug, never defined), `GetRequiredElementById` (Document prototype extension)
+
+### Key discovery
+- **`pphotogame` is exported from theClub.ts**, not theBar.ts — initial analysis was wrong, caught via typecheck
+
+### Validation
+- **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)
+- **Build**: `node esbuild.config.mjs` emits single bundle (472.1kb)
 - **Tests**: `dotnet test` (UserFlowTests) passes (18/18 non-explicit tests)
 

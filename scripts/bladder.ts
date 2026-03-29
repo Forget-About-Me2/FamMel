@@ -1,3 +1,12 @@
+import { printList, printListSelection, printLList, printChoicesList, callChoice, sayText, c, cListener, cListenerGen, cListenerGenList, addSayText, addListenersList, voccurse } from './quotes';
+import { pickrandom, randomchoice, range, gameRandom, randomInt, incrandom, pushloc, poploc } from './shims';
+import { haveItem, backPackItems, displaydrank, holdpurse, giveHer } from './backPackItems';
+import { nextstop } from './locations/driveAround';
+import { pdrinkinggame } from './locations/theBar';
+import { doDance, pphotogame } from './locations/theClub';
+import { displayyourneed } from './yourbladder';
+import { kissher } from './actions';
+
 //This file contains all functions related to peeing
 //TODO organize this better
 

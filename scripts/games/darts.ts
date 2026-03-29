@@ -1,3 +1,8 @@
+import { formatAllVarsList, printList, sayText, cListenerGen, cListener, callChoice, addSayText, addListenersList } from '../quotes';
+import { range, randomchoice, pickrandom } from '../shims';
+import { showneed, displayneed, wetherself } from '../bladder';
+import { displayyourneed, wetyourself } from '../yourbladder';
+
 export function dartSetup(data: any){
     darts = data;
     darts["play"] = formatAllVarsList(darts["play"]);

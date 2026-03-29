@@ -1,6 +1,11 @@
 import { gameState, LocationCategory } from "./gameState/gameState";
 import { getLegacyBladderThresholds } from "./gameState/bladderThresholds";
 import { gameSettings } from "./settings/gameSettings";
+import { loadLocationScene, printIntro, printAlways, printChoices, printChoicesList, printSDialogue, sayText, c, handleFlirt, cListenerGenList, printList } from './quotes';
+import { pushloc, incrandom, randomchoice, formatString, printDialogue } from './shims';
+import { displaygottavoc, flushdrank, phoneholdthresh } from './bladder';
+import { displayyourneed, wetyourself } from './yourbladder';
+import { haveItem, backPackItems } from './backPackItems';
 
 //This contains everything you can do from your home before you pick-up your date
 

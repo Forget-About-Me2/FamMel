@@ -1,3 +1,7 @@
+import { callChoice, sayText, c, printList, cListenerGenList } from './quotes';
+import { pickrandom, incrandom } from './shims';
+import { haveSex } from './fuckHer';
+
 export function flirt_l() {
     let curtext = []
     shyness -= 1;

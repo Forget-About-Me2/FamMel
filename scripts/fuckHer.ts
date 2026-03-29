@@ -1,3 +1,10 @@
+import { formatAllVarsList, formatAllVars, printList, sayText, cListenerGen, cListenerGenList, callChoice } from './quotes';
+import { pickrandom, pushloc, poploc } from './shims';
+import { showneed, displayneed, flushdrank, holdit, allowpee } from './bladder';
+import { displayyourneed } from './yourbladder';
+import { kissher } from './actions';
+import { gameOver, gameWet, gameSexBoth, gameWon } from './main';
+
 // Fucking Parameters
 export let arousal = 0;
 export let kisscounter = 0;

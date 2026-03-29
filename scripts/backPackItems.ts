@@ -1,4 +1,12 @@
-interface IBackpackItem {
+import { printList, printListSelection, printAllChoicesList, callChoice, sayText, c, cListener, cListenerGenList, addListenersList, addSayText, addGirlTalk, formatAllVarsList, fetchJson, setText, handleFlirt } from './quotes';
+import { randomchoice, pickrandom, randomIndex, formatAll } from './shims';
+import { peein, displayneed, displayholdquip, indepee, showneed } from './bladder';
+import { ypeein } from './yourbladder';
+import { openPopUp } from './pop-up';
+import { sellPanties } from './locations/theBar';
+import { flirtBarGirl } from './locations/theClub';
+
+export interface IBackpackItem {
     bpName: string;
     price?: number;
     value: number;
@@ -32,7 +40,7 @@ interface IBackpackItem {
     [key: string]: any;
 }
 
-interface IDrink extends IBackpackItem
+export interface IDrink extends IBackpackItem
 {
     bottles?: number[];
     alhocolVolume: number; // TODO rename
@@ -45,7 +53,7 @@ interface IDrink extends IBackpackItem
     volume: number;
 }
 
-interface IContainer extends IBackpackItem{
+export interface IContainer extends IBackpackItem{
     volume?: number;
     peed?: number;
 }

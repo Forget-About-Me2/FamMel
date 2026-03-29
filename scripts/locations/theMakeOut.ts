@@ -1,4 +1,12 @@
-import { fetchJson } from '../quotes';
+import { fetchJson, printList, sayText, cListenerGen, cListenerGenList } from '../quotes';
+import { pickrandom, randomchoice, pushloc, poploc, formatAll } from '../shims';
+import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, gomakeoutthresh, hottubthresh, flushdrank } from '../bladder';
+import { displayyourneed, wetyourself, ypeeoutside, yPeeInTub } from '../yourbladder';
+import { standobjs, backPackItems } from '../backPackItems';
+import { kissher, feelup, checkherout } from '../actions';
+import { leavehm, driveout } from '../drive';
+import { lookAround } from '../locations';
+import { haveSex } from '../fuckHer';
 
 export let makeOut; //This stores the JSON quotes regarding the makeOut
 export let askedswim = 0; // She's asked about a swim
@@ -85,7 +93,7 @@ export function viewStars() {
     let curtext = printList([], stargazing);
     // s("You hold hands and stare into the sky together.");
     curtext = displayneed(curtext);
-    let rand = 1;
+    let rand: number | boolean = 1;
     if (playerbladder)
         rand = randomchoice(7);
     if (rand) {

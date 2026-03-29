@@ -1,3 +1,6 @@
+import { setText, imagedesc } from './quotes';
+import { setjpgimgs } from './settings';
+
 export let imgs = {
     Jennifer:{},
     Karen:{},

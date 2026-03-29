@@ -1,3 +1,9 @@
+import { printList, callChoice, sayText, c, cListenerGen, cListenerGenList } from './quotes';
+import { pickrandom, randomchoice } from './shims';
+import { displayneed, rrlockedthresh, rrlinethresh } from './bladder';
+import { haveItem, backPackItems, playOnly } from './backPackItems';
+import { theHotTub, theMakeOut } from './locations/theMakeOut';
+
 //Your bladder variables
 export let yourbladder = 500;
 export let yourtummy = 200;

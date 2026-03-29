@@ -2,6 +2,7 @@ import {gameSettings, PersonSettings} from "../settings/gameSettings";
 import {getRandomValueFromNormalDistribution} from "../helperFiles/helperFunctions";
 import {Person} from "./Person";
 import {getLegacyBladderThresholds} from "./bladderThresholds";
+import { randomInt } from "../shims";
 export enum LocationCategory {
     Start,
     Options,

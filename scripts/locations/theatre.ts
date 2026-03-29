@@ -1,4 +1,11 @@
-import { fetchJson } from '../quotes';
+import { fetchJson, printList, sayText, cListenerGen, cListenerGenList } from '../quotes';
+import { pickrandom, randomchoice, pushloc, poploc, formatAll } from '../shims';
+import { showneed, noteholding, interpbladder, wetherself, preventpee, holdit, allowpee } from '../bladder';
+import { displayyourneed, wetyourself, youpee } from '../yourbladder';
+import { standobjs, haveItem, buyItem, backPackItems } from '../backPackItems';
+import { kissher, feelup, checkherout } from '../actions';
+import { leavehm, driveout } from '../drive';
+import { itsClosed } from '../locations';
 
 export let theatre; //Json with quotes for theatre
 export let rrMovieLineThresh = 7; // Likelihood of line for restroom in the movie theatre.

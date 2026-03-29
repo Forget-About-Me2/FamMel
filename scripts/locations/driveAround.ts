@@ -1,4 +1,9 @@
-import { fetchJson } from '../quotes';
+import { fetchJson, printList, callChoice, sayText, cListenerGen, cListenerGenList, addSayText, c } from '../quotes';
+import { randomchoice } from '../shims';
+import { showneed, displayneed, wetherself, preventpee } from '../bladder';
+import { displayyourneed, wetyourself, ypeein } from '../yourbladder';
+import { standobjs, haveItem } from '../backPackItems';
+import { driveout } from '../drive';
 
 let driveRound; //JSON quotes for location
 

@@ -1,4 +1,12 @@
-import { fetchJson, fetchAndCacheJson } from './quotes';
+import { fetchJson, fetchAndCacheJson, getMLocations, printList, sayText, cListenerGen, cListenerGenList, addSayText, voccurse } from './quotes';
+import { pushloc, poploc, pickrandom, randomchoice, randomize } from './shims';
+import { showneed, displayneed, displaygottavoc, noteholding, preventpee, flushdrank, allowpee, wetherself } from './bladder';
+import { displayyourneed, wetyourself, youpee } from './yourbladder';
+import { standobjs, haveItem, backPackItems } from './backPackItems';
+import { leavehm } from './drive';
+import { kissher } from './actions';
+import { theBedroom } from './fuckHer';
+import { gameOver } from './main';
 
 // All functions connected to her house. This is both pickup and endgame
 export let herHome; //Json with quotes for herHome.

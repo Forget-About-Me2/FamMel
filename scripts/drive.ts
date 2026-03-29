@@ -1,3 +1,9 @@
+import { printChoicesList, printIntro, printAlways, sayText, locationMCSetup } from './quotes';
+import { pickrandom, incrandom, randomchoice, pushloc, printDialogue } from './shims';
+import { showneed, displayneed } from './bladder';
+import { displayyourneed } from './yourbladder';
+import { updateSuggestedLocation, printLocationMenu } from './locations';
+
 export let wetthecar = 0; // Seat of the car is wet
 
 //

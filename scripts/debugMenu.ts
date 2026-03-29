@@ -1,3 +1,10 @@
+import { backPackItems } from './backPackItems';
+import { gameState } from './gameState/gameState';
+import { go } from './main';
+import { theYard, exitYard, theWalk } from './locations/theMakeOut';
+import { openPopUp } from './pop-up';
+import { getRandomSeed } from './shims';
+
 //These are functions that might regularly be used to debug the code.
 //Functions are added as needed
 
@@ -177,6 +184,14 @@ export function CreateValueRow(table: HTMLTableElement, label: string, value: st
     row.insertCell().innerText = label;
     row.insertCell().innerText = value;
 }
+
+type person = {
+    bladderUrge: number;
+    bladderNeed: number;
+    bladderEmer: number;
+    bladderLose: number;
+    [key: string]: any;
+};
 
 export function CreatePersonRows(person: person | undefined, tag : string, table: HTMLTableElement){
     let row = table.insertRow();

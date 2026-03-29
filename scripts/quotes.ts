@@ -1,5 +1,20 @@
 //TODO make a more general function for handling curtext
 
+// String prototype extensions — augment the global String interface
+// so TypeScript accepts .format() and .formatVars() calls everywhere.
+import { formatString, range, pickrandom, incrandom, randomInt } from './shims';
+import { validateListenerList } from './validation';
+import { dartSetup } from './games/darts';
+import { fuckHerSetup } from './fuckHer';
+import { flirt_l, flirt_m, flirt_h } from './actions';
+
+declare global {
+    interface String {
+        format(...args: any[]): string;
+        formatVars(): string;
+    }
+}
+
 export let calledjsons: any = {}; //Cache of fetched JSON files, keyed by tag name
 
 // Delegated click handler: maps action IDs to function callbacks.

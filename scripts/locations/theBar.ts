@@ -1,4 +1,12 @@
-import { fetchJson } from '../quotes';
+import { fetchJson, printList, sayText, cListener, cListenerGen, cListenerGenList, addListenersList, addSayText, callChoice } from '../quotes';
+import { pickrandom, randomchoice, randomIndex, randomInt, pushloc, poploc } from '../shims';
+import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, flushdrank, drinkinggamethreshold, askcanhold, pstory } from '../bladder';
+import { displayyourneed, wetyourself, youpee, flushyourdrank, holdpeethresh } from '../yourbladder';
+import { standobjs, haveItem, buyItem, backPackItems } from '../backPackItems';
+import { kissher, feelup, checkherout } from '../actions';
+import { playDarts } from '../games/darts';
+import { leavehm, driveout } from '../drive';
+import { lookAround, itsClosed } from '../locations';
 
 export let bar;
 export let bartopic = 0; // Topics of discussion at the bar.

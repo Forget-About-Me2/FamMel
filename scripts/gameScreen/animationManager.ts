@@ -3,6 +3,7 @@ import { ImageType } from "../settings/imageType";
 import { BladderState } from "../gameState/bladderState";
 import { getLegacyBladderThresholds } from "../gameState/bladderThresholds";
 import { gameState } from "../gameState/gameState";
+import { randomInt } from "../shims";
 import { imageManager } from "./imageManager";
 
 /**

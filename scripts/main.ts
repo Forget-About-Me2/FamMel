@@ -5,6 +5,8 @@ import {yourHome} from './yourHome';
 import {gameScreen} from "./gameScreen/gameScreen";
 import { animationManager } from "./gameScreen/animationManager";
 import { setupQuotes, fetchAndCacheJson, locationSetup, locjson, printAllChoices, sayText, printList, setText, fetchJson } from "./quotes";
+import { pushloc, poploc, randomInt } from './shims';
+import { setup } from './settings';
 
 /**
  * Main program loop that handles location transitions and game state updates
@@ -257,7 +259,7 @@ export async function start() {
     sayText(curtext);
 }
 
-function gameOver() {
+export function gameOver() {
     setText(endScreens["gameOver"]);
 }
 
@@ -266,7 +268,7 @@ function gameOver() {
 
 //TODO maybe combine the game ending function into one
 //Basically you got her into bed but not desperate
-function gameSexBoth(){
+export function gameSexBoth(){
     let curtext = printList([], endScreens["gameSexBoth"]);
     curtext = printList(curtext, endScreens["stats"]);
     setText(curtext);
@@ -277,13 +279,13 @@ function gameSexYou(){
 //TODO
 }
 
-function gameWet() {
+export function gameWet() {
     let curtext = printList([], endScreens["gameWet"]);
     curtext = printList(curtext, endScreens["stats"]);
     setText(curtext);
 }
 
-function gameWon() {
+export function gameWon() {
     let curtext = printList([], endScreens["gameWon"]);
     curtext = printList(curtext, endScreens["stats"]);
     setText(curtext);
