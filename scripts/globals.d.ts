@@ -209,9 +209,7 @@ declare var gameScreen: any;
 // ============================================================================
 // Window-only functions (not exported from any module)
 // cellphone — local function in yourHome.ts, exposed on window
-// wrapAndFormatAll — called but never defined; pre-existing bug
 // GetRequiredElementById — Document prototype extension, exposed on window by app.ts
 // ============================================================================
 declare function cellphone(): void;
-declare function wrapAndFormatAll(template: any, values: any): any;
 declare function GetRequiredElementById<T extends HTMLElement>(id: string): T;

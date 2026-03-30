@@ -809,74 +809,106 @@ export function getAmountOwned(selected) {
     return description;
 }
 
-//TODO combine the if statements from dink/beer/cocktail/soda
-export function drinkNow(item) {
-    //Closes the backpack since a function has been chosen
-    const backpackcnt = document.GetRequiredElementById<HTMLElement>("pop-up");
-    backpackcnt.style.display = "none";
-    let curtext: any[] = [];
-    if (((tummy > maxtummy && (item !== "beer"|| tummy > maxbeer)) && item !== "cocktail")||
+type DrinkMode = 'her' | 'you' | 'together';
+
+function doesCompanionRefuseDrink(item: string): boolean {
+    return ((tummy > maxtummy && (item !== "beer" || tummy > maxbeer)) && item !== "cocktail") ||
         (attraction < 10 && bladder > bladneed) ||
-        (attraction < 20 && bladder > blademer)) {
-        curtext.push(girltalk + "I just don't feel thirsty right now.");
+        (attraction < 20 && bladder > blademer);
+}
+
+function generateDrinkQuotes(curtext: any[], drink: IBackpackItem, mode: DrinkMode): any[] {
+    if (mode !== 'you' && bladder > blademer && shyness < 90 && brokeice) {
+        curtext.push(pickrandom(needs["drinkquote"]));
+        const verb = mode === 'her' ? "She drinks the " : "You both drink your ";
+        curtext.push(verb + drink.bpName.toLowerCase() + ".");
     } else {
-        let drink = backPackItems[item];
-        if (bladder > blademer && shyness < 90 && brokeice) {
-            curtext.push(pickrandom(needs["drinkquote"]));
-            curtext.push("She drinks the " + (drink.bpName.toLowerCase()) + ".");
+        const customQuoteProp = mode === 'her' ? 'cDrinkQuote' : mode === 'you' ? 'cYouDrinkQuote' : 'cTogDrinkQuote';
+        if (drink[customQuoteProp]) {
+            if (mode === 'you') {
+                curtext = printList(curtext, drink[customQuoteProp]);
+            } else {
+                curtext = printList(curtext, addGirlTalk(drink[customQuoteProp]));
+            }
         } else {
-            if (drink.cDrinkQuote) {
-                curtext = printList(curtext, addGirlTalk(drink.cDrinkQuote));
+            if (mode === 'you') {
+                curtext.push(drink.yDrinkQuote != null ? drink.yDrinkQuote : "<b>YOU: </b>" + drink.drinkQuote);
+                curtext.push("You drink the " + drink.bpName.toLowerCase() + ".");
             } else {
                 curtext.push(girltalk + drink.drinkQuote);
-                curtext.push("She drinks the " + drink.bpName.toLowerCase() + ".");
+                const verb = mode === 'her'
+                    ? "She drinks the "
+                    : "After a toast you both drink your ";
+                curtext.push(verb + drink.bpName.toLowerCase() + ".");
             }
         }
+    }
+    return curtext;
+}
+
+function applyDrinkStats(drink: IBackpackItem, mode: DrinkMode) {
+    const herDrinks = mode === 'her' || mode === 'together';
+    const youDrink = mode === 'you' || mode === 'together';
+
+    if (herDrinks) {
         tummy += drink.volume ?? 0;
-        drink.value -= 1;
         drink.sheDrank = (drink.sheDrank ?? 0) + 1;
         drankbeer += drink.drankBeer ?? 0;
         attraction += drink.attraction ?? 0;
         shyness -= drink.shyness ?? 0;
-        if (drink.tumInc && maxtummy < 1250) {
+    }
+    if (youDrink) {
+        yourtummy += drink.volume ?? 0;
+        drink.yDrank = (drink.yDrank ?? 0) + 1;
+        ydrankbeer += drink.drankBeer ?? 0;
+    }
+
+    drink.value -= mode === 'together' ? 2 : 1;
+
+    const tumIncCap = mode === 'together' ? 1000 : 1250;
+    if (drink.tumInc) {
+        if (herDrinks && maxtummy < tumIncCap) {
             maxtummy += drink.tumInc;
             maxbeer += drink.tumInc;
         }
+        if (youDrink && ymaxtummy < tumIncCap) {
+            ymaxtummy += drink.tumInc;
+            ymaxbeer += drink.tumInc;
+        }
+    }
+}
+
+function executeDrink(item: string, mode: DrinkMode) {
+    const backpackcnt = document.GetRequiredElementById<HTMLElement>("pop-up");
+    backpackcnt.style.display = "none";
+    let curtext: any[] = [];
+    const drink = backPackItems[item];
+
+    const refused = mode === 'you'
+        ? (item !== "cocktail" && (yourtummy > ymaxtummy && yourtummy > ymaxbeer))
+        : doesCompanionRefuseDrink(item);
+
+    if (refused) {
+        curtext.push(mode === 'you'
+            ? "You consider drinking the " + drink.bpName.toLowerCase() + ", but you have drunk way too much already."
+            : girltalk + "I just don't feel thirsty right now.");
+    } else {
+        curtext = generateDrinkQuotes(curtext, drink, mode);
+        applyDrinkStats(drink, mode);
     }
     curtext = c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
 }
 
-export function yDrinkNow(item){
-    //Closes the backpack since a function has been chosen
-    const backpackcnt = document.GetRequiredElementById<HTMLElement>("pop-up");
-    backpackcnt.style.display = "none";
-    let drink = backPackItems[item];
-    let curtext: any[] = [];
-    if (item !== "cocktail" && (yourtummy > ymaxtummy && yourtummy > ymaxbeer)){
-        curtext.push("You consider drinking the " + drink.bpName.toLowerCase() + ", but you have drunk way too much already.");
-    } else {
-        if (drink.cYouDrinkQuote) {
-            curtext = printList(curtext, drink.cYouDrinkQuote);
-        } else {
-            if (drink.hasOwnProperty("yDrinkQuote"))
-                curtext.push(drink.yDrinkQuote);
-            else
-                curtext.push("<b>YOU: </b>" + drink.drinkQuote);
-            curtext.push("You drink the " + drink.bpName.toLowerCase() + ".");
-        }
-        yourtummy += drink.volume ?? 0;
-        drink.value -= 1;
-        drink.yDrank = (drink.yDrank ?? 0) + 1;
-        ydrankbeer += drink.drankBeer ?? 0;
-        if (drink.tumInc && ymaxtummy < 1250) {
-            ymaxtummy += drink.tumInc;
-            ymaxbeer += drink.tumInc;
-        }
-    }
-    curtext = c([locStack[0], "Continue..."], curtext);
-    sayText(curtext);
+//TODO combine the if statements from dink/beer/cocktail/soda
+export function drinkNow(item) {
+    executeDrink(item, 'her');
 }
+
+export function yDrinkNow(item) {
+    executeDrink(item, 'you');
+}
+
 
 export let homeChampagne = 0; //Flag whether champagne has been drunk at her home before (aka whether she needs to get the glasses)
 //TODO turn into JSON
@@ -938,50 +970,8 @@ export function champagneNow() {
     sayText(curtext);
 }
 
-export function drinkTogether(item){
-    //Closes the backpack since a function has been chosen
-    const backpackcnt = document.GetRequiredElementById<HTMLElement>("pop-up");
-    backpackcnt.style.display = "none";
-    let curtext: any[] = [];
-    if (((tummy > maxtummy && (item !== "beer"|| tummy > maxbeer)) && item !== "cocktail")||
-        (attraction < 10 && bladder > bladneed) ||
-        (attraction < 20 && bladder > blademer)) {
-        curtext.push(girltalk + "I just don't feel thirsty right now.");
-    } else {
-        let drink = backPackItems[item];
-        if (bladder > blademer && shyness < 90 && brokeice) {
-            curtext.push(pickrandom(needs["drinkquote"]));
-            curtext.push("You both drink your " + (drink.bpName.toLowerCase()) + ".");
-        } else {
-            if (drink.cTogDrinkQuote) {
-                curtext = printList(curtext, addGirlTalk(drink.cTogDrinkQuote));
-            } else {
-                curtext.push(girltalk + drink.drinkQuote);
-                curtext.push("After a toast you both drink your " + drink.bpName.toLowerCase() + ".");
-            }
-        }
-        tummy += drink.volume ?? 0;
-        yourtummy += drink.volume ?? 0;
-        drink.value -= 2;
-        drink.sheDrank = (drink.sheDrank ?? 0) + 1;
-        drink.yDrank = (drink.yDrank ?? 0) + 1;
-        drankbeer += drink.drankBeer ?? 0;
-        ydrankbeer += drink.drankBeer ?? 0;
-        attraction += drink.attraction ?? 0;
-        shyness -= drink.shyness ?? 0;
-        if (drink.tumInc) {
-            if (maxtummy < 1000) {
-                maxtummy += drink.tumInc;
-                maxbeer += drink.tumInc;
-            }
-            if (ymaxtummy < 1000) {
-                ymaxtummy += drink.tumInc;
-                ymaxbeer += drink.tumInc;
-            }
-        }
-    }
-    curtext = c([locStack[0], "Continue..."], curtext);
-    sayText(curtext);
+export function drinkTogether(item) {
+    executeDrink(item, 'together');
 }
 
 export function exposeBackPackItemsOnWindow() {

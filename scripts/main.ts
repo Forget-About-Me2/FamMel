@@ -192,41 +192,6 @@ export function go(location: unknown) {
     console.error("Invalid location passed to go():", location);
 }
 
-//TODO potentially use this to choose quotes instead of randomchoice
-/**
- * Picks a random element from the given array.
- * @template T The type of elements in the array
- * @param {T[]} array The input array to pick from
- * @returns {T} A randomly selected element from the array
- * @throws {Error} If the array is empty
- */
-function pickRandom<T>(array: T[]): T {
-    if (!array.length) {
-        throw new Error('Cannot pick from an empty array');
-    }
-    const index = randomInt(array.length);
-    return array[index];
-}
-
-
-//Picks a random index from a list.
-function randomIndex(list : []){
-    return randomInt(list.length);
-}
-
-//Randomizes the given list
-function shuffle<T>(array: T[]): T[] {
-    const copy = [...array]; // Using spread operator instead of custom deep copy
-
-    // Fisher-Yates (Knuth) shuffle algorithm
-    for (let i = copy.length - 1; i > 0; i--) {
-        const j = randomInt(i + 1);
-        [copy[i], copy[j]] = [copy[j], copy[i]]; // swap elements
-    }
-
-    return copy;
-}
-
 //This sets the game up when you click start
 export async function gamestart(){
     if (!gameSettings.PlayerBladder) {
@@ -273,9 +238,9 @@ export function gameSexBoth(){
     setText(curtext);
 }
 
-//It's just who who came. You selfish bastard
+//TODO It's just you who came. You selfish bastard
 function gameSexYou(){
-//TODO
+    //TODO implement
 }
 
 export function gameWet() {

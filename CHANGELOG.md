@@ -1,6 +1,7 @@
 # version 0.6.0
 * Add debug menu
 * Refactor codebase to use typescript
+* Fix crash in darts minigame when scoring points
 
 # version 0.5.5
 * Fix selection of custom girl in settings

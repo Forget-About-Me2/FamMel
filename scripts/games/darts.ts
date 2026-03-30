@@ -1,4 +1,4 @@
-import { formatAllVarsList, printList, sayText, cListenerGen, cListener, callChoice, addSayText, addListenersList } from '../quotes';
+import { formatAllVarsList, printList, sayText, cListenerGen, cListener, callChoice, addSayText, addListenersList, wrapAndFormatAll } from '../quotes';
 import { range, randomchoice, pickrandom } from '../shims';
 import { showneed, displayneed, wetherself } from '../bladder';
 import { displayyourneed, wetyourself } from '../yourbladder';

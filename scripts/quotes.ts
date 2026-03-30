@@ -110,6 +110,11 @@ String.prototype.formatVars = function() {
 
 }
 
+//Formats each template string with its corresponding value from the values array
+export function wrapAndFormatAll(template: any[], values: any[]): string[] {
+    return template.map((str: string, i: number) => str.format([values[i]]));
+}
+
 //Formats all Strings in exprList to add the variables
 export function formatAllVars(exprList: any[]){
     let result = [] as any[];
