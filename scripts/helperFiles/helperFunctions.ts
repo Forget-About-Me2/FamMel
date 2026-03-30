@@ -1,5 +1,17 @@
 import { randomInt } from "../shims";
 
+/**
+ * Asserts that a value is not null or undefined, returning it narrowed.
+ * Use at code paths where the value is expected to exist (e.g. item properties
+ * that should always be defined for items reaching that function).
+ */
+export function assertExists<T>(value: T | null | undefined, message: string): T {
+    if (value == null) {
+        throw new Error(`Assertion failed: ${message}`);
+    }
+    return value;
+}
+
 export function range(start: number, end: number): number[] {
     if (start === end) return [start];
     return [start, ...range(start + 1, end)];

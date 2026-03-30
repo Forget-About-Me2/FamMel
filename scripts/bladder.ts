@@ -7,6 +7,7 @@ import { doDance, pphotogame } from './locations/theClub';
 import { displayyourneed } from './yourbladder';
 import { kissher } from './actions';
 import { gameState } from './gameState/gameState';
+import { assertExists } from './helperFiles/helperFunctions';
 
 //This file contains all functions related to peeing
 //TODO organize this better
@@ -876,7 +877,7 @@ export function peein(item: string) {
 export function peein2(item: string) {
     let curtext: any[] = [];
     //print quote depending on the panties she wears.
-    const quoteKey = backPackItems[item].quote ?? "";
+    const quoteKey = assertExists(backPackItems[item].quote, `Item '${item}' is missing pee quote key`);
     if (pantycolor !== "none")
         curtext.push(appearance["clothes"][heroutfit][quoteKey].format([pantycolor]));
     else

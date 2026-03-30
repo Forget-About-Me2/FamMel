@@ -5,6 +5,7 @@ import { ypeein } from './yourbladder';
 import { openPopUp } from './pop-up';
 import { sellPanties } from './locations/theBar';
 import { flirtBarGirl } from './locations/theClub';
+import { assertExists } from './helperFiles/helperFunctions';
 
 export interface IBackpackItem {
     bpName: string;
@@ -680,7 +681,7 @@ export function giveHer(item){
     backpackcnt.style.display = "none";
     const obj = backPackItems[item];
     obj.value -= 1;
-    const quotes = formatAllVarsList(obj.giveQuotes ?? []);
+    const quotes = formatAllVarsList(assertExists(obj.giveQuotes, `Item '${item}' is missing giveQuotes`));
     let curtext = printList([], quotes[0]);
     const listenerList: any[] = [];
 
@@ -746,7 +747,7 @@ export function selectitem(selecteditem){
     let tobeprinted = "<p class='title'>"+ clickedObj.bpName +"</p>";
     if(clickedObj.owned)
         tobeprinted += "<b><i>You have " + getAmountOwned(clickedObj) + "</i></b><br><br>";
-    tobeprinted += (clickedObj.description ?? "").format([girlname]);
+    tobeprinted += assertExists(clickedObj.description, `Item '${selecteditem}' is missing description`).format([girlname]);
     if (!noItemLoc.includes(locStack[0]) && locStack.length !== 0 && clickedObj.functions && allowItems){
         if (!clickedObj.locations && !clickedObj.banLocs?.includes(locStack[0])){
             //If the girl isn't with you, you can't ask her to use a certain item
