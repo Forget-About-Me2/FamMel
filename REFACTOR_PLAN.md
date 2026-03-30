@@ -163,7 +163,7 @@ Move module-scoped `let` variables into `gameState` properties, updating all ref
 ## Phase 4 — Polish & Testing
 
 - [x] Wire up Selenium tests (PickherupTest, RandomSeedDeterminismTest)
-- [ ] Add smoke test: load game → start → navigate each location
+- [x] Add smoke test: load game → start → navigate each location
 - [x] Replace required `document.getElementById(...)` call sites with `document.GetRequiredElementById(...)` where the element is expected to exist; keep nullable lookups only where absence is a valid runtime state (quotes.ts, backPackItems.ts, bladder.ts, settings.ts)
 - [x] Replace temporary `any` escape hatches with narrower types — `backPackItems` map restored to `IBackpackItem`; all `!` assertions replaced with proper narrowing (`?? 0`, truthiness checks, optional chaining, local variable extraction)
 - [x] Remove jQuery dependency — replaced `$()` radio queries in images.ts with `querySelector`, replaced `$.ajax()` in changeLogPopUp.ts with `fetch()`, removed jQuery from index.html and package.json
@@ -756,3 +756,20 @@ Replaced `document.getElementById(...)!` with `document.GetRequiredElementById<T
 - **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)
 - **Build**: `node esbuild.config.mjs` emits bundle (480.0kb)
 - **Tests**: `dotnet test` (UserFlowTests) passes (20/20 non-explicit tests)
+
+---
+
+## Changelog — Phase 4: Navigation Smoke Tests
+
+Added `NavigationSmokeTests.cs` — tests the full `go()` routing pipeline (routing, time/state processing, UI rendering) by navigating to each location through the game's normal navigation system, complementing `SceneIntegrationSmokeTests` which invokes scene functions directly.
+
+### UserFlowTests/NavigationSmokeTests.cs (NEW)
+- **`FullNavigation_StartGame_ThenVisitAllLocations_WithoutErrors`** — starts game normally, then navigates to all 9 locations via `go()` in sequence, verifying text render and no runtime errors at each stop
+- **`GoNavigation_Individual_RendersWithoutErrors` (×9 parameterized)** — isolated test per location: yourhome, callher, gostore, herhome, driveAround, theTheatre, theClub, thebar, theMakeOut
+- **`GoBack_ReturnsToYourHome_WithoutErrors`** — navigates to store then back via `go("goback")`, verifying locStack pop resolves correctly
+- **`GoGamestart_ThenYourHome_NavigationChain_WithoutErrors`** — full UI flow: click "Start the game" → wait for gamestart/yourHome render → verify locStack state
+
+### Validation
+- **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)
+- **Build**: `node esbuild.config.mjs` emits bundle (479.4kb)
+- **Tests**: `dotnet test` (UserFlowTests) passes (32/32 non-explicit tests)
