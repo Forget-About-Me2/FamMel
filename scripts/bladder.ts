@@ -332,36 +332,34 @@ export function interpbladder(curtext: any[]): any[] {
     return curtext;
 }
 
+const BEDROOM_LOCATIONS = ["thebedroom", "theBedroom"];
+const HOME_LOCATIONS = ["thehome", ...BEDROOM_LOCATIONS, "fuckher6"];
+const NO_RESTROOM_LOCATIONS = ["theMakeOut", "theHotTub", "driveout", "thehome", ...BEDROOM_LOCATIONS, "theWalk", "theYard", "theBeach"];
+const OUTDOOR_NO_RESTROOM = ["theWalk", "theYard", "theBeach", "theHotTub"];
+const DESPERATE_PEE_OFFSET = 25; // bladder within this margin of bladlose triggers desperate text
+
 //TODO lose control when bursting on the way
 export function indepee(curtext: any[] = [], called: boolean = false) {
     gottagoflag = 0;
     const currentLocation = locStack[0];
 
-    const homeLocations = ["thehome", "thebedroom", "pickup", "fuckher6"];
-    const outdoorLocations = ["theMakeOut", "theHotTub", "driveout", "thehome", "thebedroom", "theWalk", "theYard", "theBeach"];
-    const noRestroomHeading = peelines["noneavailable"][0]; // girlname reference
-    const noRestroomMakeOut = peelines["noneavailable"][1]; // "no restroom in the boonies"
-    const noRestroomCar = peelines["noneavailable"][2];     // "no restroom in the car"
-    const noRestroomGeneric = peelines["noneavailable"][3]; // "no restroom around"
-    const headsToBathroom = peelines["thehome"][0];         // girlname reference
-    const peesLoudly = peelines["thehome"][1];              // full pee description
-    const peesQuietly = peelines["thehome"][2];             // brief pee description
+    const [noRestroomHeading, noRestroomMakeOut, noRestroomCar, noRestroomGeneric] = peelines["noneavailable"];
+    const [headsToBathroom, peesLoudly, peesQuietly] = peelines["thehome"];
 
+    // Part 1: Heading text — what does she say/do on the way to the bathroom?
     //TODO the locstack aren't compeltely correct
     if (haveherpurse) {
         haveherpurse = 0;
-    } else if (currentLocation === "thehome" ||
-        currentLocation === "thebedroom" ||
-        currentLocation === "pickup" ||
-        currentLocation === "fuckher6") {
+    } else if (HOME_LOCATIONS.includes(currentLocation) || currentLocation === "pickup") {
         curtext.push(headsToBathroom);
-    } else if (outdoorLocations.includes(currentLocation)) {
+    } else if (NO_RESTROOM_LOCATIONS.includes(currentLocation)) {
         curtext.push(noRestroomHeading);
-    } else
+    } else {
         curtext = printList(curtext, peelines["remaining"]);
-    if ((currentLocation === "theBar" && randomchoice(rrlockedthresh)) ||
-        ((currentLocation === "theClub" || currentLocation === "doDance") && randomchoice(rrlinethresh)) ||
-        (currentLocation === "theTheatre" && randomchoice(rrMovieLineThresh) || currentLocation === "domovie" && randomchoice(rrMovieLineThresh))) {
+    }
+
+    // Part 2: What actually happens — can she use the bathroom?
+    if (isBathroomLocked(currentLocation)) {
         curtext = bathroomlocked(curtext);
     } else if (currentLocation === "theMakeOut") {
         curtext.push(noRestroomMakeOut);
@@ -369,35 +367,40 @@ export function indepee(curtext: any[] = [], called: boolean = false) {
     } else if (currentLocation === "driveout") {
         curtext.push(noRestroomCar);
         curtext = displayneed(curtext);
-    } else if (currentLocation === "theWalk" || currentLocation === "theYard" || currentLocation === "theBeach" || currentLocation === "theHotTub") {
+    } else if (OUTDOOR_NO_RESTROOM.includes(currentLocation)) {
         curtext.push(noRestroomGeneric);
         curtext = displayneed(curtext);
         curtext = interpbladder(curtext);
-    } else if (currentLocation === "thehome" ||
-        currentLocation === "thebedroom" ||
-        currentLocation === "fuckher6") {
+    } else if (HOME_LOCATIONS.includes(currentLocation)) {
         curtext.push(peesLoudly);
         flushdrank();
     } else if (currentLocation === "pickup") {
         curtext.push(peesQuietly);
         flushdrank();
     } else {
-        if (bladder > bladlose - 25)
-            curtext.push(pickrandom(appearance["clothes"][heroutfit]["peeprivate"]));
-        else
-            curtext.push(pickrandom(appearance["clothes"][heroutfit]["peeprivate2"]));
-        attraction -= 2;
+        // Indoor venue with a restroom — she excuses herself to go
+        const clothesKey = bladder > bladlose - DESPERATE_PEE_OFFSET ? "peeprivate" : "peeprivate2";
+        curtext.push(pickrandom(appearance["clothes"][heroutfit][clothesKey]));
         flushdrank();
     }
-    if (bladder >= bladlose - 25 && locStack[0] !== "thehottub") curtext = begtoilet(curtext);
-    else {
+
+    if (bladder >= bladlose - DESPERATE_PEE_OFFSET && locStack[0] !== "thehottub")
+        curtext = begtoilet(curtext);
+    else
         curtext = c([locStack[0], "Continue..."], curtext);
-    }
+
     //If the function has been called by another function, send the result back otherwise print it yourself
     if (called)
         return curtext;
     else
         sayText(curtext);
+}
+
+/** Check if the bathroom at the current location is randomly locked/occupied. */
+function isBathroomLocked(location: string): boolean {
+    return (location === "theBar" && randomchoice(rrlockedthresh)) ||
+        ((location === "theClub" || location === "doDance") && randomchoice(rrlinethresh)) ||
+        ((location === "theTheatre" || location === "domovie") && randomchoice(rrMovieLineThresh));
 }
 
 //TODO your and her bathroomlocked can probably be intertwened, only difference is start and the locked variable
@@ -435,41 +438,21 @@ export function bathroomlocked(curtext: any[]): any[] {
 
 //  Displayneed function prints a relatively random
 //  indication of her level of pee urgency.
+const SEATED_LOCATIONS = ["themakeout", "driveout", "drivearound", "domovie"];
+
 export function displayneed(curtext: any[]): any[] {
     showedneed = 1;
-    if (locStack[0] === "themakeout" || locStack[0] === "driveout" ||
-        locStack[0] === "drivearound" || locStack[0] === "domovie" ||
-        locStack[0] === "thebed" || fuckingnow > 0) {
-        if (bladder >= bladlose) {
-            curtext.push(needs["sitneedlose"][randcounter]);
-        } else if (bladder > blademer) {
-            curtext.push(needs["sitneedemer"][randcounter]);
-        } else if (bladder > bladneed) {
-            curtext.push(needs["sitneed"][randcounter]);
-        } else if (bladder > bladurge) {
-            curtext.push(needs["sitneedurge"][randcounter]);
-        }
-    } else if (locStack[0] === "thehottub") {
-        if (bladder >= bladlose) {
-            curtext.push(needs["tubneedlose"][randcounter]);
-        } else if (bladder > blademer) {
-            curtext.push(needs["tubneedemer"][randcounter]);
-        } else if (bladder > bladneed) {
-            curtext.push(needs["tubneed"][randcounter]);
-        } else if (bladder > bladurge) {
-            curtext.push(needs["tubneedurge"][randcounter]);
-        }
-    } else {
-        if (bladder >= bladlose) {
-            curtext.push(needs["needlose"][randcounter]);
-        } else if (bladder > blademer) {
-            curtext.push(needs["needemer"][randcounter]);
-        } else if (bladder > bladneed) {
-            curtext.push(needs["need"][randcounter]);
-        } else if (bladder > bladurge) {
-            curtext.push(needs["needurge"][randcounter]);
-        }
-    }
+    // Pick the quote prefix based on whether she's seated, in the tub, or standing
+    const prefix = (SEATED_LOCATIONS.includes(locStack[0]) || fuckingnow > 0) ? "sit"
+        : locStack[0] === "thehottub" ? "tub"
+        : "";
+    const needKey =
+        bladder >= bladlose ? `${prefix}needlose` :
+        bladder > blademer  ? `${prefix}needemer` :
+        bladder > bladneed  ? `${prefix}need` :
+        bladder > bladurge  ? `${prefix}needurge` :
+        null;
+    if (needKey) curtext.push(needs[needKey][randcounter]);
     incrandom();
     return curtext;
 }
@@ -780,7 +763,7 @@ export function allowpee(): void {
     const [allowResponse, allowRelief, allowOfferPurse] = needs["allowpee"];
     curtext.push(allowResponse);
     curtext.push(allowRelief);
-    if (locStack[0] === "fuckher6" || locStack[0] === "thehome" || locStack[0] === "thebedroom" || locStack[0] === "darkbar"
+    if (locStack[0] === "fuckher6" || locStack[0] === "thehome" || BEDROOM_LOCATIONS.includes(locStack[0]) || locStack[0] === "darkbar"
         || locStack[0] === "pickup" || locStack[0] === "darkclub" || locStack[0] === "darkbar") {
         listenerList.push([[indepee, "Continue..."], "indePee"]);
     } else {

@@ -396,7 +396,7 @@ export const herpurse = {
 }
 
 //List of locations where there is never an opportunity to use an item
-export const noItemLoc = ["start2", "beachsex", "tubsex", "pnorestroom", "thebed"]
+export const noItemLoc = ["start2", "beachsex", "tubsex", "pnorestroom", "theBedroom"]
 
 //List of locations where just the playerrelated options work
 export const playOnly = ["yourhome", "gostore", "callher"]
@@ -454,51 +454,55 @@ export function backpack(){
     itemtext.innerHTML = "";
 }
 
+const WET_PANTIES_QUOTE_INDEX = 3; // bartender reacts to wet panties on this quote
+
 export function buyItem(item){
-    let html = printList([], objQuotes["buyItem"]);
-    let formatList = [[item],[], []];
-    let temp = [item, item];
-    let obj = backPackItems[item];
+    const obj = backPackItems[item];
     let value = 1;
     let price = obj.price ?? 0;
-    temp.push(displaypos(obj, value, true));
-    formatList.push(temp);
-    formatList.push([price]);
-    formatList.push([]);
-    formatList.push([]);
-    formatList.push([]);
-    html = formatAll(html, formatList);
-    setText(html);
-    const itemElem = document.GetRequiredElementById<HTMLInputElement>(item+"Am");
-    let listenerList: any[] = [];
-    if (item === "beer"){
+    const html = objQuotes["buyItem"].join("")
+        .formatVars()
+        .replace(/{item}/g, item)
+        .replace(/{itemDisplay}/g, displaypos(obj, value, true))
+        .replace(/{price}/g, price.toString());
+    setText([html]);
+
+    const listenerList: any[] = [];
+    addVenueSpecificContent(item, listenerList);
+    setupBuyFormListeners(item, obj, value, price, listenerList);
+}
+
+/** Add bar/club-specific quotes and extra options to the buy screen. */
+function addVenueSpecificContent(item: string, listenerList: any[]): void {
+    if (item === "beer") {
         const i = randomIndex(bar["barQuotes"]);
         document.GetRequiredElementById<HTMLElement>("addQuote").innerHTML = bar["barQuotes"][i].formatVars();
-        if (haveItem("wetPanties") && i === 3) {
-            document.GetRequiredElementById<HTMLElement>("extraList").innerHTML= "<li class='cListener' id=sellPanties>Sell wet panties to the bartender.</li>";
+        if (haveItem("wetPanties") && i === WET_PANTIES_QUOTE_INDEX) {
+            document.GetRequiredElementById<HTMLElement>("extraList").innerHTML = "<li class='cListener' id=sellPanties>Sell wet panties to the bartender.</li>";
             listenerList.push([[sellPanties, "Sell wet panties to the bartender."], "sellPanties"]);
         }
-    } else if (item === "cocktail"){
+    } else if (item === "cocktail") {
         document.GetRequiredElementById<HTMLElement>("preQuote").innerHTML = pickrandom(club["barGirlDesc"]);
-        document.GetRequiredElementById<HTMLElement>("addQuote").innerHTML= pickrandom(club["barGirlQuotes"]);
-        document.GetRequiredElementById<HTMLElement>("extraList").innerHTML= "<li class='cListener' id=flirtBar>Flirt with the bar girl.</li>";
+        document.GetRequiredElementById<HTMLElement>("addQuote").innerHTML = pickrandom(club["barGirlQuotes"]);
+        document.GetRequiredElementById<HTMLElement>("extraList").innerHTML = "<li class='cListener' id=flirtBar>Flirt with the bar girl.</li>";
         listenerList.push([[flirtBarGirl, "Flirt with the bar girl."], "flirtBar"]);
     }
+}
+
+/** Wire up the quantity input, buy button, and form submit for the buy screen. */
+function setupBuyFormListeners(item: string, obj, value: number, price: number, listenerList: any[]): void {
+    const itemElem = document.GetRequiredElementById<HTMLInputElement>(item + "Am");
     itemElem.addEventListener("input", function () {
         value = parseInt(itemElem.value);
         price = value * (obj.price ?? 0);
-        const itemIndic = document.GetRequiredElementById<HTMLElement>("itemIndic");
-        itemIndic.innerText = displaypos(obj, value, true);
+        document.GetRequiredElementById<HTMLElement>("itemIndic").innerText = displaypos(obj, value, true);
         const moneyElem = document.GetRequiredElementById<HTMLElement>("monAmount");
-        if (price < 0)
-            moneyElem.innerText = "NaN";
-        else
-            moneyElem.innerText = price.toString();
+        moneyElem.innerText = price < 0 ? "NaN" : price.toString();
     });
-    listenerList.push([[function(){
+    listenerList.push([[function () {
         buyItem2(item, value, price);
     }], "buy", false]);
-    let form = document.GetRequiredElementById<HTMLElement>("buy"+item);
+    const form = document.GetRequiredElementById<HTMLElement>("buy" + item);
     form.onsubmit = function (event) {
         event.preventDefault();
         buyItem2(item, value, price);
