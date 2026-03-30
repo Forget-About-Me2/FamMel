@@ -32,7 +32,7 @@ import { exposeTheatreOnWindow } from './locations/theatre';
 import { exposeTheMakeOutOnWindow } from './locations/theMakeOut';
 import { exposeHerHomeOnWindow } from './herhome';
 import { exposeLocationsOnWindow } from './locations';
-import { exposeBackPackItemsOnWindow } from './backPackItems';
+import { exposeBackPackItemsOnWindow, backpack } from './backPackItems';
 import { exposeStoreOnWindow } from './store';
 import { exposeDebugMenuOnWindow } from './debugMenu';
 import { saveToSlot, loadFromSlot, hasSave, deleteSave, exportSave, importSave } from './saveLoad';
@@ -92,3 +92,9 @@ exposeDebugMenuOnWindow();
 (window as any).deleteSave = deleteSave;
 (window as any).exportSave = exportSave;
 (window as any).importSave = importSave;
+
+// Wire up static UI elements
+document.getElementById("backpack-link")?.addEventListener("click", function (e) {
+    e.preventDefault();
+    backpack();
+});

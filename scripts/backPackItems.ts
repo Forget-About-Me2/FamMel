@@ -441,6 +441,10 @@ export function backpack(){
     if (itemlist.length > 0) {
         itemlist.forEach(item => items += item);
         backpackitem.innerHTML = items;
+        backpackitem.addEventListener("click", function (e) {
+            const btn = (e.target as HTMLElement).closest<HTMLElement>("[data-select-item]");
+            if (btn) selectitem(btn.dataset.selectItem!);
+        });
     } else {
         backpackitem.innerHTML = "<b>Your backpack is empty :(</b>";
     }
@@ -669,16 +673,18 @@ export function takeHerItem(item){
 
 }
 
+const MAX_BRIBE_LEVEL = 9;
+
 export function giveHer(item){
-    //Closes the backpack since a function has been chosen
     const backpackcnt = document.GetRequiredElementById<HTMLElement>("pop-up");
     backpackcnt.style.display = "none";
-    let obj = backPackItems[item];
+    const obj = backPackItems[item];
     obj.value -= 1;
-    let quotes = formatAllVarsList(obj.giveQuotes ?? []);
+    const quotes = formatAllVarsList(obj.giveQuotes ?? []);
     let curtext = printList([], quotes[0]);
-    let listenerList: any[] = [];
-    if (item === "sexyPanties"){
+    const listenerList: any[] = [];
+
+    if (item === "sexyPanties") {
         pantycolor = "sexy";
         if (!wetlegs) attraction += 5;
         else curtext = printList(curtext, quotes[1]);
@@ -689,23 +695,21 @@ export function giveHer(item){
                 giveHer("sexyPanties");
             }, "Offer her a clean pair of panties."], "oPanties"]);
         }
-    } else {
-        if (bladder < blademer) {
-            curtext = printList(curtext, quotes[1]);
-            attraction += obj.attr ?? 0;
-            if (item === "earrings"){
-                //Giving earrings increases the chance she will hold it when desperate and you just ask.
-                // Up to a maximum of 90%
-                bribeAskBase += 1;
-                if (bribeAskBase > 9) bribeAskBase = 9;
-                bribeaskthresh = bribeAskBase;
-            }
-        } else {
-            curtext = printList(curtext, quotes[2]);
-            attraction += obj.emerAttr ?? 0;
-            askholditcounter += obj.holdCount ?? 0;
+    } else if (bladder < blademer) {
+        curtext = printList(curtext, quotes[1]);
+        attraction += obj.attr ?? 0;
+        if (item === "earrings") {
+            // Giving earrings raises the chance she holds it when you ask when desperate.
+            bribeAskBase = Math.min(bribeAskBase + 1, MAX_BRIBE_LEVEL);
+            bribeaskthresh = bribeAskBase;
         }
+    } else {
+        // She's past emergency — less grateful, but will hold it longer
+        curtext = printList(curtext, quotes[2]);
+        attraction += obj.emerAttr ?? 0;
+        askholditcounter += obj.holdCount ?? 0;
     }
+
     attraction += obj.attraction ?? 0;
     sayText(curtext);
     listenerList.forEach(item => cListener(item[0], item[1]));
@@ -720,11 +724,9 @@ export function createItemButtonList(){
     for (let i =0; i< obj.length; i++) {
         const curobj = backPackItems[obj[i]];
         if (curobj.value !== 0) {
-            const baseString = "<button onclick=\"selectitem('";
-            let curString = baseString + obj[i];
-            curString += "')\" class=\"itembtn\" id=\"";
+            let curString = "<button class=\"itembtn\" id=\"";
             curString += obj[i];
-            curString += "\">";
+            curString += "\" data-select-item=\"" + obj[i] + "\">";
             curString += curobj.bpName;
             curString += "</button> \n";
             itemlist.push(curString)
@@ -762,50 +764,72 @@ export function selectitem(selecteditem){
     previousbtn = clickedbtn;
 }
 
+const CHAMPAGNE_HALF_EMPTY_THRESHOLD = 6;
+
 //Returns text saying how much you own of an item.
 export function getAmountOwned(selected) {
-    let number = selected.value;
-    let description = selected.owned
+    const number = selected.value;
+    let description = selected.owned;
     let formatlist = [number.toString()];
-    if (selected.bpName === "Champagne"){
-        if (selected.bottles[0] === 0){
-            let i = 0;
-            while (i < selected.bottles.length && selected.bottles[i] === 0) {
-                i++;
-            }
-            formatlist = [i.toString(), "empty"];
-            if (i > 1) formatlist.push("s");
-            else formatlist.push("");
-            description = description.format(formatlist);
-            if (i < selected.bottles.length) {
-                let full = true;
-                if (selected.bottles[i] < 6) {
-                    let inbetween = " and "
-                    if (i + 1 < selected.bottles.length) inbetween = ", ";
-                    else full = false;
-                    description += inbetween + selected.owned;
-                    description = description.format(["1", "half-empty", ""]);
-                } if (full) {
-                    description += "and " + selected.owned;
-                    formatlist = [(number - i).toString(), ""];
-                }
 
-            }
-        } else if(selected.bottles[0] < 6) {
-            description = description.format(["1", "half-empty", ""]);
-            if (selected.bottles.length > 1) {
-                description += "and " + selected.owned;
-                formatlist = [(number - 1).toString(), ""];
-            }
-        } else {
-            formatlist.push("");
-        }
+    if (selected.bpName === "Champagne") {
+        description = formatChampagneOwned(selected, number);
     }
-    if (number > 1){
-        if (description.includes("glass")) formatlist.push("es");
-        else formatlist.push("s");
-    } else formatlist.push("");
+
+    if (number > 1) {
+        formatlist.push(description.includes("glass") ? "es" : "s");
+    } else {
+        formatlist.push("");
+    }
     description = description.format(formatlist);
+    return description;
+}
+
+function formatChampagneOwned(selected, totalBottles: number): string {
+    const bottles: number[] = selected.bottles;
+    let description = selected.owned;
+
+    // Count leading empty bottles
+    let emptyCount = 0;
+    while (emptyCount < bottles.length && bottles[emptyCount] === 0) {
+        emptyCount++;
+    }
+
+    if (bottles[0] === 0) {
+        // First bottle is empty — describe empty ones, then any remaining
+        description = description.format([
+            emptyCount.toString(),
+            "empty",
+            emptyCount > 1 ? "s" : ""
+        ]);
+
+        if (emptyCount < bottles.length) {
+            const nextBottle = bottles[emptyCount];
+            const isHalfEmpty = nextBottle < CHAMPAGNE_HALF_EMPTY_THRESHOLD;
+            const hasMoreAfter = emptyCount + 1 < bottles.length;
+            const separator = hasMoreAfter ? ", " : " and ";
+
+            if (isHalfEmpty) {
+                description += separator + selected.owned;
+                description = description.format(["1", "half-empty", ""]);
+            }
+            if (!isHalfEmpty || hasMoreAfter) {
+                description += "and " + selected.owned;
+                description = description.format([(totalBottles - emptyCount).toString(), "", ""]);
+            }
+        }
+    } else if (bottles[0] < CHAMPAGNE_HALF_EMPTY_THRESHOLD) {
+        // First bottle is half-empty
+        description = description.format(["1", "half-empty", ""]);
+        if (bottles.length > 1) {
+            description += "and " + selected.owned;
+            description = description.format([(totalBottles - 1).toString(), "", ""]);
+        }
+    } else {
+        // All bottles full — just add empty plural slot
+        description = description.format([totalBottles.toString(), ""]);
+    }
+
     return description;
 }
 
@@ -911,61 +935,72 @@ export function yDrinkNow(item) {
 
 
 export let homeChampagne = 0; //Flag whether champagne has been drunk at her home before (aka whether she needs to get the glasses)
+
+const CHAMPAGNE_VOLUME = 50;
+const CHAMPAGNE_GLASSES_REQUIRED = 2;
+const CHAMPAGNE_MAX_COUNTER = 6;
+
+function consumeChampagne(bottles: number[] | undefined) {
+    champagnecounter += CHAMPAGNE_GLASSES_REQUIRED;
+    drankChamp = 0;
+    if (bottles) bottles[0] -= CHAMPAGNE_GLASSES_REQUIRED;
+}
+
 //TODO turn into JSON
 export function champagneNow() {
     const backpackcnt = document.GetRequiredElementById<HTMLElement>("pop-up");
     backpackcnt.style.display = "none";
-    let obj = backPackItems.champagne;
+    const obj = backPackItems.champagne;
     const bottles = obj.bottles;
     let curtext: any[] = [];
-    if (locStack[0] === "theHome"){
-        curtext = printList(curtext, drinklines["champagne"][0]);
-        if (!homeChampagne){
-            curtext = printList(curtext, drinklines["champagne"][1]);
+
+    const [champIntro, champFirstTime, champOk, champReluctant, champRefuseIntro, champRefuse] =
+        drinklines["champagne"];
+
+    if (locStack[0] === "theHome") {
+        curtext = printList(curtext, champIntro);
+        if (!homeChampagne) {
+            curtext = printList(curtext, champFirstTime);
             homeChampagne = 1;
         }
         curtext = displayneed(curtext);
+
         if (bladder < blademer) {
             curtext.push(pickrandom(appearance["clothes"][heroutfit]["fillchampok"]));
-            champagnecounter += 2;
-            drankChamp = 0;
-            if (bottles) bottles[0] -= 2;
-            curtext = printList(curtext, drinklines["champagne"][2]);
-        } else if (bladder < bladlose){
+            consumeChampagne(bottles);
+            curtext = printList(curtext, champOk);
+        } else if (bladder < bladlose) {
             curtext.push(girltalk + pickrandom(drinklines["wonderWhy"]));
             curtext = showneed(curtext);
             curtext.push(pickrandom(drinklines["fillChamp"]));
-            champagnecounter += 2;
-            drankChamp = 0;
-            if (bottles) bottles[0] -= 2;
-            curtext= printList(curtext, drinklines["champagne"][3]);
+            consumeChampagne(bottles);
+            curtext = printList(curtext, champReluctant);
         } else {
             curtext.push(girltalk + pickrandom(drinklines["cantDo"]));
-            curtext = printList(curtext, drinklines["champagne"][4]);
+            curtext = printList(curtext, champRefuseIntro);
             curtext = showneed(curtext);
             curtext.push(pickrandom(drinklines["fillChampBad"]));
-            champagnecounter = 6;
-            curtext = printList(curtext, drinklines["champagne"][5]);
+            champagnecounter = CHAMPAGNE_MAX_COUNTER;
+            curtext = printList(curtext, champRefuse);
         }
-    } else if (backPackItems["champ-glass"].value >= 2) {
+    } else if (backPackItems["champ-glass"].value >= CHAMPAGNE_GLASSES_REQUIRED) {
         curtext.push("You get out the glasses and champagne and fill up both glasses");
-        if (bladder < blademer){
-            curtext.push("She smiles at you before you toast and drink the champagne together.")
+        if (bladder < blademer) {
+            curtext.push("She smiles at you before you toast and drink the champagne together.");
         } else {
             curtext.push(girlgasp + "Oh I have to go so bad, but if you want me to drink it, I will.");
         }
-        champagnecounter+=2;
-        drankChamp = 0;
-        if (bottles) bottles[0] -= 2;
+        consumeChampagne(bottles);
     } else {
         curtext.push("Unfortunately you don't have any champagne glasses, so you can't drink champagne.");
     }
+
     if (bottles && bottles[0] === 0) {
         bottles.shift();
         obj.value--;
     }
-    tummy += 50;
-    yourtummy += 50;
+    tummy += CHAMPAGNE_VOLUME;
+    yourtummy += CHAMPAGNE_VOLUME;
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
 }
