@@ -736,33 +736,56 @@ export function createItemButtonList(){
     return itemlist;
 }
 
+const SELECTED_BG_COLOR = "#4bb6c3";
+const SELECTED_TEXT_COLOR = "#e52222";
+
 //When an item is selected in the backpack print the info and related functions
 export function selectitem(selecteditem){
     const clickedbtn = document.GetRequiredElementById<HTMLElement>(selecteditem);
     const clickedObj = backPackItems[selecteditem];
-    clickedbtn.style.backgroundColor = "#4bb6c3";
-    clickedbtn.style.color = "#e52222";
+    clickedbtn.style.backgroundColor = SELECTED_BG_COLOR;
+    clickedbtn.style.color = SELECTED_TEXT_COLOR;
     if (previousbtn)
         previousbtn.removeAttribute("style");
-    let tobeprinted = "<p class='title'>"+ clickedObj.bpName +"</p>";
+    let html = "<p class='title'>"+ clickedObj.bpName +"</p>";
     if(clickedObj.owned)
-        tobeprinted += "<b><i>You have " + getAmountOwned(clickedObj) + "</i></b><br><br>";
-    tobeprinted += assertExists(clickedObj.description, `Item '${selecteditem}' is missing description`).format([girlname]);
-    if (!noItemLoc.includes(locStack[0]) && locStack.length !== 0 && clickedObj.functions && allowItems){
-        if (!clickedObj.locations && !clickedObj.banLocs?.includes(locStack[0])){
-            //If the girl isn't with you, you can't ask her to use a certain item
-            if (!playOnly.includes(locStack[0]))
-                printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
-            if (playerbladder && clickedObj.yFunctions){
-                printAllChoicesList([], clickedObj.yFunctions).forEach(item => tobeprinted += item);
-                if (clickedObj.togFunctions && !playOnly.includes(locStack[0]) && clickedObj.value > 1)
-                    printAllChoicesList([], clickedObj.togFunctions).forEach(item => tobeprinted += item);
-            }
-        } else if (clickedObj.locations?.includes(locStack[0]))
-            printAllChoicesList([], clickedObj.functions).forEach(item => tobeprinted += item);
-    }
-    itemtext.innerHTML= tobeprinted;
+        html += "<b><i>You have " + getAmountOwned(clickedObj) + "</i></b><br><br>";
+    html += assertExists(clickedObj.description, `Item '${selecteditem}' is missing description`).format([girlname]);
+    html += buildItemActions(clickedObj);
+    itemtext.innerHTML = html;
     previousbtn = clickedbtn;
+}
+
+function buildItemActions(clickedObj): string {
+    const canUseItems = !noItemLoc.includes(locStack[0])
+        && locStack.length !== 0
+        && clickedObj.functions
+        && allowItems;
+    if (!canUseItems) return "";
+
+    // Item is restricted to specific locations — only show if we're in one
+    if (clickedObj.locations)
+        return clickedObj.locations.includes(locStack[0])
+            ? printAllChoicesList([], clickedObj.functions).join("")
+            : "";
+
+    // Item is banned at this location
+    if (clickedObj.banLocs?.includes(locStack[0])) return "";
+
+    let html = "";
+    const companionPresent = !playOnly.includes(locStack[0]);
+
+    // Companion-targeted actions (give her the item, use on her, etc.)
+    if (companionPresent)
+        html += printAllChoicesList([], clickedObj.functions).join("");
+
+    // Player-targeted actions
+    if (playerbladder && clickedObj.yFunctions) {
+        html += printAllChoicesList([], clickedObj.yFunctions).join("");
+        if (clickedObj.togFunctions && companionPresent && clickedObj.value > 1)
+            html += printAllChoicesList([], clickedObj.togFunctions).join("");
+    }
+    return html;
 }
 
 const CHAMPAGNE_HALF_EMPTY_THRESHOLD = 6;

@@ -193,6 +193,16 @@ export function flushdrank() {
     bribeaskthresh = bribeAskBase;
 }
 
+// Shyness thresholds for vocalization decisions
+const SHYNESS_ALWAYS_VOCALIZE = 90;  // Below this, she vocalizes when about to wet
+const SHYNESS_VENUE_ASK = 70;       // Below this, asks when changing venue
+const SHYNESS_EMERGENCY_ASK = 80;   // Below this, asks during bladder emergency
+const SHYNESS_NEED_ASK = 60;        // Below this, asks when needing badly
+const SHYNESS_URGE_ASK = 40;        // Below this, lets you know at first urge
+
+const WAIT_AFTER_VENUE_CHANGE = 4;
+const WAIT_RECENT_THRESHOLD = 2;    // waitcounter <= this means she was recently told to wait
+
 // Showneed calculates how she's going to indicate
 // her current level of need ( if at all ) based on her situation
 export function showneed(curtext: any[] = []): any[] {
@@ -209,16 +219,16 @@ export function showneed(curtext: any[] = []): any[] {
     // no matter what.
     let tuminc = calcTuminc(); //Gets the current tuminc, used to calculate if she's within the 2 turns
     //TODO use this calculation globally, instead of a fixed constant
-    if (bladder >= (bladlose - 2 * tuminc) && shyness < 90) {
+    if (bladder >= (bladlose - 2 * tuminc) && shyness < SHYNESS_ALWAYS_VOCALIZE) {
         if (externalflirt) curtext = voccurse(curtext);
         curtext = displaygottavoc(curtext);
     } else if (changevenueflag) {
         // She's almost always going to ask to go if you're off somewhere
         if ((bladder >= blademer) ||
-            (bladder >= bladneed && shyness < 70)) {
-            if (waitcounter <= 2) {  // did you just ask her to wait?
+            (bladder >= bladneed && shyness < SHYNESS_VENUE_ASK)) {
+            if (waitcounter <= WAIT_RECENT_THRESHOLD) {
                 curtext.push(girltalk + "Hey! Before we go...");
-                waitcounter = 4;
+                waitcounter = WAIT_AFTER_VENUE_CHANGE;
                 curtext = displaygottavoc(curtext);
             } else {
                 curtext.push(girlname + " looks like she really has to pee, but she doesn't say anything.");
@@ -229,30 +239,29 @@ export function showneed(curtext: any[] = []): any[] {
     } else if (waitcounter === 0 && !externalflirt) {
         // Then there are generic instances where she might ask
         // She'll try to hold it if you flirted with somebody at that location
-        // Shyness < 80 is enough to ask if she's having a bladder emergency
-        if (shyness < 80 && bladder > blademer) {
+        if (shyness < SHYNESS_EMERGENCY_ASK && bladder > blademer) {
             waitcounter = Math.max(Math.round(bladlose / 150), 6);
             curtext = displaygottavoc(curtext);
-            // Shyness < 60 is enough to ask if she's merely needing to pee bad
-        } else if (shyness < 60 && bladder > bladneed) {
+        } else if (shyness < SHYNESS_NEED_ASK && bladder > bladneed) {
             waitcounter = Math.max(Math.round(bladlose / 90), 9);
             curtext = displaygottavoc(curtext);
-            // Shyness < 40 and she's letting you know at 1st urge.
-        } else if (shyness < 40 && bladder > bladurge) {
+        } else if (shyness < SHYNESS_URGE_ASK && bladder > bladurge) {
             waitcounter = Math.max(Math.round(bladlose / 75), 12);
             curtext = displaygottavoc(curtext);
-            // Otherwise, she may or may not show symptoms of having to go
-        } else if ((gameRandom() * bladlose) < bladder) {
+        } else if (showsRandomSymptom()) {
             curtext = displayneed(curtext);
         }
-        // Otherwise, she may or may not show symptoms of having to go
-    } else if ((gameRandom() * bladlose) < bladder) {
+    } else if (showsRandomSymptom()) {
         curtext = displayneed(curtext);
     }
     changevenueflag = 0;
     return curtext;
 }
 
+/** Probabilistic check: higher bladder fill → more likely to show symptoms. */
+function showsRandomSymptom(): boolean {
+    return (gameRandom() * bladlose) < bladder;
+}
 
 // DisplayGottaVoc function prints a quasi-random vocalization from "+girlname+"
 // indication her sincere hope to find a bathroom soon.

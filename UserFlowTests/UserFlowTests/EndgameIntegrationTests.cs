@@ -160,6 +160,96 @@ public class EndgameIntegrationTests
         AssertNoRuntimeErrors();
     }
 
+    [Test]
+    public void E2E_WetHerselfWin_FuckNowToGameWet()
+    {
+        StartGame();
+        WaitForEndgameDataReady();
+
+        // Set up: high bladder (past emergency), at bedroom, fuckHer data loaded
+        ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            bladder = 800;
+            yourbladder = 0;
+            attraction = 130;
+            shyness = 10;
+            locStack.unshift('theBedroom');
+            locStack.unshift('haveSex');
+            fuckingnow = 1;
+            fuckNow();
+        ");
+
+        // fuckNow shows two choices: "Keep fucking her" and "Pause"
+        // Click "Keep fucking her" → fuckHer2 → bladder > blademer → wetBed path
+        var clicked = TryClickFirstAvailable(By.Id("keepGoing"), By.LinkText("Keep fucking her."));
+        clicked.Should().BeTrue("should see 'Keep fucking her' choice after fuckNow");
+
+        // fuckHer2 detects bladder > blademer → shows wet text → Continue to wetBed
+        clicked = TryClickFirstAvailable(By.Id("wetBed"), By.LinkText("Continue..."));
+        clicked.Should().BeTrue("should see Continue to wetBed after fuckHer2");
+
+        // wetBed → Continue to gameWet
+        clicked = TryClickFirstAvailable(By.Id("gameWet"), By.LinkText("Continue..."));
+        clicked.Should().BeTrue("should see Continue to gameWet after wetBed");
+
+        var text = WaitForStoryText();
+        text.Should().Contain("Woot", "wet-herself win should show the gameWet end screen");
+
+        AssertNoRuntimeErrors();
+    }
+
+    [Test]
+    public void E2E_WinState_FuckNowPauseThroughToGameWon()
+    {
+        StartGame();
+        WaitForEndgameDataReady();
+
+        // Set up: bladder past emergency but below sex-lose (750 < 800 < 1250),
+        // at bedroom with sex in progress
+        ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            bladder = 800;
+            yourbladder = 0;
+            attraction = 130;
+            shyness = 10;
+            locStack.unshift('theBedroom');
+            locStack.unshift('haveSex');
+            fuckingnow = 1;
+            fuckNow();
+        ");
+
+        // fuckNow: click "Pause for a second to regain control" → fuckHer2b
+        var clicked = TryClickFirstAvailable(By.Id("pause"), By.LinkText("Pause for a second to regain control"));
+        clicked.Should().BeTrue("should see Pause choice after fuckNow");
+
+        // fuckHer2b → Continue → fuckHer3
+        clicked = TryClickFirstAvailable(By.Id("fuckHer"), By.LinkText("Continue..."));
+        clicked.Should().BeTrue("should see Continue after fuckHer2b");
+
+        // fuckHer3: bladder > blademer → shows pause option → click "Pause for a second" → fuckHer4
+        clicked = TryClickFirstAvailable(By.Id("fuckHer"), By.LinkText("Pause for a second"));
+        clicked.Should().BeTrue("should see Pause choice in fuckHer3");
+
+        // fuckHer4: bladder < bladsexlose → click "hold it another minute" → fuckHer5
+        clicked = TryClickFirstAvailable(By.Id("fuckBetter"));
+        clicked.Should().BeTrue("should see 'hold it another minute' choice in fuckHer4");
+
+        // fuckHer5 → "I promise..." → fuckHer6
+        clicked = TryClickFirstAvailable(By.Id("fuckHer"), By.LinkText("I promise..."));
+        clicked.Should().BeTrue("should see 'I promise' choice in fuckHer5");
+
+        // fuckHer6: bladder >= bladneed → win branch → Continue → fuckHer7
+        clicked = TryClickFirstAvailable(By.Id("fuckHer"), By.LinkText("Continue..."));
+        clicked.Should().BeTrue("should see Continue in fuckHer6 (win branch)");
+
+        // fuckHer7 → Continue → gameWon
+        clicked = TryClickFirstAvailable(By.Id("gameWon"), By.LinkText("Continue..."));
+        clicked.Should().BeTrue("should see Continue to gameWon after fuckHer7");
+
+        var text = WaitForStoryText();
+        text.Should().Contain("You Won", "win path should show the gameWon end screen");
+
+        AssertNoRuntimeErrors();
+    }
+
     private void StartGame()
     {
         _driver.Navigate().GoToUrl(BaseUrl);
@@ -189,8 +279,10 @@ public class EndgameIntegrationTests
                 try {
                     return typeof herhome === 'function'
                         && typeof gameOver === 'function'
+                        && typeof fuckNow === 'function'
                         && typeof calledjsons !== 'undefined'
-                        && !!calledjsons['herhome'];
+                        && !!calledjsons['herhome']
+                        && typeof endScreens !== 'undefined' && !!endScreens;
                 } catch {
                     return false;
                 }

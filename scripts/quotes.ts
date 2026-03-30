@@ -379,10 +379,7 @@ export function getMLocations(tag: string, subtag: string){
 export function locationSetup(tag: string){
     locjson = JSON.parse(JSON.stringify(calledjsons[tag]));
     locjson.girlname = addGirlname(locjson.girlname);
-    replaceWCI("intro", "girlname");
-    replaceWCT("always", "girlname");
-    replaceWCI("intro", "money");
-    replaceWCT("always", "money");
+    resolveWildcards(["girlname", "money"]);
 }
 
 // Load a subtag from a multi-subtag location into locjson and resolve wildcards.
@@ -391,29 +388,22 @@ export function locationSetup(tag: string){
 // choices, and dialogue sections.
 export function loadLocationScene(tag: string, subtag: string){
     locjson = JSON.parse(JSON.stringify(calledjsons[tag][subtag]));
-    if (locjson.hasOwnProperty("girlname"))
-        locjson.girlname = addGirlname(locjson.girlname);
-    if (locjson.hasOwnProperty("money"))
-        locjson.money = addMoney(locjson.money);
-    if (locjson.hasOwnProperty("girltalk"))
-        locjson.girltalk = addGirlTalk(locjson.girltalk)
-    //TODO this can be more efficient (arraylist with all options) with property
-    //TODO instead of using {0} format outright replace the name0 thing with the right value
-    replaceWCI("intro", "girlname");
-    replaceWCT("always", "girlname");
-    replaceWCI("intro", "money");
-    replaceWCT("always", "money");
-    replaceWCI("intro", "girltalk");
-    replaceWCT("always", "girltalk");
+    const wildcardProcessors: Record<string, (q: any[]) => any[]> = {
+        girlname: addGirlname,
+        money: addMoney,
+        girltalk: addGirlTalk,
+    };
+    for (const [key, processor] of Object.entries(wildcardProcessors)) {
+        if (locjson.hasOwnProperty(key))
+            locjson[key] = processor(locjson[key]);
+    }
+    resolveWildcards(["girlname", "money", "girltalk"]);
     replaceChoices("girlname");
     if (locjson.hasOwnProperty("dialogue")){
-        for (let [key, value] of Object.entries(locjson.dialogue) as [string, any][]) {
-            if(locjson.dialogue.hasOwnProperty(key)){
-                value = replaceWCLI(value, "girlname");
-                value = replaceWCLI(value, "money");
-                value = replaceWCLI(value, "girltalk");
-                locjson.dialogue[key] = value;
-            }
+        for (const [key, value] of Object.entries(locjson.dialogue) as [string, any][]) {
+            locjson.dialogue[key] = ["girlname", "money", "girltalk"].reduce(
+                (v, wc) => replaceWCLI(v, wc), value
+            );
         }
     }
 }
@@ -429,11 +419,8 @@ export function locationMCSetup(subtag: string, customloc: any){
     replaceWCI("intro", "girlname");
     replaceChoices("girlname");
     if (locjson.hasOwnProperty("dialogue")){
-        for (let [key, value] of Object.entries(locjson.dialogue) as [string, any][]) {
-            if(locjson.dialogue.hasOwnProperty(key)){
-                value = replaceWCLI(value, "girltalk");
-                locjson.dialogue[key] = value;
-            }
+        for (const [key, value] of Object.entries(locjson.dialogue) as [string, any][]) {
+            locjson.dialogue[key] = replaceWCLI(value, "girltalk");
         }
     }
 }
@@ -450,6 +437,14 @@ function replaceWCI(jsontag: string, tag: string){
     let result: any[] = [];
     locjson[jsontag].forEach(item => result.push(replaceWCL(item, tag)));
     locjson[jsontag] = result;
+}
+
+/** Apply wildcard replacement for each tag across intro and always sections. */
+function resolveWildcards(tags: string[]){
+    for (const tag of tags) {
+        replaceWCI("intro", tag);
+        replaceWCT("always", tag);
+    }
 }
 
 //Replacing the variable wildcards of the given tag for the given list
