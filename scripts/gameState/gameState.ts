@@ -45,9 +45,9 @@ class GameState {
     HavePurse : boolean = false;
 
     /**
-     * Whether she owes you a favour
+     * How many favours she owes you (counter — can accumulate and be spent)
      */
-    OwedFavour : boolean = false;
+    OwedFavour : number = 0;
 
     TimeSinceLastFlirt : number = 0;
 
@@ -150,9 +150,6 @@ class GameState {
 
     set Money(value: number) {
         this._money = value;
-        if (typeof (globalThis as any).money !== "undefined") {
-            (globalThis as any).money = value;
-        }
     }
 
     PayAmount (value: number) : boolean {
@@ -171,9 +168,6 @@ class GameState {
 
     set Attraction(value: number) {
         this._attraction = value;
-        if (typeof (globalThis as any).attraction !== "undefined") {
-            (globalThis as any).attraction = value;
-        }
     }
 
     get Shyness(): number {
@@ -182,9 +176,6 @@ class GameState {
 
     set Shyness(value: number) {
         this._shyness = value;
-        if (typeof (globalThis as any).shyness !== "undefined") {
-            (globalThis as any).shyness = value;
-        }
     }
 
     get CurRandCounter() : number {

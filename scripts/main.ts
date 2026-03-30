@@ -5,7 +5,7 @@ import {yourHome} from './yourHome';
 import {gameScreen} from "./gameScreen/gameScreen";
 import { animationManager } from "./gameScreen/animationManager";
 import { setupQuotes, fetchAndCacheJson, locationSetup, locjson, printAllChoices, sayText, printList, setText, fetchJson } from "./quotes";
-import { pushloc, poploc, randomInt } from './shims';
+import { pushloc, poploc, randomInt, connectToGameState } from './shims';
 import { setup } from './settings';
 
 /**
@@ -161,14 +161,9 @@ export function go(location: unknown) {
 
         gameState.Time.nextTick();
 
-        // Sync legacy globals with gameState
+        // Sync legacy time globals from gameState
         thetime = gameState.Time.totalTime;
         hour = gameState.Time.hour;
-
-        // Keep typed game state in sync with legacy globals modified by JS modules.
-        if (typeof money !== "undefined") gameState.Money = money;
-        if (typeof attraction !== "undefined") gameState.Attraction = attraction;
-        if (typeof shyness !== "undefined") gameState.Shyness = shyness;
     }
 
     document.GetRequiredElementById('textsp').innerText = "";
@@ -212,9 +207,13 @@ export async function start() {
     try { gameSettings.PlayerBladder = !!(globalThis as any).playerbladder; } catch {}
     gameState.init();
     animationManager.start();
+    // Push current legacy values into gameState before connecting bridges.
     if (typeof money !== "undefined") gameState.Money = money;
     if (typeof attraction !== "undefined") gameState.Attraction = attraction;
     if (typeof shyness !== "undefined") gameState.Shyness = shyness;
+    gameState.randCounter = (globalThis as any).randcounter ?? 0;
+    // Connect window bridges to gameState — all reads/writes now go through gameState.
+    connectToGameState(gameState);
     await fetchAndCacheJson("start");
     pushloc("yourhome");
     locationSetup("start");

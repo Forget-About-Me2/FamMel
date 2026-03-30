@@ -149,7 +149,17 @@ Save/load system implemented in `saveLoad.ts`. Reads ~130 module-scoped variable
 
 Move module-scoped `let` variables into `gameState` properties, updating all references. This removes the need for window bridges and makes `gameState` the canonical runtime source of truth.
 
-- [ ] Absorb shims state (money, attraction, shyness, time, closing times, etc.)
+#### Bridge connection pattern (established)
+
+`connectToGameState(gs)` in shims.ts re-defines window property bridges to delegate directly to gameState, called from `start()` after `gameState.init()`. Before connection, the old shims module-var bridges work. After connection, gameState is the sole backing store. This eliminates the dual-write sync problem without touching consumer code.
+
+#### Absorbed variables
+
+- [x] **First batch** (14 variables): money, attraction, shyness, lastmoney, lastattraction, lastshyness, flirtcounter, randcounter, owedfavor, didintro, haveherpurse, changevenueflag, checkedherout, showedneed — all already had gameState counterparts. Window bridges now delegate to gameState. Removed redundant sync lines from `go()` and `syncGameState()`. Fixed `OwedFavour` from `boolean` to `number` (it's a counter — `+=1`/`-=1` in theatre.ts/bladder.ts; the old `!!` coercion was lossy). Removed global-write from `Money`/`Attraction`/`Shyness` setters (bridge handles it, avoids infinite loop). Updated `incrandom()` to use window bridge instead of module variable.
+
+#### Remaining absorption
+
+- [ ] Absorb shims state — remaining: locStack, thetime, hour, minute, meridian, late, playerbladder, flirtedflag, noflirtflag, shopping, maxflirts, maxkiss, maxfeel, randmax, closing times, timespeed
 - [ ] Absorb bladder state (bladder, tummy, thresholds, flags)
 - [ ] Absorb yourbladder state
 - [ ] Absorb fuckHer state (arousal, counters)

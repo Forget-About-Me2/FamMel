@@ -117,7 +117,8 @@ export function randomchoice(n: number): boolean {
 }
 
 export function incrandom(): void {
-    randcounter = (randcounter + randomInt(2) + 1) % 5;
+    const w = globalThis as any;
+    w.randcounter = (w.randcounter + randomInt(2) + 1) % 5;
 }
 
 export function pickrandom(list: any[]): any {
@@ -184,6 +185,54 @@ if (seed !== null && seed !== "") {
 
 // Initialize randcounter after RNG is seeded
 randcounter = randomInt(5);
+
+// ============================================================================
+// Connect window bridges to gameState — makes gameState the sole authority
+// for absorbed variables.  Call once after gameState.init() + initial sync.
+// ============================================================================
+export function connectToGameState(gs: any): void {
+    const w = window as any;
+
+    // Numeric properties — direct pass-through
+    const numericProps: Array<[string, string]> = [
+        ['money',          'Money'],
+        ['attraction',     'Attraction'],
+        ['shyness',        'Shyness'],
+        ['lastmoney',      'LastMoney'],
+        ['lastattraction', 'LastAttraction'],
+        ['lastshyness',    'LastShyness'],
+        ['flirtcounter',   'FlirtCounter'],
+        ['randcounter',    'randCounter'],
+        ['owedfavor',      'OwedFavour'],
+    ];
+
+    // Boolean flags — coerce number↔boolean for legacy compatibility
+    const boolProps: Array<[string, string]> = [
+        ['didintro',       'DidIntro'],
+        ['haveherpurse',   'HavePurse'],
+        ['changevenueflag','ChangeVenueFlag'],
+        ['checkedherout',  'CheckedHerOut'],
+        ['showedneed',     'ShowedNeed'],
+    ];
+
+    for (const [globalName, gsProp] of numericProps) {
+        Object.defineProperty(w, globalName, {
+            get: () => gs[gsProp],
+            set: (v: any) => { gs[gsProp] = v; },
+            configurable: true,
+            enumerable: true,
+        });
+    }
+
+    for (const [globalName, gsProp] of boolProps) {
+        Object.defineProperty(w, globalName, {
+            get: () => gs[gsProp],
+            set: (v: any) => { gs[gsProp] = !!v; },
+            configurable: true,
+            enumerable: true,
+        });
+    }
+}
 
 // ============================================================================
 // Window bridge — expose all shims globals on window so existing code

@@ -183,28 +183,17 @@ export function loadSave(save: Record<string, any>): void {
     syncGameState();
 }
 
-/** Push restored window globals into the typed gameState singleton. */
+/** Push restored window globals into the typed gameState singleton.
+ *  After connectToGameState(), most variables are already bridged — the
+ *  window property setter writes directly to gameState.  Only un-bridged
+ *  variables (time, etc.) still need manual sync here.
+ */
 function syncGameState(): void {
     const w = window as any;
     const gs = w.gameState;
     if (!gs) return;
 
-    gs.Money = w.money;
-    gs.Attraction = w.attraction;
-    gs.Shyness = w.shyness;
-    gs.DidIntro = !!w.didintro;
-    gs.FlirtCounter = w.flirtcounter;
-    gs.HavePurse = !!w.haveherpurse;
-    gs.OwedFavour = !!w.owedfavor;
-    gs.ChangeVenueFlag = !!w.changevenueflag;
-    gs.CheckedHerOut = !!w.checkedherout;
-    gs.ShowedNeed = !!w.showedneed;
-    gs.LastMoney = w.lastmoney;
-    gs.LastAttraction = w.lastattraction;
-    gs.LastShyness = w.lastshyness;
-    gs.randCounter = w.randcounter;
-
-    // Time
+    // Time is not yet bridged — sync manually
     gs.Time.hour = w.hour;
     gs.Time.minute = w.minute;
     gs.Time.totalTime = w.thetime;
