@@ -6,6 +6,7 @@ import { pdrinkinggame } from './locations/theBar';
 import { doDance, pphotogame } from './locations/theClub';
 import { displayyourneed } from './yourbladder';
 import { kissher } from './actions';
+import { gameState } from './gameState/gameState';
 
 //This file contains all functions related to peeing
 //TODO organize this better
@@ -116,6 +117,9 @@ export function updateurge(newurge: number) {
     bladlose = newurge * 3 + 150; // Level where she loses control
     bladcumlose = newurge * 4; // Level where she spurts as she cums
     bladsexlose = newurge * 5; // Level where she can't control it during sex
+
+    // Sync to Person (source of truth) when available
+    gameState.Companion?.setUrge(newurge);
 }
 
 // Slightly randomizes the calculated tuminc

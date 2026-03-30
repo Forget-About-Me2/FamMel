@@ -1,7 +1,6 @@
 import {gameSettings, PersonSettings} from "../settings/gameSettings";
 import {getRandomValueFromNormalDistribution} from "../helperFiles/helperFunctions";
 import {Person} from "./Person";
-import {getLegacyBladderThresholds} from "./bladderThresholds";
 import { randomInt } from "../shims";
 export enum LocationCategory {
     Start,
@@ -90,13 +89,14 @@ class GameState {
 
         // Read legacy globals through globalThis so missing values don't throw at load time.
         const rawGirlName = (globalThis as any).girlname;
-        const thresholds = getLegacyBladderThresholds();
+        const rawUrge = Number((globalThis as any).bladurge);
+        const companionUrge = Number.isFinite(rawUrge) ? rawUrge : 250;
         const companionName = typeof rawGirlName === "string" && rawGirlName.length > 0
             ? rawGirlName
             : "Melissa";
 
         this.Companion = new dateNPC({
-            bladderUrge: thresholds.urge,
+            bladderUrge: companionUrge,
             startBladderVolume: 0,
             startTummyVolume: 0,
             startMaxTummy: 300,

@@ -75,7 +75,7 @@
 ### Batch A: Bladder System (core mechanic)
 - [x] `bladder.js` → `bladder.ts` — extract threshold globals into gameSettings or Person
 - [x] `yourbladder.js` → `yourbladder.ts`
-- [ ] Move `bladurge`, `bladneed`, `blademer`, `bladlose` to `Person` or `gameSettings`
+- [x] Move `bladurge`, `bladneed`, `blademer`, `bladlose` to `Person` — Person is now the authoritative owner; `updateurge()` syncs to Person, `Person.pee()` syncs back to legacy module vars. `bladderThresholds.ts` bridge deleted; TS consumers read `gameState.Companion` directly. ~80 legacy bare-global read sites remain (future Phase 5 cleanup)
 
 ### Batch B: Quotes into Bundle
 - [x] Move `quotes.ts` from script-style into the bundle (import from main.ts)
@@ -116,6 +116,7 @@
 - [x] Replace `eval()` calls in `getjsonT()` with function registry
 - [x] Enable `strictNullChecks` in tsconfig.json
 - [ ] Eliminate duplicate state (single source of truth per variable)
+- [ ] Replace raw bladder threshold comparisons with `BladderState` enum checks — `Person.bladderState` getter already exists; migrate ~80 sites in bladder.ts, actions.ts, backPackItems.ts, fuckHer.ts, herhome.ts, etc. from `bladder > blademer` to `companion.bladderState >= BladderState.Emergency`
 - [x] Replace `javascript:go()` hrefs with delegated data-attribute pattern
 
 ### 3b: Replace bare-global functions/constants with ES imports ✓
@@ -164,6 +165,8 @@ Move module-scoped `let` variables into `gameState` properties, updating all ref
 
 - [x] Wire up Selenium tests (PickherupTest, RandomSeedDeterminismTest)
 - [x] Add smoke test: load game → start → navigate each location
+- [ ] Add end-to-end test: start game → play through to a win state (high attraction, navigate locations, reach `gameWon()` via `fuckHer` path)
+- [ ] Add end-to-end test: start game → play through to a wet-herself loss state
 - [x] Replace required `document.getElementById(...)` call sites with `document.GetRequiredElementById(...)` where the element is expected to exist; keep nullable lookups only where absence is a valid runtime state (quotes.ts, backPackItems.ts, bladder.ts, settings.ts)
 - [x] Replace temporary `any` escape hatches with narrower types — `backPackItems` map restored to `IBackpackItem`; all `!` assertions replaced with proper narrowing (`?? 0`, truthiness checks, optional chaining, local variable extraction)
 - [x] Remove jQuery dependency — replaced `$()` radio queries in images.ts with `querySelector`, replaced `$.ajax()` in changeLogPopUp.ts with `fetch()`, removed jQuery from index.html and package.json
@@ -768,6 +771,41 @@ Added `NavigationSmokeTests.cs` — tests the full `go()` routing pipeline (rout
 - **`GoNavigation_Individual_RendersWithoutErrors` (×9 parameterized)** — isolated test per location: yourhome, callher, gostore, herhome, driveAround, theTheatre, theClub, thebar, theMakeOut
 - **`GoBack_ReturnsToYourHome_WithoutErrors`** — navigates to store then back via `go("goback")`, verifying locStack pop resolves correctly
 - **`GoGamestart_ThenYourHome_NavigationChain_WithoutErrors`** — full UI flow: click "Start the game" → wait for gamestart/yourHome render → verify locStack state
+
+### Validation
+- **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)
+- **Build**: `node esbuild.config.mjs` emits bundle (479.4kb)
+- **Tests**: `dotnet test` (UserFlowTests) passes (32/32 non-explicit tests)
+
+---
+
+## Changelog — Phase 2A: Bladder Thresholds to Person (2026-03-30)
+
+Made `Person` the authoritative owner of bladder thresholds (`bladurge`, `bladneed`, `blademer`, `bladlose`, `bladcumlose`, `bladsexlose`). The module-scoped variables in bladder.ts remain as synced copies for ~80 legacy bare-global read sites. Deleted the `bladderThresholds.ts` bridge — all TS consumers now read from `gameState.Companion` directly. All 32 Selenium tests pass.
+
+### scripts/gameState/Person.ts
+- **Added `setUrge(value: number)`** — sets the base `_bladderUrge` threshold; all derived thresholds (need, emergency, lose, cumLose, sexLose) are computed from it
+- **Added `syncThresholdsToLegacy()` (private)** — pushes Person's thresholds back to the legacy module-scoped variables via window bridge setters
+- **`pee()` now calls `syncThresholdsToLegacy()`** after bladder decay, keeping legacy reads in sync with Person's decayed values
+
+### scripts/bladder.ts
+- **Added `import { gameState }` from gameState.ts**
+- **`updateurge()` now syncs to Person** — after updating module vars, calls `gameState.Companion?.setUrge(newurge)` (null-safe for pre-init calls from settings.ts)
+
+### scripts/gameState/bladderThresholds.ts — DELETED
+- `getLegacyBladderThresholds()` bridge is no longer needed; all 4 consumers now read directly from `gameState.Companion`
+
+### scripts/gameState/gameState.ts
+- **Removed `bladderThresholds` import** — replaced `getLegacyBladderThresholds()` call in `init()` with direct `globalThis.bladurge` read (Person doesn't exist yet at init time)
+
+### scripts/main.ts
+- **Removed `bladderThresholds` import** — `go()` tick processing now reads `gameState.Companion.bladderEmer` directly instead of `thresholds.emergency`
+
+### scripts/yourHome.ts
+- **Removed `bladderThresholds` import** — `callHer()` and `gotta()` now use `gameState.Companion.bladderUrge/bladderNeed/bladderEmer` directly
+
+### scripts/gameScreen/animationManager.ts
+- **Removed `bladderThresholds` import** — `getLegacyBladderState()` now reads thresholds from `gameState.Companion` with null-safety fallback to `BladderState.Empty`
 
 ### Validation
 - **Typecheck**: `npx tsc -p . --noEmit` passes (0 errors)

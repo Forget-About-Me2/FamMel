@@ -1,7 +1,6 @@
 import { gameSettings } from "../settings/gameSettings";
 import { ImageType } from "../settings/imageType";
 import { BladderState } from "../gameState/bladderState";
-import { getLegacyBladderThresholds } from "../gameState/bladderThresholds";
 import { gameState } from "../gameState/gameState";
 import { randomInt } from "../shims";
 import { imageManager } from "./imageManager";
@@ -101,21 +100,21 @@ class AnimationManager {
 
     private getLegacyBladderState(): BladderState {
         const legacyBladder = Number((globalThis as any).bladder);
-        const thresholds = getLegacyBladderThresholds();
+        const companion = gameState.Companion;
 
-        if (!Number.isFinite(legacyBladder)) {
+        if (!Number.isFinite(legacyBladder) || !companion) {
             return BladderState.Empty;
         }
-        if (legacyBladder < thresholds.urge) {
+        if (legacyBladder < companion.bladderUrge) {
             return BladderState.Empty;
         }
-        if (legacyBladder < thresholds.need) {
+        if (legacyBladder < companion.bladderNeed) {
             return BladderState.Urge;
         }
-        if (legacyBladder < thresholds.emergency) {
+        if (legacyBladder < companion.bladderEmer) {
             return BladderState.Need;
         }
-        if (legacyBladder < thresholds.lose) {
+        if (legacyBladder < companion.bladderLose) {
             return BladderState.Emergency;
         }
         return BladderState.Lose;

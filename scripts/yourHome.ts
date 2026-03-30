@@ -1,5 +1,5 @@
 ﻿import { gameState, LocationCategory } from "./gameState/gameState";
-import { getLegacyBladderThresholds } from "./gameState/bladderThresholds";
+
 import { gameSettings } from "./settings/gameSettings";
 import { loadLocationScene, printIntro, printAlways, printChoices, printChoicesList, printSDialogue, sayText, c, handleFlirt, cListenerGenList, printList } from './quotes';
 import { pushloc, incrandom, randomchoice, formatString, printDialogue } from './shims';
@@ -72,7 +72,7 @@ function buy(number){
 //TODO you can't see her looking away on the phone
 //TODO show your need?
 export function callHer() {
-    const thresholds = getLegacyBladderThresholds();
+    const companion = gameState.Companion;
     allowItems = 1;
     let curtext: any[] = [];
     if (locStack[0] !== "callher") {
@@ -80,7 +80,7 @@ export function callHer() {
         pushloc("callher");
         loadLocationScene("yourhome", "callher")
         curtext = printIntro(curtext, 0);
-        if (thetime > 75 && bladder < thresholds.emergency) {
+        if (thetime > 75 && bladder < companion.bladderEmer) {
             late = 1;
         }
         onphone = 1;
@@ -96,14 +96,14 @@ export function callHer() {
         attraction -= 5;
         shyness -= 10;
         curtext = printChoices(curtext, [0]);
-    } else if (thetime > 75 && bladder < thresholds.emergency) {
+    } else if (thetime > 75 && bladder < companion.bladderEmer) {
         curtext = printDialogue(curtext,"callher", 1);
         curtext = printChoices(curtext, [0]);
-    } else if (bladder > thresholds.emergency && !askholditcounter) {
+    } else if (bladder > companion.bladderEmer && !askholditcounter) {
         curtext = printDialogue(curtext, "callher", 2);
         curtext = printChoices(curtext, [0]);
         flushdrank();
-    } else if (bladder > thresholds.emergency && askholditcounter && waitcounter === 0) {
+    } else if (bladder > companion.bladderEmer && askholditcounter && waitcounter === 0) {
         curtext = cantwait(curtext);
     } else {
         if (shyness > 80) shyness -= 1;
@@ -126,23 +126,23 @@ function favor() {
 }
 
 function gotta() {
-    const thresholds = getLegacyBladderThresholds();
+    const companion = gameState.Companion;
     let curtext: any[] = []
     if (shyness > 80) {
         curtext = printSDialogue(curtext, "gotta", 0, 0, 0);
         attraction -= 2;
         shyness += 5;
-    } else if (bladder < thresholds.urge) {
+    } else if (bladder < companion.bladderUrge) {
         curtext = printSDialogue(curtext, "gotta", 0, 1, 1);
     } else {
-        if (bladder < thresholds.need || shyness > 75) {
+        if (bladder < companion.bladderNeed || shyness > 75) {
             curtext = printSDialogue(curtext, "gotta", 0, 2, 2);
         } else {
             curtext = printSDialogue(curtext, "gotta", 0, 3, 3);
         }
     }
 
-    if (bladder >= thresholds.need && shyness <= 75)
+    if (bladder >= companion.bladderNeed && shyness <= 75)
         curtext = printChoices(curtext, [9])
     curtext = printChoices(curtext, [7,8,6]);
     sayText(curtext);

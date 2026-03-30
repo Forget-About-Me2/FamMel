@@ -146,7 +146,30 @@ export class Person {
             }
         }
 
+        this.syncThresholdsToLegacy();
         this.ItemsDrankSinceLastPee = [];
+    }
+
+    /**
+     * Sets the base bladder urge threshold. All derived thresholds (need, emergency, lose, etc.)
+     * are computed from this value.
+     */
+    setUrge(value: number) {
+        this._bladderUrge = value;
+    }
+
+    /**
+     * Pushes the Person's bladder thresholds back to the legacy module-scoped
+     * variables via window bridge setters. Called after Person.pee() decay.
+     */
+    private syncThresholdsToLegacy() {
+        const w = window as any;
+        w.bladurge = this._bladderUrge;
+        w.bladneed = this.bladderNeed;
+        w.blademer = this.bladderEmer;
+        w.bladlose = this.bladderLose;
+        w.bladcumlose = this.bladderCumLose;
+        w.bladsexlose = this.bladderSexLose;
     }
 
     /**

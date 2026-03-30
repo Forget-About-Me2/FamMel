@@ -1,5 +1,5 @@
 import {GameLocation, gameState, LocationCategory} from "./gameState/gameState";
-import { getLegacyBladderThresholds } from "./gameState/bladderThresholds";
+
 import {gameSettings} from "./settings/gameSettings";
 import {yourHome} from './yourHome';
 import {gameScreen} from "./gameScreen/gameScreen";
@@ -136,7 +136,6 @@ export function go(location: unknown) {
         || isLegacyDrinkingGameLocation(currentLegacyTag);
 
     if (shouldProcessTick) {
-        const thresholds = getLegacyBladderThresholds();
         gameState.ShowedNeed = false; // clear the showed need flag - only active in the current window.
         gameState.ChangeVenueFlag = false;
         gameState.AllowedToFlirt = true;
@@ -146,8 +145,8 @@ export function go(location: unknown) {
 
         //  If she's not with you, then she can go pee
         if (isPlayerOnlyLocation &&
-            // TODO Add bladder state enum instead
-            gameState.Companion.Bladder > thresholds.emergency && !askholditcounter)
+            // TODO Use bladder state enum instead of raw threshold comparison
+            gameState.Companion.Bladder > gameState.Companion.bladderEmer && !askholditcounter)
             if (!isCallHerLocation)
                 gameState.Companion.pee();
 
