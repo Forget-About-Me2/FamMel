@@ -1,6 +1,8 @@
 import { loadLocationScene, printAlways, printAllChoices, sayText } from './quotes';
 import { pushloc } from './shims';
 import { displayyourneed } from './yourbladder';
+import { gameState } from './gameState/gameState';
+import { BladderState } from './gameState/bladderState';
 
 // Buy stuff at the store.
 export function goStore() {
@@ -10,13 +12,13 @@ export function goStore() {
         shopping = 1;
     }
     loadLocationScene("yourhome", "store");
-    if (askholditcounter > 0 && bladder > blademer && bladder < bladlose && !waitcounter) {
+    if (askholditcounter > 0 && gameState.Companion.bladderState >= BladderState.Emergency && gameState.Companion.bladderState < BladderState.Lose && !waitcounter) {
         cellphone();
     } else {
-        if (!askholditcounter && bladder > bladneed) {
+        if (!askholditcounter && gameState.Companion.bladderState >= BladderState.Need) {
             bladder = 0;
         }
-        if (bladder > bladlose) {
+        if (gameState.Companion.bladderState >= BladderState.Lose) {
             bladder = 0;
             prepeed = 1;
         }

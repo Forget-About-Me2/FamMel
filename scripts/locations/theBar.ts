@@ -7,6 +7,8 @@ import { kissher, feelup, checkherout } from '../actions';
 import { playDarts } from '../games/darts';
 import { leavehm, driveout } from '../drive';
 import { lookAround, itsClosed } from '../locations';
+import { gameState } from '../gameState/gameState';
+import { BladderState } from '../gameState/bladderState';
 
 export let bar;
 export let bartopic = 0; // Topics of discussion at the bar.
@@ -53,8 +55,8 @@ export function thebar(){
         else if (randomchoice(5)) curtext = interpbladder(curtext);
         curtext = displayyourneed(curtext);
         curtext = showneed(curtext);
-        if (bladder > bladlose) wetherself();
-        else if (yourbladder > yourbladlose) wetyourself();
+        if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
+        else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
         else {
             if (gottagoflag > 0) {
                 listenerList = preventpee(listenerList);
@@ -71,7 +73,7 @@ export function thebar(){
                 }
                 curtext = standobjs([], listenerList);
                 addSayText(curtext);
-                if (yourbladder > yourbladurge) {
+                if (gameState.Player.bladderState >= BladderState.Urge) {
                     listenerList.push([[youpee, bar["choices"]["youPee"]], "youpee"]);
                 }
             }
@@ -162,8 +164,8 @@ export function stealbeer2(){
     if (randomchoice(3)) curtext = noteholding(curtext);
     else if (randomchoice(5)) curtext = interpbladder(curtext);
     curtext = displayyourneed(curtext);
-    if (bladder > bladlose) wetherself();
-    else if (yourbladder > yourbladlose) wetyourself();
+    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
+    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
     else {
         curtext.push(bar["stealMoreBeer"]);
         backPackItems.beer.value++;
@@ -201,8 +203,8 @@ export function darkBar(){
    curtext = showneed(curtext);
    curtext = displayyourneed(curtext);
     let listenerList: any[] = []
-   if (bladder > bladlose) wetherself();
-   else if (yourbladder > yourbladlose) wetyourself();
+   if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
+   else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
    else if (gottagoflag > 0) {
        listenerList = preventpee(listenerList);
        sayText(curtext);
@@ -219,7 +221,7 @@ export function darkBar(){
        if (!checkedherout){
            listenerList.push([[checkherout, general["checkHerOut"]], "checkOut"]);
        }
-       if (yourbladder > yourbladurge) {
+       if (gameState.Player.bladderState >= BladderState.Urge) {
            listenerList.push([[youpee, bar["choices"]["youPee"]], "youPee"]);
        }
        listenerList.push([[leavehm, bar["choices"]["leaveHm"]], "leaveHm"]);
@@ -272,7 +274,7 @@ export let loser;
 export function drinkinggame() {
     allowItems = 1;
     let curtext = printList([], bar["drinkingGame"][5]); // gameStatus
-    if (yourbladder >= yourbladlose) {
+    if (gameState.Player.bladderState >= BladderState.Lose) {
         if (!holdself || randomchoice(holdpeethresh)) {
             poploc();
             pushloc("postgame");
@@ -281,7 +283,7 @@ export function drinkinggame() {
             return
         }
     }
-    if (bladder >= bladlose) {
+    if (gameState.Companion.bladderState >= BladderState.Lose) {
         poploc();
         pushloc("postgame");
         wetherself();
@@ -296,7 +298,7 @@ export function drinkinggame() {
         drankbeer = 2;
         ydrankbeer = 2;
         let listenerList: any[] = [];
-        if (yourbladder > yourblademer)
+        if (gameState.Player.bladderState >= BladderState.Emergency)
             listenerList.push([[holdYourself, "You grab your dick"], "grabDick"]);
         listenerList.push([[feelup, "You feel her up."], "feelUp"]);
         listenerList.push([[kissher, "Kiss her."], "kissHer"]);
@@ -325,17 +327,17 @@ export function postgame() {
     else
         curtext = printList(curtext, cleanOpener);
     curtext = printList(curtext, transition);
-    if (bladder > blademer && yourbladder > yourblademer) {
+    if (gameState.Companion.bladderState >= BladderState.Emergency && gameState.Player.bladderState >= BladderState.Emergency) {
         situation = "both";
         curtext = printList(curtext, bothDesperate);
         flushdrank();
         flushyourdrank();
-    } else if(bladder > blademer){
+    } else if(gameState.Companion.bladderState >= BladderState.Emergency){
         situation = "her";
         curtext = printList(curtext, sheDesperate);
         flushdrank();
     } else {
-        if (yourbladder > yourblademer) {
+        if (gameState.Player.bladderState >= BladderState.Emergency) {
             situation = "you";
             curtext = printList(curtext, youDesperate);
             flushyourdrank();

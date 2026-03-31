@@ -1,4 +1,5 @@
 ﻿import { gameState, LocationCategory } from "./gameState/gameState";
+import { BladderState } from "./gameState/bladderState";
 
 import { gameSettings } from "./settings/gameSettings";
 import { loadLocationScene, printIntro, printAlways, printChoices, printChoicesList, printSDialogue, sayText, c, handleFlirt, cListenerGenList, printList } from './quotes';
@@ -33,7 +34,7 @@ export function yourHome() {
     }
     curtext = printAlways(curtext);
     curtext = displayyourneed(curtext);
-    if (gameSettings.PlayerBladder && yourbladder > yourbladlose) {
+    if (gameSettings.PlayerBladder && gameState.Player.bladderState >= BladderState.Lose) {
         wetyourself();
         return;
     }

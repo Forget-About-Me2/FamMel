@@ -2,6 +2,8 @@ import { formatAllVarsList, printList, sayText, cListenerGen, cListener, callCho
 import { range, randomchoice, pickrandom } from '../shims';
 import { showneed, displayneed, wetherself } from '../bladder';
 import { displayyourneed, wetyourself } from '../yourbladder';
+import { gameState } from '../gameState/gameState';
+import { BladderState } from '../gameState/bladderState';
 
 export function dartSetup(data: any){
     darts = data;
@@ -132,8 +134,8 @@ export function playDarts() {
         "you": 301,
         "her": 301
     }
-    if (bladder > bladlose) wetherself();
-    else if (yourbladder > yourbladlose) wetyourself();
+    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
+    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
     else {
         sayText(curtext);
         let round = function () {
@@ -174,8 +176,8 @@ export function dartRound(dartPoints: any){
     }
     curText = displayneed(curText);
     curText = displayyourneed(curText);
-    if (bladder > bladlose) wetherself();
-    else if (yourbladder > yourbladlose) wetyourself();
+    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
+    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
     else {
         sayText(curText);
         let listenerList: any[] = [];

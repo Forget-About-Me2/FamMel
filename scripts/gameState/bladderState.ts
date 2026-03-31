@@ -1,9 +1,9 @@
 export enum BladderState {
-    Empty = "Empty",
-    Urge = "Urge",
-    Need = "Need",
-    Emergency = "Emergency",
-    Lose = "Lose",
-    CumLose = "CumLose",
-    SexLose = "SexLose"
+    Empty = 0,
+    Urge = 1,
+    Need = 2,
+    Emergency = 3,
+    Lose = 4,
+    CumLose = 5,
+    SexLose = 6
 }

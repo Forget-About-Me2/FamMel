@@ -1,4 +1,5 @@
 import {GameLocation, gameState, LocationCategory} from "./gameState/gameState";
+import { BladderState } from "./gameState/bladderState";
 
 import {gameSettings} from "./settings/gameSettings";
 import {yourHome} from './yourHome';
@@ -8,6 +9,7 @@ import { setupQuotes, fetchAndCacheJson, locationSetup, locjson, printAllChoices
 import { pushloc, poploc, randomInt, connectToGameState } from './shims';
 import { setup } from './settings';
 import { updateyoururge } from './yourbladder';
+import { updateurge } from './bladder';
 
 /**
  * Main program loop that handles location transitions and game state updates
@@ -122,6 +124,32 @@ function syncLegacyLocStackFromTypedLocation(location: GameLocation): void {
     locStack[0] = mappedTag;
 }
 
+function syncCompanionFromLegacyGlobals(): void {
+    if (!gameState.Companion) return;
+    gameState.Companion.Bladder = Number(bladder) || 0;
+    gameState.Companion.Tummy = Number(tummy) || 0;
+    gameState.Companion.MaxTummy = Number(maxtummy) || gameState.Companion.MaxTummy;
+    gameState.Companion.MaxAlcohol = Number(maxbeer) || gameState.Companion.MaxAlcohol;
+    gameState.Companion.AlcoholInTummy = Number(drankbeer) || 0;
+    gameState.Companion.NowPeeing = !!nowpeeing;
+    const legacyUrge = Number(bladurge);
+    if (Number.isFinite(legacyUrge) && legacyUrge > 0) {
+        gameState.Companion.setUrge(legacyUrge);
+    }
+}
+
+function syncLegacyGlobalsFromCompanion(): void {
+    if (!gameState.Companion) return;
+    bladder = gameState.Companion.Bladder;
+    tummy = gameState.Companion.Tummy;
+    maxtummy = gameState.Companion.MaxTummy;
+    maxbeer = gameState.Companion.MaxAlcohol;
+    drankbeer = gameState.Companion.AlcoholInTummy;
+    nowpeeing = gameState.Companion.NowPeeing ? 1 : 0;
+    bladurge = gameState.Companion.bladderUrge;
+    updateurge(bladurge);
+}
+
 function syncPlayerFromLegacyGlobals(): void {
     if (!gameState.Player) {
         return;
@@ -158,6 +186,7 @@ function syncLegacyGlobalsFromPlayer(): void {
 
 export function go(location: unknown) {
     gameState.init();
+    syncCompanionFromLegacyGlobals();
     syncPlayerFromLegacyGlobals();
     allowItems = 0;
 
@@ -178,13 +207,15 @@ export function go(location: unknown) {
         gameState.Companion.NowPeeing = false; // clear the currently peeing flag.
 
         gameState.Companion.processFluidsDigestion();
+        syncLegacyGlobalsFromCompanion();
 
         //  If she's not with you, then she can go pee
         if (isPlayerOnlyLocation &&
-            // TODO Use bladder state enum instead of raw threshold comparison
-            gameState.Companion.Bladder > gameState.Companion.bladderEmer && !askholditcounter)
-            if (!isCallHerLocation)
+            gameState.Companion.bladderState >= BladderState.Emergency && !askholditcounter)
+            if (!isCallHerLocation) {
                 gameState.Companion.pee();
+                syncLegacyGlobalsFromCompanion();
+            }
 
         if (gameSettings.PlayerBladder
             || (isDrinkingGameLocation && gameSettings.PlayerDrinkGame)) {
@@ -242,6 +273,7 @@ export async function start() {
     animationManager.start();
     // Connect window bridges to gameState — auto-seeds from current window values.
     connectToGameState(gameState);
+    syncCompanionFromLegacyGlobals();
     syncPlayerFromLegacyGlobals();
     await fetchAndCacheJson("start");
     pushloc("yourhome");

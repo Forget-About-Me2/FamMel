@@ -1,6 +1,8 @@
 import { callChoice, sayText, c, printList, cListenerGenList } from './quotes';
 import { pickrandom, incrandom } from './shims';
 import { haveSex } from './fuckHer';
+import { gameState } from './gameState/gameState';
+import { BladderState } from './gameState/bladderState';
 
 export function flirt_l() {
     let curtext: any[] = []
@@ -79,11 +81,11 @@ export function feelup() {
     let curtext: any[] = [];
     if (locStack[0] !== "thehottub") {
         curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelher"]));
-        if (bladder > blademer) curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelpee"]));
+        if (gameState.Companion.bladderState >= BladderState.Emergency) curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelpee"]));
         else curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelres"]));
     } else {
         curtext.push(pickrandom(feelUp["tub"]));
-        if (bladder > blademer) curtext.push(pickrandom(feelUp["peeTub"]));
+        if (gameState.Companion.bladderState >= BladderState.Emergency) curtext.push(pickrandom(feelUp["peeTub"]));
         else curtext.push(pickrandom(feelUp["resTub"]));
     }
     if (flirtcounter > 1 && attraction > 35) {
@@ -148,7 +150,7 @@ export function kissher(curtext: any[] = [], sexLoc?: string) {
             arousal += 6;
         }
     } else {
-        if (bladder < blademer) {
+        if (gameState.Companion.bladderState < BladderState.Emergency) {
             if (locStack[0] !== "thehottub") {
                 curtext.push(pickrandom(kissing["sxy"]));
                 arousal += 8;

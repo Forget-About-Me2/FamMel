@@ -7,6 +7,8 @@ import { leavehm } from './drive';
 import { kissher } from './actions';
 import { theBedroom } from './fuckHer';
 import { gameOver } from './main';
+import { gameState } from './gameState/gameState';
+import { BladderState } from './gameState/bladderState';
 
 // All functions connected to her house. This is both pickup and endgame
 export let herHome; //Json with quotes for herHome.
@@ -58,12 +60,12 @@ export function pickup() {
             curtext.push(appearance["clothes"][heroutfit]["firstmtgtightquotebare"]);
         if (thetime < 55) {
             curtext.push(locjson["earlyComment"].formatVars());
-        } else if (!askholditcounter && bladder >= bladneed) {
+        } else if (!askholditcounter && gameState.Companion.bladderState >= BladderState.Need) {
             flushdrank(); // You did not ask her to wait.
         }
-        if (bladder > blademer)
+        if (gameState.Companion.bladderState >= BladderState.Emergency)
             curtext.push(pickrandom(locjson["bladderBulgeDesc"]));
-        if (thetime > 75 || (bladder > bladneed && thetime > 60)) {
+        if (thetime > 75 || (gameState.Companion.bladderState >= BladderState.Need && thetime > 60)) {
             curtext = printList(curtext, locjson["lateComment"]);
             curtext =  showneed(curtext);
             curtext.push(pickrandom(locjson["upsetDesc"]));
@@ -74,7 +76,7 @@ export function pickup() {
         if (prepeed) {
             curtext.push(locjson["prePeed"].formatVars());
             curtext = displaygottavoc(curtext);
-        } else if (bladder > bladneed && askholditcounter) {
+        } else if (gameState.Companion.bladderState >= BladderState.Need && askholditcounter) {
             if (thetime > 60)
                 curtext.push(pickrandom(locjson["lateHold"]).formatVars());
             else
@@ -97,14 +99,14 @@ export function pickup() {
     sayText(curtext);
     curtext = [];
     let listenerList: any[] = [];
-    if (bladder > bladlose) wetherself();
-    else if (yourbladder > yourbladlose) wetyourself();
+    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
+    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
     else {
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
         } else {
             curtext = standobjs(curtext, listenerList);
-            if (yourbladder > yourbladurge)
+            if (gameState.Player.bladderState >= BladderState.Urge)
                 listenerList.push([[youpee, locjson["choices"]["askToilet"]], "youpee"]);
         }
         listenerList.push([[leavehm, locjson["choices"]["letsGo"]], "leavehm"]);
@@ -138,7 +140,7 @@ export function elevatorWait() {
         listenerList.push([[elevatorWait, "Continue..."], "elevatorWait"]);
     } else {
             if (randomchoice(3)) {
-                if (elevatorwaitcounter > 2 && bladder > blademer) {
+                if (elevatorwaitcounter > 2 && gameState.Companion.bladderState >= BladderState.Emergency) {
                     curtext = printList(curtext, herHome["elevArriveEmer"]);
                 } else {
                     curtext.push(herHome["elevArrive"].formatVars());
@@ -146,7 +148,7 @@ export function elevatorWait() {
                 listenerList.push([[theElevator, "Continue..."], "theElevator"]);
             } else {
                 curtext = printList(curtext, herHome["elevWait"]);
-                if (bladder > blademer)
+                if (gameState.Companion.bladderState >= BladderState.Emergency)
                     curtext.push(pickrandom(herHome["elevWaitEmerQuote"]).formatVars());
                 else
                     curtext.push(pickrandom(herHome["elevWaitQuote"]).formatVars());
@@ -167,7 +169,7 @@ export function theElevator(){
     if (floorcounter === 3) {
         curtext = printList(curtext, herHome["elev3rdFloor"])
         if (!haveItem("herKeys")) {
-            if (bladder > blademer)
+            if (gameState.Companion.bladderState >= BladderState.Emergency)
                 curtext.push(herHome["sheHasKeys"].formatVars());
             listenerList.push([[theHome, "Continue..."], "theHome"]);
         } else
@@ -179,8 +181,8 @@ export function theElevator(){
     }
     curtext =  showneed(curtext);
     curtext = displayyourneed(curtext);
-    if (bladder > bladlose) wetherself();
-    else if (yourbladder > yourbladlose) wetyourself();
+    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
+    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
     else {
         if (floorcounter >= 3) {
             poploc();
@@ -210,7 +212,7 @@ export function giveKeys() {
     backPackItems.herKeys.value=0;
     let curtext = [herHome["getKeys"]];
     let listenerList: any[] = [];
-    if (bladder >= blademer) {
+    if (gameState.Companion.bladderState >= BladderState.Emergency) {
         curtext = displayneed(curtext);
         curtext.push(herHome["giveKeysDesp"].formatVars());
         listenerList.push([[theHome, "Continue..."], "theHome"]);
@@ -295,7 +297,7 @@ export function theHome() {
         } else {
             if (gottagoflag)
                 listerList.push([[allowpee, herHome["choices"]["allowPee"]], "allowPee"]);
-            else if (yourbladder > yourbladurge)
+            else if (gameState.Player.bladderState >= BladderState.Urge)
                 listerList.push([[youpee, herHome["choices"]["askBathroom"]], "youPee"]);
             listerList.push([[kissher, herHome["choices"]["kissHer"]], "kissHer"]);
             listerList.push([[gameOver, herHome["choices"]["goodNight"]],"gameOver"]);

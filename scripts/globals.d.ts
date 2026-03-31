@@ -30,6 +30,7 @@ declare let bladDespDec: number;
 declare let seal: number;
 declare let ybeerdecCounter: number;
 declare let drankbeer: number;
+declare let nowpeeing: number;
 declare let lastpeetime: number;
 declare let timeheld: number;
 declare let notdesperate: number;

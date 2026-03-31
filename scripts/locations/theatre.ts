@@ -6,6 +6,8 @@ import { standobjs, haveItem, buyItem, backPackItems } from '../backPackItems';
 import { kissher, feelup, checkherout } from '../actions';
 import { leavehm, driveout } from '../drive';
 import { itsClosed } from '../locations';
+import { gameState } from '../gameState/gameState';
+import { BladderState } from '../gameState/bladderState';
 
 export let theatre; //Json with quotes for theatre
 export let rrMovieLineThresh = 7; // Likelihood of line for restroom in the movie theatre.
@@ -53,8 +55,8 @@ export function theTheatre(){
         if (randomchoice(3)) curtext = noteholding(curtext);
         else if (randomchoice(5)) curtext = interpbladder(curtext);
         curtext = displayyourneed(curtext);
-        if (bladder > bladlose) wetherself();
-        else if (yourbladder > yourbladlose) wetyourself();
+        if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
+        else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
         else if (gottagoflag > 0){
             listenerList = preventpee(curtext);
             sayText(curtext);
@@ -62,7 +64,7 @@ export function theTheatre(){
             listenerList.push([[function () {buyItem("soda")}, objQuotes["buyChoices"]["soda"]], "buySoda"]);
             listenerList.push([[askMovie, theatre["choices"]["askMovie"]], "askMovie"]);
             listenerList.push([[chooseMovie, theatre["choices"]["chooseMovie"]], "chooseMovie"]);
-            if (yourbladder > yourbladurge)
+            if (gameState.Player.bladderState >= BladderState.Urge)
                 listenerList.push([[youpee, theatre["choices"]["youPee"]], "youPee"]);
             listenerList.push([[leavehm, theatre["choices"]["leaveHm"]], "leaveHm"]);
             curtext = standobjs(curtext, listenerList);
@@ -190,7 +192,7 @@ export function preMoviePee(curtext: any[] = []) {
         listenerList.push([[holdit, "Ask her to hold it."], "holdIt"]);
         listenerList.push([[allowpee, "Let her go."], "allowPee"]);
     } else {
-        if (yourbladder > yourbladneed)
+        if (gameState.Player.bladderState >= BladderState.Need)
             listenerList.push([[youpee, "Use the bathroom before watching the movie."], "youPee"]);
     }
     listenerList.push([[domovie, "Buy the tickets and head over to find the auditorium."], "doMovie"]);
@@ -223,8 +225,8 @@ export function domovie() {
     curtext = displayyourneed(curtext);
 
     let listenerList: any[] = [];
-    if (bladder > bladlose) wetherself();
-    else if (yourbladder > yourbladlose) wetyourself();
+    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
+    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
     else {
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
@@ -345,8 +347,8 @@ export function darkTheatre() {
 
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
-    if (bladder > bladlose) wetherself();
-    else if (yourbladder > yourbladlose) wetyourself();
+    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
+    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
     else if (gottagoflag > 0) {
         listenerList = preventpee(listenerList);
         sayText(curtext);
@@ -357,7 +359,7 @@ export function darkTheatre() {
         listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
         listenerList.push([[feelup, general["feelUp"]], "feelUp"]);
         if (!checkedherout) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);
-        if (yourbladder > yourbladurge) listenerList.push([[youpee, theatre["choices"]["youPee"]], "youPee"]);
+        if (gameState.Player.bladderState >= BladderState.Urge) listenerList.push([[youpee, theatre["choices"]["youPee"]], "youPee"]);
         listenerList.push([[leavehm, theatre["choices"]["leaveHm"]], "leaveHm"]);
     }
     cListenerGenList(listenerList);

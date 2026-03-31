@@ -4,6 +4,8 @@ import { showneed, displayneed, flushdrank, holdit, allowpee } from './bladder';
 import { displayyourneed } from './yourbladder';
 import { kissher } from './actions';
 import { gameOver, gameWet, gameSexBoth, gameWon } from './main';
+import { gameState } from './gameState/gameState';
+import { BladderState } from './gameState/bladderState';
 
 // Fucking Parameters
 export let arousal = 0;
@@ -272,7 +274,7 @@ export function haveSex(location: string){
             curtext = printList(curtext, firstIntroVariants[0]);
         } else {
             if (pantycolor === "none") sexActions.takeOff("panties");
-            if (bladder > bladlose)
+            if (gameState.Companion.bladderState >= BladderState.Lose)
                 curtext = printList(curtext, firstIntroVariants[0]);
             else
                 curtext = printList(curtext, firstIntroVariants[1]);
@@ -349,7 +351,7 @@ export function takeOff(item: string, location: string){
     let processed = false;
     let failTakeOff = false;
     let curtext: any[] = [];
-    if (item === "skirt" && bladder > blademer)
+    if (item === "skirt" && gameState.Companion.bladderState >= BladderState.Emergency)
         curtext.push(appearance["clothes"][heroutfit]["sextoskirtquoteemer"].formatVars());
     for (let i = 0; !processed; i++){
         // clothesInfo tuple: [prerequisite, bladderCheck, failMode]
@@ -364,16 +366,16 @@ export function takeOff(item: string, location: string){
             temp = appearance["clothes"][heroutfit]["sex"+item+prerequisite.formatVars()];
             if (typeof temp !== "undefined")
                 curtext.push(temp);
-            if (item === "panties" && bladder > bladlose)
+            if (item === "panties" && gameState.Companion.bladderState >= BladderState.Lose)
                 curtext = printList(curtext, sexLines["clothes"][item][i][3]); // extraText
             curtext = printList(curtext, sexLines["clothes"][item][i][0]); // baseText
             if (bladderCheck === "lose") {
-                if (bladder > bladlose)
+                if (gameState.Companion.bladderState >= BladderState.Lose)
                     curtext = printList(curtext, sexLines["clothes"][item][i][1]); // desperateText
                 else
                     curtext = printList(curtext, sexLines["clothes"][item][i][2]); // normalText
             } else if (bladderCheck === "emer"){
-                if (bladder > blademer)
+                if (gameState.Companion.bladderState >= BladderState.Emergency)
                     curtext = printList(curtext, sexLines["clothes"][item][i][1]); // desperateText
                 else
                     curtext = printList(curtext, sexLines["clothes"][item][i][2]); // normalText
@@ -389,17 +391,17 @@ export function takeOff(item: string, location: string){
             if (item === "panties")
                 curtext.push(appearance["clothes"][heroutfit]["sexPantiesTOSkirt"]);
             if (bladderCheck === "lose") {
-                if (bladder > bladlose)
+                if (gameState.Companion.bladderState >= BladderState.Lose)
                     curtext = printList(curtext, sexLines["clothes"][item][i][1]); // desperateText
                 else
                     curtext = printList(curtext, sexLines["clothes"][item][i][2]); // normalText
             } else if (bladderCheck === "emer"){
-                if (bladder > blademer)
+                if (gameState.Companion.bladderState >= BladderState.Emergency)
                     curtext = printList(curtext, sexLines["clothes"][item][i][1]); // desperateText
                 else
                     curtext = printList(curtext, sexLines["clothes"][item][i][2]); // normalText
             }
-            if (item === "skirt" && bladder > bladlose)
+            if (item === "skirt" && gameState.Companion.bladderState >= BladderState.Lose)
                 curtext = printList(curtext, sexLines["clothes"][item][i][3]); // extraText
             processed = true;
         }
@@ -458,7 +460,7 @@ export function performAction(action: string, location: string){
             }
             curtext = printList(curtext, sexLines["actions"][action][i][0]); // baseText
             if (bladderCheck === "emer") {
-                if (bladder > blademer)
+                if (gameState.Companion.bladderState >= BladderState.Emergency)
                     curtext = printList(curtext, sexLines["actions"][action][i][1]); // desperateText
                 else {
                     if (action === "kPussy" && wetherpanties)
@@ -466,14 +468,14 @@ export function performAction(action: string, location: string){
                     curtext = printList(curtext, sexLines["actions"][action][i][2]); // normalText
                 }
             } else if (bladderCheck === "lose"){
-                if (bladder > bladlose)
+                if (gameState.Companion.bladderState >= BladderState.Lose)
                     curtext = printList(curtext, sexLines["actions"][action][i][1]); // desperateText
                 else
                     if (action === "kPussy" && wetherpanties && prerequisite==="none")
                         curtext = printList(curtext, sexLines["actions"][action][i][3]); // wetPantiesText
                     curtext = printList(curtext, sexLines["actions"][action][i][2]); // normalText
             }
-            if (action === "kPussy" && bladder > bladlose && prerequisite === "none")
+            if (action === "kPussy" && gameState.Companion.bladderState >= BladderState.Lose && prerequisite === "none")
                 curtext = printList(curtext, sexLines["actions"][action][i][4]); // bladderLoseExtraText
 
             processed = true;
@@ -529,10 +531,10 @@ export function theBedroom() {
 export function fuckNow() {
     fuckingnow = 1;
     let curtext = printList([], sexLines["fuckNow"][0]);
-    if (bladder > bladlose) {
+    if (gameState.Companion.bladderState >= BladderState.Lose) {
         curtext = printList(curtext, sexLines["fuckNow"][1]);
     }
-    if (bladder > blademer) {
+    if (gameState.Companion.bladderState >= BladderState.Emergency) {
         curtext = printList(curtext, sexLines["fuckNow"][2]);
     } else {
         curtext = printList(curtext, sexLines["fuckNow"][3]);
@@ -547,7 +549,7 @@ export function fuckNow() {
 
 export function fuckHer2() {
     let curtext = printList([], sexLines["fuckNow"][4]);
-    if (bladder > blademer) {
+    if (gameState.Companion.bladderState >= BladderState.Emergency) {
         curtext = printList(curtext, sexLines["fuckNow"][5]);
         sayText(curtext);
         cListenerGen([wetBed, "Continue..."], "wetBed");
@@ -564,7 +566,7 @@ export function wetBed() {
 
 export function bothCum() {
     let curtext = printList([], sexLines["fuckNow"][7]);
-    if (bladder > bladneed)
+    if (gameState.Companion.bladderState >= BladderState.Need)
         curtext = printList(curtext, sexLines["fuckNow"][8]);
     else
         curtext = printList(curtext, sexLines["fuckNow"][9]);
@@ -574,7 +576,7 @@ export function bothCum() {
 
 export function fuckHer2b() {
     let curtext = printList([], sexLines["fuckNow"][10]);
-    if (bladder > blademer)
+    if (gameState.Companion.bladderState >= BladderState.Emergency)
         curtext = printList(curtext, sexLines["fuckNow"][11]);
     else
         curtext = printList(curtext, sexLines["fuckNow"][12]);
@@ -584,7 +586,7 @@ export function fuckHer2b() {
 
 export function fuckHer3() {
     let curtext: any[] = [], listenerList: any[] = [];
-    if (bladder > blademer) {
+    if (gameState.Companion.bladderState >= BladderState.Emergency) {
         curtext = printList(curtext, sexLines["fuckNow"][13]);
         listenerList.push([[preWet, "Keep fucking her"], "preWet"]);
         listenerList.push([[fuckHer4, "Pause for a second"], "fuckHer"]);
@@ -608,7 +610,7 @@ export function fuckHer4() {
     sayText(sexLines["fuckNow"][16]);
     let listenerList: any[] = [];
     let func;
-    if (bladder < bladsexlose)
+    if (gameState.Companion.bladderState < BladderState.SexLose)
         func = fuckHer5;
     else
         func = fuckHer5b;
@@ -631,15 +633,15 @@ export function fuckHer5b() {
 export function fuckHer6() {
     let curtext: any[] = [];
     let listenerList: any[] = [];
-    if (bladder < bladneed) {
+    if (gameState.Companion.bladderState < BladderState.Need) {
         curtext = printList(curtext, sexLines["fuckNow"][19]);
         listenerList.push([[gameSexBoth, "Continue..."], "gameSex"]);
     } else {
         curtext = printList(curtext, sexLines["fuckNow"][20]);
-        if (bladder >= bladcumlose)
+        if (gameState.Companion.bladderState >= BladderState.CumLose)
             curtext = printList(curtext, sexLines["fuckNow"][21]);
         curtext = printList(curtext, sexLines["fuckNow"][22]);
-        if (bladder >= bladcumlose)
+        if (gameState.Companion.bladderState >= BladderState.CumLose)
             curtext = printList(curtext, sexLines["fuckNow"][23]);
         curtext = printList(curtext, sexLines["fuckNow"][24]);
         listenerList.push([[fuckHer7, "Continue..."], "fuckHer"]);
