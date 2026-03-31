@@ -332,9 +332,8 @@ export function interpbladder(curtext: any[]): any[] {
     return curtext;
 }
 
-const BEDROOM_LOCATIONS = ["thebedroom", "theBedroom"];
-const HOME_LOCATIONS = ["thehome", ...BEDROOM_LOCATIONS, "fuckher6"];
-const NO_RESTROOM_LOCATIONS = ["theMakeOut", "theHotTub", "driveout", "thehome", ...BEDROOM_LOCATIONS, "theWalk", "theYard", "theBeach"];
+const HOME_LOCATIONS = ["thehome", "theBedroom", "fuckher6"];
+const NO_RESTROOM_LOCATIONS = ["theMakeOut", "theHotTub", "driveout", "thehome", "theBedroom", "theWalk", "theYard", "theBeach"];
 const OUTDOOR_NO_RESTROOM = ["theWalk", "theYard", "theBeach", "theHotTub"];
 const DESPERATE_PEE_OFFSET = 25; // bladder within this margin of bladlose triggers desperate text
 
@@ -763,7 +762,7 @@ export function allowpee(): void {
     const [allowResponse, allowRelief, allowOfferPurse] = needs["allowpee"];
     curtext.push(allowResponse);
     curtext.push(allowRelief);
-    if (locStack[0] === "fuckher6" || locStack[0] === "thehome" || BEDROOM_LOCATIONS.includes(locStack[0]) || locStack[0] === "darkbar"
+    if (locStack[0] === "fuckher6" || locStack[0] === "thehome" || locStack[0] === "theBedroom" || locStack[0] === "darkbar"
         || locStack[0] === "pickup" || locStack[0] === "darkclub" || locStack[0] === "darkbar") {
         listenerList.push([[indepee, "Continue..."], "indePee"]);
     } else {

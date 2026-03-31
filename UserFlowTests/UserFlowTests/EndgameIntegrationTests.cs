@@ -1,5 +1,4 @@
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using AwesomeAssertions;
 using UserFlowTests;
 
@@ -14,7 +13,7 @@ public class EndgameIntegrationTests
     [SetUp]
     public void SetUp()
     {
-        _driver = new ChromeDriver();
+        _driver = DriverExtensions.CreateTestDriver();
     }
 
     [TearDown]

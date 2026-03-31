@@ -1,5 +1,4 @@
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using AwesomeAssertions;
 using UserFlowTests;
 
@@ -9,7 +8,7 @@ public class TheMovieTest {
 
   [SetUp]
   public void SetUp() {
-    driver = new ChromeDriver();
+    driver = DriverExtensions.CreateTestDriver();
   }
 
   [TearDown]

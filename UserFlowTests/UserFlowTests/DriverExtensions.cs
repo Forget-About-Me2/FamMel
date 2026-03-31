@@ -1,10 +1,32 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using System.Diagnostics;
 
 namespace UserFlowTests
 {
     public static class DriverExtensions
     {
+        public static IWebDriver CreateTestDriver()
+        {
+            var options = new ChromeOptions();
+
+            // Default to headless to keep UI tests from stealing focus during background runs.
+            var runHeadless = !string.Equals(
+                Environment.GetEnvironmentVariable("FAMMEL_UI_TEST_HEADFUL"),
+                "1",
+                StringComparison.OrdinalIgnoreCase);
+
+            if (runHeadless)
+            {
+                options.AddArgument("--headless=new");
+            }
+
+            options.AddArgument("--window-size=1600,1000");
+            options.AddArgument("--disable-gpu");
+
+            return new ChromeDriver(options);
+        }
+
         public static void ClickWhenInteractable(this IWebDriver driver, By by, int timeoutSeconds = 10)
         {
             var element = driver.WaitForInteractable(by, timeoutSeconds);

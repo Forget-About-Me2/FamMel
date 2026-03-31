@@ -92,7 +92,7 @@ export function youpee() {
         curtext = printList(curtext, ypeelines["yourhome"]);
         peed = 1
     } else if (currentLocation === "theHome" ||
-        currentLocation === "thebedroom" || currentLocation === "pickup" || currentLocation === "fuckher6") {
+        currentLocation === "theBedroom" || currentLocation === "pickup" || currentLocation === "fuckher6") {
         if(currentLocation !== "fuckher6") {
             curtext = printList(curtext, askToiletLines);
         }

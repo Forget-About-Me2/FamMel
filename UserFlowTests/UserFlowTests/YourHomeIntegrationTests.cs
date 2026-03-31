@@ -1,5 +1,4 @@
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using AwesomeAssertions;
 
 namespace UserFlowTests;
@@ -13,7 +12,7 @@ public class YourHomeIntegrationTests
     [SetUp]
     public void SetUp()
     {
-        _driver = new ChromeDriver();
+        _driver = DriverExtensions.CreateTestDriver();
     }
 
     [TearDown]
