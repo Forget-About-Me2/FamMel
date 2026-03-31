@@ -167,10 +167,28 @@ Move module-scoped `let` variables into `gameState` properties, updating all ref
 
 - [x] **Sixth batch — bladder + yourbladder** (68 variables): All 44 bladder.ts state variables (customurge, minurge, minperc, bladurge, bladneed, blademer, bladlose, bladcumlose, bladsexlose, maxtummy, maxbeer, tummy, bladder, bladDec, bladDespDec, seal, beerdecCounter, ybeerdecCounter, peedtowels, peedvase, peedshot, peedoutside, lastpeetime, timeheld, drankbeer, notdesperate, notydesperate, nothdesperate, spurtthresh, yspurtthresh, bribeaskthresh, bribeAskBase, tumavg, rrlockedflag, shespurted, brokeice, sawherpee, wetlegs, wetherpanties, nowpeeing, gottagoflag, askholditcounter, waitcounter, toldstories, lastStory) and all 24 yourbladder.ts variables (yourbladder, yourtummy, yourtumavg, holdself, yourbladurge, yourbladneed, yourblademer, yourbladlose, yourbladcumlose, yourbladsexlose, ymaxtummy, ymaxbeer, yourcustomurge, yminurge, ynowpeeing, ylastpeetime, ytimeheld, ydrankcocktails, ydranksodas, ydrankwaters, ydrankbeers, ydrankbeer, yrrlockedflag, youSpurted). Deep fields (`toldstories`, `lastStory`) bridged via `stringProps` (no-coercion pass-through). Added auto-seeding to `connectToGameState()` — all bridge loops now copy current window value into gameState before overriding, so `setup()` localStorage changes survive. Removed redundant explicit seeding lines from `start()` in main.ts.
 
+- [x] **Seventh batch — deep fields & locStack (properties only, NOT bridged)** (28 variables): Added GameState properties for all remaining DEEP_FIELDS from saveLoad.ts: Settings, StatsBars, EndScreens, LegacyLocStack (shims.ts); SexActions (fuckHer.ts); CalledJsons, LocJson, FlirtResps, FeelUp, Kissing, YPeeLines, PeeLines, Needs, YNeeds, DrinkLines, Appearance, Drive, General, Darts, SexLines, ObjQuotes (quotes.ts); Locations, SharedLoc (locations.ts); Bar, TalkUnused (theBar.ts); Club (theClub.ts); Theatre (theatre.ts); MakeOut (theMakeOut.ts); HerHome (herhome.ts). **These are NOT bridged** in `connectToGameState()` — see "Bridge limitation" below.
+
+#### Bridge limitation discovered
+
+**Module-scoped variables cannot be safely bridged via window property override.**
+
+The `connectToGameState()` pattern overrides `window.x` to delegate to `gs.X`, but module code still reads/writes the local `let` variable directly (e.g., `bladder += 5` in bladder.ts writes the module variable, not `gs.Bladder`). This disconnects `window.x` from the module variable after bridging.
+
+**Affected**: ALL non-shims variables (batches 2–6 scalar bridges from bladder.ts, yourbladder.ts, fuckHer.ts, drive.ts, locations.ts, theBar.ts, theClub.ts, theatre.ts, theMakeOut.ts, herhome.ts, settings.ts, quotes.ts, backPackItems.ts, images.ts). These bridges silently disconnect — module code works with its own variable, `window.x` reads a stale gameState copy.
+
+**Not affected**: shims.ts variables (money, attraction, etc.) — these module variables are never read/written by module code after initialization; all runtime access goes through window.
+
+**Impact**: Save/load reads through `window`, which after bridging returns the stale gameState value instead of the live module variable. Current tests don't verify save/load, so this doesn't fail tests.
+
+**Fix needed**: Reverse the bridge direction for non-shims variables — make `gs.X` delegate to `window.x` (which reads the module variable), instead of `window.x` delegating to `gs.X`. This preserves module code correctness while giving gameState typed access. The deep fields and locStack remain unbridged because they're mutated by module code and accessed via `expose*OnWindow()` bridges.
+
 #### Remaining absorption
 
-- [ ] Absorb shims state — remaining: locStack (string-based, incompatible with gameState.LocStack GameLocation[]), settings/statsBars/endScreens (JSON caches)
-- [ ] Absorb remaining deep-field JSON caches (sexActions, calledjsons, locjson, flirtresps, feelUp, kissing, ypeelines, peelines, needs, yneeds, drinklines, appearance, drive, general, darts, sexLines, objQuotes, locations, sharedLoc, bar, talkUnused, club, theatre, makeOut, herHome) — these are JSON objects loaded at runtime, currently saved via DEEP_FIELDS in saveLoad.ts
+- [ ] Fix non-shims scalar bridges — reverse bridge direction so `gs.X` delegates to `window.x` instead of overriding window (see "Bridge limitation" above)
+- [ ] Bridge deep fields once module code is migrated to access through gameState directly
+
+#### Remaining structural work
 - [ ] Consolidate bedroom location key — `"theBedroom"` (camelCase, pushed in fuckHer.ts) vs `"thebedroom"` (lowercase, checked in bladder.ts/yourbladder.ts). Pick one canonical form and update all references. Currently papered over with `BEDROOM_LOCATIONS` alias array in bladder.ts
 - [ ] Create Player `Person` object — player currently uses bare globals (`yourbladder`, `yourbladurge`, etc.) with no `Person` instance. Give the player a `gameState.Player` Person so both companion and player share the same bladder API
 - [ ] Replace raw bladder threshold comparisons with `BladderState` enum checks (~134 sites across 15 files). Requires: convert `BladderState` to numeric enum for `>=` comparisons; keep a raw-value escape hatch (e.g. `person.Bladder > person.bladderLose - 25`) for ~15 offset comparisons that don't map to a clean enum state. `Person.bladderState` getter already exists; migrate consumer files (actions, backPackItems, fuckHer, herhome, locations/*, store, darts) first, leave bladder.ts/yourbladder.ts internals for last

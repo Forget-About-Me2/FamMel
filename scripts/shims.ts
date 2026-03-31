@@ -362,10 +362,14 @@ export function connectToGameState(gs: any): void {
         ['girltalk',       'GirlTalk'],
         ['girlgasp',       'GirlGasp'],
         ['imageprev',      'ImagePrev'],
-        // bladder.ts deep fields
-        ['toldstories',    'ToldStories'],
-        ['lastStory',      'LastStory'],
     ];
+
+    // NOTE: Deep-field variables (toldstories, lastStory, calledjsons, locjson,
+    // bar, club, etc.) and locStack are NOT bridged here. Their module code
+    // reads/writes the module variable directly (not through window), so
+    // overriding the window property would disconnect module writes from window
+    // reads. They remain accessible via their expose*OnWindow() bridges for
+    // save/load purposes.
 
     // Seed gameState from current window values before overriding bridges.
     // setup() may have changed values (e.g. custom urge from localStorage).

@@ -247,6 +247,55 @@ class GameState {
     YRrLockedFlag: number = 0;
     YouSpurted: number = 0;
 
+    // shims.ts deep fields (JSON caches)
+    Settings: any = undefined;
+    StatsBars: any = undefined;
+    EndScreens: any = undefined;
+
+    // fuckHer.ts deep field
+    SexActions: any = undefined;
+
+    // quotes.ts deep fields (JSON caches + dialogue sets)
+    CalledJsons: any = {};
+    LocJson: any = null;
+    FlirtResps: any = undefined;
+    FeelUp: any = undefined;
+    Kissing: any = undefined;
+    YPeeLines: any = undefined;
+    PeeLines: any = undefined;
+    Needs: any = undefined;
+    YNeeds: any = undefined;
+    DrinkLines: any = undefined;
+    Appearance: any = undefined;
+    Drive: any = undefined;
+    General: any = undefined;
+    Darts: any = undefined;
+    SexLines: any = undefined;
+    ObjQuotes: any = undefined;
+
+    // locations.ts deep fields
+    Locations: any = undefined;
+    SharedLoc: any = undefined;
+
+    // theBar.ts deep fields
+    Bar: any = undefined;
+    TalkUnused: any = undefined;
+
+    // theClub.ts deep field
+    Club: any = undefined;
+
+    // theatre.ts deep field
+    Theatre: any = undefined;
+
+    // theMakeOut.ts deep field
+    MakeOut: any = undefined;
+
+    // herhome.ts deep field
+    HerHome: any = undefined;
+
+    // shims.ts — legacy string-based location stack (separate from this.LocStack which uses GameLocation[])
+    LegacyLocStack: string[] = ["yourhome"];
+
     init(): void {
         if (this.initialized) {
             return;
