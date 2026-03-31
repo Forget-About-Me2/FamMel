@@ -184,19 +184,14 @@ export function loadSave(save: Record<string, any>): void {
 }
 
 /** Push restored window globals into the typed gameState singleton.
- *  After connectToGameState(), most variables are already bridged — the
- *  window property setter writes directly to gameState.  Only un-bridged
- *  variables (time, etc.) still need manual sync here.
+ *  After connectToGameState(), all shims variables are bridged — the
+ *  window property setter writes directly to gameState.  This function
+ *  is kept as a hook for any future un-bridged variables.
  */
 function syncGameState(): void {
-    const w = window as any;
-    const gs = w.gameState;
-    if (!gs) return;
-
-    // Time is not yet bridged — sync manually
-    gs.Time.hour = w.hour;
-    gs.Time.minute = w.minute;
-    gs.Time.totalTime = w.thetime;
+    // All shims variables (including time) are now bridged via
+    // connectToGameState().  Window property writes in loadSave()
+    // flow through to gameState automatically.
 }
 
 // ---------------------------------------------------------------------------

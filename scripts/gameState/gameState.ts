@@ -73,6 +73,33 @@ class GameState {
      */
     ShowedNeed : boolean = false;
 
+    // Late-night flag (set when thetime > 75)
+    Late: number = 0;
+
+    // Flirt interaction counters
+    FlirtedFlag: number = 0;
+    NoFlirtFlag: number = 0;
+
+    // Shopping session flag (1 while in store)
+    Shopping: number = 0;
+
+    // Interaction limits (saveable — defaults match gameSettings)
+    MaxFlirts: number = 2;
+    MaxKiss: number = 7;
+    MaxFeel: number = 7;
+    RandMax: number = 5;
+
+    // Venue closing times (ticks from 7 PM)
+    ClubClosingTime: number = 7 * 60;     // 420 = 2:00 AM
+    TheaterClosingTime: number = 3 * 60;  // 180 = 10:00 PM
+    BarClosingTime: number = 6 * 60;      // 360 = 1:00 AM
+
+    // Time progression rate
+    TimeSpeed: number = 2;
+
+    // Whether the player bladder mechanic is enabled
+    PlayerBladder: boolean = true;
+
     init(): void {
         if (this.initialized) {
             return;
@@ -213,6 +240,10 @@ class Time{
     minute: number = 0;
 
     totalTime : number = 0;
+
+    get meridian(): string {
+        return this.hour < 12 ? 'AM' : 'PM';
+    }
 
     nextTick() : void{
         this.minute += gameSettings.TimeSpeed;

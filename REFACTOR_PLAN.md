@@ -157,9 +157,11 @@ Move module-scoped `let` variables into `gameState` properties, updating all ref
 
 - [x] **First batch** (14 variables): money, attraction, shyness, lastmoney, lastattraction, lastshyness, flirtcounter, randcounter, owedfavor, didintro, haveherpurse, changevenueflag, checkedherout, showedneed — all already had gameState counterparts. Window bridges now delegate to gameState. Removed redundant sync lines from `go()` and `syncGameState()`. Fixed `OwedFavour` from `boolean` to `number` (it's a counter — `+=1`/`-=1` in theatre.ts/bladder.ts; the old `!!` coercion was lossy). Removed global-write from `Money`/`Attraction`/`Shyness` setters (bridge handles it, avoids infinite loop). Updated `incrandom()` to use window bridge instead of module variable.
 
+- [x] **Second batch — shims state** (17 variables): thetime, hour, minute, meridian, late, playerbladder, flirtedflag, noflirtflag, shopping, maxflirts, maxkiss, maxfeel, randmax, clubclosingtime, theaterclosingtime, barclosingtime, timespeed. Added `Time.meridian` computed getter, `Late`, `FlirtedFlag`, `NoFlirtFlag`, `Shopping`, `MaxFlirts`, `MaxKiss`, `MaxFeel`, `RandMax`, `ClubClosingTime`, `TheaterClosingTime`, `BarClosingTime`, `TimeSpeed`, `PlayerBladder` to GameState. Time variables (`thetime`, `hour`, `minute`) bridge to nested `gs.Time.totalTime/hour/minute`. `meridian` is derived from hour (setter is no-op). Removed manual time sync from `syncGameState()` (all bridged now). Removed redundant `thetime`/`hour` sync lines from `go()` in main.ts. Seeded `PlayerBladder` from shims before `connectToGameState()`.
+
 #### Remaining absorption
 
-- [ ] Absorb shims state — remaining: locStack, thetime, hour, minute, meridian, late, playerbladder, flirtedflag, noflirtflag, shopping, maxflirts, maxkiss, maxfeel, randmax, closing times, timespeed
+- [ ] Absorb shims state — remaining: locStack (string-based, incompatible with gameState.LocStack GameLocation[]), settings/statsBars/endScreens (JSON caches)
 - [ ] Absorb bladder state (bladder, tummy, thresholds, flags)
 - [ ] Absorb yourbladder state
 - [ ] Absorb fuckHer state (arousal, counters)

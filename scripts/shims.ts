@@ -204,6 +204,18 @@ export function connectToGameState(gs: any): void {
         ['flirtcounter',   'FlirtCounter'],
         ['randcounter',    'randCounter'],
         ['owedfavor',      'OwedFavour'],
+        ['late',           'Late'],
+        ['flirtedflag',    'FlirtedFlag'],
+        ['noflirtflag',    'NoFlirtFlag'],
+        ['shopping',       'Shopping'],
+        ['maxflirts',      'MaxFlirts'],
+        ['maxkiss',        'MaxKiss'],
+        ['maxfeel',        'MaxFeel'],
+        ['randmax',        'RandMax'],
+        ['clubclosingtime','ClubClosingTime'],
+        ['theaterclosingtime','TheaterClosingTime'],
+        ['barclosingtime', 'BarClosingTime'],
+        ['timespeed',      'TimeSpeed'],
     ];
 
     // Boolean flags — coerce number↔boolean for legacy compatibility
@@ -232,6 +244,28 @@ export function connectToGameState(gs: any): void {
             enumerable: true,
         });
     }
+
+    // Time system — nested on gs.Time
+    Object.defineProperty(w, 'thetime', {
+        get: () => gs.Time.totalTime,
+        set: (v: any) => { gs.Time.totalTime = v; },
+        configurable: true, enumerable: true,
+    });
+    Object.defineProperty(w, 'hour', {
+        get: () => gs.Time.hour,
+        set: (v: any) => { gs.Time.hour = v; },
+        configurable: true, enumerable: true,
+    });
+    Object.defineProperty(w, 'minute', {
+        get: () => gs.Time.minute,
+        set: (v: any) => { gs.Time.minute = v; },
+        configurable: true, enumerable: true,
+    });
+    Object.defineProperty(w, 'meridian', {
+        get: () => gs.Time.meridian,
+        set: () => {},  // derived from hour — no-op
+        configurable: true, enumerable: true,
+    });
 }
 
 // ============================================================================

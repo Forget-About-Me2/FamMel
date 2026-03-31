@@ -160,10 +160,6 @@ export function go(location: unknown) {
         }
 
         gameState.Time.nextTick();
-
-        // Sync legacy time globals from gameState
-        thetime = gameState.Time.totalTime;
-        hour = gameState.Time.hour;
     }
 
     document.GetRequiredElementById('textsp').innerText = "";
@@ -212,6 +208,8 @@ export async function start() {
     if (typeof attraction !== "undefined") gameState.Attraction = attraction;
     if (typeof shyness !== "undefined") gameState.Shyness = shyness;
     gameState.randCounter = (globalThis as any).randcounter ?? 0;
+    // Seed newly absorbed properties — setup() may have changed playerbladder.
+    gameState.PlayerBladder = !!(globalThis as any).playerbladder;
     // Connect window bridges to gameState — all reads/writes now go through gameState.
     connectToGameState(gameState);
     await fetchAndCacheJson("start");
