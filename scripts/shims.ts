@@ -193,8 +193,14 @@ randcounter = randomInt(5);
 export function connectToGameState(gs: any): void {
     const w = window as any;
 
-    // Numeric properties — direct pass-through
-    const numericProps: Array<[string, string]> = [
+    // ========================================================================
+    // FORWARD bridges — shims-owned variables.
+    // These module vars are NOT read/written by module code after init, so
+    // overriding window.x → gs.X is safe.  All runtime access goes through
+    // window, which now delegates to gameState.
+    // ========================================================================
+
+    const shimsNumericProps: Array<[string, string]> = [
         ['money',          'Money'],
         ['attraction',     'Attraction'],
         ['shyness',        'Shyness'],
@@ -216,6 +222,74 @@ export function connectToGameState(gs: any): void {
         ['theaterclosingtime','TheaterClosingTime'],
         ['barclosingtime', 'BarClosingTime'],
         ['timespeed',      'TimeSpeed'],
+    ];
+
+    const shimsBoolProps: Array<[string, string]> = [
+        ['didintro',       'DidIntro'],
+        ['haveherpurse',   'HavePurse'],
+        ['changevenueflag','ChangeVenueFlag'],
+        ['checkedherout',  'CheckedHerOut'],
+        ['showedneed',     'ShowedNeed'],
+        ['playerbladder',  'PlayerBladder'],
+    ];
+
+    // Seed gameState from current window values, then override window bridge.
+    for (const [globalName, gsProp] of shimsNumericProps) {
+        const cur = w[globalName];
+        if (cur !== undefined) gs[gsProp] = cur;
+        Object.defineProperty(w, globalName, {
+            get: () => gs[gsProp],
+            set: (v: any) => { gs[gsProp] = v; },
+            configurable: true,
+            enumerable: true,
+        });
+    }
+
+    for (const [globalName, gsProp] of shimsBoolProps) {
+        const cur = w[globalName];
+        if (cur !== undefined) gs[gsProp] = !!cur;
+        Object.defineProperty(w, globalName, {
+            get: () => gs[gsProp],
+            set: (v: any) => { gs[gsProp] = !!v; },
+            configurable: true,
+            enumerable: true,
+        });
+    }
+
+    // Time system — forward bridge (shims-owned)
+    if (w.thetime !== undefined) gs.Time.totalTime = w.thetime;
+    if (w.hour !== undefined) gs.Time.hour = w.hour;
+    if (w.minute !== undefined) gs.Time.minute = w.minute;
+    Object.defineProperty(w, 'thetime', {
+        get: () => gs.Time.totalTime,
+        set: (v: any) => { gs.Time.totalTime = v; },
+        configurable: true, enumerable: true,
+    });
+    Object.defineProperty(w, 'hour', {
+        get: () => gs.Time.hour,
+        set: (v: any) => { gs.Time.hour = v; },
+        configurable: true, enumerable: true,
+    });
+    Object.defineProperty(w, 'minute', {
+        get: () => gs.Time.minute,
+        set: (v: any) => { gs.Time.minute = v; },
+        configurable: true, enumerable: true,
+    });
+    Object.defineProperty(w, 'meridian', {
+        get: () => gs.Time.meridian,
+        set: () => {},  // derived from hour — no-op
+        configurable: true, enumerable: true,
+    });
+
+    // ========================================================================
+    // REVERSE bridges — non-shims module variables.
+    // These vars are read/written by their module code via the local `let`
+    // variable.  The expose*OnWindow() bridges keep window ↔ module var in
+    // sync.  We define gs.X as a pass-through to window.x so gameState
+    // always sees the live module value without overriding the window bridge.
+    // ========================================================================
+
+    const moduleNumericProps: Array<[string, string]> = [
         // fuckHer.ts state
         ['arousal',        'Arousal'],
         ['kisscounter',    'KissCounter'],
@@ -335,18 +409,7 @@ export function connectToGameState(gs: any): void {
         ['youSpurted',     'YouSpurted'],
     ];
 
-    // Boolean flags — coerce number↔boolean for legacy compatibility
-    const boolProps: Array<[string, string]> = [
-        ['didintro',       'DidIntro'],
-        ['haveherpurse',   'HavePurse'],
-        ['changevenueflag','ChangeVenueFlag'],
-        ['checkedherout',  'CheckedHerOut'],
-        ['showedneed',     'ShowedNeed'],
-        ['playerbladder',  'PlayerBladder'],
-    ];
-
-    // String properties — direct pass-through
-    const stringProps: Array<[string, string]> = [
+    const moduleStringProps: Array<[string, string]> = [
         ['loser',          'Loser'],
         ['moviechoice',    'MovieChoice'],
         // settings.ts state
@@ -364,72 +427,59 @@ export function connectToGameState(gs: any): void {
         ['imageprev',      'ImagePrev'],
     ];
 
-    // NOTE: Deep-field variables (toldstories, lastStory, calledjsons, locjson,
-    // bar, club, etc.) and locStack are NOT bridged here. Their module code
-    // reads/writes the module variable directly (not through window), so
-    // overriding the window property would disconnect module writes from window
-    // reads. They remain accessible via their expose*OnWindow() bridges for
-    // save/load purposes.
+    // Deep-field variables (toldstories, lastStory, calledjsons, locjson,
+    // bar, club, etc.) and locStack are accessed the same way — module code
+    // mutates them directly.  They stay on expose*OnWindow() bridges only.
+    // gameState has placeholder properties for them but they're reverse-bridged
+    // here so gs.X always reads the live module value through window.
+    const moduleDeepProps: Array<[string, string]> = [
+        ['toldstories',    'ToldStories'],
+        ['lastStory',      'LastStory'],
+        ['settings',       'Settings'],
+        ['statsBars',      'StatsBars'],
+        ['endScreens',     'EndScreens'],
+        ['sexActions',     'SexActions'],
+        ['calledjsons',    'CalledJsons'],
+        ['locjson',        'LocJson'],
+        ['flirtresps',     'FlirtResps'],
+        ['feelUp',         'FeelUp'],
+        ['kissing',        'Kissing'],
+        ['ypeelines',      'YPeeLines'],
+        ['peelines',       'PeeLines'],
+        ['needs',          'Needs'],
+        ['yneeds',         'YNeeds'],
+        ['drinklines',     'DrinkLines'],
+        ['appearance',     'Appearance'],
+        ['drive',          'Drive'],
+        ['general',        'General'],
+        ['darts',          'Darts'],
+        ['sexLines',       'SexLines'],
+        ['objQuotes',      'ObjQuotes'],
+        ['locations',      'Locations'],
+        ['sharedLoc',      'SharedLoc'],
+        ['bar',            'Bar'],
+        ['talkUnused',     'TalkUnused'],
+        ['club',           'Club'],
+        ['theatre',        'Theatre'],
+        ['makeOut',        'MakeOut'],
+        ['herHome',        'HerHome'],
+        ['locStack',       'LegacyLocStack'],
+    ];
 
-    // Seed gameState from current window values before overriding bridges.
-    // setup() may have changed values (e.g. custom urge from localStorage).
-    for (const [globalName, gsProp] of numericProps) {
-        const cur = w[globalName];
-        if (cur !== undefined) gs[gsProp] = cur;
-        Object.defineProperty(w, globalName, {
-            get: () => gs[gsProp],
-            set: (v: any) => { gs[gsProp] = v; },
+    // Reverse bridge: define gs.X as a pass-through to window.x
+    const allModuleProps = [
+        ...moduleNumericProps,
+        ...moduleStringProps,
+        ...moduleDeepProps,
+    ];
+    for (const [globalName, gsProp] of allModuleProps) {
+        Object.defineProperty(gs, gsProp, {
+            get: () => w[globalName],
+            set: (v: any) => { w[globalName] = v; },
             configurable: true,
             enumerable: true,
         });
     }
-
-    for (const [globalName, gsProp] of stringProps) {
-        const cur = w[globalName];
-        if (cur !== undefined) gs[gsProp] = cur;
-        Object.defineProperty(w, globalName, {
-            get: () => gs[gsProp],
-            set: (v: any) => { gs[gsProp] = v; },
-            configurable: true,
-            enumerable: true,
-        });
-    }
-
-    for (const [globalName, gsProp] of boolProps) {
-        const cur = w[globalName];
-        if (cur !== undefined) gs[gsProp] = !!cur;
-        Object.defineProperty(w, globalName, {
-            get: () => gs[gsProp],
-            set: (v: any) => { gs[gsProp] = !!v; },
-            configurable: true,
-            enumerable: true,
-        });
-    }
-
-    // Time system — seed then bridge
-    if (w.thetime !== undefined) gs.Time.totalTime = w.thetime;
-    if (w.hour !== undefined) gs.Time.hour = w.hour;
-    if (w.minute !== undefined) gs.Time.minute = w.minute;
-    Object.defineProperty(w, 'thetime', {
-        get: () => gs.Time.totalTime,
-        set: (v: any) => { gs.Time.totalTime = v; },
-        configurable: true, enumerable: true,
-    });
-    Object.defineProperty(w, 'hour', {
-        get: () => gs.Time.hour,
-        set: (v: any) => { gs.Time.hour = v; },
-        configurable: true, enumerable: true,
-    });
-    Object.defineProperty(w, 'minute', {
-        get: () => gs.Time.minute,
-        set: (v: any) => { gs.Time.minute = v; },
-        configurable: true, enumerable: true,
-    });
-    Object.defineProperty(w, 'meridian', {
-        get: () => gs.Time.meridian,
-        set: () => {},  // derived from hour — no-op
-        configurable: true, enumerable: true,
-    });
 }
 
 // ============================================================================

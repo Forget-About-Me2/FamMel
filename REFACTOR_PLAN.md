@@ -151,7 +151,11 @@ Move module-scoped `let` variables into `gameState` properties, updating all ref
 
 #### Bridge connection pattern (established)
 
-`connectToGameState(gs)` in shims.ts re-defines window property bridges to delegate directly to gameState, called from `start()` after `gameState.init()`. Before connection, the old shims module-var bridges work. After connection, gameState is the sole backing store. This eliminates the dual-write sync problem without touching consumer code.
+`connectToGameState(gs)` in shims.ts sets up two kinds of bridges, called from `start()` after `gameState.init()`:
+
+1. **Forward bridges** (shims-owned variables — money, attraction, shyness, time, etc.): Overrides `window.x` to delegate to `gs.X`. Safe because no module code reads/writes these variables after initialization — all runtime access goes through window.
+
+2. **Reverse bridges** (non-shims module variables — bladder, fuckHer, drive, locations, settings, quotes, images, etc., plus deep fields): Defines `gs.X` as a getter/setter that reads/writes through `window.x`, which still delegates to the module variable via `expose*OnWindow()`. This preserves module code correctness (module writes to its local `let` variable → window getter reads it → gs getter reads window → everything in sync).
 
 #### Absorbed variables
 
@@ -167,26 +171,20 @@ Move module-scoped `let` variables into `gameState` properties, updating all ref
 
 - [x] **Sixth batch — bladder + yourbladder** (68 variables): All 44 bladder.ts state variables (customurge, minurge, minperc, bladurge, bladneed, blademer, bladlose, bladcumlose, bladsexlose, maxtummy, maxbeer, tummy, bladder, bladDec, bladDespDec, seal, beerdecCounter, ybeerdecCounter, peedtowels, peedvase, peedshot, peedoutside, lastpeetime, timeheld, drankbeer, notdesperate, notydesperate, nothdesperate, spurtthresh, yspurtthresh, bribeaskthresh, bribeAskBase, tumavg, rrlockedflag, shespurted, brokeice, sawherpee, wetlegs, wetherpanties, nowpeeing, gottagoflag, askholditcounter, waitcounter, toldstories, lastStory) and all 24 yourbladder.ts variables (yourbladder, yourtummy, yourtumavg, holdself, yourbladurge, yourbladneed, yourblademer, yourbladlose, yourbladcumlose, yourbladsexlose, ymaxtummy, ymaxbeer, yourcustomurge, yminurge, ynowpeeing, ylastpeetime, ytimeheld, ydrankcocktails, ydranksodas, ydrankwaters, ydrankbeers, ydrankbeer, yrrlockedflag, youSpurted). Deep fields (`toldstories`, `lastStory`) bridged via `stringProps` (no-coercion pass-through). Added auto-seeding to `connectToGameState()` — all bridge loops now copy current window value into gameState before overriding, so `setup()` localStorage changes survive. Removed redundant explicit seeding lines from `start()` in main.ts.
 
-- [x] **Seventh batch — deep fields & locStack (properties only, NOT bridged)** (28 variables): Added GameState properties for all remaining DEEP_FIELDS from saveLoad.ts: Settings, StatsBars, EndScreens, LegacyLocStack (shims.ts); SexActions (fuckHer.ts); CalledJsons, LocJson, FlirtResps, FeelUp, Kissing, YPeeLines, PeeLines, Needs, YNeeds, DrinkLines, Appearance, Drive, General, Darts, SexLines, ObjQuotes (quotes.ts); Locations, SharedLoc (locations.ts); Bar, TalkUnused (theBar.ts); Club (theClub.ts); Theatre (theatre.ts); MakeOut (theMakeOut.ts); HerHome (herhome.ts). **These are NOT bridged** in `connectToGameState()` — see "Bridge limitation" below.
+- [x] **Seventh batch — deep fields & locStack** (28 variables): Added GameState properties for all remaining DEEP_FIELDS from saveLoad.ts: Settings, StatsBars, EndScreens, LegacyLocStack (shims.ts); SexActions (fuckHer.ts); CalledJsons, LocJson, FlirtResps, FeelUp, Kissing, YPeeLines, PeeLines, Needs, YNeeds, DrinkLines, Appearance, Drive, General, Darts, SexLines, ObjQuotes (quotes.ts); Locations, SharedLoc (locations.ts); Bar, TalkUnused (theBar.ts); Club (theClub.ts); Theatre (theatre.ts); MakeOut (theMakeOut.ts); HerHome (herhome.ts). Reverse-bridged via `connectToGameState()` so `gs.X` reads through `window.x` (which reads the module variable). Module code continues to work with its own `let` variable unimpeded.
 
-#### Bridge limitation discovered
+- [x] **Bridge direction fix**: Restructured `connectToGameState()` to use two bridge types. Shims-owned variables (21 numeric + 6 bool + 4 time) keep forward bridges (window → gs). Non-shims module variables (68 numeric + 13 string + 31 deep fields) now use reverse bridges (gs → window). This fixes the fundamental disconnect where module code writes its local `let` variable but `window.x` was reading a stale gameState copy. All 34 tests pass.
 
-**Module-scoped variables cannot be safely bridged via window property override.**
+#### Bridge limitation (resolved)
 
-The `connectToGameState()` pattern overrides `window.x` to delegate to `gs.X`, but module code still reads/writes the local `let` variable directly (e.g., `bladder += 5` in bladder.ts writes the module variable, not `gs.Bladder`). This disconnects `window.x` from the module variable after bridging.
+Module-scoped variables cannot be safely bridged via window property override (forward bridge). The `connectToGameState()` forward pattern overrides `window.x` to delegate to `gs.X`, but module code still reads/writes the local `let` variable directly. This disconnects `window.x` from the module variable.
 
-**Affected**: ALL non-shims variables (batches 2–6 scalar bridges from bladder.ts, yourbladder.ts, fuckHer.ts, drive.ts, locations.ts, theBar.ts, theClub.ts, theatre.ts, theMakeOut.ts, herhome.ts, settings.ts, quotes.ts, backPackItems.ts, images.ts). These bridges silently disconnect — module code works with its own variable, `window.x` reads a stale gameState copy.
-
-**Not affected**: shims.ts variables (money, attraction, etc.) — these module variables are never read/written by module code after initialization; all runtime access goes through window.
-
-**Impact**: Save/load reads through `window`, which after bridging returns the stale gameState value instead of the live module variable. Current tests don't verify save/load, so this doesn't fail tests.
-
-**Fix needed**: Reverse the bridge direction for non-shims variables — make `gs.X` delegate to `window.x` (which reads the module variable), instead of `window.x` delegating to `gs.X`. This preserves module code correctness while giving gameState typed access. The deep fields and locStack remain unbridged because they're mutated by module code and accessed via `expose*OnWindow()` bridges.
+**Resolution**: Reverse bridges for non-shims variables. Instead of overriding `window.x`, the reverse bridge defines `gs.X` as a getter/setter that reads/writes through `window.x` (which still reads the module variable via `expose*OnWindow()`). Forward bridges are only used for shims.ts-owned variables where no module code accesses them after initialization.
 
 #### Remaining absorption
 
-- [ ] Fix non-shims scalar bridges — reverse bridge direction so `gs.X` delegates to `window.x` instead of overriding window (see "Bridge limitation" above)
-- [ ] Bridge deep fields once module code is migrated to access through gameState directly
+- [x] Fix non-shims scalar bridges — reverse bridge direction so `gs.X` delegates to `window.x` instead of overriding window (see "Bridge limitation" above)
+- [x] Bridge deep fields via reverse bridges — `gs.X` reads through `window.x`
 
 #### Remaining structural work
 - [ ] Consolidate bedroom location key — `"theBedroom"` (camelCase, pushed in fuckHer.ts) vs `"thebedroom"` (lowercase, checked in bladder.ts/yourbladder.ts). Pick one canonical form and update all references. Currently papered over with `BEDROOM_LOCATIONS` alias array in bladder.ts
@@ -274,6 +272,8 @@ These bridges serve three purposes:
 - **`GameState` class** — singleton with `Companion` (Person), `Player` (Person), `Money`, `Attraction`, `Shyness`, location stack. Lazy-initialized via `init()` called from `start()`.
 - **`Person` class** — owns bladder thresholds (`_bladderUrge` → computed `bladderNeed/Emer/Lose/CumLose/SexLose`), `bladderState` getter returns `BladderState` enum, `processFluidsDigestion()`, `pee()` with threshold decay + sync
 - **Dual state**: `gameState.Money` / `gameState.Attraction` / `gameState.Shyness` have synchronized getters/setters that update legacy globals. Bladder thresholds: Person is authoritative, `updateurge()` syncs to Person, `pee()` syncs back to legacy module vars.
+- **Forward bridges** (shims-owned vars): `window.x` delegates to `gs.X`. Used for ~31 shims.ts variables (money, attraction, time, etc.) that are never read/written by module code after initialization.
+- **Reverse bridges** (module vars): `gs.X` delegates to `window.x` (which reads module var via `expose*OnWindow()`). Used for ~112 non-shims variables and deep fields. Module code continues writing its local `let` variable; gameState always sees the live value.
 - **`globals.d.ts`** — ~120 `declare let`/`declare var` entries remain for mutable state accessed as bare globals. Will be deleted when all state is absorbed into `gameState` (Phase 5b).
 
 ### Save/Load System
