@@ -188,7 +188,7 @@ Module-scoped variables cannot be safely bridged via window property override (f
 
 #### Remaining structural work
 - [x] Consolidate bedroom location key — standardized to `"theBedroom"` (camelCase). Fixed `"thebedroom"` in yourbladder.ts, removed `BEDROOM_LOCATIONS` workaround array from bladder.ts, inlined `"theBedroom"` directly into `HOME_LOCATIONS`, `NO_RESTROOM_LOCATIONS`, and the `allowpee` check
-- [ ] Create Player `Person` object — player currently uses bare globals (`yourbladder`, `yourbladurge`, etc.) with no `Person` instance. Give the player a `gameState.Player` Person so both companion and player share the same bladder API
+- [x] Create Player `Person` object — `gameState.init()` now seeds `gameState.Player` from legacy player globals (`yourbladder`, `yourtummy`, `yourbladurge`, `ymaxtummy`, `ymaxbeer`, `ydrankbeer`, `ynowpeeing`) so startup/save-load values are preserved. `go()` now syncs legacy globals → Player before tick and Player → legacy globals after `processFluidsDigestion()`, making Player a live runtime model while existing bare-global call sites continue to work.
 - [ ] Replace raw bladder threshold comparisons with `BladderState` enum checks (~134 sites across 15 files). Requires: convert `BladderState` to numeric enum for `>=` comparisons; keep a raw-value escape hatch (e.g. `person.Bladder > person.bladderLose - 25`) for ~15 offset comparisons that don't map to a clean enum state. `Person.bladderState` getter already exists; migrate consumer files (actions, backPackItems, fuckHer, herhome, locations/*, store, darts) first, leave bladder.ts/yourbladder.ts internals for last
 - [ ] Remove remaining `declare let` from globals.d.ts → delete the file
 - [ ] Remove `expose*OnWindow()` bridges (no more bare global reads)

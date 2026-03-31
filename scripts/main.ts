@@ -7,6 +7,7 @@ import { animationManager } from "./gameScreen/animationManager";
 import { setupQuotes, fetchAndCacheJson, locationSetup, locjson, printAllChoices, sayText, printList, setText, fetchJson } from "./quotes";
 import { pushloc, poploc, randomInt, connectToGameState } from './shims';
 import { setup } from './settings';
+import { updateyoururge } from './yourbladder';
 
 /**
  * Main program loop that handles location transitions and game state updates
@@ -121,8 +122,43 @@ function syncLegacyLocStackFromTypedLocation(location: GameLocation): void {
     locStack[0] = mappedTag;
 }
 
+function syncPlayerFromLegacyGlobals(): void {
+    if (!gameState.Player) {
+        return;
+    }
+
+    gameState.Player.Bladder = Number(yourbladder) || 0;
+    gameState.Player.Tummy = Number(yourtummy) || 0;
+    gameState.Player.MaxTummy = Number(ymaxtummy) || gameState.Player.MaxTummy;
+    gameState.Player.MaxAlcohol = Number(ymaxbeer) || gameState.Player.MaxAlcohol;
+    gameState.Player.AlcoholInTummy = Number(ydrankbeer) || 0;
+    gameState.Player.NowPeeing = !!ynowpeeing;
+
+    const legacyUrge = Number(yourbladurge);
+    if (Number.isFinite(legacyUrge) && legacyUrge > 0) {
+        gameState.Player.setUrge(legacyUrge);
+    }
+}
+
+function syncLegacyGlobalsFromPlayer(): void {
+    if (!gameState.Player) {
+        return;
+    }
+
+    yourbladder = gameState.Player.Bladder;
+    yourtummy = gameState.Player.Tummy;
+    ymaxtummy = gameState.Player.MaxTummy;
+    ymaxbeer = gameState.Player.MaxAlcohol;
+    ydrankbeer = gameState.Player.AlcoholInTummy;
+    ynowpeeing = gameState.Player.NowPeeing ? 1 : 0;
+
+    yourbladurge = gameState.Player.bladderUrge;
+    updateyoururge(yourbladurge);
+}
+
 export function go(location: unknown) {
     gameState.init();
+    syncPlayerFromLegacyGlobals();
     allowItems = 0;
 
     const previousLocation = gameState.CurrentLocation;
@@ -153,6 +189,7 @@ export function go(location: unknown) {
         if (gameSettings.PlayerBladder
             || (isDrinkingGameLocation && gameSettings.PlayerDrinkGame)) {
             gameState.Player.processFluidsDigestion();
+            syncLegacyGlobalsFromPlayer();
         }
 
         if (gameState.FlirtCounter > 0) {
@@ -205,7 +242,7 @@ export async function start() {
     animationManager.start();
     // Connect window bridges to gameState — auto-seeds from current window values.
     connectToGameState(gameState);
-    connectToGameState(gameState);
+    syncPlayerFromLegacyGlobals();
     await fetchAndCacheJson("start");
     pushloc("yourhome");
     locationSetup("start");

@@ -301,14 +301,31 @@ class GameState {
             return;
         }
 
+        // Read legacy player globals through globalThis so initialization is
+        // consistent with setup()/save-load values and safe when missing.
+        const rawPlayerUrge = Number((globalThis as any).yourbladurge);
+        const rawPlayerCustomUrge = Number((globalThis as any).yourcustomurge);
+        const playerUrge = Number.isFinite(rawPlayerUrge)
+            ? rawPlayerUrge
+            : (Number.isFinite(rawPlayerCustomUrge) ? rawPlayerCustomUrge : 500);
+
+        const rawPlayerBladder = Number((globalThis as any).yourbladder);
+        const rawPlayerTummy = Number((globalThis as any).yourtummy);
+        const rawPlayerMaxTummy = Number((globalThis as any).ymaxtummy);
+        const rawPlayerMaxAlcohol = Number((globalThis as any).ymaxbeer);
+
         this.Player = new Person({
-            bladderUrge: 500,
-            startBladderVolume: 500,
-            startTummyVolume: 200,
-            startMaxTummy: 500,
-            startMaxAlcohol: 500,
+            bladderUrge: playerUrge,
+            startBladderVolume: Number.isFinite(rawPlayerBladder) ? rawPlayerBladder : 500,
+            startTummyVolume: Number.isFinite(rawPlayerTummy) ? rawPlayerTummy : 200,
+            startMaxTummy: Number.isFinite(rawPlayerMaxTummy) ? rawPlayerMaxTummy : 500,
+            startMaxAlcohol: Number.isFinite(rawPlayerMaxAlcohol) ? rawPlayerMaxAlcohol : 1000,
             minPercentage: 70
         });
+
+        const rawPlayerAlcohol = Number((globalThis as any).ydrankbeer);
+        this.Player.AlcoholInTummy = Number.isFinite(rawPlayerAlcohol) ? rawPlayerAlcohol : 0;
+        this.Player.NowPeeing = !!(globalThis as any).ynowpeeing;
 
         // Read legacy globals through globalThis so missing values don't throw at load time.
         const rawGirlName = (globalThis as any).girlname;
