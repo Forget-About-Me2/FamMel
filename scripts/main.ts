@@ -203,14 +203,8 @@ export async function start() {
     try { gameSettings.PlayerBladder = !!(globalThis as any).playerbladder; } catch {}
     gameState.init();
     animationManager.start();
-    // Push current legacy values into gameState before connecting bridges.
-    if (typeof money !== "undefined") gameState.Money = money;
-    if (typeof attraction !== "undefined") gameState.Attraction = attraction;
-    if (typeof shyness !== "undefined") gameState.Shyness = shyness;
-    gameState.randCounter = (globalThis as any).randcounter ?? 0;
-    // Seed newly absorbed properties — setup() may have changed playerbladder.
-    gameState.PlayerBladder = !!(globalThis as any).playerbladder;
-    // Connect window bridges to gameState — all reads/writes now go through gameState.
+    // Connect window bridges to gameState — auto-seeds from current window values.
+    connectToGameState(gameState);
     connectToGameState(gameState);
     await fetchAndCacheJson("start");
     pushloc("yourhome");

@@ -216,6 +216,123 @@ export function connectToGameState(gs: any): void {
         ['theaterclosingtime','TheaterClosingTime'],
         ['barclosingtime', 'BarClosingTime'],
         ['timespeed',      'TimeSpeed'],
+        // fuckHer.ts state
+        ['arousal',        'Arousal'],
+        ['kisscounter',    'KissCounter'],
+        ['feelcounter',    'FeelCounter'],
+        ['fuckingnow',     'FuckingNow'],
+        ['champagnecounter','ChampagneCounter'],
+        ['drankChamp',     'DrankChamp'],
+        // drive.ts state
+        ['wetthecar',      'WetTheCar'],
+        // locations.ts state
+        ['emerBreak',      'EmerBreak'],
+        ['emerHold',       'EmerHold'],
+        // driveAround.ts state
+        ['gasStation',     'GasStation'],
+        // theBar.ts state
+        ['bartopic',       'BarTopic'],
+        // theClub.ts state
+        ['externalflirt',  'ExternalFlirt'],
+        ['wetPhoto',       'WetPhoto'],
+        ['isNude',         'IsNude'],
+        ['posectr',        'PoseCtr'],
+        ['outfitctr',      'OutfitCtr'],
+        // theatre.ts state
+        ['rrMovieLineThresh','RrMovieLineThresh'],
+        ['moviecounter',   'MovieCounter'],
+        ['askedfavourite', 'AskedFavourite'],
+        ['seenmovie',      'SeenMovie'],
+        // theMakeOut.ts state
+        ['askedswim',      'AskedSwim'],
+        ['walkcounter',    'WalkCounter'],
+        // herhome.ts state
+        ['prepeed',        'PrePeed'],
+        ['elevatorwaitcounter','ElevatorWaitCounter'],
+        ['floorcounter',   'FloorCounter'],
+        // settings.ts state
+        ['multiplemoves',  'MultipleMoves'],
+        ['rstmoves',       'RstMoves'],
+        ['showstats',      'ShowStats'],
+        ['enableimages',   'EnableImages'],
+        ['enableascii',    'EnableAscii'],
+        ['playerGame',     'PlayerGame'],
+        // quotes.ts state
+        ['comma',          'Comma'],
+        // backPackItems.ts state
+        ['allowItems',     'AllowItems'],
+        ['homeChampagne',  'HomeChampagne'],
+        // images.ts state
+        ['picset',         'PicSet'],
+        // bladder.ts state
+        ['customurge',     'CustomUrge'],
+        ['minurge',        'MinUrge'],
+        ['minperc',        'MinPerc'],
+        ['bladurge',       'BladUrge'],
+        ['bladneed',       'BladNeed'],
+        ['blademer',       'BladEmer'],
+        ['bladlose',       'BladLose'],
+        ['bladcumlose',    'BladCumLose'],
+        ['bladsexlose',    'BladSexLose'],
+        ['maxtummy',       'MaxTummy'],
+        ['maxbeer',        'MaxBeer'],
+        ['tummy',          'Tummy'],
+        ['bladder',        'Bladder'],
+        ['bladDec',        'BladDec'],
+        ['bladDespDec',    'BladDespDec'],
+        ['seal',           'Seal'],
+        ['beerdecCounter', 'BeerDecCounter'],
+        ['ybeerdecCounter','YBeerDecCounter'],
+        ['peedtowels',     'PeedTowels'],
+        ['peedvase',       'PeedVase'],
+        ['peedshot',       'PeedShot'],
+        ['peedoutside',    'PeedOutside'],
+        ['lastpeetime',    'LastPeeTime'],
+        ['timeheld',       'TimeHeld'],
+        ['drankbeer',      'DrankBeer'],
+        ['notdesperate',   'NotDesperate'],
+        ['notydesperate',  'NotYDesperate'],
+        ['nothdesperate',  'NotHDesperate'],
+        ['spurtthresh',    'SpurtThresh'],
+        ['yspurtthresh',   'YSpurtThresh'],
+        ['bribeaskthresh', 'BribeAskThresh'],
+        ['bribeAskBase',   'BribeAskBase'],
+        ['tumavg',         'TumAvg'],
+        ['rrlockedflag',   'RrLockedFlag'],
+        ['shespurted',     'SheSpurted'],
+        ['brokeice',       'BrokeIce'],
+        ['sawherpee',      'SawHerPee'],
+        ['wetlegs',        'WetLegs'],
+        ['wetherpanties',  'WetHerPanties'],
+        ['nowpeeing',      'NowPeeing'],
+        ['gottagoflag',    'GottaGoFlag'],
+        ['askholditcounter','AskHoldItCounter'],
+        ['waitcounter',    'WaitCounter'],
+        // yourbladder.ts state
+        ['yourbladder',    'YourBladder'],
+        ['yourtummy',      'YourTummy'],
+        ['yourtumavg',     'YourTumAvg'],
+        ['holdself',       'HoldSelf'],
+        ['yourbladurge',   'YourBladUrge'],
+        ['yourbladneed',   'YourBladNeed'],
+        ['yourblademer',   'YourBladEmer'],
+        ['yourbladlose',   'YourBladLose'],
+        ['yourbladcumlose','YourBladCumLose'],
+        ['yourbladsexlose','YourBladSexLose'],
+        ['ymaxtummy',      'YMaxTummy'],
+        ['ymaxbeer',       'YMaxBeer'],
+        ['yourcustomurge', 'YourCustomUrge'],
+        ['yminurge',       'YMinUrge'],
+        ['ynowpeeing',     'YNowPeeing'],
+        ['ylastpeetime',   'YLastPeeTime'],
+        ['ytimeheld',      'YTimeHeld'],
+        ['ydrankcocktails','YDrankCocktails'],
+        ['ydranksodas',    'YDrankSodas'],
+        ['ydrankwaters',   'YDrankWaters'],
+        ['ydrankbeers',    'YDrankBeers'],
+        ['ydrankbeer',     'YDrankBeer'],
+        ['yrrlockedflag',  'YRrLockedFlag'],
+        ['youSpurted',     'YouSpurted'],
     ];
 
     // Boolean flags — coerce number↔boolean for legacy compatibility
@@ -225,9 +342,47 @@ export function connectToGameState(gs: any): void {
         ['changevenueflag','ChangeVenueFlag'],
         ['checkedherout',  'CheckedHerOut'],
         ['showedneed',     'ShowedNeed'],
+        ['playerbladder',  'PlayerBladder'],
     ];
 
+    // String properties — direct pass-through
+    const stringProps: Array<[string, string]> = [
+        ['loser',          'Loser'],
+        ['moviechoice',    'MovieChoice'],
+        // settings.ts state
+        ['heroutfit',      'HerOutfit'],
+        ['favoritemovie',  'FavoriteMovie'],
+        ['suggestedloc',   'SuggestedLoc'],
+        ['photoChoice',    'PhotoChoice'],
+        // quotes.ts state
+        ['pantycolor',     'PantyColor'],
+        ['girlname',       'GirlName'],
+        ['customgirlname', 'CustomGirlName'],
+        ['basegirl',       'BaseGirl'],
+        ['girltalk',       'GirlTalk'],
+        ['girlgasp',       'GirlGasp'],
+        ['imageprev',      'ImagePrev'],
+        // bladder.ts deep fields
+        ['toldstories',    'ToldStories'],
+        ['lastStory',      'LastStory'],
+    ];
+
+    // Seed gameState from current window values before overriding bridges.
+    // setup() may have changed values (e.g. custom urge from localStorage).
     for (const [globalName, gsProp] of numericProps) {
+        const cur = w[globalName];
+        if (cur !== undefined) gs[gsProp] = cur;
+        Object.defineProperty(w, globalName, {
+            get: () => gs[gsProp],
+            set: (v: any) => { gs[gsProp] = v; },
+            configurable: true,
+            enumerable: true,
+        });
+    }
+
+    for (const [globalName, gsProp] of stringProps) {
+        const cur = w[globalName];
+        if (cur !== undefined) gs[gsProp] = cur;
         Object.defineProperty(w, globalName, {
             get: () => gs[gsProp],
             set: (v: any) => { gs[gsProp] = v; },
@@ -237,6 +392,8 @@ export function connectToGameState(gs: any): void {
     }
 
     for (const [globalName, gsProp] of boolProps) {
+        const cur = w[globalName];
+        if (cur !== undefined) gs[gsProp] = !!cur;
         Object.defineProperty(w, globalName, {
             get: () => gs[gsProp],
             set: (v: any) => { gs[gsProp] = !!v; },
@@ -245,7 +402,10 @@ export function connectToGameState(gs: any): void {
         });
     }
 
-    // Time system — nested on gs.Time
+    // Time system — seed then bridge
+    if (w.thetime !== undefined) gs.Time.totalTime = w.thetime;
+    if (w.hour !== undefined) gs.Time.hour = w.hour;
+    if (w.minute !== undefined) gs.Time.minute = w.minute;
     Object.defineProperty(w, 'thetime', {
         get: () => gs.Time.totalTime,
         set: (v: any) => { gs.Time.totalTime = v; },

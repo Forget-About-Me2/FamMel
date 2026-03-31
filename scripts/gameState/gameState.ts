@@ -100,6 +100,153 @@ class GameState {
     // Whether the player bladder mechanic is enabled
     PlayerBladder: boolean = true;
 
+    // fuckHer state
+    Arousal: number = 0;
+    KissCounter: number = 0;
+    FeelCounter: number = 0;
+    FuckingNow: number = 0;
+    ChampagneCounter: number = 0;
+    DrankChamp: number = 0;
+
+    // drive state
+    WetTheCar: number = 0;
+
+    // locations.ts state
+    EmerBreak: number = 0;
+    EmerHold: number = 0;
+
+    // driveAround.ts state
+    GasStation: number = 0;
+
+    // theBar.ts state
+    BarTopic: number = 0;
+    Loser: string = "";
+
+    // theClub.ts state
+    ExternalFlirt: number = 0;
+    WetPhoto: number = 0;
+    IsNude: number = 0;
+    PoseCtr: number = 0;
+    OutfitCtr: number = 0;
+
+    // theatre.ts state
+    RrMovieLineThresh: number = 7;
+    MovieCounter: number = 0;
+    MovieChoice: string = "";
+    AskedFavourite: number = 0;
+    SeenMovie: number = 0;
+
+    // theMakeOut.ts state
+    AskedSwim: number = 0;
+    WalkCounter: number = 0;
+
+    // herhome.ts state
+    PrePeed: number = 0;
+    ElevatorWaitCounter: number = 0;
+    FloorCounter: number = 0;
+
+    // settings.ts state
+    HerOutfit: string = "jeans";
+    FavoriteMovie: string = "theurge";
+    SuggestedLoc: string = "thebar";
+    MultipleMoves: number = 1;
+    RstMoves: number = 0;
+    PhotoChoice: any = undefined;
+    ShowStats: number = 1;
+    EnableImages: number = 1;
+    EnableAscii: number = 0;
+    PlayerGame: number = 0;
+
+    // quotes.ts state
+    PantyColor: string = "black";
+    GirlName: string = "Laura";
+    CustomGirlName: string = "Amanda";
+    BaseGirl: string = "Laura";
+    GirlTalk: string = "<b>Laura:&nbsp;</b>";
+    GirlGasp: string = "<b>Laura gasps:&nbsp;</b>";
+    Comma: number = 0;
+    ImagePrev: any = undefined;
+
+    // backPackItems.ts state
+    AllowItems: number = 1;
+    HomeChampagne: number = 0;
+
+    // images.ts state
+    PicSet: number = 0;
+
+    // bladder.ts state
+    CustomUrge: number = 250;
+    MinUrge: number = 187;
+    MinPerc: number = 75;
+    BladUrge: number = 250;
+    BladNeed: number = 250 * 2;
+    BladEmer: number = 250 * 3;
+    BladLose: number = 250 * 3 + 150;
+    BladCumLose: number = 250 * 4;
+    BladSexLose: number = 250 * 5;
+    MaxTummy: number = 250;
+    MaxBeer: number = 500;
+    Tummy: number = 0;
+    Bladder: number = 0;
+    BladDec: number = 1;
+    BladDespDec: number = 1;
+    Seal: number = 1;
+    BeerDecCounter: number = 0;
+    YBeerDecCounter: number = 0;
+    PeedTowels: number = 0;
+    PeedVase: number = 0;
+    PeedShot: number = 0;
+    PeedOutside: number = 0;
+    LastPeeTime: number = 0;
+    TimeHeld: number = 0;
+    DrankBeer: number = 0;
+    NotDesperate: number = 0;
+    NotYDesperate: number = 0;
+    NotHDesperate: number = 0;
+    SpurtThresh: number = 5;
+    YSpurtThresh: number = 3;
+    BribeAskThresh: number = 7;
+    BribeAskBase: number = 7;
+    TumAvg: number = 0;
+    RrLockedFlag: number = 0;
+    SheSpurted: number = 0;
+    BrokeIce: number = 0;
+    SawHerPee: number = 0;
+    WetLegs: number = 0;
+    WetHerPanties: number = 0;
+    NowPeeing: number = 0;
+    GottaGoFlag: number = 0;
+    AskHoldItCounter: number = 0;
+    WaitCounter: number = 0;
+    ToldStories: any[] = [];
+    LastStory: any = undefined;
+
+    // yourbladder.ts state
+    YourBladder: number = 500;
+    YourTummy: number = 200;
+    YourTumAvg: number = 200;
+    HoldSelf: number = 0;
+    YourBladUrge: number = 500;
+    YourBladNeed: number = 500 * 2;
+    YourBladEmer: number = 500 * 3;
+    YourBladLose: number = 500 * 3 + 150;
+    YourBladCumLose: number = 500 * 4;
+    YourBladSexLose: number = 500 * 5;
+    YMaxTummy: number = 500;
+    YMaxBeer: number = 1000;
+    YourCustomUrge: number = 500;
+    YMinUrge: number = 375;
+    YNowPeeing: number = 0;
+    YLastPeeTime: number = 0;
+    YTimeHeld: number = 0;
+    YDrankCocktails: number = 0;
+    YDrankSodas: number = 0;
+    YDrankWaters: number = 0;
+    YDrankBeers: number = 0;
+    YDrankBeer: number = 0;
+    YRrLockedFlag: number = 0;
+    YouSpurted: number = 0;
+
     init(): void {
         if (this.initialized) {
             return;
