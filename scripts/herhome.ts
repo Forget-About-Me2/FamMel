@@ -1,19 +1,26 @@
-﻿import { fetchJson, fetchAndCacheJson, getMLocations, printList, sayText, cListenerGen, cListenerGenList, addSayText, voccurse } from './quotes';
-import { pushloc, poploc, pickrandom, randomchoice, randomize } from './shims';
-import { showneed, displayneed, displaygottavoc, noteholding, preventpee, flushdrank, allowpee, wetherself } from './bladder';
+﻿import { fetchJson, fetchAndCacheJson, getMLocations, printList, sayText, cListenerGen, cListenerGenList, addSayText, voccurse, locjson, appearance, setAppearance, girlname, pantycolor } from './quotes';
+import { pushloc, poploc, pickrandom, randomchoice, randomize, locStack, thetime, attraction, setAttraction, shyness, setShyness, maxkiss } from './shims';
+import { showneed, displayneed, displaygottavoc, noteholding, preventpee, flushdrank, allowpee, wetherself, bladder, bladlose, gottagoflag, setGottagoflag, askholditcounter, setAskholditcounter, waitcounter, setWaitcounter } from './bladder';
 import { displayyourneed, wetyourself, youpee } from './yourbladder';
-import { standobjs, haveItem, backPackItems } from './backPackItems';
+import { standobjs, haveItem, backPackItems, allowItems, setAllowItems } from './backPackItems';
 import { leavehm } from './drive';
 import { kissher } from './actions';
-import { theBedroom } from './fuckHer';
+import { theBedroom, kisscounter, champagnecounter } from './fuckHer';
 import { gameOver } from './main';
 import { gameState } from './gameState/gameState';
 import { BladderState } from './gameState/bladderState';
+import { locations } from './locations';
+import { heroutfit } from './settings';
+import { seenmovie } from './locations/theatre';
 
 // All functions connected to her house. This is both pickup and endgame
 export let herHome; //Json with quotes for herHome.
 export let prepeed = 0; // did she pee before you picked her up
+export function setPrepeed(val: number) {
+    prepeed = val;
+}
 export let elevatorwaitcounter = 0;
+export function setElevatorwaitcounter(val: number) { elevatorwaitcounter = val; }
 
 export function herHomeSetup() {
     fetchAndCacheJson("herhome").then(function(data) {
@@ -22,8 +29,8 @@ export function herHomeSetup() {
         locations.theHome.wantVisit = [herhome, herHome["choices"]["wantVisit"]];
     });
     return {
-        visit: [],
-        wantVisit: [],
+        visit: [] as any[],
+        wantVisit: [] as any[],
         group: 4
     }
 }
@@ -37,7 +44,7 @@ export function herhome() {
     //This chooses the appropriate function to continue in the location herhome
     if (locStack[0] === "yourhome")
         fetchJson("appearance").then(function(data) {
-            appearance = data;
+            setAppearance(data);
             pickup();
         });
     else takeHerHome();
@@ -46,7 +53,7 @@ export function herhome() {
 //TODO fix this scene
 //The dialogues is fucked if you asked her to hold it
 export function pickup() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     if (locStack[0] !== "pickup") { // happens first time only.
         getMLocations("herhome", "pickup");
@@ -69,8 +76,8 @@ export function pickup() {
             curtext = printList(curtext, locjson["lateComment"]);
             curtext =  showneed(curtext);
             curtext.push(pickrandom(locjson["upsetDesc"]));
-            attraction -= 5;
-            shyness -= 10;
+            setAttraction(attraction - 5);
+            setShyness(shyness - 10);
         }
         curtext = displayneed(curtext);
         if (prepeed) {
@@ -82,14 +89,14 @@ export function pickup() {
             else
                 curtext.push(pickrandom(locjson["arriveHold"]).formatVars());
             curtext = displayneed(curtext);
-            askholditcounter = 0;
-            waitcounter = 0;
-            gottagoflag = 1;
+            setAskholditcounter(0);
+            setWaitcounter(0);
+            setGottagoflag(1);
         } else if (askholditcounter) {
             curtext.push(pickrandom(locjson["askedHold"]).formatVars());
             curtext = showneed(curtext);
-            askholditcounter = 0;
-            waitcounter = 0;
+            setAskholditcounter(0);
+            setWaitcounter(0);
         }
     } else {
         curtext.push(locjson["pickupMsg"].formatVars());
@@ -131,7 +138,7 @@ export function takeHerHome(){
 
 export let floorcounter = 0;
 export function elevatorWait() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     let listenerList: any[] = [];
     if (locStack[0] !== "theElevator") {
@@ -163,7 +170,7 @@ export function elevatorWait() {
 }
 
 export function theElevator(){
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     let listenerList: any[] = [];
     if (floorcounter === 3) {
@@ -238,14 +245,14 @@ export function keyNevermind() {
 export function keyGoodExcuse(){
     let curtext = printList([], herHome["keysGood"]);
     sayText(curtext);
-    attraction += 10;
+    setAttraction(attraction + 10);
     cListenerGen([theHome, "Continue..."], "theHome");
 }
 
 export function keyBadExcuse(){
     let curtext = printList([], herHome["keysBad"]);
     sayText(curtext);
-    attraction = 0;
+    setAttraction(0);
     cListenerGen([gameOver, herHome["choices"]["keySlap"]], "gameOver");
 }
 
@@ -274,7 +281,7 @@ export function lookForKeys() {
 }
 
 export function theHome() {
-    allowItems = 1;
+    setAllowItems(1);
     if (locStack[0] !== "theHome")
         pushloc("theHome")
     let curtext = [herHome["atHome"].formatVars()];

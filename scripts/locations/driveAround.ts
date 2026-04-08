@@ -2,8 +2,10 @@ import { fetchJson, printList, callChoice, sayText, cListenerGen, cListenerGenLi
 import { randomchoice } from '../shims';
 import { showneed, displayneed, wetherself, preventpee } from '../bladder';
 import { displayyourneed, wetyourself, ypeein } from '../yourbladder';
-import { standobjs, haveItem } from '../backPackItems';
+import { standobjs, haveItem, setAllowItems } from '../backPackItems';
 import { driveout } from '../drive';
+import { gottagoflag } from '../bladder';
+import { locStack } from '../shims';
 import { gameState } from '../gameState/gameState';
 import { BladderState } from '../gameState/bladderState';
 
@@ -26,7 +28,7 @@ const gasChance = 3; //Chance you'll encounter a gas station
 export let gasStation;
 
 export function driveAround(){
-    allowItems = 1;
+    setAllowItems(1);
     // driveAround: [0]=driving narration, [1]=gas station spotted
     const [drivingNarration, gasStationSpotted] = driveRound["driveAround"];
     let curtext = printList([], drivingNarration);
@@ -71,7 +73,7 @@ export function nextstop() {
 }
 
 export function drivetell() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext = printList([], driveRound["driveTell"]);
     curtext = displayyourneed(curtext);
     sayText(curtext);
@@ -101,7 +103,7 @@ export function drivePee() {
 }
 
 export function station(){
-    allowItems = 1;
+    setAllowItems(1);
     //TODO create properly
     let curtext = printList([], driveRound["station"]);
     curtext = callChoice(["curloc", "Continue ..."], curtext);

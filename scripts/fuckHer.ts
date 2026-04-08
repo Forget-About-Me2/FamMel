@@ -1,20 +1,28 @@
-﻿import { formatAllVarsList, formatAllVars, printList, sayText, cListenerGen, cListenerGenList, callChoice } from './quotes';
-import { pickrandom, pushloc, poploc } from './shims';
-import { showneed, displayneed, flushdrank, holdit, allowpee } from './bladder';
+﻿import { formatAllVarsList, formatAllVars, printList, sayText, cListenerGen, cListenerGenList, callChoice, sexLines, setSexLines, appearance, pantycolor } from './quotes';
+import { pickrandom, pushloc, poploc, locStack, maxkiss, thetime } from './shims';
+import { showneed, displayneed, flushdrank, holdit, allowpee, bladder, bladlose, gottagoflag, wetherpanties, lastpeetime, timeheld, setTimeheld } from './bladder';
 import { displayyourneed } from './yourbladder';
 import { kissher } from './actions';
 import { gameOver, gameWet, gameSexBoth, gameWon } from './main';
 import { gameState } from './gameState/gameState';
 import { BladderState } from './gameState/bladderState';
+import { heroutfit, multiplemoves, rstmoves } from './settings';
+import { herHome } from './herhome';
 
 // Fucking Parameters
 export let arousal = 0;
+export function setArousal(val: number) { arousal = val; }
 export let kisscounter = 0;
+export function setKisscounter(val: number) { kisscounter = val; }
 export let feelcounter = 0;
+export function setFeelcounter(val: number) { feelcounter = val; }
 export let fuckingnow = 0; // You are in the middle of fucking.
+export function setFuckingnow(val: number) { fuckingnow = val; }
 
 export let champagnecounter = 0; // Number of glasses of champagne served.
+export function setChampagnecounter(val: number) { champagnecounter = val; }
 export let drankChamp = 0; // Time since last champagne glass was drunk.
+export function setDrankChamp(val: number) { drankChamp = val; }
 
 export function deepClone(value: any) {
     return JSON.parse(JSON.stringify(value));
@@ -237,7 +245,7 @@ export let sexActions = {
     }
 }
 export function fuckHerSetup(data: any){
-    sexLines = data;
+    setSexLines(data);
     Object.keys(sexLines).forEach(loc => {
         if (typeof loc === "object" && (loc !== "clothes" || loc !== "actions")) {
             const obj = sexLines[loc];
@@ -653,7 +661,7 @@ export function fuckHer6() {
 export function fuckHer7() {
     let curtext = printList([], sexLines["fuckNow"][18]);
     sayText(curtext);
-    timeheld = thetime - lastpeetime;
+    setTimeheld(thetime - lastpeetime);
     cListenerGen([gameWon, "Continue..."], "gameWon");
 }
 

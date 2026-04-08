@@ -6,10 +6,11 @@ import {yourHome} from './yourHome';
 import {gameScreen} from "./gameScreen/gameScreen";
 import { animationManager } from "./gameScreen/animationManager";
 import { setupQuotes, fetchAndCacheJson, locationSetup, locjson, printAllChoices, sayText, printList, setText, fetchJson } from "./quotes";
-import { pushloc, poploc, randomInt, connectToGameState } from './shims';
+import { pushloc, poploc, randomInt, connectToGameState, locStack, endScreens } from './shims';
 import { setup } from './settings';
-import { updateyoururge } from './yourbladder';
-import { updateurge } from './bladder';
+import { updateyoururge, yourbladder, setYourbladder, yourtummy, setYourtummy, ymaxtummy, setYmaxtummy, ymaxbeer, setYmaxbeer, ydrankbeer, setYdrankbeer, ynowpeeing, setYnowpeeing, yourbladurge, setYourbladurge } from './yourbladder';
+import { updateurge, bladder, setBladder, tummy, setTummy, maxtummy, setMaxtummy, maxbeer, setMaxbeer, drankbeer, setDrankbeer, nowpeeing, setNowpeeing, bladurge, setBladurge, askholditcounter } from './bladder';
+import { allowItems, setAllowItems } from './backPackItems';
 
 /**
  * Main program loop that handles location transitions and game state updates
@@ -140,13 +141,13 @@ function syncCompanionFromLegacyGlobals(): void {
 
 function syncLegacyGlobalsFromCompanion(): void {
     if (!gameState.Companion) return;
-    bladder = gameState.Companion.Bladder;
-    tummy = gameState.Companion.Tummy;
-    maxtummy = gameState.Companion.MaxTummy;
-    maxbeer = gameState.Companion.MaxAlcohol;
-    drankbeer = gameState.Companion.AlcoholInTummy;
-    nowpeeing = gameState.Companion.NowPeeing ? 1 : 0;
-    bladurge = gameState.Companion.bladderUrge;
+    setBladder(gameState.Companion.Bladder);
+    setTummy(gameState.Companion.Tummy);
+    setMaxtummy(gameState.Companion.MaxTummy);
+    setMaxbeer(gameState.Companion.MaxAlcohol);
+    setDrankbeer(gameState.Companion.AlcoholInTummy);
+    setNowpeeing(gameState.Companion.NowPeeing ? 1 : 0);
+    setBladurge(gameState.Companion.bladderUrge);
     updateurge(bladurge);
 }
 
@@ -173,14 +174,14 @@ function syncLegacyGlobalsFromPlayer(): void {
         return;
     }
 
-    yourbladder = gameState.Player.Bladder;
-    yourtummy = gameState.Player.Tummy;
-    ymaxtummy = gameState.Player.MaxTummy;
-    ymaxbeer = gameState.Player.MaxAlcohol;
-    ydrankbeer = gameState.Player.AlcoholInTummy;
-    ynowpeeing = gameState.Player.NowPeeing ? 1 : 0;
+    setYourbladder(gameState.Player.Bladder);
+    setYourtummy(gameState.Player.Tummy);
+    setYmaxtummy(gameState.Player.MaxTummy);
+    setYmaxbeer(gameState.Player.MaxAlcohol);
+    setYdrankbeer(gameState.Player.AlcoholInTummy);
+    setYnowpeeing(gameState.Player.NowPeeing ? 1 : 0);
 
-    yourbladurge = gameState.Player.bladderUrge;
+    setYourbladurge(gameState.Player.bladderUrge);
     updateyoururge(yourbladurge);
 }
 
@@ -188,7 +189,7 @@ export function go(location: unknown) {
     gameState.init();
     syncCompanionFromLegacyGlobals();
     syncPlayerFromLegacyGlobals();
-    allowItems = 0;
+    setAllowItems(0);
 
     const previousLocation = gameState.CurrentLocation;
     const currentLegacyTag = locStack[0];

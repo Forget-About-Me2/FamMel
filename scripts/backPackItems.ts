@@ -1,13 +1,15 @@
-import { printList, printListSelection, printAllChoicesList, callChoice, sayText, c, cListener, cListenerGenList, addListenersList, addSayText, addGirlTalk, formatAllVarsList, fetchJson, setText, handleFlirt } from './quotes';
-import { randomchoice, pickrandom, randomIndex, formatAll } from './shims';
-import { peein, displayneed, displayholdquip, indepee, showneed } from './bladder';
-import { ypeein } from './yourbladder';
+import { printList, printListSelection, printAllChoicesList, callChoice, sayText, c, cListener, cListenerGenList, addListenersList, addSayText, addGirlTalk, formatAllVarsList, fetchJson, setText, handleFlirt, objQuotes, setObjQuotes, needs, drinklines, appearance, girlname, girltalk, girlgasp, pantycolor, setPantycolor, comma, setComma } from './quotes';
+import { randomchoice, pickrandom, randomIndex, formatAll, locStack, money, setMoney, attraction, setAttraction, shyness, setShyness, haveherpurse, setHaveherpurse, maxflirts, noflirtflag, flirtedflag, showedneed, playerbladder } from './shims';
+import { peein, displayneed, displayholdquip, indepee, showneed, tummy, setTummy, maxtummy, setMaxtummy, maxbeer, setMaxbeer, drankbeer, setDrankbeer, gottagoflag, askholditcounter, setAskholditcounter, bribeAskBase, setBribeAskBase, bribeaskthresh, setBribeaskthresh, wetlegs, setWetlegs, brokeice } from './bladder';
+import { ypeein, yourtummy, setYourtummy, ymaxtummy, setYmaxtummy, ymaxbeer, setYmaxbeer, ydrankbeer, setYdrankbeer } from './yourbladder';
 import { openPopUp } from './pop-up';
-import { sellPanties } from './locations/theBar';
-import { flirtBarGirl } from './locations/theClub';
+import { sellPanties, bar } from './locations/theBar';
+import { flirtBarGirl, club } from './locations/theClub';
 import { assertExists } from './helperFiles/helperFunctions';
 import { gameState } from './gameState/gameState';
 import { BladderState } from './gameState/bladderState';
+import { heroutfit } from './settings';
+import { champagnecounter, setChampagnecounter, drankChamp, setDrankChamp } from './fuckHer';
 
 export interface IBackpackItem {
     bpName: string;
@@ -410,6 +412,9 @@ export const drinkLoc = ["pickup", "driveout", "domovie",
     "thehottub", "darkmovie", "photogame", "drinkinggame", "thehome"]
 
 export let allowItems= 1; //Are you currently allowed to use items?
+export function setAllowItems(val: number) {
+    allowItems = val;
+}
 
 //TODO add a mention need option
 // standobjs function allows one to use the normal objects.
@@ -428,7 +433,7 @@ export let itemtext;
 export function backpack(){
     if (!objQuotes){
         fetchJson("objects").then(function (data) {
-            objQuotes = data;
+            setObjQuotes(data);
             objQuotes["buyItem2"] = formatAllVarsList(objQuotes["buyItem2"]);
             backpack();
         });
@@ -537,7 +542,7 @@ export function buyItem2(item, value, price){
             curtext = printList(curtext, objQuotes["buyItem2"][3]);
         else
             curtext = printList(curtext, objQuotes["buyItem2"][4]);
-        money -= price;
+        setMoney(money - price);
         backPackItems[item].value += value;
         choice = callChoice(["curloc", "Continue..."], choice);
     }
@@ -577,14 +582,14 @@ export function displaypos(itemobj, number, buy=false) {
             } else if (champagnecounter === 0) formatList.push("");
         }
         description = description.format(formatList);
-        comma = 1;
+        setComma(1);
     }
     return description;
 }
 
 export function displaydrank(curtext){
     let sentence = " ";
-    comma = 0;
+    setComma(0);
     Object.keys(backPackItems).forEach(item => sentence += displayDrankItem(item));
     if (sentence.length > 1){
         curtext.push(girltalk + "I drank " + sentence + " " + pickrandom(needs["drankburst"]));
@@ -604,7 +609,7 @@ export function displayDrankItem(item){
 export function briberoses() {
     let curtext: any[] = [];
     curtext = printList(curtext, needs["briberoses"]);
-    askholditcounter++;
+    setAskholditcounter(askholditcounter + 1);
     curtext = displayholdquip(curtext);
     curtext = callChoice(["curloc", "Continue..."], curtext);
     backPackItems.roses.value -= 1;
@@ -614,7 +619,7 @@ export function briberoses() {
 export function bribeearrings() {
     let curtext: any[] = [];
     curtext = printList(curtext, needs["bribeearrings"]);
-    askholditcounter++;
+    setAskholditcounter(askholditcounter + 1);
     curtext = displayholdquip(curtext);
     curtext = callChoice(["curloc", "Continue..."], curtext);
     backPackItems.earrings.value -= 1;
@@ -622,7 +627,7 @@ export function bribeearrings() {
 }
 
 export function holdpurse() {
-    haveherpurse = 1;
+    setHaveherpurse(1);
     let curtext = printListSelection([], needs["holdpurse"], [0,1]);
     let listenerList = [
         [[lookinsidepurse, needs["choices"]["lookInsidePurse"]], "lookInsidePurse"],
@@ -692,11 +697,11 @@ export function giveHer(item){
     const listenerList: any[] = [];
 
     if (item === "sexyPanties") {
-        pantycolor = "sexy";
-        if (!wetlegs) attraction += 5;
+        setPantycolor("sexy");
+        if (!wetlegs) setAttraction(attraction + 5);
         else curtext = printList(curtext, quotes[1]);
     } else if (item === "ptowels") {
-        wetlegs = 0;
+        setWetlegs(0);
         if (haveItem("sexyPanties")) {
             listenerList.push([[function () {
                 giveHer("sexyPanties");
@@ -704,20 +709,20 @@ export function giveHer(item){
         }
     } else if (gameState.Companion.bladderState < BladderState.Emergency) {
         curtext = printList(curtext, quotes[1]);
-        attraction += obj.attr ?? 0;
+        setAttraction(attraction + (obj.attr ?? 0));
         if (item === "earrings") {
             // Giving earrings raises the chance she holds it when you ask when desperate.
-            bribeAskBase = Math.min(bribeAskBase + 1, MAX_BRIBE_LEVEL);
-            bribeaskthresh = bribeAskBase;
+            setBribeAskBase(Math.min(bribeAskBase + 1, MAX_BRIBE_LEVEL));
+            setBribeaskthresh(bribeAskBase);
         }
     } else {
         // She's past emergency — less grateful, but will hold it longer
         curtext = printList(curtext, quotes[2]);
-        attraction += obj.emerAttr ?? 0;
-        askholditcounter += obj.holdCount ?? 0;
+        setAttraction(attraction + (obj.emerAttr ?? 0));
+        setAskholditcounter(askholditcounter + (obj.holdCount ?? 0));
     }
 
-    attraction += obj.attraction ?? 0;
+    setAttraction(attraction + (obj.attraction ?? 0));
     sayText(curtext);
     listenerList.forEach(item => cListener(item[0], item[1]));
     curtext = callChoice(["curloc", "Continue..."] );
@@ -905,16 +910,16 @@ function applyDrinkStats(drink: IBackpackItem, mode: DrinkMode) {
     const youDrink = mode === 'you' || mode === 'together';
 
     if (herDrinks) {
-        tummy += drink.volume ?? 0;
+        setTummy(tummy + (drink.volume ?? 0));
         drink.sheDrank = (drink.sheDrank ?? 0) + 1;
-        drankbeer += drink.drankBeer ?? 0;
-        attraction += drink.attraction ?? 0;
-        shyness -= drink.shyness ?? 0;
+        setDrankbeer(drankbeer + (drink.drankBeer ?? 0));
+        setAttraction(attraction + (drink.attraction ?? 0));
+        setShyness(shyness - (drink.shyness ?? 0));
     }
     if (youDrink) {
-        yourtummy += drink.volume ?? 0;
+        setYourtummy(yourtummy + (drink.volume ?? 0));
         drink.yDrank = (drink.yDrank ?? 0) + 1;
-        ydrankbeer += drink.drankBeer ?? 0;
+        setYdrankbeer(ydrankbeer + (drink.drankBeer ?? 0));
     }
 
     drink.value -= mode === 'together' ? 2 : 1;
@@ -922,12 +927,12 @@ function applyDrinkStats(drink: IBackpackItem, mode: DrinkMode) {
     const tumIncCap = mode === 'together' ? 1000 : 1250;
     if (drink.tumInc) {
         if (herDrinks && maxtummy < tumIncCap) {
-            maxtummy += drink.tumInc;
-            maxbeer += drink.tumInc;
+            setMaxtummy(maxtummy + drink.tumInc);
+            setMaxbeer(maxbeer + drink.tumInc);
         }
         if (youDrink && ymaxtummy < tumIncCap) {
-            ymaxtummy += drink.tumInc;
-            ymaxbeer += drink.tumInc;
+            setYmaxtummy(ymaxtummy + drink.tumInc);
+            setYmaxbeer(ymaxbeer + drink.tumInc);
         }
     }
 }
@@ -965,14 +970,15 @@ export function yDrinkNow(item) {
 
 
 export let homeChampagne = 0; //Flag whether champagne has been drunk at her home before (aka whether she needs to get the glasses)
+export function setHomeChampagne(val: number) { homeChampagne = val; }
 
 const CHAMPAGNE_VOLUME = 50;
 const CHAMPAGNE_GLASSES_REQUIRED = 2;
 const CHAMPAGNE_MAX_COUNTER = 6;
 
 function consumeChampagne(bottles: number[] | undefined) {
-    champagnecounter += CHAMPAGNE_GLASSES_REQUIRED;
-    drankChamp = 0;
+    setChampagnecounter(champagnecounter + CHAMPAGNE_GLASSES_REQUIRED);
+    setDrankChamp(0);
     if (bottles) bottles[0] -= CHAMPAGNE_GLASSES_REQUIRED;
 }
 
@@ -1010,7 +1016,7 @@ export function champagneNow() {
             curtext = printList(curtext, champRefuseIntro);
             curtext = showneed(curtext);
             curtext.push(pickrandom(drinklines["fillChampBad"]));
-            champagnecounter = CHAMPAGNE_MAX_COUNTER;
+            setChampagnecounter(CHAMPAGNE_MAX_COUNTER);
             curtext = printList(curtext, champRefuse);
         }
     } else if (backPackItems["champ-glass"].value >= CHAMPAGNE_GLASSES_REQUIRED) {
@@ -1029,8 +1035,8 @@ export function champagneNow() {
         bottles.shift();
         obj.value--;
     }
-    tummy += CHAMPAGNE_VOLUME;
-    yourtummy += CHAMPAGNE_VOLUME;
+    setTummy(tummy + CHAMPAGNE_VOLUME);
+    setYourtummy(yourtummy + CHAMPAGNE_VOLUME);
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
 }

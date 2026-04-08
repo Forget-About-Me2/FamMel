@@ -2,11 +2,12 @@
 
 // String prototype extensions — augment the global String interface
 // so TypeScript accepts .format() and .formatVars() calls everywhere.
-import { formatString, range, pickrandom, incrandom, randomInt } from './shims';
+import { formatString, range, pickrandom, incrandom, randomInt, locStack, money, randcounter } from './shims';
 import { validateListenerList } from './validation';
 import { dartSetup } from './games/darts';
 import { fuckHerSetup } from './fuckHer';
 import { flirt_l, flirt_m, flirt_h } from './actions';
+import { bladder, bladlose, timeheld } from './bladder';
 
 declare global {
     interface String {
@@ -16,6 +17,7 @@ declare global {
 }
 
 export let calledjsons: any = {}; //Cache of fetched JSON files, keyed by tag name
+export function setCalledjsons(val: any) { calledjsons = val; }
 
 // Delegated click handler: maps action IDs to function callbacks.
 // Cleared on every screen refresh (sayText/setText) so stale closures get GC'd.
@@ -60,22 +62,38 @@ export let appearance: any; // This stores the appearance quotes from the JSON
 export let drive: any; //This stores all dialogues regarding driving around from the JSON
 export let general: any; //This stores all general quotes from JSON call
 export let darts: any; //This stores the json quotes for the darts game
+export function setDarts(val: any) {
+    darts = val;
+}
 export let sexLines: any; //This stores the json quotes related to fucking scenes
+export function setSexLines(val: any) { sexLines = val; }
+export function setAppearance(val: any) { appearance = val; }
 export let objQuotes: any; //This stores the json quotes related to objects.
+export function setObjQuotes(val: any) { objQuotes = val; }
 let credits: any; //This stores the json for the credits
 
 export let girlname = "Laura";
+export function setGirlname(val: string) {
+    girlname = val;
+}
 export let customgirlname = "Amanda";
+export function setCustomgirlname(val: string) { customgirlname = val; }
 export let basegirl = "Laura";
+export function setBasegirl(val: string) { basegirl = val; }
 export let girltalk = "<b>" + girlname + ":&nbsp;</b>";
+export function setGirltalk(val: string) { girltalk = val; }
 export let girlgasp = "<b>" + girlname + " gasps:&nbsp;</b>";
+export function setGirlgasp(val: string) { girlgasp = val; }
 export let pantycolor = "black";
+export function setPantycolor(val: string) { pantycolor = val; }
 
 //Formatting Parameters
 // Formatting : flags if string has been placed.
 export let imageprev: any;  // Previous image
+export function setImageprev(val: any) { imageprev = val; }
 export const imagedesc = '"Picture of girl"';
 export let comma = 0; // used in formatting possessions.
+export function setComma(val: number) { comma = val; }
 
 //Formats a given string with the given list of values.
 //Overwrites the wildcards with the given values in the list.
@@ -349,6 +367,7 @@ export function setText(lines: any[]){
 }
 
 export let locjson: any = null; //This is the main json for the current location
+export function setLocjson(val: any) { locjson = val; }
 
 // Fetch a JSON file and return its parsed contents.
 // path: relative path under JSON/ (without JSON/ prefix or .JSON suffix)

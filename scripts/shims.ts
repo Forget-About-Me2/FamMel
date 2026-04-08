@@ -6,40 +6,65 @@
 // Game state variables (initial values)
 // ============================================================================
 export let locStack: string[] = ["yourhome"];
+export function setLocStack(val: string[]) { locStack = val; }
 export let money: number = 200;
+export function setMoney(val: number) { money = val; }
 export let thetime: number = 0;
+export function setThetime(val: number) { thetime = val; }
 export let hour: number = 7;
+export function setHour(val: number) { hour = val; }
 export let minute: number = 0;
+export function setMinute(val: number) { minute = val; }
 export let meridian: string = "PM";
+export function setMeridian(val: string) { meridian = val; }
 export let late: number = 0;
+export function setLate(val: number) { late = val; }
 export let playerbladder: boolean = true;
+export function setPlayerbladder(val: any) { playerbladder = val; }
 
 // Interaction / flirt state
 export let attraction: number = 10;
+export function setAttraction(val: number) { attraction = val; }
 export let shyness: number = 90;
+export function setShyness(val: number) { shyness = val; }
 export let flirtedflag: number = 0;
+export function setFlirtedflag(val: number) { flirtedflag = val; }
 export let flirtcounter: number = 0;
+export function setFlirtcounter(val: number) { flirtcounter = val; }
 export let noflirtflag: number = 0;
+export function setNoflirtflag(val: number) { noflirtflag = val; }
 export let checkedherout: number = 0;
+export function setCheckedherout(val: number) { checkedherout = val; }
 export let haveherpurse: number = 0;
+export function setHaveherpurse(val: number) { haveherpurse = val; }
 export let owedfavor: number = 0;
+export function setOwedfavor(val: number) { owedfavor = val; }
 export let changevenueflag: number = 0;
+export function setChangevenueflag(val: number) { changevenueflag = val; }
 export let shopping: number = 0;
+export function setShopping(val: number) { shopping = val; }
 
 // Flirt / interaction limits
 export let maxflirts: number = 2;
+export function setMaxflirts(val: number) { maxflirts = val; }
 export let maxkiss: number = 7;
+export function setMaxkiss(val: number) { maxkiss = val; }
 export let maxfeel: number = 7;
+export function setMaxfeel(val: number) { maxfeel = val; }
 export let randmax: number = 5;
 
 // Venue closing times (ticks from 7 PM)
 export let clubclosingtime: number = 7 * 60;    // 2:00 AM
+export function setClubclosingtime(val: number) { clubclosingtime = val; }
 export let theaterclosingtime: number = 3 * 60;  // 10:00 PM last showing
+export function setTheaterclosingtime(val: number) { theaterclosingtime = val; }
 export let barclosingtime: number = 6 * 60;      // 1:00 AM
+export function setBarclosingtime(val: number) { barclosingtime = val; }
 
 // Time
 export let timespeed: number = 2;
 export let didintro: number = 0;
+export function setDidintro(val: number) { didintro = val; }
 
 // Delta tracking (for status bar arrows)
 export let lastmoney: number = money;
@@ -48,9 +73,13 @@ export let lastshyness: number = shyness;
 
 // JSON data loaded at runtime
 export let settings: any;
+export function setSettings(val: any) { settings = val; }
 export let statsBars: any;
+export function setStatsBars(val: any) { statsBars = val; }
 export let showedneed: any;
+export function setShowedneed(val: any) { showedneed = val; }
 export let endScreens: any;
+export function setEndScreens(val: any) { endScreens = val; }
 
 // ============================================================================
 // Seedable RNG — deterministic integration tests use ?seed= query param
@@ -171,6 +200,7 @@ export function randomize(list: any[]): any[] {
 
 // Random counter for NPC behavior
 export let randcounter: number = 0;
+export function setRandcounter(val: number) { randcounter = val; }
 
 // ============================================================================
 // Initialize RNG seed from query string (runs at module load time)

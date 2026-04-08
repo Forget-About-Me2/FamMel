@@ -1,5 +1,8 @@
+import { basegirl, imageprev, setImageprev } from './quotes';
+import { enableimages } from './settings';
 import { setText, imagedesc } from './quotes';
 import { setjpgimgs } from './settings';
+import { settings } from './shims';
 
 export let imgs = {
     Jennifer:{},
@@ -35,7 +38,7 @@ export function displaypix(picname: string) {
     if (enableimages && imgssrc !== imageprev && !picset) {
         document.GetRequiredElementById<HTMLElement>('thepic').innerHTML = "<img src=" + imgssrc + " alt=" + imagedesc + " class='pic'>";
     }
-    imageprev = imgssrc;
+    setImageprev(imgssrc);
 }
 
 //TODO proper explanation on how setup works

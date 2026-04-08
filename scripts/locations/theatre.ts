@@ -1,20 +1,26 @@
-import { fetchJson, printList, sayText, cListenerGen, cListenerGenList } from '../quotes';
-import { pickrandom, randomchoice, pushloc, poploc, formatAll } from '../shims';
-import { showneed, noteholding, interpbladder, wetherself, preventpee, holdit, allowpee } from '../bladder';
+import { fetchJson, printList, sayText, cListenerGen, cListenerGenList, appearance, general, objQuotes } from '../quotes';
+import { pickrandom, randomchoice, pushloc, poploc, formatAll, locStack, thetime, theaterclosingtime, attraction, setAttraction, shyness, setShyness, changevenueflag, setChangevenueflag, owedfavor, setOwedfavor, checkedherout } from '../shims';
+import { showneed, noteholding, interpbladder, wetherself, preventpee, holdit, allowpee, gottagoflag } from '../bladder';
 import { displayyourneed, wetyourself, youpee } from '../yourbladder';
-import { standobjs, haveItem, buyItem, backPackItems } from '../backPackItems';
+import { standobjs, haveItem, buyItem, backPackItems, allowItems, setAllowItems } from '../backPackItems';
+import { heroutfit } from '../settings';
 import { kissher, feelup, checkherout } from '../actions';
 import { leavehm, driveout } from '../drive';
-import { itsClosed } from '../locations';
+import { itsClosed, locations, sharedLoc } from '../locations';
 import { gameState } from '../gameState/gameState';
 import { BladderState } from '../gameState/bladderState';
+import { favoritemovie } from '../settings';
 
 export let theatre; //Json with quotes for theatre
 export let rrMovieLineThresh = 7; // Likelihood of line for restroom in the movie theatre.
+export function setRrMovieLineThresh(val: number) { rrMovieLineThresh = val; }
 
 export let moviecounter = 0; // Keep track of location in movie
+export function setMoviecounter(val: number) { moviecounter = val; }
 export let moviechoice; //  Which movie are we showing
+export function setMoviechoice(val: any) { moviechoice = val; }
 export let askedfavourite = 0; //asked her which movie to watch
+export function setAskedfavourite(val: number) { askedfavourite = val; }
 
 export function theatreSetup(){
     fetchJson("locations/theatre").then(theatreJsonSetup);
@@ -33,7 +39,7 @@ function theatreJsonSetup(data: any){
 }
 
 export function theTheatre(){
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     let listenerList: any[] = [];
     // theatre: [0]=revisit from drive, [1]=first arrival, [2]=ambient
@@ -98,7 +104,7 @@ export function askMovie() {
         curtext = printList(curtext, temp);
         listenerList.push([[function () {
             moviechoice = favoritemovie;
-            attraction += 2;
+            setAttraction(attraction + 2);
             preMoviePee();}, "Let's watch that then."], "movieFavour"]);
         listenerList.push([[chooseOtherMovie, theatre["favouriteMovie"][favoritemovie]["choice"]], "chooseOther"]);
     } else {
@@ -157,7 +163,7 @@ export function movieArgue() {
     if (askedfavourite) {
         //You asked her which movie she wanted to watch and then deliberately chose a different one.
         curtext = printList(curtext, theatre["watchMovie"][4]); // argueBadFaith
-        attraction -= 5;
+        setAttraction(attraction - 5);
         preMoviePee(curtext);
     } else {
         let moviename = theatre["favouriteMovie"][favoritemovie]["name"];
@@ -167,7 +173,7 @@ export function movieArgue() {
         sayText(curtext);
         let listenerList: any[] = [];
         listenerList.push([[function (){
-            owedfavor += 1;
+            setOwedfavor(owedfavor + 1);
             moviechoice = favoritemovie;
             preMoviePee();
         }, "Okay, but you own me one."], "favour"]);
@@ -177,12 +183,13 @@ export function movieArgue() {
 }
 
 export let seenmovie = 0;
+export function setSeenmovie(val: number) { seenmovie = val; }
 //TODO figure out duplicate continue's
 export function preMoviePee(curtext: any[] = []) {
     pushloc("domovie");
     moviecounter = 0;
     seenmovie = 0;
-    changevenueflag = 1;//TODO probs delete
+    setChangevenueflag(1);//TODO probs delete
     curtext = displayyourneed(curtext);
     curtext = showneed(curtext);
     curtext = printList(curtext, theatre["watchMovie"][10]); // preMovieBathroom
@@ -201,7 +208,7 @@ export function preMoviePee(curtext: any[] = []) {
 
 //TODO you can go to the bathroom if you're desperate
 export function domovie() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     if (seenmovie === 0) {
         curtext = printList(curtext, theatre["watchMovie"][6]); // movieStarts
@@ -214,7 +221,7 @@ export function domovie() {
     if (moviecounter >= 7) {
         curtext = printList(curtext, theatre["watchMovie"][8]); // movieEnds
         poploc();
-        changevenueflag = 1;
+        setChangevenueflag(1);
     } else {
         curtext.push(theatre["favouriteMovie"][moviechoice]["plot"][moviecounter]);
     }
@@ -255,14 +262,14 @@ export function domovie() {
 
 // Hold her hand
 export function movieRomance() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     const [attempt, success, failure] = theatre["movieRomance"];
     curtext = printList(curtext, attempt);
     if (moviecounter === 4 || moviecounter === 6 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 30)) {
         curtext = printList(curtext, success);
-        attraction += 3;
-        shyness -= 3;
+        setAttraction(attraction + 3);
+        setShyness(shyness - 3);
     } else {
         curtext = printList(curtext, failure);
     }
@@ -275,14 +282,14 @@ export function movieRomance() {
 
 // Touch her thigh
 export function movieSex() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     const [attempt, success] = theatre["movieSex"];
     curtext = printList(curtext, attempt);
     if (moviecounter === 3 || moviecounter === 5 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 70)) {
         curtext.push(pickrandom(appearance["clothes"][heroutfit]["thighresp"]));
-        attraction += 3;
-        shyness -= 3;
+        setAttraction(attraction + 3);
+        setShyness(shyness - 3);
     } else {
         curtext = printList(curtext, theatre["movieSex"][1]);
     }
@@ -295,13 +302,13 @@ export function movieSex() {
 
 // Lean closer to her
 export function movieScary() {
-    allowItems = 1;
+    setAllowItems(1);
     const [attempt, success, failure] = theatre["movieScary"];
     let curtext = printList([], attempt);
     if (moviecounter === 2 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 40)) {
         curtext = printList(curtext, success);
-        attraction += 3;
-        shyness -= 3;
+        setAttraction(attraction + 3);
+        setShyness(shyness - 3);
     } else {
         curtext = printList(curtext, failure);
     }
@@ -314,13 +321,13 @@ export function movieScary() {
 
 // look her in the eyes
 export function movieDoh() {
-    allowItems = 1;
+    setAllowItems(1);
     const [attempt, success, failure] = theatre["movieDoh"];
     let curtext = printList([], attempt);
     if (moviecounter === 1 || ((moviecounter >= 7 || moviecounter === 0) && attraction > 50)) {
         curtext = printList(curtext, success);
-        attraction += 3;
-        shyness -= 3;
+        setAttraction(attraction + 3);
+        setShyness(shyness - 3);
     } else {
         curtext = printList(curtext, failure);
     }
@@ -333,7 +340,7 @@ export function movieDoh() {
 
 //TODO fix thehold my purse
 export function darkTheatre() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     let listenerList: any[] = [];
     // darkTheatre: [0]=first entry, [1]=ambient

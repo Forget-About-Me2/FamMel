@@ -1,40 +1,50 @@
-import { fetchJson, c, setText } from './quotes';
-import { formatAll } from './shims';
-import { initUrge } from './bladder';
-import { initYUrge } from './yourbladder';
+import { fetchJson, c, setText, girlname, setGirlname, basegirl, setBasegirl, customgirlname, setCustomgirlname, girltalk, setGirltalk, girlgasp, setGirlgasp } from './quotes';
+import { formatAll, money, setMoney, playerbladder, setPlayerbladder, settings, setSettings, statsBars, setStatsBars } from './shims';
+import { initUrge, bladDec, setBladDec, bladDespDec, setBladDespDec, bladurge, setBladurge, customurge, setCustomurge, minperc, setMinperc, seal, setSeal } from './bladder';
+import { initYUrge, yourcustomurge, setYourcustomurge } from './yourbladder';
 import { displaypix, importimgs } from './images';
 
 export let enableimages: number = 1;
+export function setEnableimages(val: number) { enableimages = val; }
 export let enableascii: number = 0;
+export function setEnableascii(val: number) { enableascii = val; }
 export let playerGame: number = 0;
+export function setPlayerGame(val: number) { playerGame = val; }
 
 export let showstats = 1; // 1 = Show her bladder state, etc.
+export function setShowstats(val: number) { showstats = val; }
 // Girl Selection Parameters
 export let photoChoice; //How she's dressed for photogame
+export function setPhotoChoice(val: any) { photoChoice = val; }
 
 export let favoritemovie = "theurge";
+export function setFavoritemovie(val: any) { favoritemovie = val; }
 export let suggestedloc = "thebar";
+export function setSuggestedloc(val: string) { suggestedloc = val; }
 
 export let heroutfit = "jeans";  //  Her clothing choice for the date
+export function setHeroutfit(val: string) { heroutfit = val; }
                           //  Possible values: skirt, jeans
 
 export let multiplemoves = 1; //Whether sex moves can be repeated during a make-out session
+export function setMultiplemoves(val: number) { multiplemoves = val; }
 export let rstmoves = 0; //Whether the sex moves reset after a make-out session
+export function setRstmoves(val: number) { rstmoves = val; }
 
 export function setup(){
     fetchJson("options").then(function (data){
-        settings=data;
+        setSettings(data);
     })
     if(typeof(Storage) !== "undefined") {
         if (localStorage.girlname) {
-            girlname = localStorage.girlname;
+            setGirlname(localStorage.girlname);
             if (localStorage.custom === "true") {
-                customgirlname = girlname;
+                setCustomgirlname(girlname);
                 if (localStorage.basegirl) {
-                    basegirl = localStorage.basegirl;
+                    setBasegirl(localStorage.basegirl);
                 }
                 if (localStorage.customurge) {
-                    customurge = localStorage.customurge;
+                    setCustomurge(localStorage.customurge);
                 }
             }
             setbasegirl(basegirl);
@@ -78,31 +88,31 @@ export function setup(){
         }
         if (localStorage.bladDec) {
             if (localStorage.bladDec === "false")
-                bladDec = 0;
+                setBladDec(0);
         }
         if (localStorage.bladDespDec) {
             if (localStorage.bladDespDec === "false")
-                bladDespDec = 0;
+                setBladDespDec(0);
         }
         if (localStorage.seal){
             if (localStorage.seal === "false")
-                seal = 0;
+                setSeal(0);
         }
         if(localStorage.yourcustomurge){
-            yourcustomurge = localStorage.yourcustomurge;
+            setYourcustomurge(localStorage.yourcustomurge);
             initYUrge(yourcustomurge);
         }
         if(localStorage.money){
-            money = localStorage.money;
+            setMoney(localStorage.money);
         }
         if (localStorage.minPerc)
-            minperc = localStorage.minPerc;
+            setMinperc(localStorage.minPerc);
 
         if (localStorage.playerBladder) {
             if (localStorage.playerBladder === "false") {
-                playerbladder = 0;
+                setPlayerbladder(0);
                 fetchJson("statsBars").then(function (data) {
-                    statsBars = data;
+                    setStatsBars(data);
                 });
             }
         }
@@ -199,7 +209,7 @@ export function bladOpt() {
     //So query it, if this hasn't happened before.
     if (!statsBars)
         fetchJson("statsBars").then(function (data) {
-            statsBars = data;
+            setStatsBars(data);
         });
     let vars: any[] = new Array(23).fill("");
     const checked: number[] = [];
@@ -288,24 +298,24 @@ export function setDisclaimer(choice: number){
 
 
 export function setcustgirlname() {
-    customgirlname = document.GetRequiredElementById<HTMLInputElement>('thegirl').value;
+    setCustomgirlname(document.GetRequiredElementById<HTMLInputElement>('thegirl').value);
     setbasegirl(basegirl);
 }
 
 export function setcustbladurge() {
-    customurge = parseInt(document.GetRequiredElementById<HTMLInputElement>('thebladder').value);
+    setCustomurge(parseInt(document.GetRequiredElementById<HTMLInputElement>('thebladder').value));
     setLocal("customurge", customurge);
     setbasegirl(basegirl);
 }
 
 export function setyourcustbladurge() {
-    yourcustomurge = parseInt(document.GetRequiredElementById<HTMLInputElement>('yourbladder').value);
+    setYourcustomurge(parseInt(document.GetRequiredElementById<HTMLInputElement>('yourbladder').value));
     setLocal("yourcustomurge", yourcustomurge);
     initYUrge(yourcustomurge);
 }
 
 export function setyourmoney() {
-    money = parseInt(document.GetRequiredElementById<HTMLInputElement>('yourmoney').value);
+    setMoney(parseInt(document.GetRequiredElementById<HTMLInputElement>('yourmoney').value));
     setLocal("money", money);
 }
 
@@ -318,13 +328,13 @@ export function setBladPer(){
         perDecErr.style.display = "inline";
     else {
         perDecErr.style.display = "none";
-        minperc = value;
+        setMinperc(value);
         setLocal("minPerc", minperc);
     }
 }
 
 export function setBladDecay(choice: number){
-    bladDec = choice;
+    setBladDec(choice);
     if (choice)
         setLocal("bladDec", "true");
     else
@@ -332,7 +342,7 @@ export function setBladDecay(choice: number){
 }
 
 export function setBladDespDecay(choice: number){
-    bladDespDec = choice;
+    setBladDespDec(choice);
     if (choice)
         setLocal("bladDespDec", "true");
     else
@@ -340,7 +350,7 @@ export function setBladDespDecay(choice: number){
 }
 
 export function setSealDec(choice: number){
-    seal = choice;
+    setSeal(choice);
     if (choice)
         setLocal("seal", "true");
     else
@@ -348,7 +358,7 @@ export function setSealDec(choice: number){
 }
 
 export function setPlayBlad(choice: number){
-    playerbladder = choice;
+    setPlayerbladder(choice);
     if (choice)
         setLocal("playerBladder", "true");
     else
@@ -371,7 +381,7 @@ export function setjpgimgs() {
 
 //TODO check if these functions can be cleaned up
 export function setbasegirl(hername: string) {
-    basegirl = hername;
+    setBasegirl(hername);
     setLocal("basegirl", basegirl);
     const htmlcall = document.getElementById('girlstats');
     let urge;
@@ -447,30 +457,30 @@ export function updategirldesc() {
 
 export function setgirl(hername: string) {
     setLocal("girlname", hername);
-    girlname = hername;
+    setGirlname(hername);
     if (document.getElementById('girlstats')) updategirldesc();
     if (girlname === "Jennifer") {
-        basegirl = girlname;
-        bladurge = 300;
+        setBasegirl(girlname);
+        setBladurge(300);
         favoritemovie = "theurge";
         setLocal("custom", "false");
     } else if (girlname === "Laura") {
-        basegirl = girlname;
-        bladurge = 250;
+        setBasegirl(girlname);
+        setBladurge(250);
         favoritemovie = "thedesp";
         setLocal("custom", "false");
     } else if (girlname === "Karen") {
-        basegirl = girlname;
-        bladurge = 200;
+        setBasegirl(girlname);
+        setBladurge(200);
         favoritemovie = "thectrl";
         setLocal("custom", "false");
     } else if (girlname === "Melissa") {
-        basegirl = girlname;
-        bladurge = 350;
+        setBasegirl(girlname);
+        setBladurge(350);
         favoritemovie = "thelitr";
         setLocal("custom", "false");
     } else {
-        bladurge = Number(customurge);
+        setBladurge(Number(customurge));
         favoritemovie = "thelitr";
         setLocal("custom", "true");
     }
@@ -478,8 +488,8 @@ export function setgirl(hername: string) {
 
 
     //  Have to reset all preset strings.
-    girltalk = "<b>" + girlname + ":&nbsp;</b>";
-    girlgasp = "<b>" + girlname + " gasps:&nbsp;</b>";
+    setGirltalk("<b>" + girlname + ":&nbsp;</b>");
+    setGirlgasp("<b>" + girlname + " gasps:&nbsp;</b>");
 }
 
 export function exposeSettingsOnWindow(): void {

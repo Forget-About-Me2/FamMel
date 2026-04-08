@@ -1,17 +1,19 @@
-﻿import { fetchJson, printList, sayText, cListener, cListenerGen, cListenerGenList, addListenersList, addSayText, callChoice } from '../quotes';
-import { pickrandom, randomchoice, randomIndex, randomInt, pushloc, poploc } from '../shims';
-import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, flushdrank, drinkinggamethreshold, askcanhold, pstory } from '../bladder';
-import { displayyourneed, wetyourself, youpee, flushyourdrank, holdpeethresh } from '../yourbladder';
-import { standobjs, haveItem, buyItem, backPackItems } from '../backPackItems';
+﻿import { fetchJson, printList, sayText, cListener, cListenerGen, cListenerGenList, addListenersList, addSayText, callChoice, general, objQuotes, appearance, basegirl, girltalk } from '../quotes';
+import { pickrandom, randomchoice, randomIndex, randomInt, pushloc, poploc, locStack, thetime, barclosingtime, attraction, setAttraction, shyness, setShyness, checkedherout, money, setMoney } from '../shims';
+import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, flushdrank, drinkinggamethreshold, askcanhold, pstory, gottagoflag, notdesperate, setNotdesperate, notydesperate, setNotydesperate, nothdesperate, setNothdesperate, drankbeer, setDrankbeer, shespurted, bladder, tummy, setTummy } from '../bladder';
+import { displayyourneed, wetyourself, youpee, flushyourdrank, holdpeethresh, holdself, setHoldself, yourtummy, setYourtummy, yourbladder, setYourbladder, ydrankbeer, setYdrankbeer, youSpurted } from '../yourbladder';
+import { standobjs, haveItem, buyItem, backPackItems, allowItems, setAllowItems } from '../backPackItems';
 import { kissher, feelup, checkherout } from '../actions';
 import { playDarts } from '../games/darts';
 import { leavehm, driveout } from '../drive';
-import { lookAround, itsClosed } from '../locations';
+import { lookAround, itsClosed, locations, sharedLoc, emerHold, setEmerHold, emerBreak, setEmerBreak } from '../locations';
 import { gameState } from '../gameState/gameState';
 import { BladderState } from '../gameState/bladderState';
+import { heroutfit } from '../settings';
 
 export let bar;
 export let bartopic = 0; // Topics of discussion at the bar.
+export function setBartopic(val: number) { bartopic = val; }
 
 export function theBarSetup(){
     fetchJson("locations/theBar").then(barJsonSetup);
@@ -31,7 +33,7 @@ function barJsonSetup(data: any){
 }
 
 export function thebar(){
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     let listenerList: any[] = [];
     // theBar: [0]=revisit from drive, [1]=first arrival, [2]=ambient narration
@@ -122,7 +124,7 @@ export function barResp(choice: number){
     let curtext = [pickrandom(bar["barResp"][choice-1]).formatVars()];
     if (choice === GOOD && randomchoice(7))
         curtext.push(pickrandom(appearance["girls"][basegirl]["stareather"][heroutfit]));
-    attraction += 6 - 3*choice; // good=+3, neutral=0, bad=-3
+    setAttraction(attraction + 6 - 3*choice); // good=+3, neutral=0, bad=-3
     bartopic++;
     talkUnused.splice(curTopicI,1);
     sayText(curtext);
@@ -132,7 +134,7 @@ export function barResp(choice: number){
 export function sellPanties(){
     const price = 20 + randomInt(20);
     sayText(["BARTENDER: I'll give you $" + price + " for those."]);
-    money += price;
+    setMoney(money + price);
     backPackItems.wetPanties.value -= 1;
     let listenerList = [
         [[function () {buyItem("beer")}, objQuotes["buyChoices"]["beer"]], "buybeer"],
@@ -179,19 +181,19 @@ export function stealbeer2(){
 }
 
 export function darkBar(){
-    allowItems = 1;
+    setAllowItems(1);
    let curtext: any[] = [];
    // darkBar: [0]=rushes to toilet after emergency, [1]=still needs to go badly,
    //          [2]=first entry into closed bar, [3]=ambient/idle
    const [rushesToToilet, stillNeedsToPee, enterClosedBar, darkBarAmbient] = bar["darkBar"];
    if (emerBreak || emerHold && bladder < 20) {
        curtext = printList(curtext, rushesToToilet);
-       emerHold = 0;
-       emerBreak = 0;
+       setEmerHold(0);
+       setEmerBreak(0);
    }
    else if (emerHold) {
        curtext = printList(curtext, stillNeedsToPee);
-       emerHold = 0;
+       setEmerHold(0);
    }
    else if (locStack[0] !== "darkBar") {
        curtext = printList(curtext, enterClosedBar);
@@ -245,7 +247,7 @@ export function pdrinkinggame() {
     } else {
         curtext = printList(curtext, gameRejection);
         if (attraction < 50)
-            attraction -= 2;
+            setAttraction(attraction - 2);
         indepee(curtext);
     }
 
@@ -255,7 +257,7 @@ export function pDrinkingGame2() {
     let curtext = printList([], bar["drinkingGame"][3]); // bathroomScene
     flushyourdrank();
     flushdrank();
-    yourbladder = 0;
+    setYourbladder(0);
     sayText(curtext);
     cListenerGen([pDrinkingGame3, "Continue..."], "pdrinking");
 }
@@ -272,7 +274,7 @@ export let loser;
 //TODO  choose what happenes when both lose at the same time
 //TODO have a chance to have it escalate
 export function drinkinggame() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext = printList([], bar["drinkingGame"][5]); // gameStatus
     if (gameState.Player.bladderState >= BladderState.Lose) {
         if (!holdself || randomchoice(holdpeethresh)) {
@@ -292,11 +294,11 @@ export function drinkinggame() {
         curtext = displayneed(curtext);
         curtext = displayyourneed(curtext);
         curtext = printList(curtext, bar["drinkingGame"][6]); // drinkRound
-        tummy += 40;
-        yourtummy += 40;
-        holdself = 0;
-        drankbeer = 2;
-        ydrankbeer = 2;
+        setTummy(tummy + 40);
+        setYourtummy(yourtummy + 40);
+        setHoldself(0);
+        setDrankbeer(2);
+        setYdrankbeer(2);
         let listenerList: any[] = [];
         if (gameState.Player.bladderState >= BladderState.Emergency)
             listenerList.push([[holdYourself, "You grab your dick"], "grabDick"]);
@@ -312,9 +314,9 @@ export function drinkinggame() {
 
 //TODO don't pee with her if you're not desperate
 export function postgame() {
-    notdesperate = 0;
-    notydesperate = 0;
-    nothdesperate = 0;
+    setNotdesperate(0);
+    setNotydesperate(0);
+    setNothdesperate(0);
     let curtext: any[] = [];
     let situation = "none";
     // postGame[Her|You]: [0]=already spurted, [1]=didn't spurt, [2]=transition,
@@ -343,9 +345,9 @@ export function postgame() {
             flushyourdrank();
         } else {
             curtext = printList(curtext, neitherDesperate);
-            attraction += 5;
-            shyness -= 7;
-            notdesperate = 1;
+            setAttraction(attraction + 5);
+            setShyness(shyness - 7);
+            setNotdesperate(1);
         }
     }
     sayText(curtext);
@@ -362,16 +364,16 @@ export function postGame2(situation: string){
     } else if(situation === "her"){
         //TODO move back to her own chair
         curtext = printList(curtext, pgHerDesperate);
-        attraction += 5;
-        shyness -= 7;
+        setAttraction(attraction + 5);
+        setShyness(shyness - 7);
     } else if(situation === "you"){
         //TODO probably have a shyness/attraction check
         //Create a deepCopy of the dialogue that needs to be added so if you insert an element the bar variable itself won't be changed
         let temp = printList([], pgYouDesperate);
         if (loser === "her") temp.splice(2, 0, "<em>Yes, you won the game. But it had been a close one.</em>");
         curtext = printList([], temp);
-        attraction += 10;
-        shyness -= 10;
+        setAttraction(attraction + 10);
+        setShyness(shyness - 10);
     }
     else{
         curtext = printList(curtext, pgBothDesperate);
@@ -391,7 +393,7 @@ export function holdYourself() {
     let curtext = printList([], sneakHand);
     if (randomchoice(7)) {
         curtext = printList(curtext, holdUnnoticed);
-        holdself = 1;
+        setHoldself(1);
     } else
         curtext = printList(curtext, holdCaught);
     curtext = showneed(curtext);

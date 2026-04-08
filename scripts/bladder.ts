@@ -1,24 +1,32 @@
-import { printList, printListSelection, printLList, printChoicesList, callChoice, sayText, c, cListener, cListenerGen, cListenerGenList, addSayText, addListenersList, voccurse } from './quotes';
-import { pickrandom, randomchoice, range, gameRandom, randomInt, incrandom, pushloc, poploc } from './shims';
+import { printList, printListSelection, printLList, printChoicesList, callChoice, sayText, c, cListener, cListenerGen, cListenerGenList, addSayText, addListenersList, voccurse, needs, peelines, appearance, girlname, girltalk, girlgasp, pantycolor, setPantycolor, general } from './quotes';
+import { pickrandom, randomchoice, range, gameRandom, randomInt, incrandom, pushloc, poploc, locStack, attraction, setAttraction, shyness, setShyness, thetime, changevenueflag, setChangevenueflag, haveherpurse, setHaveherpurse, owedfavor, setOwedfavor, randcounter, showedneed, setShowedneed } from './shims';
 import { haveItem, backPackItems, displaydrank, holdpurse, giveHer } from './backPackItems';
 import { nextstop } from './locations/driveAround';
 import { pdrinkinggame } from './locations/theBar';
-import { doDance, pphotogame } from './locations/theClub';
+import { doDance, pphotogame, externalflirt } from './locations/theClub';
 import { displayyourneed } from './yourbladder';
 import { kissher } from './actions';
 import { gameState } from './gameState/gameState';
 import { assertExists } from './helperFiles/helperFunctions';
+import { heroutfit } from './settings';
+import { theatre, rrMovieLineThresh } from './locations/theatre';
+import { gasStation } from './locations/driveAround';
+import { fuckingnow } from './fuckHer';
+import { wetthecar, setWetthecar } from './drive';
 
 //This file contains all functions related to peeing
 //TODO organize this better
 
 //Her bladder variables
 export let customurge = 250;
+export function setCustomurge(val: number) { customurge = val; }
 export let minurge = 187; //Bladder never decays below this
 
 export let minperc = 75; //Percentage of the minimumvalue of the bladder
+export function setMinperc(val: number) { minperc = val; }
 
 export let bladurge = 250; // Level where she feels the first urge
+export function setBladurge(val: number) { bladurge = val; }
 export let bladneed = bladurge * 2; // Level where she continuously needs to go
 export let blademer = bladurge * 3; // Level where it becomes an emergency
 export let bladlose = bladurge * 3 + 150; // Level where she loses control
@@ -26,17 +34,25 @@ export let bladcumlose = bladurge * 4; // Level where she spurts as she cums
 export let bladsexlose = bladurge * 5; // Level where she can't control it during sex
 
 export let maxtummy = 250; // Drink capacity of stomach
+export function setMaxtummy(val: number) { maxtummy = val; }
 export let maxbeer = 500; // Beer capacity of stomach
+export function setMaxbeer(val: number) { maxbeer = val; }
 
 // Legacy global state used across script-style JS files.
 export let tummy = 0;
+export function setTummy(val: number) { tummy = val; }
 export let bladder = 0;
+export function setBladder(val: number) { bladder = val; }
 
 export let bladDec = 1;
+export function setBladDec(val: number) { bladDec = val; }
 export let bladDespDec = 1;
+export function setBladDespDec(val: number) { bladDespDec = val; }
 export let seal = 1;
+export function setSeal(val: number) { seal = val; }
 export let beerdecCounter = 0; //How long has it been since her bladder capacity has been decayed by beer
 export let ybeerdecCounter = 0; //How long has it been since your bladder capacity has been decayed by beer
+export function setYbeerdecCounter(val: number) { ybeerdecCounter = val; }
 
 //  So she doesn't seem unfamiliar with the concept after the first time.
 export let peedtowels = 0; // has she peed in your paper towels
@@ -47,14 +63,20 @@ export let peedoutside = 0; // has she peed outside
 //  The following are used by her to complain about how long she's
 // been waiting and how much she's drunk.
 export let lastpeetime = 0;  // When did she last go?
+export function setLastpeetime(val: number) { lastpeetime = val; }
 export let timeheld = 0; // for stats
+export function setTimeheld(val: number) { timeheld = val; }
 
 export let drankbeer = 0; // has she drunk beer?  Changes capacities and rates.
+export function setDrankbeer(val: number) { drankbeer = val; }
 
 // Flags for drinking game.
 export let notdesperate = 0; //neither you or her are desperate after drinking game.
+export function setNotdesperate(val: number) { notdesperate = val; }
 export let notydesperate = 0; //You aren't desperate but she is after drinking game.
+export function setNotydesperate(val: number) { notydesperate = val; }
 export let nothdesperate = 0; //She isn't desperate but you are after drinking game
+export function setNothdesperate(val: number) { nothdesperate = val; }
 
 //  Randomness thresholds 1-10.
 //  1 corresponds to 10% likelihood.
@@ -63,9 +85,13 @@ export const rrlockedthresh = 7; // Likelihood of bar restroom locked ( occupied
 export const rrlinethresh = 7; // Likelihood of line for restroom in club
 export const phoneholdthresh = 7; // Likelihood of her holding it for you on the phone
 export let spurtthresh = 5; // Likelihood of her spurting rather than wetting
+export function setSpurtthresh(val: number) { spurtthresh = val; }
 export let yspurtthresh = 3; // Likelihood of you spurting rather than wetting
+export function setYspurtthresh(val: number) { yspurtthresh = val; }
 export let bribeaskthresh = 7; //Likelihood she'll hold it if you ask her when desperate
+export function setBribeaskthresh(val: number) { bribeaskthresh = val; }
 export let bribeAskBase = 7; //The base likelihood that the asks works, this is used to reset the askthresh when she pees
+export function setBribeAskBase(val: number) { bribeAskBase = val; }
 
 export let tumavg = tummy; // Average blood water level
 export const tumdecay = 6; // Number of calculation cycles to average bladder filling
@@ -88,18 +114,27 @@ export const holditlosethresh = 90; // She'll try to hold it for lose
 export const gomakeoutthresh = 40; // She'll go to the makeout spot
 
 export let rrlockedflag = 0; // Restroom was locked last time she went
+export function setRrlockedflag(val: number) { rrlockedflag = val; }
 export let shespurted = 0; // She only spurted
+export function setShespurted(val: number) { shespurted = val; }
 export let brokeice = 0; // She's previously brought up that she needs to pee
+export function setBrokeice(val: number) { brokeice = val; }
 export let sawherpee = 0; // You've seen her pee
 
 export let wetlegs = 0; // her legs are wet
+export function setWetlegs(val: number) { wetlegs = val; }
 export let wetherpanties = 0; // did she ever wet herself?
+export function setWetherpanties(val: number) { wetherpanties = val; }
 export let nowpeeing = 0; // flag: she is currently peeing
+export function setNowpeeing(val: number) { nowpeeing = val; }
 
 export let gottagoflag = 0; // has she just asked to use the restroom
+export function setGottagoflag(val: number) { gottagoflag = val; }
 
 export let askholditcounter = 0; // How many times have you asked her to hold it.
+export function setAskholditcounter(val: number) { askholditcounter = val; }
 export let waitcounter = 0; // how long ago did she ask to pee?
+export function setWaitcounter(val: number) { waitcounter = val; }
                      //Reset positive when you ask her.
 
 //Initializes the bladder values for the girl
@@ -254,7 +289,7 @@ export function showneed(curtext: any[] = []): any[] {
     } else if (showsRandomSymptom()) {
         curtext = displayneed(curtext);
     }
-    changevenueflag = 0;
+    setChangevenueflag(0);
     return curtext;
 }
 
@@ -348,7 +383,7 @@ export function indepee(curtext: any[] = [], called: boolean = false) {
     // Part 1: Heading text — what does she say/do on the way to the bathroom?
     //TODO the locstack aren't compeltely correct
     if (haveherpurse) {
-        haveherpurse = 0;
+        setHaveherpurse(0);
     } else if (HOME_LOCATIONS.includes(currentLocation) || currentLocation === "pickup") {
         curtext.push(headsToBathroom);
     } else if (NO_RESTROOM_LOCATIONS.includes(currentLocation)) {
@@ -440,7 +475,7 @@ export function bathroomlocked(curtext: any[]): any[] {
 const SEATED_LOCATIONS = ["themakeout", "driveout", "drivearound", "domovie"];
 
 export function displayneed(curtext: any[]): any[] {
-    showedneed = 1;
+    setShowedneed(1);
     // Pick the quote prefix based on whether she's seated, in the tub, or standing
     const prefix = (SEATED_LOCATIONS.includes(locStack[0]) || fuckingnow > 0) ? "sit"
         : locStack[0] === "thehottub" ? "tub"
@@ -565,7 +600,7 @@ export function holdit() {
                     bladder = 0;
                     waitcounter = 0;
                     askholditcounter = 0;
-                    attraction = 0;
+                    setAttraction(0);
                 } else {
                     curtext = displayneed(curtext);
                 }
@@ -577,13 +612,13 @@ export function holdit() {
             curtext.push(holdPhoneSorry);
             curtext.push(holdPhoneHangUp);
             //She's not holding it while on the phone
-            attraction -= 5;
+            setAttraction(attraction - 5);
             bladder = 0;
             curtext = callChoice(["curloc", "Continue..."], curtext);
         } else {
             curtext.push(holdRefusal);
             // she's not holding it for you
-            attraction -= 5;
+            setAttraction(attraction - 5);
             curtext = indepee(curtext, true) ?? curtext;
         }
     }
@@ -748,7 +783,7 @@ export function bribefavor() {
     let curtext = needs["bribefavor"]
     curtext = displayholdquip(curtext);
     curtext = interpbladder(curtext);
-    owedfavor -= 1;
+    setOwedfavor(owedfavor - 1);
     askholditcounter++;
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
@@ -767,7 +802,7 @@ export function allowpee(): void {
         listenerList.push([[indepee, "Continue..."], "indePee"]);
     } else {
         curtext.push(allowOfferPurse);
-        attraction += 7;
+        setAttraction(attraction + 7);
         listenerList.push([[indepee, "Continue..."], "indePee"]);
         listenerList.push([[holdpurse, needs["choices"]["holdPurse"]], "holdPurse"]);
     }
@@ -784,7 +819,7 @@ export function peephone() {
     if (attraction > 30) {
         if (bladder > blademer && shyness < 75) {
             curtext = printLList(curtext, peelines["peephone"], PHONE_PEE_OPEN);
-            attraction += 10;
+            setAttraction(attraction + 10);
             flushdrank();
         } else {
             curtext = printLList(curtext, peelines["peephone"], PHONE_PEE_PRIVATE);
@@ -845,8 +880,8 @@ export function peein(item: string) {
     } else {
         //She outrightly refuses the idea.
         curtext = printList(curtext, list[6]);
-        attraction -= 3;
-        if (attraction < 0) attraction = 0;
+        setAttraction(attraction - 3);
+        if (attraction < 0) setAttraction(0);
         //TODO add check for makeout
         if (locStack[0] === "driveout") {
             //When in the car she'll throw the item out of the window.
@@ -889,7 +924,7 @@ export function peein3(item: string) {
     if (bladder < bladurge) {
         curtext.push(girltalk + "I'm sorry. I really don't have to go.");
         curtext.push(girltalk + "I just can't. Maybe later.");
-        shyness += 1;
+        setShyness(shyness + 1);
     } else {
         const container = backPackItems[item];
         const containerVolume = container.volume;
@@ -918,7 +953,7 @@ export function peein3(item: string) {
             flushdrank();
         }
         sawherpee = 1;
-        attraction += 4;
+        setAttraction(attraction + 4);
         container.peed = 1;
     }
     curtext = callChoice(["curloc", "Continue..."], curtext);
@@ -980,8 +1015,8 @@ export function peeoutside() {
         //TODO this code is almost impossible to reach? since you need at least 40 attraction to get outside
         const outsideRefusal = needs["peeoutside"][6]; // "No way am I exposing my privates"
         curtext.push(outsideRefusal);
-        attraction -= 3;
-        if (attraction < 0) attraction = 0;
+        setAttraction(attraction - 3);
+        if (attraction < 0) setAttraction(0);
         curtext = callChoice(["curloc", "Continue..."], curtext);
     }
     sayText(curtext);
@@ -1020,7 +1055,7 @@ export function peeoutside2b() {
 export function peeoutside3() {
     let curtext = itscomingout([]);
     curtext = printListSelection(curtext, needs["peeoutside"], range(8, 10));
-    attraction += 3;
+    setAttraction(attraction + 3);
     flushdrank();
     peedoutside = 1;
     sawherpee = 1;
@@ -1032,7 +1067,7 @@ export function peeoutside3() {
 export function peeoutside3b() {
     let curtext = itscomingout([]);
     curtext = printListSelection(curtext, needs["peeoutside"], range(11, 13));
-    attraction += 3;
+    setAttraction(attraction + 3);
     flushdrank();
     peedoutside = 1;
     sawherpee = 1;
@@ -1044,7 +1079,7 @@ export function peeoutside3b() {
 export function peeoutside3c() {
     let curtext = itscomingout([]);
     curtext = printListSelection(curtext, needs["peeoutside"], range(14, 16));
-    attraction += 3;
+    setAttraction(attraction + 3);
     flushdrank();
     peedoutside = 1;
     sawherpee = 1;
@@ -1109,15 +1144,15 @@ export function wetherself2c() {
     flushdrank();
     wetlegs = 1;
     wetherpanties = 1;
-    wetthecar = 1;
+    setWetthecar(1);
     sayText(curtext);
     cListenerGen([wetherself3c, "Continue..."], "wetherself3c");
 }
 
 export function wetherself3c() {
     let curtext = printListSelection([], needs["wetherself"], [9, 10]);
-    shyness += 20;
-    if (shyness > 100) shyness = 100;
+    setShyness(shyness + 20);
+    if (shyness > 100) setShyness(100);
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
 }
@@ -1131,13 +1166,13 @@ export function wetherself3() {
             curtext = printListSelection(curtext, needs["wetherself"], [11, 12]);
             backPackItems.wetPanties.value++
         }
-        pantycolor = "none";
+        setPantycolor("none");
     } else if (pantycolor === "none")
         curtext.push(needs["wetherself"][13]);
     curtext.push(pickrandom(appearance["clothes"][heroutfit]["dryquote"]));
     if (locStack[0] !== "drinkinggame") {
-        shyness += 15;
-        if (shyness > 100) shyness = 100;
+        setShyness(shyness + 15);
+        if (shyness > 100) setShyness(100);
     }
     let listenerList: any[] = [[[scoldher, "Scold her for wetting herself"]]];
     if (haveItem("ptowels")) {
@@ -1160,8 +1195,8 @@ export function wetherself3() {
 // In the tub
 export function wetherself3t() {
     let curtext = printListSelection([], needs["wetherself"], range(14, 16));
-    shyness += 10;
-    if (shyness > 100) shyness = 100;
+    setShyness(shyness + 10);
+    if (shyness > 100) setShyness(100);
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
 }
@@ -1200,8 +1235,8 @@ export function checkspurted() {
     if (attraction < 75) {
         curtext = printListSelection(curtext, needs["askspurted"], [2, 3]);
         curtext = displayneed(curtext);
-        attraction -= 10;
-        shyness += 10;
+        setAttraction(attraction - 10);
+        setShyness(shyness + 10);
     } else {
         if (pantycolor === "none") {
             curtext = printListSelection(curtext, needs["askspurted"], [4, 5]);
@@ -1230,7 +1265,7 @@ export function smellspurted() {
 export function scoldher() {
     console.log("test: scoldHer");
     let curtext = printList([], needs["scoldher"]);
-    attraction -= 20;
+    setAttraction(attraction - 20);
     sayText(curtext);
     cListenerGen([comforther, needs["choices"]["comfortHer"]], "comfortHer");
 }
@@ -1239,8 +1274,8 @@ export function scoldher() {
 export function comforther() {
     let curtext = printList([], needs["comforther"]);
     curtext = callChoice(["curloc", "Continue..."], curtext);
-    attraction += 5;
-    shyness -= 2;
+    setAttraction(attraction + 5);
+    setShyness(shyness - 2);
     sayText(curtext);
 }
 
@@ -1455,8 +1490,8 @@ export function pTogether5c() {
     else
         curtext.push(appearance["clothes"][heroutfit]["ptogetherdumpquotebare"]);
     flushdrank();
-    attraction += 6;
-    shyness -= 6;
+    setAttraction(attraction + 6);
+    setShyness(shyness - 6);
     sawherpee = 1;
     curtext = printList(curtext, peelines["ptogether"][26]);
     sayText(curtext);
@@ -1476,7 +1511,7 @@ export function pTogether6() {
     curtext = printList(curtext, peelines["ptogether"][28]);
     sayText(curtext);
     poploc();
-    attraction -= 3;
+    setAttraction(attraction - 3);
     cListenerGen([doDance, "Continue..."], "doDance");
 }
 

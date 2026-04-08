@@ -3,6 +3,7 @@ import {getRandomValueFromNormalDistribution} from "../helperFiles/helperFunctio
 import {gameState} from "./gameState";
 import {BladderState} from "./bladderState";
 import { IBackpackItem, IDrink } from "../backPackItems";
+import { lastpeetime, minperc } from "../bladder";
 
 export class Person {
     private _bladderUrge: number;

@@ -190,7 +190,7 @@ Module-scoped variables cannot be safely bridged via window property override (f
 - [x] Consolidate bedroom location key — standardized to `"theBedroom"` (camelCase). Fixed `"thebedroom"` in yourbladder.ts, removed `BEDROOM_LOCATIONS` workaround array from bladder.ts, inlined `"theBedroom"` directly into `HOME_LOCATIONS`, `NO_RESTROOM_LOCATIONS`, and the `allowpee` check
 - [x] Create Player `Person` object — `gameState.init()` now seeds `gameState.Player` from legacy player globals (`yourbladder`, `yourtummy`, `yourbladurge`, `ymaxtummy`, `ymaxbeer`, `ydrankbeer`, `ynowpeeing`) so startup/save-load values are preserved. `go()` now syncs legacy globals → Player before tick and Player → legacy globals after `processFluidsDigestion()`, making Player a live runtime model while existing bare-global call sites continue to work.
 - [x] Replace raw bladder threshold comparisons with `BladderState` enum checks (~145 sites across 14 consumer files). Converted `BladderState` to numeric enum (`Empty=0` through `SexLose=6`) for `>=` comparisons. Added companion bidirectional sync (`syncCompanionFromLegacyGlobals`/`syncLegacyGlobalsFromCompanion`) in main.ts to keep `Person.Bladder`/`Tummy` in sync with legacy `bladder`/`tummy` module vars. Migrated actions.ts, backPackItems.ts, fuckHer.ts, herhome.ts, locations.ts, store.ts, yourHome.ts, darts.ts, driveAround.ts, theatre.ts, theBar.ts, theClub.ts, theMakeOut.ts, main.ts. ~5 raw-value offset comparisons (`bladder > bladlose-25`, `bladder < blademer && tummy > 30`, `yourbladder < yourblademer && tummy > 30`) remain where arithmetic with actual values is needed. bladder.ts/yourbladder.ts internals intentionally left using raw threshold vars (they define the thresholds).
-- [ ] Remove remaining `declare let` from globals.d.ts → delete the file
+- [x] Remove remaining `declare let` from globals.d.ts — stripped all ~170 `declare let` entries. All 23 consumer files now use proper ES module `import { x } from './source'` statements instead of bare-global reads through `declare let` + `expose*OnWindow()` bridges. Added `export function setX(val)` setters in source modules for all cross-module writes (~60 setters across shims.ts, bladder.ts, yourbladder.ts, quotes.ts, settings.ts, fuckHer.ts, drive.ts, backPackItems.ts, herhome.ts, locations.ts, locations/theatre.ts, locations/theBar.ts, locations/theClub.ts, locations/theMakeOut.ts). globals.d.ts now contains only `declare var gameState/gameScreen` and `declare function cellphone/GetRequiredElementById`. Build 503kb, typecheck clean, 34/34 tests pass.
 - [ ] Remove `expose*OnWindow()` bridges (no more bare global reads)
 - [ ] Add save/load UI (buttons in game, not just console API)
 
@@ -253,10 +253,9 @@ export function exposeBladderOnWindow() {
 }
 ```
 
-These bridges serve three purposes:
-1. **Legacy compatibility** — ~120 mutable state variables still referenced as bare globals across files via `globals.d.ts` declares
-2. **Save/load** — `saveLoad.ts` reads/writes all state through these window getters/setters
-3. **Cross-module state sharing** — until variables are absorbed into `gameState` (Phase 5b)
+These bridges serve two purposes:
+1. **Save/load** — `saveLoad.ts` reads/writes all state through these window getters/setters
+2. **`connectToGameState()` reverse bridges** — `gs.X` delegates to `window.x` for non-shims variables
 
 ### Click Handling
 
@@ -274,7 +273,7 @@ These bridges serve three purposes:
 - **Dual state**: `gameState.Money` / `gameState.Attraction` / `gameState.Shyness` have synchronized getters/setters that update legacy globals. Bladder thresholds: Person is authoritative, `updateurge()` syncs to Person, `pee()` syncs back to legacy module vars.
 - **Forward bridges** (shims-owned vars): `window.x` delegates to `gs.X`. Used for ~31 shims.ts variables (money, attraction, time, etc.) that are never read/written by module code after initialization.
 - **Reverse bridges** (module vars): `gs.X` delegates to `window.x` (which reads module var via `expose*OnWindow()`). Used for ~112 non-shims variables and deep fields. Module code continues writing its local `let` variable; gameState always sees the live value.
-- **`globals.d.ts`** — ~120 `declare let`/`declare var` entries remain for mutable state accessed as bare globals. Will be deleted when all state is absorbed into `gameState` (Phase 5b).
+- **`globals.d.ts`** — stripped down to 4 entries: `declare var gameState/gameScreen` (window-exposed singletons) and `declare function cellphone/GetRequiredElementById` (window-only functions). All ~170 `declare let` entries removed — all modules now use proper ES imports with setter functions for cross-module writes.
 
 ### Save/Load System
 

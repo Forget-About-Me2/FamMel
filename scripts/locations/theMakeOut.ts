@@ -1,18 +1,21 @@
-﻿import { fetchJson, printList, sayText, cListenerGen, cListenerGenList } from '../quotes';
-import { pickrandom, randomchoice, pushloc, poploc, formatAll } from '../shims';
-import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, gomakeoutthresh, hottubthresh, flushdrank } from '../bladder';
-import { displayyourneed, wetyourself, ypeeoutside, yPeeInTub } from '../yourbladder';
-import { standobjs, backPackItems } from '../backPackItems';
+﻿import { fetchJson, printList, sayText, cListenerGen, cListenerGenList, general, appearance, girlname, pantycolor, setPantycolor } from '../quotes';
+import { pickrandom, randomchoice, pushloc, poploc, formatAll, locStack, attraction, setAttraction, shyness, setShyness, flirtcounter, setFlirtcounter, checkedherout, playerbladder } from '../shims';
+import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, gomakeoutthresh, hottubthresh, flushdrank, bladder, setBladder, tummy, setTummy, gottagoflag, blademer } from '../bladder';
+import { displayyourneed, wetyourself, ypeeoutside, yPeeInTub, yourbladder, setYourbladder, yourtummy, setYourtummy, yourblademer } from '../yourbladder';
+import { standobjs, backPackItems, allowItems, setAllowItems } from '../backPackItems';
 import { kissher, feelup, checkherout } from '../actions';
 import { leavehm, driveout } from '../drive';
-import { lookAround } from '../locations';
+import { lookAround, locations, sharedLoc } from '../locations';
 import { haveSex } from '../fuckHer';
 import { gameState } from '../gameState/gameState';
 import { BladderState } from '../gameState/bladderState';
+import { heroutfit } from '../settings';
 
 export let makeOut; //This stores the JSON quotes regarding the makeOut
 export let askedswim = 0; // She's asked about a swim
+export function setAskedswim(val: number) { askedswim = val; }
 export let walkcounter = 0; // How far have you walked
+export function setWalkcounter(val: number) { walkcounter = val; }
 
 export function makeOutSetup(){
     fetchJson("locations/makeOut").then(makeOutJson);
@@ -29,7 +32,7 @@ function makeOutJson(data: any){
 }
 
 export function theMakeOut() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     let listenerList: any[] = [];
     // theMakeOut: [0]=arrival (attraction high enough), [1]=attraction too low, [2]=ambient, [3]=rejection
@@ -76,8 +79,8 @@ export function theMakeOut() {
 }
 
 export function failMakeOut() {
-    shyness += 10;
-    attraction -= 10;
+    setShyness(shyness + 10);
+    setAttraction(attraction - 10);
     const makeOutRejection = makeOut["theMakeOut"][3];
     let curtext = printList([], makeOutRejection);
     curtext = displayneed(curtext);
@@ -101,11 +104,11 @@ export function viewStars() {
     if (rand) {
         if (bladder < blademer && tummy > 30) {
             if (tummy >= blademer - bladder) {
-                tummy -= (blademer - bladder);
-                bladder = blademer;
+                setTummy(tummy - (blademer - bladder));
+                setBladder(blademer);
             } else {
-                bladder += tummy;
-                tummy = 0;
+                setBladder(bladder + tummy);
+                setTummy(0);
             }
             curtext = printList(curtext, herBladderCold);
             // s("The cold weather works some magic on " + girlname + "'s bladder.");
@@ -114,11 +117,11 @@ export function viewStars() {
     } else {
         if (yourbladder < yourblademer && tummy > 30) {
             if (yourtummy >= yourblademer - yourbladder) {
-                yourtummy -= (yourblademer - yourbladder);
-                yourbladder = yourblademer;
+                setYourtummy(yourtummy - (yourblademer - yourbladder));
+                setYourbladder(yourblademer);
             } else {
-                yourbladder += yourtummy;
-                yourtummy = 0;
+                setYourbladder(yourbladder + yourtummy);
+                setYourtummy(0);
             }
             //TODO better description
             curtext = printList(curtext, yourBladderCold);
@@ -126,14 +129,14 @@ export function viewStars() {
             curtext = displayyourneed(curtext);
         }
     }
-    if (flirtcounter < 1) attraction += 5;
-    flirtcounter += 4;
+    if (flirtcounter < 1) setAttraction(attraction + 5);
+    setFlirtcounter(flirtcounter + 4);
     sayText(curtext);
     cListenerGen([theMakeOut, "Continue..."], "Continue...");
 }
 
 export function theWalk() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     // theWalk: [0]=first walk, [1]=ambient, [2]=examine gate, [3]=gate locked,
     //          [4]=gate inviting, [5]=gate leads to beach
@@ -206,7 +209,7 @@ export function examineGate() {
 }
 
 export function theYard() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     // theYard: named properties for each quote group
     const yardEntry = makeOut["theYard"]["entry"];
@@ -278,7 +281,7 @@ export function preHotTub() {
 //TODO she can pee in the hottub if she's not about to burst
 //TODO fix need dialogue
 export function theHotTub() {
-    allowItems = 1;
+    setAllowItems(1);
     const tubEntry = makeOut["theYard"]["tubEntry"];
     const tubAmbient = makeOut["theYard"]["tubAmbient"];
     let curtext: any[] = []
@@ -334,7 +337,7 @@ export function exitHotTub(){
 //  [19]=hold her close (she pees against you), [20]=dry off,
 //  [21]=she gives you wet panties
 export function theBeach() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     const [beachArrival, beachAmbient, askSwim] = makeOut["theBeach"];
     if (locStack[0] !== "theBeach") {
@@ -493,7 +496,7 @@ export function beachSwim5() {
     if (pantycolor !== "none") {
         curtext = printList(curtext, makeOut["theBeach"][21]); // gives you wet panties
         backPackItems.wetPanties.value += 1;
-        pantycolor = "none";
+        setPantycolor("none");
     }
     sayText(curtext);
     cListenerGen([theBeach, "Continue..."], "theBeach");

@@ -5,10 +5,12 @@ import { theatreSetup } from './locations/theatre';
 import { makeOutSetup } from './locations/theMakeOut';
 import { herHomeSetup, homeConditions } from './herhome';
 import { fetchJson, formatAllVarsList, printList, callChoice, sayText, cListener, cListenerGen, addSayText, addListenersList, addListeners } from './quotes';
-import { pickrandom, randomchoice, pushloc, formatAll } from './shims';
+import { pickrandom, randomchoice, pushloc, formatAll, attraction, shyness } from './shims';
 import { displayneed, displaygottavoc, showneed, holdit, indepee } from './bladder';
 import { displayyourneed } from './yourbladder';
 import { backPackItems, haveItem } from './backPackItems';
+import { suggestedloc, setSuggestedloc } from './settings';
+import { seenmovie } from './locations/theatre';
 import { gameState } from './gameState/gameState';
 import { BladderState } from './gameState/bladderState';
 
@@ -24,6 +26,7 @@ export let locations = {
 };
 
 export let sharedLoc;
+export function setSharedLoc(val: any) { sharedLoc = val; }
 fetchJson("locations/locations").then(locJsonSetup);
 
 export function locJsonSetup(data: any){
@@ -35,15 +38,15 @@ export function locJsonSetup(data: any){
 //Determines whether the wants to visit a location.
 export function updateSuggestedLocation(){
     if (shyness < 30 && attraction > 50 && !locations.makeOut.visited) {
-        suggestedloc = "themakeout";
+        setSuggestedloc("themakeout");
     } else if (homeConditions()) {
-        suggestedloc = "thehome";
+        setSuggestedloc("thehome");
     } else if (shyness > 80 && attraction < 30 && !seenmovie) {
-        suggestedloc = "themovie";
+        setSuggestedloc("themovie");
     } else if (shyness < 60 && attraction > 30 && !locations.theClub.visited) {
-        suggestedloc = "theclub";
+        setSuggestedloc("theclub");
     } else if (gameState.Companion.bladderState >= BladderState.Need && shyness < 50 && !locations.theBar.visited) {
-        suggestedloc = "thebar";
+        setSuggestedloc("thebar");
     }
 }
 
@@ -141,7 +144,9 @@ export function itsClosed(locname: string, fun: () => void, curloc: string) {
 }
 
 export let emerBreak; //True if she rushed to the toilet after you opened the door
+export function setEmerBreak(val: any) { emerBreak = val; }
 export let emerHold; //True if you asked her to hold it.
+export function setEmerHold(val: any) { emerHold = val; }
 export function breakLoc(loc: any, curloc: string){
     // breakLoc: [0]=trying the key, [1]=she rushes past you
     const [tryingKey, sheRushesPast] = sharedLoc["breakLoc"];

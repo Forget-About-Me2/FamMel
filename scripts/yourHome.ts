@@ -2,11 +2,12 @@
 import { BladderState } from "./gameState/bladderState";
 
 import { gameSettings } from "./settings/gameSettings";
-import { loadLocationScene, printIntro, printAlways, printChoices, printChoicesList, printSDialogue, sayText, c, handleFlirt, cListenerGenList, printList } from './quotes';
-import { pushloc, incrandom, randomchoice, formatString, printDialogue } from './shims';
-import { displaygottavoc, flushdrank, phoneholdthresh } from './bladder';
-import { displayyourneed, wetyourself } from './yourbladder';
-import { haveItem, backPackItems } from './backPackItems';
+import { loadLocationScene, printIntro, printAlways, printChoices, printChoicesList, printSDialogue, sayText, c, handleFlirt, cListenerGenList, printList, locjson, drinklines, calledjsons, girltalk } from './quotes';
+import { pushloc, incrandom, randomchoice, formatString, printDialogue, locStack, shopping, setShopping, money, setMoney, flirtedflag, setFlirtedflag, late, setLate, attraction, setAttraction, shyness, setShyness, maxflirts, thetime } from './shims';
+import { displaygottavoc, flushdrank, phoneholdthresh, bladder, tummy, setTummy, maxtummy, askholditcounter, setAskholditcounter, waitcounter, setWaitcounter } from './bladder';
+import { displayyourneed, wetyourself, yourtummy, setYourtummy, ymaxtummy } from './yourbladder';
+import { haveItem, backPackItems, allowItems, setAllowItems } from './backPackItems';
+import { heroutfit } from './settings';
 
 //This contains everything you can do from your home before you pick-up your date
 
@@ -18,7 +19,7 @@ let onphone = 0; // Flag for being on the phone with her
 //TODO decide whether you can always go to the bathroom(maybe like a certain percentage filled)
 //TODO refactor
 export function yourHome() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: string[] = [];
     if (!gameState.DidIntro) {
         loadLocationScene("yourhome", "yourhome");
@@ -28,7 +29,7 @@ export function yourHome() {
         if (locStack[0] !== "yourhome" || onphone || shopping) {
             loadLocationScene("yourhome", "yourhome");
             onphone = 0;
-            shopping = 0;
+            setShopping(0);
         }
         curtext = printIntro(curtext, 1);
     }
@@ -58,7 +59,7 @@ function buy(number){
     if (money >= price){
         curtext.push("You buy a "+ item[0]+ ".")
         obj.value += 1;
-        money -= price;
+        setMoney(money - price);
         if (obj.hasOwnProperty("bottles"))
             obj.bottles?.push(6);
     } else curtext.push("You don't have enough money!");
@@ -74,15 +75,15 @@ function buy(number){
 //TODO show your need?
 export function callHer() {
     const companion = gameState.Companion;
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     if (locStack[0] !== "callher") {
-        flirtedflag = 0;
+        setFlirtedflag(0);
         pushloc("callher");
         loadLocationScene("yourhome", "callher")
         curtext = printIntro(curtext, 0);
         if (thetime > 75 && bladder < companion.bladderEmer) {
-            late = 1;
+            setLate(1);
         }
         onphone = 1;
     } else {
@@ -94,8 +95,8 @@ export function callHer() {
         let startI = curtext.length;
         curtext = printDialogue(curtext, "callher",0);
         if (askholditcounter) curtext = displaygottavoc(curtext, startI+2);
-        attraction -= 5;
-        shyness -= 10;
+        setAttraction(attraction - 5);
+        setShyness(shyness - 10);
         curtext = printChoices(curtext, [0]);
     } else if (thetime > 75 && bladder < companion.bladderEmer) {
         curtext = printDialogue(curtext,"callher", 1);
@@ -107,7 +108,7 @@ export function callHer() {
     } else if (bladder > companion.bladderEmer && askholditcounter && waitcounter === 0) {
         curtext = cantwait(curtext);
     } else {
-        if (shyness > 80) shyness -= 1;
+        if (shyness > 80) setShyness(shyness - 1);
         //TODO This also prints highflirts while in the original that can't happen over the phone
         if(flirtedflag < maxflirts){
             handleFlirt(listenerList);
@@ -131,8 +132,8 @@ function gotta() {
     let curtext: any[] = []
     if (shyness > 80) {
         curtext = printSDialogue(curtext, "gotta", 0, 0, 0);
-        attraction -= 2;
-        shyness += 5;
+        setAttraction(attraction - 2);
+        setShyness(shyness + 5);
     } else if (bladder < companion.bladderUrge) {
         curtext = printSDialogue(curtext, "gotta", 0, 1, 1);
     } else {
@@ -150,7 +151,7 @@ function gotta() {
 }
 
 function ohreally() {
-    attraction -= 5;
+    setAttraction(attraction - 5);
     let curtext = printDialogue([], "gotta", 1);
     curtext = printChoices(curtext, [10]);
     sayText(curtext);
@@ -174,7 +175,7 @@ function waitpickup() {
     } else {
         curtext = printSDialogue(curtext, "gotta", 2, 2, 2);
         flushdrank();
-        attraction = 0;
+        setAttraction(0);
         curtext = printChoices(curtext, [10]);
     }
     sayText(curtext);
@@ -182,7 +183,7 @@ function waitpickup() {
 
 function luckybribe() {
     let curtext = printDialogue([],"bribes", 0);
-    askholditcounter++;
+    setAskholditcounter(askholditcounter + 1);
     curtext = printChoices(curtext, [10]);
     sayText(curtext);
 }
@@ -195,7 +196,7 @@ function declinebribe() {
 
 function acceptbribe() {
     let curtext = printDialogue([], "bribes", 2);
-    askholditcounter++;
+    setAskholditcounter(askholditcounter + 1);
     curtext = printChoices(curtext, [10]);
     sayText(curtext);
 }
@@ -226,15 +227,15 @@ function predrink() {
     let curtext: any[] = [];
     if (attraction < 10) {
         curtext = printDialogue(curtext, "predrink", 0);
-        attraction = 0;
+        setAttraction(0);
     } else {
         if (tummy < maxtummy / 2 && attraction > 12) {
             curtext = printDialogue(curtext, "predrink", 1);
-            tummy += 200;
+            setTummy(tummy + 200);
             backPackItems.water.sheDrank = (backPackItems.water.sheDrank ?? 0) + 2;
         } else if (tummy < maxtummy && attraction > 15) {
             curtext = printDialogue(curtext, "predrink", 2);
-            tummy += 200;
+            setTummy(tummy + 200);
             backPackItems.water.sheDrank = (backPackItems.water.sheDrank ?? 0) + 2;
         } else {
             curtext = printDialogue(curtext, "predrink", 3);
@@ -252,7 +253,7 @@ function yPreDrink() {
         : [[], []];
     if (yourtummy < ymaxtummy) {
         curtext = printList(curtext, yDrinkLines[0] || ["You drink some water."]);
-        yourtummy += 200;
+        setYourtummy(yourtummy + 200);
         backPackItems.water.yDrank = (backPackItems.water.yDrank ?? 0) + 2;
     } else {
         curtext = printList(curtext, yDrinkLines[1] || ["Your stomach feels too full to drink more right now."]);
@@ -288,7 +289,7 @@ function getYourHomeCallData() {
 function cellphone() {
     const callData = getYourHomeCallData();
     let curtext = [callData.getcalled]
-    waitcounter += 3;
+    setWaitcounter(waitcounter + 3);
     curtext = printChoicesList(curtext, [0,1], callData.choices);
     sayText(curtext);
 }
@@ -304,14 +305,14 @@ function anscell() {
 function ignorecell() {
     const callData = getYourHomeCallData();
     let curtext = [callData.ignorecell];
-    attraction -= 1;
+    setAttraction(attraction - 1);
     curtext = c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
 }
 
 function cantwait(curtext) {
     const callData = getYourHomeCallData();
-    waitcounter += 4;
+    setWaitcounter(waitcounter + 4);
     curtext.push(formatString(callData.cantwait, [girltalk]));
     curtext = displaygottavoc(curtext);
     curtext = printChoicesList(curtext, [2,3,4], callData.choices);

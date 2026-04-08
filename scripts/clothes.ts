@@ -1,3 +1,4 @@
+import { pantycolor, girltalk, setPantycolor } from './quotes';
 import { printFormatDialogue, printChoices, sayText } from './quotes';
 import { printDialogue } from './shims';
 
@@ -27,7 +28,7 @@ export function changepanties(choice: number) {
                 curtext = printDialogue(curtext, "changepanties", 4);
         }
     }
-    pantycolor = newcolor;
+    setPantycolor(newcolor);
     curtext = printChoices(curtext, [10]);
     sayText(curtext);
 }

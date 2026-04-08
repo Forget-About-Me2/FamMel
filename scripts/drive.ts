@@ -1,21 +1,26 @@
-import { printChoicesList, printIntro, printAlways, sayText, locationMCSetup } from './quotes';
-import { pickrandom, incrandom, randomchoice, pushloc, printDialogue } from './shims';
-import { showneed, displayneed } from './bladder';
+import { printChoicesList, printIntro, printAlways, sayText, locationMCSetup, appearance, drive, girltalk } from './quotes';
+import { pickrandom, incrandom, randomchoice, pushloc, printDialogue, locStack, changevenueflag, setChangevenueflag, checkedherout, setCheckedherout, flirtedflag, setFlirtedflag } from './shims';
+import { showneed, displayneed, gottagoflag, rrlockedflag, setRrlockedflag } from './bladder';
 import { displayyourneed } from './yourbladder';
 import { updateSuggestedLocation, printLocationMenu } from './locations';
+import { allowItems, setAllowItems } from './backPackItems';
+import { kisscounter, setKisscounter, feelcounter, setFeelcounter } from './fuckHer';
+import { externalflirt, setExternalflirt } from './locations/theClub';
+import { suggestedloc, setSuggestedloc, heroutfit } from './settings';
 
 export let wetthecar = 0; // Seat of the car is wet
+export function setWetthecar(val: number) { wetthecar = val; }
 
 //
 //  This function is used to leave ANY location and drive off.
 //
 export function leavehm() {
-    changevenueflag = 1;
-    checkedherout = 0;
-    kisscounter = 0;
-    feelcounter = 0;
-    rrlockedflag = 0;
-    externalflirt = 0;
+    setChangevenueflag(1);
+    setCheckedherout(0);
+    setKisscounter(0);
+    setFeelcounter(0);
+    setRrlockedflag(0);
+    setExternalflirt(0);
 
     let curtext = showneed([]);
 
@@ -23,7 +28,7 @@ export function leavehm() {
         // choices: [0]=hold it, [1]=let her go, [2]=let's go
         curtext = printChoicesList(curtext, [0,1], drive["leavehm"]["choices"]);
     } else {
-        flirtedflag = 0;
+        setFlirtedflag(0);
         curtext.push("<b>YOU</b> " + pickrandom(drive["leavehm"]["outtahere"]));
         incrandom();
         curtext.push(girltalk + "Yeah! " + pickrandom(drive["leavehm"]["outtahere"]));
@@ -38,13 +43,13 @@ export function leavehm() {
 
 //TODO fix the go to the bar like she asked
 export function driveout() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     if (locStack[0] !== "driveout") {
         pushloc("driveout");
         locationMCSetup("driveout", drive);
         curtext = printIntro(curtext, 0);
-        suggestedloc = "none";
+        setSuggestedloc("none");
         if (wetthecar)
             curtext.push(appearance["clothes"][heroutfit]["soakedseatquote"]);
         else

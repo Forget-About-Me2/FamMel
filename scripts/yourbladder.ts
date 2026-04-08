@@ -1,17 +1,22 @@
-﻿import { printList, callChoice, sayText, c, cListenerGen, cListenerGenList } from './quotes';
-import { pickrandom, randomchoice } from './shims';
-import { displayneed, rrlockedthresh, rrlinethresh } from './bladder';
-import { haveItem, backPackItems, playOnly } from './backPackItems';
+﻿import { printList, callChoice, sayText, c, cListenerGen, cListenerGenList, ypeelines, yneeds } from './quotes';
+import { pickrandom, randomchoice, locStack, thetime, attraction, setAttraction, shyness } from './shims';
+import { displayneed, rrlockedthresh, rrlinethresh, bladDec, bladDespDec, gottagoflag, setGottagoflag, minperc, seal, ybeerdecCounter, setYbeerdecCounter, yspurtthresh, setYspurtthresh } from './bladder';
+import { haveItem, backPackItems, playOnly, allowItems, setAllowItems } from './backPackItems';
 import { theHotTub, theMakeOut } from './locations/theMakeOut';
+import { rrMovieLineThresh } from './locations/theatre';
 
 //Your bladder variables
 export let yourbladder = 500;
+export function setYourbladder(val: number) { yourbladder = val; }
 export let yourtummy = 200;
+export function setYourtummy(val: number) { yourtummy = val; }
 export let yourtumavg = yourtummy;
 export let holdself = 0;
+export function setHoldself(val: number) { holdself = val; }
 export const holdpeethresh = 3; //Chance you'll still pee yourself even though you're holding your dick.
 
 export let yourbladurge = 500; // Level where you feel the first urge
+export function setYourbladurge(val: number) { yourbladurge = val; }
 export let yourbladneed = yourbladurge * 2; // Level where you continuously needs to go
 export let yourblademer = yourbladurge * 3; // Level where it becomes an emergency
 export let yourbladlose = yourbladurge * 3 + 150; // Level where you lose control
@@ -19,11 +24,15 @@ export let yourbladcumlose = yourbladurge * 4; // Level where you lose it as you
 export let yourbladsexlose = yourbladurge * 5; // Level where you can't control it during sex
 
 export let ymaxtummy = 500; // Drink capacity of stomach
+export function setYmaxtummy(val: number) { ymaxtummy = val; }
 export let ymaxbeer = 1000; // Beer capacity of stomach
+export function setYmaxbeer(val: number) { ymaxbeer = val; }
 
 export let yourcustomurge = 500;
+export function setYourcustomurge(val: number) { yourcustomurge = val; }
 export let yminurge = 375; // min bladder urge
 export let ynowpeeing = 0; // flag: you are currently peeing
+export function setYnowpeeing(val: number) { ynowpeeing = val; }
 
 //  The following are used to keep track of what you drank and when you last went
 // Might be used later on.
@@ -32,10 +41,12 @@ export let ytimeheld = 0; // for stats
 
 export let ydrankcocktails = 0;
 export let ydranksodas = 0;
+export function setYdranksodas(val: number) { ydranksodas = val; }
 export let ydrankwaters = 0;
 export let ydrankbeers;
 
 export let ydrankbeer = 0; //Did you drink beer? changes capacities and rates.
+export function setYdrankbeer(val: number) { ydrankbeer = val; }
 
 export let yrrlockedflag = 0; //Restroom was locked last time you went
 
@@ -64,7 +75,7 @@ export function flushyourdrank() {
         //bladder decays based on breaking the seal can only happen once an hour
         else if (seal && ydrankbeer > 15 && ybeerdecCounter > 30) {
             updateyoururge(yourbladurge * 9.5 / 10);
-            ybeerdecCounter = 0;
+            setYbeerdecCounter(0);
         }
     }
 
@@ -82,7 +93,7 @@ export function flushyourdrank() {
 //TODO add a chance of her denying you
 export function youpee() {
     let curtext: any[] = [];
-    gottagoflag = 0;
+    setGottagoflag(0);
     let peed = 0;
     const currentLocation = locStack[0];
     // ypeelines["thehome"]: [0]=asking to use toilet, [1]=peeing description
@@ -105,7 +116,7 @@ export function youpee() {
     if ((currentLocation === "thebar" && randomchoice(rrlockedthresh) ) ||
         ((currentLocation === "theclub" || currentLocation === "dodance") && randomchoice(rrlinethresh)) ||
         (currentLocation === "themovie" && randomchoice(rrMovieLineThresh) || currentLocation === "domovie" && randomchoice(rrMovieLineThresh))) {
-        allowItems = 1;
+        setAllowItems(1);
         curtext = youbathroomlocked(curtext);
     } else if (currentLocation === "darkBar" || currentLocation === "darkTheatre" || currentLocation === "darkclub") {
         //TODO potentially cycle between quotes
@@ -246,7 +257,7 @@ export function ypeein(item: string){
             curtext.push("\"Are you out of your mind!?\" She hisses urgently. \"You can't do that! What if someone sees?!\"");
             curtext.push("You sigh, but put away the " + backPackItems[item].bpname.toLowerCase() + ".");
             curtext = callChoice(["curloc", "Continue..."], curtext);
-            attraction -= Math.round(10 / (yneedtype + 1));
+            setAttraction(attraction - Math.round(10 / (yneedtype + 1)));
         }
     }
     sayText(curtext);
@@ -295,7 +306,7 @@ export function ypeein3(item: string, yneedtype: number){
             curtext = printList(curtext, peeResult[yneedtype]);
             flushyourdrank();
         }
-        attraction += Math.round(10 / (yneedtype + 1));
+        setAttraction(attraction + Math.round(10 / (yneedtype + 1)));
     }
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
@@ -406,7 +417,7 @@ export function wetyourself() {
     if (randomchoice(yspurtthresh) && locStack[0] !== "thehottub") {
         spurtedyourself(curtext);
     } else {
-        yspurtthresh = 3;
+        setYspurtthresh(3);
         if (locStack[0] === "driveout")
             cListenerGen([wetyourself2c, "Continue ..."], "wetyourself");
         else if (locStack[0] === "themakeout")
@@ -466,10 +477,10 @@ export function wetyourself3t() {
 }
 
 export let youSpurted = 0;
-//TODO more text options and her reponse
+export function setYouSpurted(val: number) { youSpurted = val; }
 export function spurtedyourself(curtext: any[]) {
     yourbladder -= 50;
-    yspurtthresh -= 0.1 * yspurtthresh;
+    setYspurtthresh(yspurtthresh - 0.1 * yspurtthresh);
     youSpurted = 1;
     curtext.push(yneeds["spurtquote"]);
     curtext = callChoice(["curloc", "Continue ..."], curtext);

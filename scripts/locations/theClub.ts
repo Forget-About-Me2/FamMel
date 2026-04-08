@@ -1,17 +1,19 @@
-﻿import { fetchJson, printList, sayText, cListenerGen, cListenerGenList } from '../quotes';
-import { pickrandom, randomchoice, pushloc, poploc } from '../shims';
-import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, holdit, allowpee, displayholdquip, photoGameThresholds } from '../bladder';
+﻿import { fetchJson, printList, sayText, cListenerGen, cListenerGenList, general, objQuotes, appearance, girlname, pantycolor } from '../quotes';
+import { pickrandom, randomchoice, pushloc, poploc, locStack, thetime, clubclosingtime, changevenueflag, setChangevenueflag, attraction, setAttraction, checkedherout } from '../shims';
+import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, holdit, allowpee, displayholdquip, photoGameThresholds, bladder, gottagoflag, askholditcounter, setAskholditcounter } from '../bladder';
 import { displayyourneed, wetyourself, youpee } from '../yourbladder';
-import { standobjs, haveItem, buyItem, backPackItems } from '../backPackItems';
+import { standobjs, haveItem, buyItem, backPackItems, allowItems, setAllowItems } from '../backPackItems';
 import { kissher, feelup, checkherout } from '../actions';
 import { leavehm, driveout } from '../drive';
-import { lookAround, itsClosed } from '../locations';
+import { lookAround, itsClosed, locations, sharedLoc, emerHold, setEmerHold, emerBreak, setEmerBreak } from '../locations';
 import { go } from '../main';
 import { gameState } from '../gameState/gameState';
 import { BladderState } from '../gameState/bladderState';
+import { photoChoice, setPhotoChoice, heroutfit } from '../settings';
 
 export let club;
 export let externalflirt = 0; // You flirted with somebody else
+export function setExternalflirt(val: number) { externalflirt = val; }
 
 export function theClubSetup(){
     fetchJson("locations/theClub").then(clubJsonSetup);
@@ -30,7 +32,7 @@ function clubJsonSetup(data: any){
 }
 
 export function theClub() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     let listenerList: any[] = []
     // theClub: [0]=revisit from drive, [1]=first arrival, [2]=ambient, [3]=go dance intro
@@ -100,7 +102,7 @@ export function reClub() {
 
 export function goDance(){
     pushloc("doDance");
-    changevenueflag = 1;
+    setChangevenueflag(1);
     const goDanceIntro = club["theClub"][3];
     let curtext = showneed();
     curtext = displayyourneed(curtext);
@@ -117,7 +119,7 @@ export function goDance(){
 }
 
 export function doDance(){
-    allowItems = 1;
+    setAllowItems(1);
     let curtext = [club["Dancing"].formatVars()];
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
@@ -153,15 +155,15 @@ export function leaveDance(){
 }
 
 export function darkClub() {
-    allowItems = 1;
+    setAllowItems(1);
     let curtext: any[] = [];
     if (emerBreak || emerHold && bladder < 20){
         curtext = printList(curtext, club["emerBreak"]);
-        emerHold = 0;
-        emerBreak = 0;
+        setEmerHold(0);
+        setEmerBreak(0);
     } else if (emerHold) {
         curtext.push(club["emerHold"].formatVars());
-        emerHold = 0;
+        setEmerHold(0);
     }
     else if (locStack[0] !== "darkClub") {
         curtext.push(club["darkClubEnter"].formatVars());
@@ -214,7 +216,7 @@ export function photoConvince(choice: string) {
         curtext.push(club["gameAccept"][choice].formatVars());
         // s(girltalk + "Okay.  But can I please go pee first?");
         curtext = displayneed(curtext);
-        photoChoice = choice;
+        setPhotoChoice(choice);
         sayText(curtext);
         cListenerGenList([
             [[photoGame, club["choices"]["startGame"]], "photogame"],
@@ -222,7 +224,7 @@ export function photoConvince(choice: string) {
         ]);
     } else {
         curtext.push(club["gameFail"]);
-        attraction -= 2;
+        setAttraction(attraction - 2);
         // s(girltalk + "No way, dude.  I'm outta here.");
         indepee(curtext);
     }
@@ -245,7 +247,7 @@ export function photoGame() {
         pushloc("photogame");
         curtext = displayholdquip(curtext);
         posectr = 0;
-        askholditcounter++;
+        setAskholditcounter(askholditcounter + 1);
         curtext = printList(curtext, club["photoGameStart"]);
         // s("<b>YOU:</b> Thanks.  You're very sexy.");
         // s("You motion " + girlname + " up onto the nightclub stage.");

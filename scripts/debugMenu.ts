@@ -3,7 +3,11 @@ import { gameState } from './gameState/gameState';
 import { go } from './main';
 import { theYard, exitYard, theWalk } from './locations/theMakeOut';
 import { openPopUp } from './pop-up';
-import { getRandomSeed } from './shims';
+import { getRandomSeed, clubclosingtime, hour, setHour, locStack, thetime, setThetime } from './shims';
+import { drankbeer, setDrankbeer, tummy, setTummy } from './bladder';
+import { locations } from './locations';
+import { seenmovie, setSeenmovie } from './locations/theatre';
+import { ydranksodas, setYdranksodas, yourtummy, setYourtummy } from './yourbladder';
 
 //These are functions that might regularly be used to debug the code.
 //Functions are added as needed
@@ -40,8 +44,8 @@ export const Debug: DebugFunctions = function () {
 
 //Sets the clock to night
     function nightTime() {
-        thetime += clubclosingtime;
-        hour += 7;
+        setThetime(thetime + clubclosingtime);
+        setHour(hour + 7);
     }
 
 //Makes all requirements met for her to take you into her flat.
@@ -50,21 +54,21 @@ export const Debug: DebugFunctions = function () {
         locations.makeOut.visited = 1;
         locations.theBar.visited = 1;
         locations.theClub.visited = 1;
-        seenmovie = 1;
+        setSeenmovie(1);
     }
 
     //Fulls her stomach and sets it to max diuretic so she has to pee often
     function quickFill(){
-        tummy += 3000;
-        drankbeer = 300;
+        setTummy(tummy + 3000);
+        setDrankbeer(300);
     }
 
     /**
      * Fulls your stomach and sets it to the max diuretic so you have to pee often
      */
     function quickFillPlayer(){
-        yourtummy += 3000;
-        ydranksodas += 300;
+        setYourtummy(yourtummy + 3000);
+        setYdranksodas(ydranksodas + 300);
     }
 
     function yardTest(times = 1){
@@ -303,13 +307,13 @@ export function CreateQuickActions(container: HTMLElement) {
     CreateQuickActionButton(container, 'Set Time 22:00', function () {
         gameState.Time.hour = 22;
         gameState.Time.minute = 0;
-        hour = 22;
+        setHour(22);
         SetDebugMessage('Time set to 22:00');
     });
 
     CreateQuickActionButton(container, 'Add 1 Hour', function () {
         gameState.Time.hour = (gameState.Time.hour + 1) % 24;
-        hour = gameState.Time.hour;
+        setHour(gameState.Time.hour);
         SetDebugMessage(`Time advanced to ${gameState.Time.timeString}`);
     });
 
