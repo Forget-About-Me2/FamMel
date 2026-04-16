@@ -14,7 +14,7 @@ import {
     changevenueflag, setChangevenueflag, shopping, setShopping, didintro, setDidintro,
     showedneed, setShowedneed, randcounter, setRandcounter,
     lastmoney, setLastmoney, lastattraction, setLastattraction, lastshyness, setLastshyness,
-    maxflirts, setMaxflirts, maxkiss, setMaxkiss, maxfeel, setMaxfeel, randmax, setRandmax,
+    maxflirts, setMaxflirts, randmax, setRandmax,
     clubclosingtime, setClubclosingtime, theaterclosingtime, setTheaterclosingtime,
     barclosingtime, setBarclosingtime, timespeed, setTimespeed,
     playerbladder, setPlayerbladder,
@@ -51,9 +51,9 @@ import {
     ydrankwaters, setYdrankwaters, ydrankbeers, setYdrankbeers, ydrankbeer, setYdrankbeer,
     yrrlockedflag, setYrrlockedflag, youSpurted, setYouSpurted,
 } from './yourbladder';
+import { gameState } from './gameState/gameState';
 import {
-    arousal, setArousal, kisscounter, setKisscounter, feelcounter, setFeelcounter,
-    fuckingnow, setFuckingnow, champagnecounter, setChampagnecounter, drankChamp, setDrankChamp,
+    drankChamp, setDrankChamp,
     sexActions, setSexActions,
 } from './fuckHer';
 import { wetthecar, setWetthecar } from './drive';
@@ -130,8 +130,8 @@ const FIELD_REGISTRY: Record<string, FieldEntry> = {
     lastshyness:        { get: () => lastshyness, set: setLastshyness },
     // --- shims.ts — config ---
     maxflirts:          { get: () => maxflirts, set: setMaxflirts },
-    maxkiss:            { get: () => maxkiss, set: setMaxkiss },
-    maxfeel:            { get: () => maxfeel, set: setMaxfeel },
+    maxkiss:            { get: () => gameState.Romance.MaxKiss, set: (v) => { gameState.Romance.MaxKiss = v; } },
+    maxfeel:            { get: () => gameState.Romance.MaxFeel, set: (v) => { gameState.Romance.MaxFeel = v; } },
     randmax:            { get: () => randmax, set: setRandmax },
     clubclosingtime:    { get: () => clubclosingtime, set: setClubclosingtime },
     theaterclosingtime: { get: () => theaterclosingtime, set: setTheaterclosingtime },
@@ -215,12 +215,12 @@ const FIELD_REGISTRY: Record<string, FieldEntry> = {
     ydrankbeer:         { get: () => ydrankbeer, set: setYdrankbeer },
     yrrlockedflag:      { get: () => yrrlockedflag, set: setYrrlockedflag },
     youSpurted:         { get: () => youSpurted, set: setYouSpurted },
-    // --- fuckHer.ts ---
-    arousal:            { get: () => arousal, set: setArousal },
-    kisscounter:        { get: () => kisscounter, set: setKisscounter },
-    feelcounter:        { get: () => feelcounter, set: setFeelcounter },
-    fuckingnow:         { get: () => fuckingnow, set: setFuckingnow },
-    champagnecounter:   { get: () => champagnecounter, set: setChampagnecounter },
+    // --- fuckHer.ts / RomanceState ---
+    arousal:            { get: () => gameState.Romance.Arousal, set: (v) => { gameState.Romance.Arousal = v; } },
+    kisscounter:        { get: () => gameState.Romance.KissCounter, set: (v) => { gameState.Romance.KissCounter = v; } },
+    feelcounter:        { get: () => gameState.Romance.FeelCounter, set: (v) => { gameState.Romance.FeelCounter = v; } },
+    fuckingnow:         { get: () => gameState.Romance.FuckingNow, set: (v) => { gameState.Romance.FuckingNow = v; } },
+    champagnecounter:   { get: () => gameState.Romance.ChampagneCounter, set: (v) => { gameState.Romance.ChampagneCounter = v; } },
     drankChamp:         { get: () => drankChamp, set: setDrankChamp },
     sexActions:         { get: () => sexActions, set: setSexActions, deep: true },
     // --- drive.ts ---
@@ -334,7 +334,7 @@ function deepMerge(target: any, source: any): void {
 const FORWARD_BRIDGED_KEYS = new Set([
     'money', 'attraction', 'shyness', 'lastmoney', 'lastattraction', 'lastshyness',
     'flirtcounter', 'randcounter', 'owedfavor', 'late', 'flirtedflag', 'noflirtflag',
-    'shopping', 'maxflirts', 'maxkiss', 'maxfeel', 'randmax',
+    'shopping', 'maxflirts', 'randmax',
     'clubclosingtime', 'theaterclosingtime', 'barclosingtime', 'timespeed',
     'didintro', 'haveherpurse', 'changevenueflag', 'checkedherout', 'showedneed', 'playerbladder',
     'thetime', 'hour', 'minute', 'meridian',

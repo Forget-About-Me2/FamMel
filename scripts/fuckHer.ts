@@ -1,5 +1,5 @@
 ﻿import { formatAllVarsList, formatAllVars, printList, sayText, cListenerGen, cListenerGenList, callChoice, sexLines, setSexLines, appearance, pantycolor } from './quotes';
-import { pickrandom, pushloc, poploc, locStack, maxkiss, thetime } from './shims';
+import { pickrandom, pushloc, poploc, locStack, thetime } from './shims';
 import { showneed, displayneed, flushdrank, holdit, allowpee, bladder, bladlose, gottagoflag, wetherpanties, lastpeetime, timeheld, setTimeheld } from './bladder';
 import { displayyourneed } from './yourbladder';
 import { kissher } from './actions';
@@ -9,18 +9,12 @@ import { BladderState } from './gameState/bladderState';
 import { heroutfit, multiplemoves, rstmoves } from './settings';
 import { herHome } from './herhome';
 
-// Fucking Parameters
-export let arousal = 0;
-export function setArousal(val: number) { arousal = val; }
-export let kisscounter = 0;
-export function setKisscounter(val: number) { kisscounter = val; }
-export let feelcounter = 0;
-export function setFeelcounter(val: number) { feelcounter = val; }
-export let fuckingnow = 0; // You are in the middle of fucking.
-export function setFuckingnow(val: number) { fuckingnow = val; }
-
-export let champagnecounter = 0; // Number of glasses of champagne served.
-export function setChampagnecounter(val: number) { champagnecounter = val; }
+// Fucking Parameters — now owned by gameState.Romance
+export function setArousal(val: number) { gameState.Romance.Arousal = val; }
+export function setKisscounter(val: number) { gameState.Romance.KissCounter = val; }
+export function setFeelcounter(val: number) { gameState.Romance.FeelCounter = val; }
+export function setFuckingnow(val: number) { gameState.Romance.FuckingNow = val; }
+export function setChampagnecounter(val: number) { gameState.Romance.ChampagneCounter = val; }
 export let drankChamp = 0; // Time since last champagne glass was drunk.
 export function setDrankChamp(val: number) { drankChamp = val; }
 export function setSexActions(val: any) { sexActions = val; }
@@ -272,8 +266,8 @@ export function haveSex(location: string){
     let curtext: any[] = [];
     let sexQuotes = sexLines[location];
     if (locStack[0]!== "haveSex"){
-        kisscounter = 0;
-        arousal = 0;
+        gameState.Romance.KissCounter = 0;
+        gameState.Romance.Arousal = 0;
         pushloc("haveSex");
         // intro[0]: first-time intro variants - [0][0]=hot tub/losing, [0][1]=normal
         // intro[1]: returning intro
@@ -292,7 +286,7 @@ export function haveSex(location: string){
         curtext = printList(curtext, sexQuotes["intro"][1]); // returningIntro
     }
     let listenerList: any[] = [];
-    if (kisscounter > maxkiss){
+    if (gameState.Romance.KissCounter > gameState.Romance.MaxKiss){
         curtext = printList(curtext, sexQuotes["maxKiss"]);
         if (location === "theBed")
             listenerList.push([[gameOver, "Continue..."], "gameOver"]);
@@ -304,13 +298,13 @@ export function haveSex(location: string){
     curtext = displayyourneed(curtext);
 
     let choice = 4;
-    if (arousal < 40)
+    if (gameState.Romance.Arousal < 40)
         choice = 0;
-    else if (arousal < 70)
+    else if (gameState.Romance.Arousal < 70)
         choice = 1;
-    else if (arousal < 100)
+    else if (gameState.Romance.Arousal < 100)
         choice = 2;
-    else if (arousal < 140)
+    else if (gameState.Romance.Arousal < 140)
         choice = 3;
 
     //The only quote here that is location dependent is if her arousal is through the roof.
@@ -337,9 +331,9 @@ export function haveSex(location: string){
                 takeOff(item, location);
             }, appearance["clothes"][heroutfit]["sextakeoff" + item]], item]);
         }});
-    if (arousal > 120 && !sexActions.isOn("skirt") && !sexActions.isOn("panties")) {
+    if (gameState.Romance.Arousal > 120 && !sexActions.isOn("skirt") && !sexActions.isOn("panties")) {
         if (location === "theBed")
-            if (arousal >= 140)
+            if (gameState.Romance.Arousal >= 140)
                 listenerList.push([[fuckNow, "Fuck her <b>NOW</b>."], "fuckNow"]);
             else
                 listenerList.push([[fuckNow, "Fuck her"], "fuckNow"]);
@@ -355,7 +349,7 @@ export function haveSex(location: string){
 }
 
 export function takeOff(item: string, location: string){
-    arousal += 4;
+    gameState.Romance.Arousal += 4;
     let info = sexActions.clothes[item];
     let processed = false;
     let failTakeOff = false;
@@ -446,7 +440,7 @@ export function performAction(action: string, location: string){
                 sumName += item;
             });
             if (met){
-                arousal += arousalBonus;
+                gameState.Romance.Arousal += arousalBonus;
                 processed = true;
                 let temp;
                 if (info.clothesArousal.length > 2)
@@ -457,7 +451,7 @@ export function performAction(action: string, location: string){
                     curtext.push(temp)
             }
         }else if (prerequisite === "none" || sexActions.isOn(prerequisite)){
-            arousal += arousalBonus;
+            gameState.Romance.Arousal += arousalBonus;
             if (prerequisite !== "none"){
                 let temp;
                 if (info.clothesArousal.length > 2)
@@ -538,7 +532,7 @@ export function theBedroom() {
 
 //TODO chance of failure upon pausing(still cuming)
 export function fuckNow() {
-    fuckingnow = 1;
+    gameState.Romance.FuckingNow = 1;
     let curtext = printList([], sexLines["fuckNow"][0]);
     if (gameState.Companion.bladderState >= BladderState.Lose) {
         curtext = printList(curtext, sexLines["fuckNow"][1]);
@@ -669,11 +663,11 @@ export function fuckHer7() {
 export function exposeFuckHerOnWindow(): void {
     const w = window as any;
     const props: Array<[string, () => any, (v: any) => void]> = [
-        ['arousal', () => arousal, (v) => { arousal = v; }],
-        ['kisscounter', () => kisscounter, (v) => { kisscounter = v; }],
-        ['feelcounter', () => feelcounter, (v) => { feelcounter = v; }],
-        ['fuckingnow', () => fuckingnow, (v) => { fuckingnow = v; }],
-        ['champagnecounter', () => champagnecounter, (v) => { champagnecounter = v; }],
+        ['arousal', () => gameState.Romance.Arousal, (v) => { gameState.Romance.Arousal = v; }],
+        ['kisscounter', () => gameState.Romance.KissCounter, (v) => { gameState.Romance.KissCounter = v; }],
+        ['feelcounter', () => gameState.Romance.FeelCounter, (v) => { gameState.Romance.FeelCounter = v; }],
+        ['fuckingnow', () => gameState.Romance.FuckingNow, (v) => { gameState.Romance.FuckingNow = v; }],
+        ['champagnecounter', () => gameState.Romance.ChampagneCounter, (v) => { gameState.Romance.ChampagneCounter = v; }],
         ['drankChamp', () => drankChamp, (v) => { drankChamp = v; }],
         ['sexActions', () => sexActions, (v) => { sexActions = v; }],
     ];

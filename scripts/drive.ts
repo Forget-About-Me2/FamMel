@@ -4,7 +4,7 @@ import { showneed, displayneed, gottagoflag, rrlockedflag, setRrlockedflag } fro
 import { displayyourneed } from './yourbladder';
 import { updateSuggestedLocation, printLocationMenu } from './locations';
 import { allowItems, setAllowItems } from './backPackItems';
-import { kisscounter, setKisscounter, feelcounter, setFeelcounter } from './fuckHer';
+import { gameState } from './gameState/gameState';
 import { externalflirt, setExternalflirt } from './locations/theClub';
 import { suggestedloc, setSuggestedloc, heroutfit } from './settings';
 
@@ -17,8 +17,8 @@ export function setWetthecar(val: number) { wetthecar = val; }
 export function leavehm() {
     setChangevenueflag(1);
     setCheckedherout(0);
-    setKisscounter(0);
-    setFeelcounter(0);
+    gameState.Romance.KissCounter = 0;
+    gameState.Romance.FeelCounter = 0;
     setRrlockedflag(0);
     setExternalflirt(0);
 
