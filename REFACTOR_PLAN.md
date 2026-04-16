@@ -155,6 +155,12 @@ Execution order:
 4. Keep only scenario/event flags in row H/I that are not simulation core.
 5. Remove duplicate bridge mappings from `shims.ts` once call sites are migrated.
 
+Current progress:
+
+- [x] Guardrail agreed: do not add new legacy setter/global dependencies while converging bladder models.
+- [ ] Next implementation slice: move threshold ownership to `Person` without expanding legacy imports or legacy setter calls in `main.ts`.
+- [ ] Remaining: migrate call sites that still read threshold globals directly in `bladder.ts` / `yourbladder.ts`.
+
 Exit criteria:
 
 - No duplicated threshold pairs remain (`Blad*` and `YourBlad*`) as independent runtime sources of truth.
@@ -189,8 +195,8 @@ Legend:
 - [ ] KEEPROOT LastAttraction
 - [ ] KEEPROOT LastShyness
 - [ ] KEEPROOT DidIntro
-- [ ] HavePurse
-- [ ] OwedFavour
+- [ ] HavePurse - related to interactions
+- [ ] OwedFavour - related to interaction
 
 #### Row B: InteractionState (active)
 
@@ -201,14 +207,14 @@ Legend:
 - [x] FlirtedFlag
 - [x] NoFlirtFlag
 - [x] MaxFlirts
-- [ ] MaxKiss
-- [ ] MaxFeel
+- [ ] MaxKiss - move to romance
+- [ ] MaxFeel - move to romance
 - [x] RandMax
-- [ ] Arousal
-- [ ] KissCounter
-- [ ] FeelCounter
-- [ ] FuckingNow
-- [ ] ChampagneCounter
+- [ ] Arousal - move to romance
+- [ ] KissCounter - romance
+- [ ] FeelCounter - romance
+- [ ] FuckingNow - romance
+- [ ] ChampagneCounter - romance
 - [ ] DrankChamp
 - [ ] CheckedHerOut
 - [ ] ChangeVenueFlag
