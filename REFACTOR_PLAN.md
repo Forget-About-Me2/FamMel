@@ -132,114 +132,38 @@ Exit criteria:
 - All tests still pass
 - Code is semantically clearer (KissCounter is now in `Interactions`, not ambiguous at root)
 
-### Phase 1 Field Triage Worksheet (Concrete Inventory)
+### Phase 1 Property Tracker (Rows Are Canonical)
 
-Use this when work feels abstract. Do not decide from memory. Process fields in order and mark each one as:
-
-- Move: belongs in a sub-object now
-- KeepRoot: root-level on purpose
-- Defer: unclear owner, defer with note
-
-Execution loop for each batch:
-
-1. Pick 5-12 fields from one row below.
-2. Confirm usage sites with search.
-3. Move fields into target sub-object.
-4. Rewrite call sites.
-5. Remove old access paths.
-6. Build, typecheck, targeted tests.
-7. Commit and mark row progress.
-
-#### Row A: Core Root (likely KeepRoot)
-
-- `Player`, `Companion`, `Time`, `LocStack`, `LegacyLocStack`
-- `LastMoney`, `LastAttraction`, `LastShyness`
-- `DidIntro`, `HavePurse`, `OwedFavour`
-
-#### Row B: InteractionState
-
-- `FlirtCounter`, `TimeSinceLastFlirt`, `AllowedToFlirt`, `ShowedNeed`
-- `FlirtedFlag`, `NoFlirtFlag`, `MaxFlirts`, `MaxKiss`, `MaxFeel`, `RandMax`
-- `Arousal`, `KissCounter`, `FeelCounter`, `FuckingNow`, `ChampagneCounter`, `DrankChamp`
-- `CheckedHerOut`, `ChangeVenueFlag`
-
-#### Row C: SessionOrProgressState
-
-- `Late`, `Shopping`, `PlayerBladder`
-- `ClubClosingTime`, `TheaterClosingTime`, `BarClosingTime`, `TimeSpeed`
-
-#### Row D: DriveState
-
-- `WetTheCar`, `GasStation`
-
-#### Row E: VenueState (Bar/Club/Theatre/MakeOut/HerHome)
-
-- Bar: `BarTopic`, `Loser`
-- Club: `ExternalFlirt`, `WetPhoto`, `IsNude`, `PoseCtr`, `OutfitCtr`
-- Theatre: `RrMovieLineThresh`, `MovieCounter`, `MovieChoice`, `AskedFavourite`, `SeenMovie`
-- MakeOut: `AskedSwim`, `WalkCounter`
-- HerHome: `PrePeed`, `ElevatorWaitCounter`, `FloorCounter`
-- Locations flow: `EmerBreak`, `EmerHold`
-
-#### Row F: SettingsState
-
-- `HerOutfit`, `FavoriteMovie`, `SuggestedLoc`, `MultipleMoves`, `RstMoves`
-- `PhotoChoice`, `ShowStats`, `EnableImages`, `EnableAscii`, `PlayerGame`
-
-#### Row G: NarrativeState (quotes/backpack/images)
-
-- `PantyColor`, `GirlName`, `CustomGirlName`, `BaseGirl`
-- `GirlTalk`, `GirlGasp`, `Comma`, `ImagePrev`
-- `AllowItems`, `HomeChampagne`, `PicSet`
-
-#### Row H: CompanionBladderState (from bladder.ts)
-
-- `CustomUrge`, `MinUrge`, `MinPerc`
-- `BladUrge`, `BladNeed`, `BladEmer`, `BladLose`, `BladCumLose`, `BladSexLose`
-- `MaxTummy`, `MaxBeer`, `Tummy`, `Bladder`
-- `BladDec`, `BladDespDec`, `Seal`, `BeerDecCounter`, `YBeerDecCounter`
-- `PeedTowels`, `PeedVase`, `PeedShot`, `PeedOutside`
-- `LastPeeTime`, `TimeHeld`, `DrankBeer`
-- `NotDesperate`, `NotYDesperate`, `NotHDesperate`
-- `SpurtThresh`, `YSpurtThresh`, `BribeAskThresh`, `BribeAskBase`, `TumAvg`
-- `RrLockedFlag`, `SheSpurted`, `BrokeIce`, `SawHerPee`, `WetLegs`, `WetHerPanties`
-- `NowPeeing`, `GottaGoFlag`, `AskHoldItCounter`, `WaitCounter`, `ToldStories`, `LastStory`
-
-#### Row I: PlayerBladderState (from yourbladder.ts)
-
-- `YourBladder`, `YourTummy`, `YourTumAvg`, `HoldSelf`
-- `YourBladUrge`, `YourBladNeed`, `YourBladEmer`, `YourBladLose`, `YourBladCumLose`, `YourBladSexLose`
-- `YMaxTummy`, `YMaxBeer`, `YourCustomUrge`, `YMinUrge`
-- `YNowPeeing`, `YLastPeeTime`, `YTimeHeld`
-- `YDrankCocktails`, `YDrankSodas`, `YDrankWaters`, `YDrankBeers`, `YDrankBeer`
-- `YRrLockedFlag`, `YouSpurted`
-
-#### Row J: ContentCacheState (JSON and loaded content)
-
-- Shims caches: `Settings`, `StatsBars`, `EndScreens`
-- Sex content: `SexActions`
-- Quotes content: `CalledJsons`, `LocJson`, `FlirtResps`, `FeelUp`, `Kissing`, `YPeeLines`, `PeeLines`, `Needs`, `YNeeds`, `DrinkLines`, `Appearance`, `Drive`, `General`, `Darts`, `SexLines`, `ObjQuotes`
-- Location content: `Locations`, `SharedLoc`, `Bar`, `TalkUnused`, `Club`, `Theatre`, `MakeOut`, `HerHome`
-
-### Property Tracker (Use This While Refactoring)
-
-This replaces row-level memory with per-property tracking.
+Use this as the only property list. Each property appears once.
 
 Rules:
 
-1. Mark each property exactly once in the checklist where it belongs.
-2. Update the checkbox in the same commit that changes code.
-3. Add one line to Touch Log for every property move.
-4. Do not start a new row until the active row builds and tests pass.
+1. Update checkbox state in the same commit as code changes.
+2. Keep one active row at a time until build/typecheck/tests pass.
+3. Add touch-log entries only for properties changed in that commit.
 
 Legend:
 
-- `[ ]` Not migrated yet
-- `[x]` Migrated to sub-object
-- `[ ] KEEPROOT` Intentionally stays on root (add reason in notes)
-- `[ ] DEFER` Ownership unclear (add follow-up note)
+- `[ ]` Not migrated
+- `[x]` Migrated
+- `[ ] KEEPROOT` Stays on root intentionally
+- `[ ] DEFER` Ownership unresolved
 
-#### Active Row Checklist: Row B (InteractionState)
+#### Row A: Core Root
+
+- [ ] KEEPROOT Player
+- [ ] KEEPROOT Companion
+- [ ] KEEPROOT Time
+- [ ] KEEPROOT LocStack
+- [ ] KEEPROOT LegacyLocStack
+- [ ] KEEPROOT LastMoney
+- [ ] KEEPROOT LastAttraction
+- [ ] KEEPROOT LastShyness
+- [ ] KEEPROOT DidIntro
+- [ ] HavePurse
+- [ ] OwedFavour
+
+#### Row B: InteractionState (active)
 
 - [x] FlirtCounter
 - [x] TimeSinceLastFlirt
@@ -262,6 +186,176 @@ Legend:
 
 Row B progress: 8/18 migrated
 
+#### Row C: SessionOrProgressState
+
+- [ ] Late
+- [ ] Shopping
+- [ ] PlayerBladder
+- [ ] ClubClosingTime
+- [ ] TheaterClosingTime
+- [ ] BarClosingTime
+- [ ] TimeSpeed
+
+#### Row D: DriveState
+
+- [ ] WetTheCar
+- [ ] GasStation
+
+#### Row E: VenueState
+
+- [ ] BarTopic
+- [ ] Loser
+- [ ] ExternalFlirt
+- [ ] WetPhoto
+- [ ] IsNude
+- [ ] PoseCtr
+- [ ] OutfitCtr
+- [ ] RrMovieLineThresh
+- [ ] MovieCounter
+- [ ] MovieChoice
+- [ ] AskedFavourite
+- [ ] SeenMovie
+- [ ] AskedSwim
+- [ ] WalkCounter
+- [ ] PrePeed
+- [ ] ElevatorWaitCounter
+- [ ] FloorCounter
+- [ ] EmerBreak
+- [ ] EmerHold
+
+#### Row F: SettingsState
+
+- [ ] HerOutfit
+- [ ] FavoriteMovie
+- [ ] SuggestedLoc
+- [ ] MultipleMoves
+- [ ] RstMoves
+- [ ] PhotoChoice
+- [ ] ShowStats
+- [ ] EnableImages
+- [ ] EnableAscii
+- [ ] PlayerGame
+
+#### Row G: NarrativeState
+
+- [ ] PantyColor
+- [ ] GirlName
+- [ ] CustomGirlName
+- [ ] BaseGirl
+- [ ] GirlTalk
+- [ ] GirlGasp
+- [ ] Comma
+- [ ] ImagePrev
+- [ ] AllowItems
+- [ ] HomeChampagne
+- [ ] PicSet
+
+#### Row H: CompanionBladderState
+
+- [ ] CustomUrge
+- [ ] MinUrge
+- [ ] MinPerc
+- [ ] BladUrge
+- [ ] BladNeed
+- [ ] BladEmer
+- [ ] BladLose
+- [ ] BladCumLose
+- [ ] BladSexLose
+- [ ] MaxTummy
+- [ ] MaxBeer
+- [ ] Tummy
+- [ ] Bladder
+- [ ] BladDec
+- [ ] BladDespDec
+- [ ] Seal
+- [ ] BeerDecCounter
+- [ ] YBeerDecCounter
+- [ ] PeedTowels
+- [ ] PeedVase
+- [ ] PeedShot
+- [ ] PeedOutside
+- [ ] LastPeeTime
+- [ ] TimeHeld
+- [ ] DrankBeer
+- [ ] NotDesperate
+- [ ] NotYDesperate
+- [ ] NotHDesperate
+- [ ] SpurtThresh
+- [ ] YSpurtThresh
+- [ ] BribeAskThresh
+- [ ] BribeAskBase
+- [ ] TumAvg
+- [ ] RrLockedFlag
+- [ ] SheSpurted
+- [ ] BrokeIce
+- [ ] SawHerPee
+- [ ] WetLegs
+- [ ] WetHerPanties
+- [ ] NowPeeing
+- [ ] GottaGoFlag
+- [ ] AskHoldItCounter
+- [ ] WaitCounter
+- [ ] ToldStories
+- [ ] LastStory
+
+#### Row I: PlayerBladderState
+
+- [ ] YourBladder
+- [ ] YourTummy
+- [ ] YourTumAvg
+- [ ] HoldSelf
+- [ ] YourBladUrge
+- [ ] YourBladNeed
+- [ ] YourBladEmer
+- [ ] YourBladLose
+- [ ] YourBladCumLose
+- [ ] YourBladSexLose
+- [ ] YMaxTummy
+- [ ] YMaxBeer
+- [ ] YourCustomUrge
+- [ ] YMinUrge
+- [ ] YNowPeeing
+- [ ] YLastPeeTime
+- [ ] YTimeHeld
+- [ ] YDrankCocktails
+- [ ] YDrankSodas
+- [ ] YDrankWaters
+- [ ] YDrankBeers
+- [ ] YDrankBeer
+- [ ] YRrLockedFlag
+- [ ] YouSpurted
+
+#### Row J: ContentCacheState
+
+- [ ] Settings
+- [ ] StatsBars
+- [ ] EndScreens
+- [ ] SexActions
+- [ ] CalledJsons
+- [ ] LocJson
+- [ ] FlirtResps
+- [ ] FeelUp
+- [ ] Kissing
+- [ ] YPeeLines
+- [ ] PeeLines
+- [ ] Needs
+- [ ] YNeeds
+- [ ] DrinkLines
+- [ ] Appearance
+- [ ] Drive
+- [ ] General
+- [ ] Darts
+- [ ] SexLines
+- [ ] ObjQuotes
+- [ ] Locations
+- [ ] SharedLoc
+- [ ] Bar
+- [ ] TalkUnused
+- [ ] Club
+- [ ] Theatre
+- [ ] MakeOut
+- [ ] HerHome
+
 #### Touch Log (append-only)
 
 | Date | Property | Action | Target | Commit | Notes |
@@ -274,15 +368,6 @@ Row B progress: 8/18 migrated
 | 2026-04-16 | NoFlirtFlag | migrated | Interactions | e890344 | first interaction slice |
 | 2026-04-16 | MaxFlirts | migrated | Interactions | e890344 | first interaction slice |
 | 2026-04-16 | RandMax | migrated | Interactions | e890344 | first interaction slice |
-
-#### Upcoming Row Templates (copy when activated)
-
-For each next row, create a checklist in this exact format before coding:
-
-- [ ] PropertyName
-- [ ] PropertyName
-
-Then add `Row X progress: N/M migrated` below the checklist.
 
 ## Phase 1b: Reset Save/Load To Transitional Simplicity
 
