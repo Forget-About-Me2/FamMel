@@ -202,9 +202,9 @@ export function go(location: unknown) {
         || isLegacyDrinkingGameLocation(currentLegacyTag);
 
     if (shouldProcessTick) {
-        gameState.ShowedNeed = false; // clear the showed need flag - only active in the current window.
-        gameState.ChangeVenueFlag = false;
-        gameState.AllowedToFlirt = true;
+        gameState.Interactions.ShowedNeed = false; // clear the showed need flag - only active in the current window.
+        gameState.Interactions.ChangeVenueFlag = false;
+        gameState.Interactions.AllowedToFlirt = true;
         gameState.Companion.NowPeeing = false; // clear the currently peeing flag.
 
         gameState.Companion.processFluidsDigestion();
@@ -224,8 +224,8 @@ export function go(location: unknown) {
             syncLegacyGlobalsFromPlayer();
         }
 
-        if (gameState.FlirtCounter > 0) {
-            gameState.FlirtCounter -= 1;
+        if (gameState.Interactions.FlirtCounter > 0) {
+            gameState.Interactions.FlirtCounter -= 1;
         }
 
         gameState.Time.nextTick();

@@ -98,7 +98,139 @@ Before merge candidate review, require all of the following:
 4. For each changed high-impact area, there is either automated test coverage or explicit manual verification evidence.
 5. Residual untested risk is documented with owner + follow-up action.
 
-## Phase 1: Reset Save/Load To Transitional Simplicity
+## Phase 1: Organize GameState Into Domain Sub-Objects
+
+Purpose: consolidate the 100+ scattered fields on GameState into logically grouped sub-objects (InteractionState, VenueState, CompanionState, etc.) so the architecture reflects domain logic instead of chaos.
+
+Current state: Partially done — fields have been added to GameState but remain flat and scattered.
+
+Target sub-objects (domains identified):
+
+- **InteractionState**: Flirt, Kiss, Feel counters; Arousal; Champagne tracking
+- **DriveState**: WetTheCar, GasStation, related counters
+- **VenueState**: Venue-specific tracking (BarTopic, Loser, ExternalFlirt, WetPhoto, IsNude, PoseCtr, OutfitCtr, MovieCounter, MovieChoice, etc.)
+- **LocationState**: Location progression, visited tracking (already partially done with `LocStack`)
+- **TimeState**: Time tracking (already exists as `Time` object — validate integration)
+- **CompanionState**: Companion needs (Bladder, Tummy, Energy, etc.) — currently still in bridged form, migrate to here
+- **PlayerState**: Player-specific state (Money, PlayerBladder, Inventory) — rationalize ownership
+
+Batch order (bottom-up from smallest):
+
+- [ ] 1a: Create `InteractionState` class, move Flirt/Kiss/Feel/Arousal fields, update all read/write sites
+- [ ] 1b: Create `DriveState` class, move Drive-related fields
+- [ ] 1c: Create `VenueState` class, move all venue-specific tracking fields
+- [ ] 1d: Verify CompanionState/PlayerState are properly encapsulated (may already be done)
+- [ ] 1e: Rationalize remaining orphan fields (ChangeVenueFlag, CheckedHerOut, etc.) into appropriate sub-object or document why they stay top-level
+
+After each sub-object completion:
+- Update all call sites to use `gameState.Interactions.KissCounter` instead of `gameState.KissCounter`
+- Run build/typecheck/tests to validate
+- Commit with "refactor: [SubObject] migration" and test evidence
+
+Exit criteria:
+- No field remains on root GameState that logically belongs in a sub-object
+- All tests still pass
+- Code is semantically clearer (KissCounter is now in `Interactions`, not ambiguous at root)
+
+### Phase 1 Field Triage Worksheet (Concrete Inventory)
+
+Use this when work feels abstract. Do not decide from memory. Process fields in order and mark each one as:
+
+- Move: belongs in a sub-object now
+- KeepRoot: root-level on purpose
+- Defer: unclear owner, defer with note
+
+Execution loop for each batch:
+
+1. Pick 5-12 fields from one row below.
+2. Confirm usage sites with search.
+3. Move fields into target sub-object.
+4. Rewrite call sites.
+5. Remove old access paths.
+6. Build, typecheck, targeted tests.
+7. Commit and mark row progress.
+
+#### Row A: Core Root (likely KeepRoot)
+
+- `Player`, `Companion`, `Time`, `LocStack`, `LegacyLocStack`
+- `LastMoney`, `LastAttraction`, `LastShyness`
+- `DidIntro`, `HavePurse`, `OwedFavour`
+
+#### Row B: InteractionState
+
+- `FlirtCounter`, `TimeSinceLastFlirt`, `AllowedToFlirt`, `ShowedNeed`
+- `FlirtedFlag`, `NoFlirtFlag`, `MaxFlirts`, `MaxKiss`, `MaxFeel`, `RandMax`
+- `Arousal`, `KissCounter`, `FeelCounter`, `FuckingNow`, `ChampagneCounter`, `DrankChamp`
+- `CheckedHerOut`, `ChangeVenueFlag`
+
+#### Row C: SessionOrProgressState
+
+- `Late`, `Shopping`, `PlayerBladder`
+- `ClubClosingTime`, `TheaterClosingTime`, `BarClosingTime`, `TimeSpeed`
+
+#### Row D: DriveState
+
+- `WetTheCar`, `GasStation`
+
+#### Row E: VenueState (Bar/Club/Theatre/MakeOut/HerHome)
+
+- Bar: `BarTopic`, `Loser`
+- Club: `ExternalFlirt`, `WetPhoto`, `IsNude`, `PoseCtr`, `OutfitCtr`
+- Theatre: `RrMovieLineThresh`, `MovieCounter`, `MovieChoice`, `AskedFavourite`, `SeenMovie`
+- MakeOut: `AskedSwim`, `WalkCounter`
+- HerHome: `PrePeed`, `ElevatorWaitCounter`, `FloorCounter`
+- Locations flow: `EmerBreak`, `EmerHold`
+
+#### Row F: SettingsState
+
+- `HerOutfit`, `FavoriteMovie`, `SuggestedLoc`, `MultipleMoves`, `RstMoves`
+- `PhotoChoice`, `ShowStats`, `EnableImages`, `EnableAscii`, `PlayerGame`
+
+#### Row G: NarrativeState (quotes/backpack/images)
+
+- `PantyColor`, `GirlName`, `CustomGirlName`, `BaseGirl`
+- `GirlTalk`, `GirlGasp`, `Comma`, `ImagePrev`
+- `AllowItems`, `HomeChampagne`, `PicSet`
+
+#### Row H: CompanionBladderState (from bladder.ts)
+
+- `CustomUrge`, `MinUrge`, `MinPerc`
+- `BladUrge`, `BladNeed`, `BladEmer`, `BladLose`, `BladCumLose`, `BladSexLose`
+- `MaxTummy`, `MaxBeer`, `Tummy`, `Bladder`
+- `BladDec`, `BladDespDec`, `Seal`, `BeerDecCounter`, `YBeerDecCounter`
+- `PeedTowels`, `PeedVase`, `PeedShot`, `PeedOutside`
+- `LastPeeTime`, `TimeHeld`, `DrankBeer`
+- `NotDesperate`, `NotYDesperate`, `NotHDesperate`
+- `SpurtThresh`, `YSpurtThresh`, `BribeAskThresh`, `BribeAskBase`, `TumAvg`
+- `RrLockedFlag`, `SheSpurted`, `BrokeIce`, `SawHerPee`, `WetLegs`, `WetHerPanties`
+- `NowPeeing`, `GottaGoFlag`, `AskHoldItCounter`, `WaitCounter`, `ToldStories`, `LastStory`
+
+#### Row I: PlayerBladderState (from yourbladder.ts)
+
+- `YourBladder`, `YourTummy`, `YourTumAvg`, `HoldSelf`
+- `YourBladUrge`, `YourBladNeed`, `YourBladEmer`, `YourBladLose`, `YourBladCumLose`, `YourBladSexLose`
+- `YMaxTummy`, `YMaxBeer`, `YourCustomUrge`, `YMinUrge`
+- `YNowPeeing`, `YLastPeeTime`, `YTimeHeld`
+- `YDrankCocktails`, `YDrankSodas`, `YDrankWaters`, `YDrankBeers`, `YDrankBeer`
+- `YRrLockedFlag`, `YouSpurted`
+
+#### Row J: ContentCacheState (JSON and loaded content)
+
+- Shims caches: `Settings`, `StatsBars`, `EndScreens`
+- Sex content: `SexActions`
+- Quotes content: `CalledJsons`, `LocJson`, `FlirtResps`, `FeelUp`, `Kissing`, `YPeeLines`, `PeeLines`, `Needs`, `YNeeds`, `DrinkLines`, `Appearance`, `Drive`, `General`, `Darts`, `SexLines`, `ObjQuotes`
+- Location content: `Locations`, `SharedLoc`, `Bar`, `TalkUnused`, `Club`, `Theatre`, `MakeOut`, `HerHome`
+
+Tracking note:
+
+- Add row-level progress markers as you go, for example: `Row B 8/18 moved`.
+- Do not start the next row until current row compiles and tests pass.
+
+Current progress:
+
+- Row B 8/18 moved: `FlirtCounter`, `TimeSinceLastFlirt`, `AllowedToFlirt`, `ShowedNeed`, `FlirtedFlag`, `NoFlirtFlag`, `MaxFlirts`, `RandMax` moved under `gameState.Interactions`.
+
+## Phase 1b: Reset Save/Load To Transitional Simplicity
 
 Purpose: remove the over-engineered registry so migration work is easier to reason about.
 

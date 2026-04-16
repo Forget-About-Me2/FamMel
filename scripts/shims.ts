@@ -218,6 +218,27 @@ randcounter = randomInt(5);
 export function connectToGameState(gs: any): void {
     const w = window as any;
 
+    const getByPath = (obj: any, path: string): any => {
+        return path.split('.').reduce((current, key) => current?.[key], obj);
+    };
+
+    const setByPath = (obj: any, path: string, value: any): void => {
+        const keys = path.split('.');
+        const last = keys.pop();
+        if (!last) {
+            return;
+        }
+
+        let current = obj;
+        for (const key of keys) {
+            if (current[key] === undefined || current[key] === null) {
+                current[key] = {};
+            }
+            current = current[key];
+        }
+        current[last] = value;
+    };
+
     // ========================================================================
     // FORWARD bridges — shims-owned variables.
     // These module vars are NOT read/written by module code after init, so
@@ -232,17 +253,17 @@ export function connectToGameState(gs: any): void {
         ['lastmoney',      'LastMoney'],
         ['lastattraction', 'LastAttraction'],
         ['lastshyness',    'LastShyness'],
-        ['flirtcounter',   'FlirtCounter'],
+        ['flirtcounter',   'Interactions.FlirtCounter'],
         ['randcounter',    'randCounter'],
         ['owedfavor',      'OwedFavour'],
         ['late',           'Late'],
-        ['flirtedflag',    'FlirtedFlag'],
-        ['noflirtflag',    'NoFlirtFlag'],
+        ['flirtedflag',    'Interactions.FlirtedFlag'],
+        ['noflirtflag',    'Interactions.NoFlirtFlag'],
         ['shopping',       'Shopping'],
-        ['maxflirts',      'MaxFlirts'],
+        ['maxflirts',      'Interactions.MaxFlirts'],
         ['maxkiss',        'MaxKiss'],
         ['maxfeel',        'MaxFeel'],
-        ['randmax',        'RandMax'],
+        ['randmax',        'Interactions.RandMax'],
         ['clubclosingtime','ClubClosingTime'],
         ['theaterclosingtime','TheaterClosingTime'],
         ['barclosingtime', 'BarClosingTime'],
@@ -252,19 +273,19 @@ export function connectToGameState(gs: any): void {
     const shimsBoolProps: Array<[string, string]> = [
         ['didintro',       'DidIntro'],
         ['haveherpurse',   'HavePurse'],
-        ['changevenueflag','ChangeVenueFlag'],
-        ['checkedherout',  'CheckedHerOut'],
-        ['showedneed',     'ShowedNeed'],
+        ['changevenueflag','Interactions.ChangeVenueFlag'],
+        ['checkedherout',  'Interactions.CheckedHerOut'],
+        ['showedneed',     'Interactions.ShowedNeed'],
         ['playerbladder',  'PlayerBladder'],
     ];
 
     // Seed gameState from current window values, then override window bridge.
     for (const [globalName, gsProp] of shimsNumericProps) {
         const cur = w[globalName];
-        if (cur !== undefined) gs[gsProp] = cur;
+        if (cur !== undefined) setByPath(gs, gsProp, cur);
         Object.defineProperty(w, globalName, {
-            get: () => gs[gsProp],
-            set: (v: any) => { gs[gsProp] = v; },
+            get: () => getByPath(gs, gsProp),
+            set: (v: any) => { setByPath(gs, gsProp, v); },
             configurable: true,
             enumerable: true,
         });
@@ -272,10 +293,10 @@ export function connectToGameState(gs: any): void {
 
     for (const [globalName, gsProp] of shimsBoolProps) {
         const cur = w[globalName];
-        if (cur !== undefined) gs[gsProp] = !!cur;
+        if (cur !== undefined) setByPath(gs, gsProp, !!cur);
         Object.defineProperty(w, globalName, {
-            get: () => gs[gsProp],
-            set: (v: any) => { gs[gsProp] = !!v; },
+            get: () => getByPath(gs, gsProp),
+            set: (v: any) => { setByPath(gs, gsProp, !!v); },
             configurable: true,
             enumerable: true,
         });

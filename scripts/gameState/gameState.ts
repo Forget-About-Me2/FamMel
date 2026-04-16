@@ -17,6 +17,19 @@ export enum LocationCategory {
     DrinkingGame,
 }
 
+class InteractionState {
+    FlirtCounter: number = 0;
+    TimeSinceLastFlirt: number = 0;
+    ChangeVenueFlag: boolean = false;
+    CheckedHerOut: boolean = false;
+    AllowedToFlirt: boolean = false;
+    ShowedNeed: boolean = false;
+    FlirtedFlag: number = 0;
+    NoFlirtFlag: number = 0;
+    MaxFlirts: number = 2;
+    RandMax: number = 5;
+}
+
 
 class GameState {
     Player!: Person;
@@ -40,7 +53,7 @@ class GameState {
     /**
      * Keeps track of how many times you've flirted at the current place.
      */
-    FlirtCounter: number = 0;
+    Interactions: InteractionState = new InteractionState();
 
     /**
      * Whether you currently have her purse
@@ -52,45 +65,17 @@ class GameState {
      */
     OwedFavour : number = 0;
 
-    TimeSinceLastFlirt : number = 0;
-
-    /**
-     * Whether you are changing venues. Makes her more easily ask to pee.
-     */
-    ChangeVenueFlag : boolean = false;
-
-    /**
-     * Whether you checked her out.
-     */
-    CheckedHerOut : boolean = false;
-
-    /**
-     * Where you are currently in a state where you're allowed to flirt.
-     */
-    AllowedToFlirt : boolean = false;
-
     randCounter : number = 0;
-
-    /**
-     * She has just visually displayed her need.
-     */
-    ShowedNeed : boolean = false;
 
     // Late-night flag (set when thetime > 75)
     Late: number = 0;
-
-    // Flirt interaction counters
-    FlirtedFlag: number = 0;
-    NoFlirtFlag: number = 0;
 
     // Shopping session flag (1 while in store)
     Shopping: number = 0;
 
     // Interaction limits (saveable — defaults match gameSettings)
-    MaxFlirts: number = 2;
     MaxKiss: number = 7;
     MaxFeel: number = 7;
-    RandMax: number = 5;
 
     // Venue closing times (ticks from 7 PM)
     ClubClosingTime: number = 7 * 60;     // 420 = 2:00 AM
