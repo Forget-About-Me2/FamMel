@@ -1,18 +1,18 @@
 scope_id	type	path_or_commit	summary	user_visible	risk_if_removed	test_evidence	decision(Keep|Defer|Drop)	confidence	follow_up
 S001	commit	bdd8eef	Start debug ui + TS conversion scaffolding	No	Medium	None yet	Keep	Medium	Retain as migration base; verify no dead debug-only hooks remain
 S002	commit	d421d01	Pop-up/settings/validation/bladder mechanics changes	Likely	High	Partial	Keep	Medium	Split into smaller slices (popup/settings/validation/bladder) before cleanup
-S003	commit	b06ad5f	Save/load implementation + integration tests	Likely	High	Partial	Keep	High	Protect with save/load characterization tests before Phase 1 simplification
+S003	commit	b06ad5f	Save/load implementation + integration tests	Likely	High	Present (YourHomeIntegrationTests 5/5)	Keep	High	Validated on current branch; keep protected during Phase 1 simplification
 S004	commit	48ae2f7	Navigation smoke tests	No (tests)	High	Present	Keep	High	Keep as critical smoke gate
 S005	path	scripts/shims.ts	Legacy bridge + compatibility surface	Indirect	High	Indirect	Defer	Medium	Refactor target for later batches; retain until gameState ownership migration reaches shims
-S006	path	scripts/saveLoad.ts	Serialization logic and load behavior	Yes	High	Partial	Keep	High	Treat as high-risk core path; only change with explicit roundtrip checks
+S006	path	scripts/saveLoad.ts	Serialization logic and load behavior	Yes	High	Present (SaveAndLoad + ExportAndImport pass)	Keep	High	Treat as high-risk core path; require explicit roundtrip checks for each change
 S007	path	scripts/quotes.ts	Dialogue/action handling and event delegation	Yes	High	Partial	Keep	Medium	Add targeted action-registry tests before deeper refactor
-S008	path	UserFlowTests/UserFlowTests/*	New/updated userflow coverage	No (tests)	High	Present	Keep	High	Curate stable smoke subset and quarantine flaky tests
+S008	path	UserFlowTests/UserFlowTests/*	New/updated userflow coverage	No (tests)	High	Present (full suite 35 succeeded, 0 failed; 1 explicit test excluded)	Keep	High	Curate stable smoke subset; keep strict late-game explicit test opt-in
 S009	commit	00a39d9	Popup dismissal Selenium updates + bladder threshold bridge	Likely	High	Partial	Defer	Medium	Separate test-only improvements from bridge behavior before deciding final keep/drop
-S010	commit	05549af	Wet-herself/win E2E improvements + item selection changes	Likely	High	Partial	Keep	Medium	Validate endgame outcomes and inventory edge cases with focused tests
-S011	commit	ac28692	Fix darts crash + drink handling updates	Yes	High	Partial	Keep	High	Retain bugfix; add targeted darts regression smoke if missing
+S010	commit	05549af	Wet-herself/win E2E improvements + item selection changes	Likely	High	Present (E2E/endgame tests pass in full suite)	Keep	High	Add explicit inventory-use edge assertions to complement endgame flows
+S011	commit	ac28692	Fix darts crash + drink handling updates	Yes	High	Present (DartsIntegrationTests 1/1)	Keep	High	Retain bugfix and keep darts integration test in smoke set
 S012	commit	48477d4	Backpack/champagne behavior and UI wiring updates	Likely	Medium	Partial	Keep	Medium	Confirm options JSON + UI flow behavior in manual matrix
 S013	commit	e55c6f7	assertExists guards replacing silent fallbacks	Potentially	Medium	Low	Defer	Low	Review runtime assertions to avoid new hard-fail player paths
 S014	commit	2cc815a	Action handling/event delegation broad refactor	Likely	High	Partial	Defer	Low	Large cross-file change; isolate minimal behavior-preserving subset first
 S015	commit	c90645f	connectToGameState unification + legacy absorption	Indirect	High	Low	Defer	Low	Keep temporarily but mark as bridge-debt hotspot for later removal
 S016	commit	b948e35	forward/reverse bridge sync in shims	Indirect	High	Low	Defer	Low	Treat as temporary compatibility layer; preserve until replacement is proven
-S017	commit	3b6bb00	Standardize bedroom key to theBedroom + test updates	Yes	Medium	Present	Keep	High	Retain as consistency fix; ensure no remaining old-key references
+S017	commit	3b6bb00	Standardize bedroom key to theBedroom + test updates	Yes	Medium	Present	Keep	High	Not standalone on main/dev baseline; preserve via forward cleanup from current HEAD and verify old-key references removed

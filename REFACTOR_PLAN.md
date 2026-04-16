@@ -49,23 +49,35 @@ Phase 0 checklist:
 - [x] Create forensic inventory artifacts from git history and diff.
 - [x] Classify initial high-impact commit/file areas as Keep, Defer, or Drop (`triage-keep-defer-drop.tsv`).
 - [ ] Complete Keep/Defer/Drop classification for remaining lower-impact areas.
-- [ ] Build a top-10 behavior matrix (flow, expected behavior, evidence source, confidence).
+- [x] Build and seed a top-10 behavior matrix with current evidence (`triage-behavior-matrix.tsv`).
 - [ ] Identify unknown behavior areas and add characterization tests before refactor.
 - [ ] Choose extraction order as vertical slices (feature + migration + tests) rather than file-type batches.
 
-Initial extraction order recommendation (from current triage):
+Extraction strategy update (validated 2026-04-16):
 
-1. Slice 1 (confidence starter): bedroom key standardization + related tests (`3b6bb00`).
-2. Slice 2 (test safety net): navigation smoke + determinism/userflow test updates (`48ae2f7`, test-only parts of nearby commits).
-3. Slice 3 (high-value behavior): save/load path + integration coverage (`b06ad5f`) with explicit roundtrip verification.
-4. Slice 4 (bugfix retention): darts crash/drink handling (`ac28692`) with targeted regression test.
-5. Defer until later: broad bridge synchronization commits (`c90645f`, `b948e35`) unless required as prerequisites.
+- Attempting to replay late commits onto `origin/dev` or `origin/master` via cherry-pick caused high conflict density, including missing test files, JS/TS file-shape mismatches, and bridge-era dependencies.
+- Conclusion: historical replay is currently higher risk and cost than preservation cleanup.
+
+Execution model going forward:
+
+1. Preserve-all baseline: work from current branch head (`typeScriptAndDebugUI`) using `recovery/clean-from-head` as the cleanup lane.
+2. Carve forward slices by concern (tests, save/load, bugfixes, bridge reduction) with new commits, instead of replaying old commits in isolation.
+3. Keep high-confidence behavior commits conceptually protected (bedroom key consistency, navigation smoke, save/load coverage, darts crash fix), but validate via current code behavior rather than cherry-pickability.
+4. Defer bridge-heavy reshaping (`connectToGameState` sync internals) until coverage confidence and behavior matrix checks are in place.
 
 Exit criteria:
 
 - No high-impact changed area remains "unknown".
 - Each user-visible behavior delta has Keep/Defer/Drop status.
 - First extraction slice is selected with explicit test evidence.
+
+Latest validation evidence:
+
+- Navigation smoke: 12/12 passing when dev host is running on `127.0.0.1:8080`.
+- Save/load integration (`YourHomeIntegrationTests`): 5/5 passing (includes SaveAndLoad + ExportAndImport flows).
+- Darts integration: 1/1 passing (`DartsIntegrationTests`) covering dark bar darts entry and first-round advance.
+- Full userflow suite: 35 succeeded, 0 failed, 0 skipped (`dotnet test UserFlowTests/UserFlowTests/UserFlowTests.csproj`); runner reported 35 discovered of 36 because one strict late-game test is marked `[Explicit]`.
+- Random seed determinism: 3 consecutive reruns of `RandomSeedDeterminismTest` passed (2/2 each run).
 
 ## Migration Principles
 
@@ -159,6 +171,57 @@ Each batch should include:
 2. Bridges/setters deleted (count)
 3. Tests run and result summary
 4. Any temporary compatibility code added (must have removal note)
+
+## Execution Discipline (Commit Early + Boy Scout + Learning Loop)
+
+### Commit Early, Often, and Slice-Based
+
+Rules for this branch:
+
+1. Each meaningful change slice gets its own commit (avoid mega-commits).
+2. Commit at least once per completed validation checkpoint (build/test evidence attached in commit message or notes).
+3. Keep commit scope single-purpose when possible:
+   - test-only
+   - behavior fix
+   - refactor/mechanical move
+   - cleanup/doc update
+4. If a task grows past ~60-90 minutes without a safe commit point, split it and commit the stable part first.
+
+Commit message pattern (recommended):
+
+- `<type>: <short intent>`
+- `Validation: <what ran + result>`
+- `Risk: <known residual risk or "none noted">`
+
+### Boy Scout Rule (Leave It Better)
+
+When touching a file, do at least one small local improvement if safe:
+
+1. remove dead code/path,
+2. tighten confusing naming,
+3. add or adjust a high-value assertion/test,
+4. clarify one non-obvious block with a concise comment,
+5. simplify one branch or duplicated snippet.
+
+Guardrail: do not expand scope if the cleanup risks blocking the current slice; record deferred cleanup in this plan.
+
+### Mistake Tracking and Learning Loop
+
+Use `mistake-ledger.tsv` to track mistakes and convert them into process improvements.
+
+For each notable mistake capture:
+
+1. What happened,
+2. Why it happened,
+3. Detection signal,
+4. Fix applied,
+5. Preventive rule/check added.
+
+Cadence:
+
+1. Update ledger immediately after mistakes that cost time or created risk.
+2. Review top recurring patterns every 5-10 commits.
+3. Add one preventive action to this plan for any recurring mistake pattern.
 
 ## Why This Is More Maintainable
 
