@@ -221,14 +221,68 @@ Execution loop for each batch:
 - Quotes content: `CalledJsons`, `LocJson`, `FlirtResps`, `FeelUp`, `Kissing`, `YPeeLines`, `PeeLines`, `Needs`, `YNeeds`, `DrinkLines`, `Appearance`, `Drive`, `General`, `Darts`, `SexLines`, `ObjQuotes`
 - Location content: `Locations`, `SharedLoc`, `Bar`, `TalkUnused`, `Club`, `Theatre`, `MakeOut`, `HerHome`
 
-Tracking note:
+### Property Tracker (Use This While Refactoring)
 
-- Add row-level progress markers as you go, for example: `Row B 8/18 moved`.
-- Do not start the next row until current row compiles and tests pass.
+This replaces row-level memory with per-property tracking.
 
-Current progress:
+Rules:
 
-- Row B 8/18 moved: `FlirtCounter`, `TimeSinceLastFlirt`, `AllowedToFlirt`, `ShowedNeed`, `FlirtedFlag`, `NoFlirtFlag`, `MaxFlirts`, `RandMax` moved under `gameState.Interactions`.
+1. Mark each property exactly once in the checklist where it belongs.
+2. Update the checkbox in the same commit that changes code.
+3. Add one line to Touch Log for every property move.
+4. Do not start a new row until the active row builds and tests pass.
+
+Legend:
+
+- `[ ]` Not migrated yet
+- `[x]` Migrated to sub-object
+- `[ ] KEEPROOT` Intentionally stays on root (add reason in notes)
+- `[ ] DEFER` Ownership unclear (add follow-up note)
+
+#### Active Row Checklist: Row B (InteractionState)
+
+- [x] FlirtCounter
+- [x] TimeSinceLastFlirt
+- [x] AllowedToFlirt
+- [x] ShowedNeed
+- [x] FlirtedFlag
+- [x] NoFlirtFlag
+- [x] MaxFlirts
+- [ ] MaxKiss
+- [ ] MaxFeel
+- [x] RandMax
+- [ ] Arousal
+- [ ] KissCounter
+- [ ] FeelCounter
+- [ ] FuckingNow
+- [ ] ChampagneCounter
+- [ ] DrankChamp
+- [ ] CheckedHerOut
+- [ ] ChangeVenueFlag
+
+Row B progress: 8/18 migrated
+
+#### Touch Log (append-only)
+
+| Date | Property | Action | Target | Commit | Notes |
+|---|---|---|---|---|---|
+| 2026-04-16 | FlirtCounter | migrated | Interactions | e890344 | first interaction slice |
+| 2026-04-16 | TimeSinceLastFlirt | migrated | Interactions | e890344 | first interaction slice |
+| 2026-04-16 | AllowedToFlirt | migrated | Interactions | e890344 | first interaction slice |
+| 2026-04-16 | ShowedNeed | migrated | Interactions | e890344 | first interaction slice |
+| 2026-04-16 | FlirtedFlag | migrated | Interactions | e890344 | first interaction slice |
+| 2026-04-16 | NoFlirtFlag | migrated | Interactions | e890344 | first interaction slice |
+| 2026-04-16 | MaxFlirts | migrated | Interactions | e890344 | first interaction slice |
+| 2026-04-16 | RandMax | migrated | Interactions | e890344 | first interaction slice |
+
+#### Upcoming Row Templates (copy when activated)
+
+For each next row, create a checklist in this exact format before coding:
+
+- [ ] PropertyName
+- [ ] PropertyName
+
+Then add `Row X progress: N/M migrated` below the checklist.
 
 ## Phase 1b: Reset Save/Load To Transitional Simplicity
 
