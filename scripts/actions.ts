@@ -1,6 +1,6 @@
 import { callChoice, sayText, c, printList, cListenerGenList, flirtresps, appearance, feelUp, kissing, girlname, basegirl } from './quotes';
-import { pickrandom, incrandom, locStack, randcounter, attraction, setAttraction, shyness, setShyness, flirtcounter, setFlirtcounter, flirtedflag, setFlirtedflag, checkedherout, setCheckedherout, maxfeel, maxkiss } from './shims';
-import { haveSex, arousal, setArousal, kisscounter, setKisscounter, feelcounter, setFeelcounter } from './fuckHer';
+import { pickrandom, incrandom, locStack, randcounter, attraction, setAttraction, shyness, setShyness, flirtcounter, setFlirtcounter, flirtedflag, setFlirtedflag, checkedherout, setCheckedherout } from './shims';
+import { haveSex } from './fuckHer';
 import { gameState } from './gameState/gameState';
 import { BladderState } from './gameState/bladderState';
 import { heroutfit } from './settings';
@@ -78,7 +78,7 @@ export function checkherout() {
 }
 
 export function feelup() {
-    setFeelcounter(feelcounter + 1);
+    gameState.Romance.FeelCounter += 1;
     let curtext: any[] = [];
     if (locStack[0] !== "thehottub") {
         curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelher"]));
@@ -95,20 +95,20 @@ export function feelup() {
             curtext.push("She" + pickrandom(feelUp["you"]));
         else
             curtext.push("She" + pickrandom(feelUp["youTub"]));
-        if (feelcounter < maxfeel) {
+        if (gameState.Romance.FeelCounter < gameState.Romance.MaxFeel) {
             setAttraction(attraction + 5);
             setShyness(shyness - 2);
-            setArousal(arousal + 1);
+            gameState.Romance.Arousal += 1;
         }
     } else if (attraction > 20) {
         if (locStack[0] !== "thehottub")
             curtext.push(girlname + pickrandom(feelUp["you"]));
         else
             curtext.push(girlname + pickrandom(feelUp["youTub"]));
-        if (feelcounter < maxfeel) {
+        if (gameState.Romance.FeelCounter < gameState.Romance.MaxFeel) {
             setAttraction(attraction + 3);
             setShyness(shyness - 5);
-            setArousal(arousal + 2);
+            gameState.Romance.Arousal += 2;
         }
     } else {
         curtext.push(pickrandom(feelUp["bad"]));
@@ -121,7 +121,7 @@ export function feelup() {
 }
 
 export function kissher(curtext: any[] = [], sexLoc?: string) {
-    setKisscounter(kisscounter + 1);
+    gameState.Romance.KissCounter += 1;
     const [kissAttempt, kissRejected, kissPleasedResponse, kissReturnedKiss, kissPassionateReturn] = kissing["diag"];
     curtext = printList(curtext, kissAttempt);
     if (attraction < 10 || (flirtcounter > 1 && attraction < 20)) {
@@ -129,54 +129,54 @@ export function kissher(curtext: any[] = [], sexLoc?: string) {
         setAttraction(attraction - 3);
     } else if (attraction < 20 || (flirtcounter > 2 && attraction < 30)) {
         curtext = printList(curtext, kissPleasedResponse);
-        if (kisscounter < maxkiss) {
+        if (gameState.Romance.KissCounter < gameState.Romance.MaxKiss) {
             setFlirtcounter(flirtcounter + 3);
             setAttraction(attraction + 3);
             setShyness(shyness - 3);
-            setArousal(arousal + 2);
+            gameState.Romance.Arousal += 2;
         }
     } else if (attraction < 30) {
         curtext = printList(curtext, kissReturnedKiss);
-        if (kisscounter < maxkiss) {
+        if (gameState.Romance.KissCounter < gameState.Romance.MaxKiss) {
             setFlirtcounter(flirtcounter + 3);
             setAttraction(attraction + 3);
             setShyness(shyness - 3);
-            setArousal(arousal + 4);
+            gameState.Romance.Arousal += 4;
         }
     } else if (attraction < 50) {
         curtext = printList(curtext, kissPassionateReturn);
-        if (kisscounter < maxkiss) {
+        if (gameState.Romance.KissCounter < gameState.Romance.MaxKiss) {
             setAttraction(attraction + 3);
             setShyness(shyness - 3);
-            setArousal(arousal + 6);
+            gameState.Romance.Arousal += 6;
         }
     } else {
         if (gameState.Companion.bladderState < BladderState.Emergency) {
             if (locStack[0] !== "thehottub") {
                 curtext.push(pickrandom(kissing["sxy"]));
-                setArousal(arousal + 8);
+                gameState.Romance.Arousal += 8;
             }
             else {
                 curtext.push(pickrandom(kissing["sxyNkd"]));
-                setArousal(arousal + 15);
+                gameState.Romance.Arousal += 15;
             }
             incrandom();
         } else {
             if (locStack[0] !== "thehottub") {
                 curtext.push(pickrandom(kissing["pee"]));
-                setArousal(arousal + 10);
+                gameState.Romance.Arousal += 10;
             }
             else {
                 curtext.push(pickrandom(kissing["nkdPee"]));
-                setArousal(arousal + 15);
+                gameState.Romance.Arousal += 15;
             }
         }
-        if (kisscounter < maxkiss) {
+        if (gameState.Romance.KissCounter < gameState.Romance.MaxKiss) {
             setAttraction(attraction + 3);
             setShyness(shyness - 3);
         }
     }
-    setArousal(arousal + 2);
+    gameState.Romance.Arousal += 2;
     let listenerList: any[] = [];
     //If sexLoc is defined then this kiss is happening in the middle of a sexual encounter and therefore handled accordingly
     if (!sexLoc) curtext = callChoice(["curloc", "Continue..."], curtext);

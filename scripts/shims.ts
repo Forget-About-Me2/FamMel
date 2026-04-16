@@ -47,10 +47,6 @@ export function setShopping(val: number) { shopping = val; }
 // Flirt / interaction limits
 export let maxflirts: number = 2;
 export function setMaxflirts(val: number) { maxflirts = val; }
-export let maxkiss: number = 7;
-export function setMaxkiss(val: number) { maxkiss = val; }
-export let maxfeel: number = 7;
-export function setMaxfeel(val: number) { maxfeel = val; }
 export let randmax: number = 5;
 
 // Venue closing times (ticks from 7 PM)
@@ -239,6 +235,24 @@ export function connectToGameState(gs: any): void {
         current[last] = value;
     };
 
+    const definePropertyByPath = (obj: any, path: string, descriptor: PropertyDescriptor): void => {
+        const keys = path.split('.');
+        const last = keys.pop();
+        if (!last) {
+            return;
+        }
+
+        let current = obj;
+        for (const key of keys) {
+            if (current[key] === undefined || current[key] === null) {
+                current[key] = {};
+            }
+            current = current[key];
+        }
+
+        Object.defineProperty(current, last, descriptor);
+    };
+
     // ========================================================================
     // FORWARD bridges — shims-owned variables.
     // These module vars are NOT read/written by module code after init, so
@@ -261,8 +275,6 @@ export function connectToGameState(gs: any): void {
         ['noflirtflag',    'Interactions.NoFlirtFlag'],
         ['shopping',       'Shopping'],
         ['maxflirts',      'Interactions.MaxFlirts'],
-        ['maxkiss',        'MaxKiss'],
-        ['maxfeel',        'MaxFeel'],
         ['randmax',        'Interactions.RandMax'],
         ['clubclosingtime','ClubClosingTime'],
         ['theaterclosingtime','TheaterClosingTime'],
@@ -337,11 +349,11 @@ export function connectToGameState(gs: any): void {
 
     const moduleNumericProps: Array<[string, string]> = [
         // fuckHer.ts state
-        ['arousal',        'Arousal'],
-        ['kisscounter',    'KissCounter'],
-        ['feelcounter',    'FeelCounter'],
-        ['fuckingnow',     'FuckingNow'],
-        ['champagnecounter','ChampagneCounter'],
+        ['arousal',        'Romance.Arousal'],
+        ['kisscounter',    'Romance.KissCounter'],
+        ['feelcounter',    'Romance.FeelCounter'],
+        ['fuckingnow',     'Romance.FuckingNow'],
+        ['champagnecounter','Romance.ChampagneCounter'],
         ['drankChamp',     'DrankChamp'],
         // drive.ts state
         ['wetthecar',      'WetTheCar'],
@@ -519,7 +531,7 @@ export function connectToGameState(gs: any): void {
         ...moduleDeepProps,
     ];
     for (const [globalName, gsProp] of allModuleProps) {
-        Object.defineProperty(gs, gsProp, {
+        definePropertyByPath(gs, gsProp, {
             get: () => w[globalName],
             set: (v: any) => { w[globalName] = v; },
             configurable: true,
@@ -556,8 +568,6 @@ export function exposeShimsOnWindow(): void {
         ['changevenueflag',   () => changevenueflag,   (v) => { changevenueflag = v; }],
         ['shopping',          () => shopping,          (v) => { shopping = v; }],
         ['maxflirts',         () => maxflirts,         (v) => { maxflirts = v; }],
-        ['maxkiss',           () => maxkiss,           (v) => { maxkiss = v; }],
-        ['maxfeel',           () => maxfeel,           (v) => { maxfeel = v; }],
         ['randmax',           () => randmax,           (v) => { randmax = v; }],
         ['clubclosingtime',   () => clubclosingtime,   (v) => { clubclosingtime = v; }],
         ['theaterclosingtime',() => theaterclosingtime,(v) => { theaterclosingtime = v; }],

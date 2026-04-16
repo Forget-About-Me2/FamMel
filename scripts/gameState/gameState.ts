@@ -28,6 +28,26 @@ class InteractionState {
     NoFlirtFlag: number = 0;
     MaxFlirts: number = 2;
     RandMax: number = 5;
+
+    /**
+     * Whether you currently have her purse
+     */
+    HavePurse : boolean = false;
+
+    /**
+     * How many favours she owes you (counter — can accumulate and be spent)
+     */
+    OwedFavour : number = 0;
+}
+
+class RomanceState {
+    MaxKiss: number = 7;
+    MaxFeel: number = 7;
+    Arousal: number = 0;
+    KissCounter: number = 0;
+    FeelCounter: number = 0;
+    FuckingNow: number = 0;
+    ChampagneCounter: number = 0;
 }
 
 
@@ -54,16 +74,7 @@ class GameState {
      * Keeps track of how many times you've flirted at the current place.
      */
     Interactions: InteractionState = new InteractionState();
-
-    /**
-     * Whether you currently have her purse
-     */
-    HavePurse : boolean = false;
-
-    /**
-     * How many favours she owes you (counter — can accumulate and be spent)
-     */
-    OwedFavour : number = 0;
+    Romance: RomanceState = new RomanceState();
 
     randCounter : number = 0;
 
@@ -72,10 +83,6 @@ class GameState {
 
     // Shopping session flag (1 while in store)
     Shopping: number = 0;
-
-    // Interaction limits (saveable — defaults match gameSettings)
-    MaxKiss: number = 7;
-    MaxFeel: number = 7;
 
     // Venue closing times (ticks from 7 PM)
     ClubClosingTime: number = 7 * 60;     // 420 = 2:00 AM
@@ -89,11 +96,6 @@ class GameState {
     PlayerBladder: boolean = true;
 
     // fuckHer state
-    Arousal: number = 0;
-    KissCounter: number = 0;
-    FeelCounter: number = 0;
-    FuckingNow: number = 0;
-    ChampagneCounter: number = 0;
     DrankChamp: number = 0;
 
     // drive state

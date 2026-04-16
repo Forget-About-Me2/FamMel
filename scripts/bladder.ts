@@ -11,7 +11,6 @@ import { assertExists } from './helperFiles/helperFunctions';
 import { heroutfit } from './settings';
 import { theatre, rrMovieLineThresh } from './locations/theatre';
 import { gasStation } from './locations/driveAround';
-import { fuckingnow } from './fuckHer';
 import { wetthecar, setWetthecar } from './drive';
 
 //This file contains all functions related to peeing
@@ -477,7 +476,7 @@ const SEATED_LOCATIONS = ["themakeout", "driveout", "drivearound", "domovie"];
 export function displayneed(curtext: any[]): any[] {
     setShowedneed(1);
     // Pick the quote prefix based on whether she's seated, in the tub, or standing
-    const prefix = (SEATED_LOCATIONS.includes(locStack[0]) || fuckingnow > 0) ? "sit"
+    const prefix = (SEATED_LOCATIONS.includes(locStack[0]) || gameState.Romance.FuckingNow > 0) ? "sit"
         : locStack[0] === "thehottub" ? "tub"
         : "";
     const needKey =

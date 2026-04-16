@@ -9,7 +9,7 @@ import { assertExists } from './helperFiles/helperFunctions';
 import { gameState } from './gameState/gameState';
 import { BladderState } from './gameState/bladderState';
 import { heroutfit } from './settings';
-import { champagnecounter, setChampagnecounter, drankChamp, setDrankChamp } from './fuckHer';
+import { drankChamp, setDrankChamp } from './fuckHer';
 
 export interface IBackpackItem {
     bpName: string;
@@ -576,10 +576,10 @@ export function displaypos(itemobj, number, buy=false) {
             else formatList.push("s");
         } else formatList.push("");
         if (itemobj.hasOwnProperty("options")){
-            if (champagnecounter > 0){
-                if (champagnecounter < 6) formatList.push(itemobj.options[0]);
+            if (gameState.Romance.ChampagneCounter > 0){
+                if (gameState.Romance.ChampagneCounter < 6) formatList.push(itemobj.options[0]);
                 else formatList.push(itemobj.options[1]);
-            } else if (champagnecounter === 0) formatList.push("");
+            } else if (gameState.Romance.ChampagneCounter === 0) formatList.push("");
         }
         description = description.format(formatList);
         setComma(1);
@@ -977,7 +977,7 @@ const CHAMPAGNE_GLASSES_REQUIRED = 2;
 const CHAMPAGNE_MAX_COUNTER = 6;
 
 function consumeChampagne(bottles: number[] | undefined) {
-    setChampagnecounter(champagnecounter + CHAMPAGNE_GLASSES_REQUIRED);
+    gameState.Romance.ChampagneCounter += CHAMPAGNE_GLASSES_REQUIRED;
     setDrankChamp(0);
     if (bottles) bottles[0] -= CHAMPAGNE_GLASSES_REQUIRED;
 }
@@ -1016,7 +1016,7 @@ export function champagneNow() {
             curtext = printList(curtext, champRefuseIntro);
             curtext = showneed(curtext);
             curtext.push(pickrandom(drinklines["fillChampBad"]));
-            setChampagnecounter(CHAMPAGNE_MAX_COUNTER);
+            gameState.Romance.ChampagneCounter = CHAMPAGNE_MAX_COUNTER;
             curtext = printList(curtext, champRefuse);
         }
     } else if (backPackItems["champ-glass"].value >= CHAMPAGNE_GLASSES_REQUIRED) {

@@ -1,11 +1,11 @@
 ﻿import { fetchJson, fetchAndCacheJson, getMLocations, printList, sayText, cListenerGen, cListenerGenList, addSayText, voccurse, locjson, appearance, setAppearance, girlname, pantycolor } from './quotes';
-import { pushloc, poploc, pickrandom, randomchoice, randomize, locStack, thetime, attraction, setAttraction, shyness, setShyness, maxkiss } from './shims';
+import { pushloc, poploc, pickrandom, randomchoice, randomize, locStack, thetime, attraction, setAttraction, shyness, setShyness } from './shims';
 import { showneed, displayneed, displaygottavoc, noteholding, preventpee, flushdrank, allowpee, wetherself, bladder, bladlose, gottagoflag, setGottagoflag, askholditcounter, setAskholditcounter, waitcounter, setWaitcounter } from './bladder';
 import { displayyourneed, wetyourself, youpee } from './yourbladder';
 import { standobjs, haveItem, backPackItems, allowItems, setAllowItems } from './backPackItems';
 import { leavehm } from './drive';
 import { kissher } from './actions';
-import { theBedroom, kisscounter, champagnecounter } from './fuckHer';
+import { theBedroom } from './fuckHer';
 import { gameOver } from './main';
 import { gameState } from './gameState/gameState';
 import { BladderState } from './gameState/bladderState';
@@ -288,7 +288,7 @@ export function theHome() {
         pushloc("theHome")
     let curtext = [herHome["atHome"].formatVars()];
     let listerList: any[] = [];
-    if (kisscounter > maxkiss) {
+    if (gameState.Romance.KissCounter > gameState.Romance.MaxKiss) {
         curtext = printList(curtext, herHome["kissExceeded"]);
         listerList.push([[gameOver, "Continue..."], "gameOver"]);
     } else {
@@ -296,7 +296,7 @@ export function theHome() {
         curtext = displayneed(curtext);
         curtext = displayyourneed(curtext);
         //TODO figure out what the hell this is
-        if (champagnecounter > 5) {
+        if (gameState.Romance.ChampagneCounter > 5) {
             if (bladder > bladlose-25)
                 curtext = printList(curtext, herHome["champagneLose"]);
             else
