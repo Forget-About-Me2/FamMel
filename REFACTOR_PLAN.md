@@ -15,6 +15,7 @@ This plan assumes you are stronger in C# than TypeScript.
 - No `expose*OnWindow()` bridge functions.
 - No setter scaffolding (`setX(...)`) for migrated state.
 - Save/load serializes and restores `gameState` directly.
+- Player and companion bladder mechanics share one model (`Person`) with role-specific config values.
 
 ## Current Snapshot (why this is hard today)
 
@@ -131,6 +132,34 @@ Exit criteria:
 - No field remains on root GameState that logically belongs in a sub-object
 - All tests still pass
 - Code is semantically clearer (KissCounter is now in `Interactions`, not ambiguous at root)
+
+### Phase 1A: Bladder Model Convergence (in scope, required)
+
+Why this exists:
+
+- `Person` already contains shared bladder/tummy logic.
+- `bladder.ts` and `yourbladder.ts` duplicate threshold/volume fields (`Blad*` vs `YourBlad*`).
+- `gameState` currently stores duplicated copies of both sets of fields, increasing drift risk.
+
+Canonical ownership target:
+
+- Shared simulation values live on `gameState.Player` and `gameState.Companion` (`Person` instances).
+- Role-specific tuning remains as config/input (initial urge, min urge percent, event thresholds).
+- Legacy module fields become compatibility aliases only, then are removed.
+
+Execution order:
+
+1. Stop introducing new root-level `Blad*` and `YourBlad*` properties.
+2. Migrate threshold reads/writes to `gameState.Player` and `gameState.Companion` getters (`bladderUrge`, `bladderNeed`, etc.).
+3. Move shared calculations (`updateurge`, `updateyoururge`, decay math) behind `Person` methods.
+4. Keep only scenario/event flags in row H/I that are not simulation core.
+5. Remove duplicate bridge mappings from `shims.ts` once call sites are migrated.
+
+Exit criteria:
+
+- No duplicated threshold pairs remain (`Blad*` and `YourBlad*`) as independent runtime sources of truth.
+- `bladder.ts` and `yourbladder.ts` use shared simulation helpers or `Person` methods.
+- Save/load captures player/companion simulation state from `gameState.Player` and `gameState.Companion`.
 
 ### Phase 1 Property Tracker (Rows Are Canonical)
 
@@ -252,6 +281,10 @@ Row B progress: 8/18 migrated
 
 #### Row H: CompanionBladderState
 
+Scope note: split this row while migrating.
+- Simulation-core fields should converge into `gameState.Companion` (`Person`) and be removed from root.
+- Scenario/event flags can remain in row H until a later behavior refactor.
+
 - [ ] CustomUrge
 - [ ] MinUrge
 - [ ] MinPerc
@@ -299,6 +332,10 @@ Row B progress: 8/18 migrated
 - [ ] LastStory
 
 #### Row I: PlayerBladderState
+
+Scope note: split this row while migrating.
+- Simulation-core fields should converge into `gameState.Player` (`Person`) and be removed from root.
+- Scenario/event flags can remain in row I until a later behavior refactor.
 
 - [ ] YourBladder
 - [ ] YourTummy
