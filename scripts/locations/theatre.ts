@@ -184,6 +184,7 @@ export function movieArgue() {
 
 export let seenmovie = 0;
 export function setSeenmovie(val: number) { seenmovie = val; }
+export function setTheatre(val: any) { theatre = val; }
 //TODO figure out duplicate continue's
 export function preMoviePee(curtext: any[] = []) {
     pushloc("domovie");

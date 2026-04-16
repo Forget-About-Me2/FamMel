@@ -178,16 +178,6 @@ export function formatAll(exprList: any[], values: any[]): any[] {
     return result;
 }
 
-export function printDialogue(curtext: any[], loc: string, index: number): any[] {
-    const lj = (window as any).locjson;
-    if (lj && lj.dialogue && lj.dialogue[loc]) {
-        lj.dialogue[loc][index].forEach(function(item: any) {
-            curtext.push(item);
-        });
-    }
-    return curtext;
-}
-
 // Shuffle a list randomly (Fisher-Yates)
 export function randomize(list: any[]): any[] {
     const arr = [...list];
@@ -201,6 +191,11 @@ export function randomize(list: any[]): any[] {
 // Random counter for NPC behavior
 export let randcounter: number = 0;
 export function setRandcounter(val: number) { randcounter = val; }
+export function setLastmoney(val: number) { lastmoney = val; }
+export function setLastattraction(val: number) { lastattraction = val; }
+export function setLastshyness(val: number) { lastshyness = val; }
+export function setRandmax(val: number) { randmax = val; }
+export function setTimespeed(val: number) { timespeed = val; }
 
 // ============================================================================
 // Initialize RNG seed from query string (runs at module load time)
@@ -582,7 +577,6 @@ export function exposeShimsOnWindow(): void {
     w.range = range;
     w.formatString = formatString;
     w.formatAll = formatAll;
-    w.printDialogue = printDialogue;
     w.randomize = randomize;
 }
 

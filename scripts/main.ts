@@ -6,7 +6,7 @@ import {yourHome} from './yourHome';
 import {gameScreen} from "./gameScreen/gameScreen";
 import { animationManager } from "./gameScreen/animationManager";
 import { setupQuotes, fetchAndCacheJson, locationSetup, locjson, printAllChoices, sayText, printList, setText, fetchJson } from "./quotes";
-import { pushloc, poploc, randomInt, connectToGameState, locStack, endScreens } from './shims';
+import { pushloc, poploc, randomInt, connectToGameState, locStack, endScreens, playerbladder } from './shims';
 import { setup } from './settings';
 import { updateyoururge, yourbladder, setYourbladder, yourtummy, setYourtummy, ymaxtummy, setYmaxtummy, ymaxbeer, setYmaxbeer, ydrankbeer, setYdrankbeer, ynowpeeing, setYnowpeeing, yourbladurge, setYourbladurge } from './yourbladder';
 import { updateurge, bladder, setBladder, tummy, setTummy, maxtummy, setMaxtummy, maxbeer, setMaxbeer, drankbeer, setDrankbeer, nowpeeing, setNowpeeing, bladurge, setBladurge, askholditcounter } from './bladder';
@@ -269,7 +269,7 @@ export async function start() {
     gameScreen.PopUps.Disclaimer.displayDisclaimerPopup();
     setup();
     // Keep typed settings in sync with legacy setup() localStorage behavior.
-    try { gameSettings.PlayerBladder = !!(globalThis as any).playerbladder; } catch {}
+    try { gameSettings.PlayerBladder = !!playerbladder; } catch {}
     gameState.init();
     animationManager.start();
     // Connect window bridges to gameState — auto-seeds from current window values.

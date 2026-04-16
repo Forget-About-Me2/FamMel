@@ -12,8 +12,11 @@ import { BladderState } from '../gameState/bladderState';
 import { heroutfit } from '../settings';
 
 export let bar;
+export function setBar(val: any) { bar = val; }
 export let bartopic = 0; // Topics of discussion at the bar.
 export function setBartopic(val: number) { bartopic = val; }
+export function setLoser(val: any) { loser = val; }
+export function setTalkUnused(val: any) { talkUnused = val; }
 
 export function theBarSetup(){
     fetchJson("locations/theBar").then(barJsonSetup);

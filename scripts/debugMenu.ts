@@ -3,7 +3,7 @@ import { gameState } from './gameState/gameState';
 import { go } from './main';
 import { theYard, exitYard, theWalk } from './locations/theMakeOut';
 import { openPopUp } from './pop-up';
-import { getRandomSeed, clubclosingtime, hour, setHour, locStack, thetime, setThetime } from './shims';
+import { getRandomSeed, clubclosingtime, hour, setHour, locStack, thetime, setThetime, attraction, setAttraction, shyness, setShyness } from './shims';
 import { drankbeer, setDrankbeer, tummy, setTummy } from './bladder';
 import { locations } from './locations';
 import { seenmovie, setSeenmovie } from './locations/theatre';
@@ -38,8 +38,8 @@ export const Debug: DebugFunctions = function () {
     function fullStats() {
         gameState.Attraction = 130;
         gameState.Shyness = 0;
-        setLegacyGlobalValue('attraction', 130);
-        setLegacyGlobalValue('shyness', 0);
+        setAttraction(130);
+        setShyness(0);
     }
 
 //Sets the clock to night
@@ -163,8 +163,8 @@ export function OpenDebugMenu() {
     CreateValueRow(table, "Money", gameState.Money.toString());
     CreateValueRow(table, "Attraction", gameState.Attraction.toString());
     CreateValueRow(table, "Shyness", gameState.Shyness.toString());
-    CreateValueRow(table, "Legacy Attraction", getLegacyGlobalValue('attraction')?.toString?.() ?? "N/A");
-    CreateValueRow(table, "Legacy Shyness", getLegacyGlobalValue('shyness')?.toString?.() ?? "N/A");
+    CreateValueRow(table, "Legacy Attraction", String(attraction));
+    CreateValueRow(table, "Legacy Shyness", String(shyness));
     CreateValueRow(table, "Game Time", gameState.Time.timeString);
     CreateValueRow(table, "Current Typed Location", GetTypedLocationLabel(gameState.CurrentLocation));
     CreateValueRow(table, "Legacy Stack (full)", (locStack ?? []).join(" -> ") || "(empty)");
@@ -392,8 +392,8 @@ export function BuildDebugDump() {
             money: gameState.Money,
             attraction: gameState.Attraction,
             shyness: gameState.Shyness,
-            legacyAttraction: getLegacyGlobalValue('attraction'),
-            legacyShyness: getLegacyGlobalValue('shyness')
+            legacyAttraction: attraction,
+            legacyShyness: shyness
         },
         locationStack: {
             legacy: [...(locStack ?? [])],
@@ -423,18 +423,6 @@ export function BuildDebugDump() {
             nowPeeing: gameState.Player?.NowPeeing
         }
     };
-}
-
-export function getLegacyGlobalValue(name: string): unknown {
-    const store = globalThis as Record<string, unknown>;
-    return store[name];
-}
-
-export function setLegacyGlobalValue(name: string, value: unknown): void {
-    const store = globalThis as Record<string, unknown>;
-    if (name in store) {
-        store[name] = value;
-    }
 }
 
 export function exposeDebugMenuOnWindow() {

@@ -1,6 +1,5 @@
 import { pantycolor, girltalk, setPantycolor } from './quotes';
-import { printFormatDialogue, printChoices, sayText } from './quotes';
-import { printDialogue } from './shims';
+import { printFormatDialogue, printChoices, sayText, printDialogue } from './quotes';
 
 //TODO implement option to match colours to descriptions (maybe type it in yourself?)
 let pantydescriptions = [

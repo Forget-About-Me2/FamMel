@@ -1,5 +1,5 @@
-import { printChoicesList, printIntro, printAlways, sayText, locationMCSetup, appearance, drive, girltalk } from './quotes';
-import { pickrandom, incrandom, randomchoice, pushloc, printDialogue, locStack, changevenueflag, setChangevenueflag, checkedherout, setCheckedherout, flirtedflag, setFlirtedflag } from './shims';
+import { printChoicesList, printIntro, printAlways, sayText, locationMCSetup, appearance, drive, girltalk, printDialogue } from './quotes';
+import { pickrandom, incrandom, randomchoice, pushloc, locStack, changevenueflag, setChangevenueflag, checkedherout, setCheckedherout, flirtedflag, setFlirtedflag } from './shims';
 import { showneed, displayneed, gottagoflag, rrlockedflag, setRrlockedflag } from './bladder';
 import { displayyourneed } from './yourbladder';
 import { updateSuggestedLocation, printLocationMenu } from './locations';

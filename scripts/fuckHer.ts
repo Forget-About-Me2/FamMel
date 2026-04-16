@@ -23,6 +23,7 @@ export let champagnecounter = 0; // Number of glasses of champagne served.
 export function setChampagnecounter(val: number) { champagnecounter = val; }
 export let drankChamp = 0; // Time since last champagne glass was drunk.
 export function setDrankChamp(val: number) { drankChamp = val; }
+export function setSexActions(val: any) { sexActions = val; }
 
 export function deepClone(value: any) {
     return JSON.parse(JSON.stringify(value));

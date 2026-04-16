@@ -12,8 +12,13 @@ import { BladderState } from '../gameState/bladderState';
 import { photoChoice, setPhotoChoice, heroutfit } from '../settings';
 
 export let club;
+export function setClub(val: any) { club = val; }
 export let externalflirt = 0; // You flirted with somebody else
 export function setExternalflirt(val: number) { externalflirt = val; }
+export function setWetPhoto(val: number) { wetPhoto = val; }
+export function setIsNude(val: number) { isNude = val; }
+export function setPosectr(val: number) { posectr = val; }
+export function setOutfitctr(val: number) { outfitctr = val; }
 
 export function theClubSetup(){
     fetchJson("locations/theClub").then(clubJsonSetup);

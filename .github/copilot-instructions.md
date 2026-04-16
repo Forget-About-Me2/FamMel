@@ -170,6 +170,16 @@ When working on refactors, be proactive about keeping REFACTOR_PLAN.md up to dat
 ## Testing
 Be proactive about running tests and update the integration tests
 
+## Documentation
+When touching a function during refactor work, assess whether it needs a JSDoc comment. Add documentation when:
+- The function's purpose is non-obvious from its name and parameters
+- It has side effects (writes to globals, mutates shared state, triggers UI updates)
+- It has a non-trivial contract (expected input formats, return value semantics, error conditions)
+- It's a setter that bridges cross-module state
+- It's a key entry point or lifecycle hook (e.g. `go()`, `start()`, `setupQuotes()`)
+
+Don't add boilerplate docs to trivial one-liners or self-explanatory helpers.
+
 ## Keeping instructions up to date
 Be proactive in suggesting improvements to the instructions, if you notice they are out of date, incomplete or in other ways lacking prompt the user.
 

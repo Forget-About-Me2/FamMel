@@ -478,6 +478,19 @@ export function wetyourself3t() {
 
 export let youSpurted = 0;
 export function setYouSpurted(val: number) { youSpurted = val; }
+export function setYourtumavg(val: number) { yourtumavg = val; }
+export function setYminurge(val: number) { yminurge = val; }
+export function setYourbladneed(val: number) { yourbladneed = val; }
+export function setYourblademer(val: number) { yourblademer = val; }
+export function setYourbladlose(val: number) { yourbladlose = val; }
+export function setYourbladcumlose(val: number) { yourbladcumlose = val; }
+export function setYourbladsexlose(val: number) { yourbladsexlose = val; }
+export function setYlastpeetime(val: number) { ylastpeetime = val; }
+export function setYtimeheld(val: number) { ytimeheld = val; }
+export function setYdrankcocktails(val: number) { ydrankcocktails = val; }
+export function setYdrankwaters(val: number) { ydrankwaters = val; }
+export function setYdrankbeers(val: any) { ydrankbeers = val; }
+export function setYrrlockedflag(val: number) { yrrlockedflag = val; }
 export function spurtedyourself(curtext: any[]) {
     yourbladder -= 50;
     setYspurtthresh(yspurtthresh - 0.1 * yspurtthresh);

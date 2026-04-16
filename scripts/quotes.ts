@@ -2,7 +2,8 @@
 
 // String prototype extensions — augment the global String interface
 // so TypeScript accepts .format() and .formatVars() calls everywhere.
-import { formatString, range, pickrandom, incrandom, randomInt, locStack, money, randcounter } from './shims';
+import { formatString, range, pickrandom, incrandom, randomInt, locStack, money, randcounter, setEndScreens } from './shims';
+import { setToldstories } from './bladder';
 import { validateListenerList } from './validation';
 import { dartSetup } from './games/darts';
 import { fuckHerSetup } from './fuckHer';
@@ -199,6 +200,15 @@ export function printList(curtext: any[], list: any[]){
     return curtext;
 }
 
+export function printDialogue(curtext: any[], loc: string, index: number): any[] {
+    if (locjson && locjson.dialogue && locjson.dialogue[loc]) {
+        locjson.dialogue[loc][index].forEach(function(item: any) {
+            curtext.push(item);
+        });
+    }
+    return curtext;
+}
+
 export function printListSelection(curtext: any[], list: any[], selection: number[]){
     selection.forEach(index => curtext.push(list[index]));
     return curtext;
@@ -368,6 +378,16 @@ export function setText(lines: any[]){
 
 export let locjson: any = null; //This is the main json for the current location
 export function setLocjson(val: any) { locjson = val; }
+export function setFlirtresps(val: any) { flirtresps = val; }
+export function setFeelUp(val: any) { feelUp = val; }
+export function setKissing(val: any) { kissing = val; }
+export function setYpeelines(val: any) { ypeelines = val; }
+export function setPeelines(val: any) { peelines = val; }
+export function setNeeds(val: any) { needs = val; }
+export function setYneeds(val: any) { yneeds = val; }
+export function setDrinklines(val: any) { drinklines = val; }
+export function setDrive(val: any) { drive = val; }
+export function setGeneral(val: any) { general = val; }
 
 // Fetch a JSON file and return its parsed contents.
 // path: relative path under JSON/ (without JSON/ prefix or .JSON suffix)
@@ -524,7 +544,7 @@ export async function setupQuotes(){
         fetchJson("flirting").then(flirtSetup),
         fetchJson("needs").then(function (data) {
         needs = data;
-        (globalThis as any).toldstories = range(0, needs["peestory"].length - 1);
+        setToldstories(range(0, needs["peestory"].length - 1));
     }),
         fetchJson("youpee").then(yPeeSetup),
         fetchJson("shepee").then(shePeeSetup),
@@ -548,7 +568,7 @@ export async function setupQuotes(){
         objQuotes["buyItem2"] = formatAllVarsList(objQuotes["buyItem2"]);
     }),
         fetchJson("endScreens").then(function (data){
-        (globalThis as any).endScreens = data;
+        setEndScreens(data);
     }),
         fetchJson("yneeds").then(function (data){
         yneeds = data;
@@ -725,6 +745,7 @@ export function exposeQuotesOnWindow(): void {
     w.callChoice = callChoice;
     w.printListSelection = printListSelection;
     w.printLList = printLList;
+    w.printDialogue = printDialogue;
     w.addListenersList = addListenersList;
     w.printAllChoicesList = printAllChoicesList;
     w.addGirlTalk = addGirlTalk;

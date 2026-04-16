@@ -660,7 +660,22 @@ export function askcanhold() {
 }
 
 export let toldstories: any[] = [];
+export function setToldstories(val: any[]) { toldstories = val; }
 export let lastStory;
+export function setLastStory(val: any) { lastStory = val; }
+export function setMinurge(val: number) { minurge = val; }
+export function setBladneed(val: number) { bladneed = val; }
+export function setBlademer(val: number) { blademer = val; }
+export function setBladlose(val: number) { bladlose = val; }
+export function setBladcumlose(val: number) { bladcumlose = val; }
+export function setBladsexlose(val: number) { bladsexlose = val; }
+export function setBeerdecCounter(val: number) { beerdecCounter = val; }
+export function setPeedtowels(val: number) { peedtowels = val; }
+export function setPeedvase(val: number) { peedvase = val; }
+export function setPeedshot(val: number) { peedshot = val; }
+export function setPeedoutside(val: number) { peedoutside = val; }
+export function setSawherpee(val: number) { sawherpee = val; }
+export function setTumavg(val: number) { tumavg = val; }
 
 export function pstory() {
     const askPeeStory = needs["pstory"][0]; // "Have you ever waited too long?"

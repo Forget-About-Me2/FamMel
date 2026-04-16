@@ -21,6 +21,8 @@ export function setPrepeed(val: number) {
 }
 export let elevatorwaitcounter = 0;
 export function setElevatorwaitcounter(val: number) { elevatorwaitcounter = val; }
+export function setFloorcounter(val: number) { floorcounter = val; }
+export function setHerHome(val: any) { herHome = val; }
 
 export function herHomeSetup() {
     fetchAndCacheJson("herhome").then(function(data) {

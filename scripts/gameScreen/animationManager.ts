@@ -4,6 +4,7 @@ import { BladderState } from "../gameState/bladderState";
 import { gameState } from "../gameState/gameState";
 import { randomInt } from "../shims";
 import { imageManager } from "./imageManager";
+import { nowpeeing, bladder } from "../bladder";
 
 /**
  * Centralized animation controller that updates the picture area based on game state.
@@ -61,7 +62,7 @@ class AnimationManager {
     private tick(): void {
         const subject = gameState.Companion;
         const type = gameSettings.ImageSettings.ImageType;
-        const isPeeing = subject?.NowPeeing ?? !!(globalThis as any).nowpeeing;
+        const isPeeing = subject?.NowPeeing ?? !!nowpeeing;
         const bladderState = subject?.bladderState ?? this.getLegacyBladderState();
 
         // Compute current ascii frame index
@@ -99,7 +100,7 @@ class AnimationManager {
     }
 
     private getLegacyBladderState(): BladderState {
-        const legacyBladder = Number((globalThis as any).bladder);
+        const legacyBladder = Number(bladder);
         const companion = gameState.Companion;
 
         if (!Number.isFinite(legacyBladder) || !companion) {

@@ -2,8 +2,8 @@
 import { BladderState } from "./gameState/bladderState";
 
 import { gameSettings } from "./settings/gameSettings";
-import { loadLocationScene, printIntro, printAlways, printChoices, printChoicesList, printSDialogue, sayText, c, handleFlirt, cListenerGenList, printList, locjson, drinklines, calledjsons, girltalk } from './quotes';
-import { pushloc, incrandom, randomchoice, formatString, printDialogue, locStack, shopping, setShopping, money, setMoney, flirtedflag, setFlirtedflag, late, setLate, attraction, setAttraction, shyness, setShyness, maxflirts, thetime } from './shims';
+import { loadLocationScene, printIntro, printAlways, printChoices, printChoicesList, printSDialogue, sayText, c, handleFlirt, cListenerGenList, printList, locjson, drinklines, calledjsons, girltalk, printDialogue } from './quotes';
+import { pushloc, incrandom, randomchoice, formatString, locStack, shopping, setShopping, money, setMoney, flirtedflag, setFlirtedflag, late, setLate, attraction, setAttraction, shyness, setShyness, maxflirts, thetime } from './shims';
 import { displaygottavoc, flushdrank, phoneholdthresh, bladder, tummy, setTummy, maxtummy, askholditcounter, setAskholditcounter, waitcounter, setWaitcounter } from './bladder';
 import { displayyourneed, wetyourself, yourtummy, setYourtummy, ymaxtummy } from './yourbladder';
 import { haveItem, backPackItems, allowItems, setAllowItems } from './backPackItems';

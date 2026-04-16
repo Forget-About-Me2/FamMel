@@ -31,6 +31,7 @@ function resetImg(){
 }
 
 export let picset = 0;
+export function setPicset(val: number) { picset = val; }
 // displaypix will set the current picture to be displayed
 //TODO figure out why need is called before urge
 export function displaypix(picname: string) {

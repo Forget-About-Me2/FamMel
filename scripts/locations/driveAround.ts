@@ -26,6 +26,7 @@ function driveJsonSetup(data: any){
 
 const gasChance = 3; //Chance you'll encounter a gas station
 export let gasStation;
+export function setGasStation(val: any) { gasStation = val; }
 
 export function driveAround(){
     setAllowItems(1);

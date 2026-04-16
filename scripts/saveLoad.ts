@@ -1,116 +1,306 @@
 // Save/load system for FamMel game state.
-// Snapshots all module-scoped mutable state via window property bridges
-// and restores through the same bridge setters.
+// Snapshots all module-scoped mutable state via direct ES module imports
+// and restores through setter functions in each source module.
 //
-// Architecture: The expose*OnWindow() bridges use Object.defineProperty
-// getter/setter pairs. Reading window.X returns the module-scoped let;
-// writing window.X = v sets it. This module exploits that for zero-churn
-// save/load — no game logic files need changes.
+// Architecture: A field registry maps each save key to { get, set } using
+// direct imports (no window bridges needed).
 
-import { backPackItems, herpurse } from './backPackItems';
+import { backPackItems, herpurse, allowItems, setAllowItems, homeChampagne, setHomeChampagne } from './backPackItems';
+import {
+    money, setMoney, thetime, setThetime, hour, setHour, minute, setMinute,
+    meridian, setMeridian, late, setLate, attraction, setAttraction, shyness, setShyness,
+    flirtedflag, setFlirtedflag, flirtcounter, setFlirtcounter, noflirtflag, setNoflirtflag,
+    checkedherout, setCheckedherout, haveherpurse, setHaveherpurse, owedfavor, setOwedfavor,
+    changevenueflag, setChangevenueflag, shopping, setShopping, didintro, setDidintro,
+    showedneed, setShowedneed, randcounter, setRandcounter,
+    lastmoney, setLastmoney, lastattraction, setLastattraction, lastshyness, setLastshyness,
+    maxflirts, setMaxflirts, maxkiss, setMaxkiss, maxfeel, setMaxfeel, randmax, setRandmax,
+    clubclosingtime, setClubclosingtime, theaterclosingtime, setTheaterclosingtime,
+    barclosingtime, setBarclosingtime, timespeed, setTimespeed,
+    playerbladder, setPlayerbladder,
+    locStack, setLocStack, settings, setSettings, statsBars, setStatsBars, endScreens, setEndScreens,
+} from './shims';
+import {
+    customurge, setCustomurge, minurge, setMinurge, minperc, setMinperc,
+    bladurge, setBladurge, bladneed, setBladneed, blademer, setBlademer,
+    bladlose, setBladlose, bladcumlose, setBladcumlose, bladsexlose, setBladsexlose,
+    maxtummy, setMaxtummy, maxbeer, setMaxbeer, tummy, setTummy, bladder, setBladder,
+    bladDec, setBladDec, bladDespDec, setBladDespDec, seal, setSeal,
+    beerdecCounter, setBeerdecCounter, ybeerdecCounter, setYbeerdecCounter,
+    peedtowels, setPeedtowels, peedvase, setPeedvase, peedshot, setPeedshot, peedoutside, setPeedoutside,
+    lastpeetime, setLastpeetime, timeheld, setTimeheld, drankbeer, setDrankbeer,
+    notdesperate, setNotdesperate, notydesperate, setNotydesperate, nothdesperate, setNothdesperate,
+    spurtthresh, setSpurtthresh, yspurtthresh, setYspurtthresh,
+    bribeaskthresh, setBribeaskthresh, bribeAskBase, setBribeAskBase,
+    tumavg, setTumavg, rrlockedflag, setRrlockedflag, shespurted, setShespurted,
+    brokeice, setBrokeice, sawherpee, setSawherpee,
+    wetlegs, setWetlegs, wetherpanties, setWetherpanties, nowpeeing, setNowpeeing,
+    gottagoflag, setGottagoflag, askholditcounter, setAskholditcounter, waitcounter, setWaitcounter,
+    toldstories, setToldstories, lastStory, setLastStory,
+} from './bladder';
+import {
+    yourbladder, setYourbladder, yourtummy, setYourtummy, yourtumavg, setYourtumavg,
+    holdself, setHoldself, yourbladurge, setYourbladurge,
+    yourbladneed, setYourbladneed, yourblademer, setYourblademer,
+    yourbladlose, setYourbladlose, yourbladcumlose, setYourbladcumlose,
+    yourbladsexlose, setYourbladsexlose,
+    ymaxtummy, setYmaxtummy, ymaxbeer, setYmaxbeer, yourcustomurge, setYourcustomurge,
+    yminurge, setYminurge, ynowpeeing, setYnowpeeing,
+    ylastpeetime, setYlastpeetime, ytimeheld, setYtimeheld,
+    ydrankcocktails, setYdrankcocktails, ydranksodas, setYdranksodas,
+    ydrankwaters, setYdrankwaters, ydrankbeers, setYdrankbeers, ydrankbeer, setYdrankbeer,
+    yrrlockedflag, setYrrlockedflag, youSpurted, setYouSpurted,
+} from './yourbladder';
+import {
+    arousal, setArousal, kisscounter, setKisscounter, feelcounter, setFeelcounter,
+    fuckingnow, setFuckingnow, champagnecounter, setChampagnecounter, drankChamp, setDrankChamp,
+    sexActions, setSexActions,
+} from './fuckHer';
+import { wetthecar, setWetthecar } from './drive';
+import {
+    enableimages, setEnableimages, enableascii, setEnableascii, playerGame, setPlayerGame,
+    showstats, setShowstats, photoChoice, setPhotoChoice, favoritemovie, setFavoritemovie,
+    suggestedloc, setSuggestedloc, heroutfit, setHeroutfit, multiplemoves, setMultiplemoves,
+    rstmoves, setRstmoves,
+} from './settings';
+import {
+    pantycolor, setPantycolor, girlname, setGirlname, customgirlname, setCustomgirlname,
+    basegirl, setBasegirl, girltalk, setGirltalk, girlgasp, setGirlgasp, comma, setComma,
+    calledjsons, setCalledjsons, locjson, setLocjson,
+    flirtresps, setFlirtresps, feelUp, setFeelUp, kissing, setKissing,
+    ypeelines, setYpeelines, peelines, setPeelines,
+    needs, setNeeds, yneeds, setYneeds, drinklines, setDrinklines,
+    appearance, setAppearance, drive, setDrive, general, setGeneral,
+    darts, setDarts, sexLines, setSexLines, objQuotes, setObjQuotes,
+} from './quotes';
+import { picset, setPicset } from './images';
+import { emerBreak, setEmerBreak, emerHold, setEmerHold, locations, setLocations, sharedLoc, setSharedLoc } from './locations';
+import { gasStation, setGasStation } from './locations/driveAround';
+import { bartopic, setBartopic, loser, setLoser, bar, setBar, talkUnused, setTalkUnused } from './locations/theBar';
+import {
+    externalflirt, setExternalflirt, wetPhoto, setWetPhoto, isNude, setIsNude,
+    posectr, setPosectr, outfitctr, setOutfitctr, club, setClub,
+} from './locations/theClub';
+import {
+    rrMovieLineThresh, setRrMovieLineThresh, moviecounter, setMoviecounter,
+    moviechoice, setMoviechoice, askedfavourite, setAskedfavourite,
+    seenmovie, setSeenmovie, theatre, setTheatre,
+} from './locations/theatre';
+import { askedswim, setAskedswim, walkcounter, setWalkcounter, makeOut, setMakeOut } from './locations/theMakeOut';
+import { prepeed, setPrepeed, elevatorwaitcounter, setElevatorwaitcounter, floorcounter, setFloorcounter, herHome, setHerHome } from './herhome';
 
 const SAVE_VERSION = 1;
 const STORAGE_KEY = 'fammel_save';
 
 // ---------------------------------------------------------------------------
-// Field lists — every window-exposed mutable variable, grouped by source
+// Field registry — maps save keys to { get, set } using direct imports.
+// No window bridges needed.
 // ---------------------------------------------------------------------------
 
-// Scalar fields: primitives read/written via defineProperty getter/setter.
-// Saved with direct copy, restored with direct assignment.
-const SIMPLE_FIELDS = [
-    // shims.ts — gameplay
-    'money', 'thetime', 'hour', 'minute', 'meridian', 'late',
-    'attraction', 'shyness', 'flirtedflag', 'flirtcounter', 'noflirtflag',
-    'checkedherout', 'haveherpurse', 'owedfavor', 'changevenueflag', 'shopping',
-    'didintro', 'showedneed', 'randcounter',
-    'lastmoney', 'lastattraction', 'lastshyness',
-    // shims.ts — config (save these so restored game has same settings)
-    'maxflirts', 'maxkiss', 'maxfeel', 'randmax',
-    'clubclosingtime', 'theaterclosingtime', 'barclosingtime', 'timespeed',
-    'playerbladder',
-    // bladder.ts
-    'customurge', 'minurge', 'minperc',
-    'bladurge', 'bladneed', 'blademer', 'bladlose', 'bladcumlose', 'bladsexlose',
-    'maxtummy', 'maxbeer', 'tummy', 'bladder',
-    'bladDec', 'bladDespDec', 'seal',
-    'beerdecCounter', 'ybeerdecCounter',
-    'peedtowels', 'peedvase', 'peedshot', 'peedoutside',
-    'lastpeetime', 'timeheld', 'drankbeer',
-    'notdesperate', 'notydesperate', 'nothdesperate',
-    'spurtthresh', 'yspurtthresh', 'bribeaskthresh', 'bribeAskBase',
-    'tumavg', 'rrlockedflag', 'shespurted', 'brokeice', 'sawherpee',
-    'wetlegs', 'wetherpanties', 'nowpeeing', 'gottagoflag',
-    'askholditcounter', 'waitcounter',
-    // yourbladder.ts
-    'yourbladder', 'yourtummy', 'yourtumavg', 'holdself',
-    'yourbladurge', 'yourbladneed', 'yourblademer', 'yourbladlose',
-    'yourbladcumlose', 'yourbladsexlose',
-    'ymaxtummy', 'ymaxbeer', 'yourcustomurge', 'yminurge',
-    'ynowpeeing', 'ylastpeetime', 'ytimeheld',
-    'ydrankcocktails', 'ydranksodas', 'ydrankwaters', 'ydrankbeers', 'ydrankbeer',
-    'yrrlockedflag', 'youSpurted',
-    // fuckHer.ts
-    'arousal', 'kisscounter', 'feelcounter', 'fuckingnow',
-    'champagnecounter', 'drankChamp',
-    // drive.ts
-    'wetthecar',
-    // settings.ts
-    'enableimages', 'enableascii', 'playerGame', 'showstats',
-    'photoChoice', 'favoritemovie', 'suggestedloc', 'heroutfit',
-    'multiplemoves', 'rstmoves',
-    // quotes.ts — gameplay strings
-    'pantycolor', 'girlname', 'customgirlname', 'basegirl',
-    'girltalk', 'girlgasp', 'comma',
-    // backPackItems.ts
-    'allowItems', 'homeChampagne',
-    // images.ts
-    'picset',
-    // locations.ts
-    'emerBreak', 'emerHold',
-    // driveAround.ts
-    'gasStation',
-    // theBar.ts
-    'bartopic', 'loser',
-    // theClub.ts
-    'externalflirt', 'wetPhoto', 'isNude', 'posectr', 'outfitctr',
-    // theatre.ts
-    'rrMovieLineThresh', 'moviecounter', 'moviechoice', 'askedfavourite', 'seenmovie',
-    // theMakeOut.ts
-    'askedswim', 'walkcounter',
-    // herhome.ts
-    'prepeed', 'elevatorwaitcounter', 'floorcounter',
-] as const;
+interface FieldEntry {
+    get: () => any;
+    set: (v: any) => void;
+    deep?: boolean; // true = deep-clone on save/load
+}
 
-// Object/array fields: need JSON deep-clone for save.
-// All use defineProperty, so window setter replaces the module-scoped let.
-const DEEP_FIELDS = [
-    // shims.ts
-    'locStack',
-    // shims.ts — JSON caches (included so restore doesn't need async re-fetches)
-    'settings', 'statsBars', 'endScreens',
-    // bladder.ts
-    'toldstories', 'lastStory',
-    // fuckHer.ts
-    'sexActions',
-    // quotes.ts — JSON caches
-    'calledjsons', 'locjson',
-    'flirtresps', 'feelUp', 'kissing', 'ypeelines', 'peelines',
-    'needs', 'yneeds', 'drinklines', 'appearance', 'drive', 'general',
-    'darts', 'sexLines', 'objQuotes',
-    // locations.ts
-    'locations', 'sharedLoc',
-    // theBar.ts
-    'bar', 'talkUnused',
-    // theClub.ts
-    'club',
-    // theatre.ts
-    'theatre',
-    // theMakeOut.ts
-    'makeOut',
-    // herhome.ts
-    'herHome',
-] as const;
+/** All saveable fields. Each entry reads/writes a module-scoped variable. */
+const FIELD_REGISTRY: Record<string, FieldEntry> = {
+    // --- shims.ts — gameplay ---
+    money:              { get: () => money, set: setMoney },
+    thetime:            { get: () => thetime, set: setThetime },
+    hour:               { get: () => hour, set: setHour },
+    minute:             { get: () => minute, set: setMinute },
+    meridian:           { get: () => meridian, set: setMeridian },
+    late:               { get: () => late, set: setLate },
+    attraction:         { get: () => attraction, set: setAttraction },
+    shyness:            { get: () => shyness, set: setShyness },
+    flirtedflag:        { get: () => flirtedflag, set: setFlirtedflag },
+    flirtcounter:       { get: () => flirtcounter, set: setFlirtcounter },
+    noflirtflag:        { get: () => noflirtflag, set: setNoflirtflag },
+    checkedherout:      { get: () => checkedherout, set: setCheckedherout },
+    haveherpurse:       { get: () => haveherpurse, set: setHaveherpurse },
+    owedfavor:          { get: () => owedfavor, set: setOwedfavor },
+    changevenueflag:    { get: () => changevenueflag, set: setChangevenueflag },
+    shopping:           { get: () => shopping, set: setShopping },
+    didintro:           { get: () => didintro, set: setDidintro },
+    showedneed:         { get: () => showedneed, set: setShowedneed },
+    randcounter:        { get: () => randcounter, set: setRandcounter },
+    lastmoney:          { get: () => lastmoney, set: setLastmoney },
+    lastattraction:     { get: () => lastattraction, set: setLastattraction },
+    lastshyness:        { get: () => lastshyness, set: setLastshyness },
+    // --- shims.ts — config ---
+    maxflirts:          { get: () => maxflirts, set: setMaxflirts },
+    maxkiss:            { get: () => maxkiss, set: setMaxkiss },
+    maxfeel:            { get: () => maxfeel, set: setMaxfeel },
+    randmax:            { get: () => randmax, set: setRandmax },
+    clubclosingtime:    { get: () => clubclosingtime, set: setClubclosingtime },
+    theaterclosingtime: { get: () => theaterclosingtime, set: setTheaterclosingtime },
+    barclosingtime:     { get: () => barclosingtime, set: setBarclosingtime },
+    timespeed:          { get: () => timespeed, set: setTimespeed },
+    playerbladder:      { get: () => playerbladder, set: setPlayerbladder },
+    // --- shims.ts — deep ---
+    locStack:           { get: () => locStack, set: setLocStack, deep: true },
+    settings:           { get: () => settings, set: setSettings, deep: true },
+    statsBars:          { get: () => statsBars, set: setStatsBars, deep: true },
+    endScreens:         { get: () => endScreens, set: setEndScreens, deep: true },
+    // --- bladder.ts ---
+    customurge:         { get: () => customurge, set: setCustomurge },
+    minurge:            { get: () => minurge, set: setMinurge },
+    minperc:            { get: () => minperc, set: setMinperc },
+    bladurge:           { get: () => bladurge, set: setBladurge },
+    bladneed:           { get: () => bladneed, set: setBladneed },
+    blademer:           { get: () => blademer, set: setBlademer },
+    bladlose:           { get: () => bladlose, set: setBladlose },
+    bladcumlose:        { get: () => bladcumlose, set: setBladcumlose },
+    bladsexlose:        { get: () => bladsexlose, set: setBladsexlose },
+    maxtummy:           { get: () => maxtummy, set: setMaxtummy },
+    maxbeer:            { get: () => maxbeer, set: setMaxbeer },
+    tummy:              { get: () => tummy, set: setTummy },
+    bladder:            { get: () => bladder, set: setBladder },
+    bladDec:            { get: () => bladDec, set: setBladDec },
+    bladDespDec:        { get: () => bladDespDec, set: setBladDespDec },
+    seal:               { get: () => seal, set: setSeal },
+    beerdecCounter:     { get: () => beerdecCounter, set: setBeerdecCounter },
+    ybeerdecCounter:    { get: () => ybeerdecCounter, set: setYbeerdecCounter },
+    peedtowels:         { get: () => peedtowels, set: setPeedtowels },
+    peedvase:           { get: () => peedvase, set: setPeedvase },
+    peedshot:           { get: () => peedshot, set: setPeedshot },
+    peedoutside:        { get: () => peedoutside, set: setPeedoutside },
+    lastpeetime:        { get: () => lastpeetime, set: setLastpeetime },
+    timeheld:           { get: () => timeheld, set: setTimeheld },
+    drankbeer:          { get: () => drankbeer, set: setDrankbeer },
+    notdesperate:       { get: () => notdesperate, set: setNotdesperate },
+    notydesperate:      { get: () => notydesperate, set: setNotydesperate },
+    nothdesperate:      { get: () => nothdesperate, set: setNothdesperate },
+    spurtthresh:        { get: () => spurtthresh, set: setSpurtthresh },
+    yspurtthresh:       { get: () => yspurtthresh, set: setYspurtthresh },
+    bribeaskthresh:     { get: () => bribeaskthresh, set: setBribeaskthresh },
+    bribeAskBase:       { get: () => bribeAskBase, set: setBribeAskBase },
+    tumavg:             { get: () => tumavg, set: setTumavg },
+    rrlockedflag:       { get: () => rrlockedflag, set: setRrlockedflag },
+    shespurted:         { get: () => shespurted, set: setShespurted },
+    brokeice:           { get: () => brokeice, set: setBrokeice },
+    sawherpee:          { get: () => sawherpee, set: setSawherpee },
+    wetlegs:            { get: () => wetlegs, set: setWetlegs },
+    wetherpanties:      { get: () => wetherpanties, set: setWetherpanties },
+    nowpeeing:          { get: () => nowpeeing, set: setNowpeeing },
+    gottagoflag:        { get: () => gottagoflag, set: setGottagoflag },
+    askholditcounter:   { get: () => askholditcounter, set: setAskholditcounter },
+    waitcounter:        { get: () => waitcounter, set: setWaitcounter },
+    // --- bladder.ts — deep ---
+    toldstories:        { get: () => toldstories, set: setToldstories, deep: true },
+    lastStory:          { get: () => lastStory, set: setLastStory, deep: true },
+    // --- yourbladder.ts ---
+    yourbladder:        { get: () => yourbladder, set: setYourbladder },
+    yourtummy:          { get: () => yourtummy, set: setYourtummy },
+    yourtumavg:         { get: () => yourtumavg, set: setYourtumavg },
+    holdself:           { get: () => holdself, set: setHoldself },
+    yourbladurge:       { get: () => yourbladurge, set: setYourbladurge },
+    yourbladneed:       { get: () => yourbladneed, set: setYourbladneed },
+    yourblademer:       { get: () => yourblademer, set: setYourblademer },
+    yourbladlose:       { get: () => yourbladlose, set: setYourbladlose },
+    yourbladcumlose:    { get: () => yourbladcumlose, set: setYourbladcumlose },
+    yourbladsexlose:    { get: () => yourbladsexlose, set: setYourbladsexlose },
+    ymaxtummy:          { get: () => ymaxtummy, set: setYmaxtummy },
+    ymaxbeer:           { get: () => ymaxbeer, set: setYmaxbeer },
+    yourcustomurge:     { get: () => yourcustomurge, set: setYourcustomurge },
+    yminurge:           { get: () => yminurge, set: setYminurge },
+    ynowpeeing:         { get: () => ynowpeeing, set: setYnowpeeing },
+    ylastpeetime:       { get: () => ylastpeetime, set: setYlastpeetime },
+    ytimeheld:          { get: () => ytimeheld, set: setYtimeheld },
+    ydrankcocktails:    { get: () => ydrankcocktails, set: setYdrankcocktails },
+    ydranksodas:        { get: () => ydranksodas, set: setYdranksodas },
+    ydrankwaters:       { get: () => ydrankwaters, set: setYdrankwaters },
+    ydrankbeers:        { get: () => ydrankbeers, set: setYdrankbeers },
+    ydrankbeer:         { get: () => ydrankbeer, set: setYdrankbeer },
+    yrrlockedflag:      { get: () => yrrlockedflag, set: setYrrlockedflag },
+    youSpurted:         { get: () => youSpurted, set: setYouSpurted },
+    // --- fuckHer.ts ---
+    arousal:            { get: () => arousal, set: setArousal },
+    kisscounter:        { get: () => kisscounter, set: setKisscounter },
+    feelcounter:        { get: () => feelcounter, set: setFeelcounter },
+    fuckingnow:         { get: () => fuckingnow, set: setFuckingnow },
+    champagnecounter:   { get: () => champagnecounter, set: setChampagnecounter },
+    drankChamp:         { get: () => drankChamp, set: setDrankChamp },
+    sexActions:         { get: () => sexActions, set: setSexActions, deep: true },
+    // --- drive.ts ---
+    wetthecar:          { get: () => wetthecar, set: setWetthecar },
+    // --- settings.ts ---
+    enableimages:       { get: () => enableimages, set: setEnableimages },
+    enableascii:        { get: () => enableascii, set: setEnableascii },
+    playerGame:         { get: () => playerGame, set: setPlayerGame },
+    showstats:          { get: () => showstats, set: setShowstats },
+    photoChoice:        { get: () => photoChoice, set: setPhotoChoice },
+    favoritemovie:      { get: () => favoritemovie, set: setFavoritemovie },
+    suggestedloc:       { get: () => suggestedloc, set: setSuggestedloc },
+    heroutfit:          { get: () => heroutfit, set: setHeroutfit },
+    multiplemoves:      { get: () => multiplemoves, set: setMultiplemoves },
+    rstmoves:           { get: () => rstmoves, set: setRstmoves },
+    // --- quotes.ts ---
+    pantycolor:         { get: () => pantycolor, set: setPantycolor },
+    girlname:           { get: () => girlname, set: setGirlname },
+    customgirlname:     { get: () => customgirlname, set: setCustomgirlname },
+    basegirl:           { get: () => basegirl, set: setBasegirl },
+    girltalk:           { get: () => girltalk, set: setGirltalk },
+    girlgasp:           { get: () => girlgasp, set: setGirlgasp },
+    comma:              { get: () => comma, set: setComma },
+    calledjsons:        { get: () => calledjsons, set: setCalledjsons, deep: true },
+    locjson:            { get: () => locjson, set: setLocjson, deep: true },
+    flirtresps:         { get: () => flirtresps, set: setFlirtresps, deep: true },
+    feelUp:             { get: () => feelUp, set: setFeelUp, deep: true },
+    kissing:            { get: () => kissing, set: setKissing, deep: true },
+    ypeelines:          { get: () => ypeelines, set: setYpeelines, deep: true },
+    peelines:           { get: () => peelines, set: setPeelines, deep: true },
+    needs:              { get: () => needs, set: setNeeds, deep: true },
+    yneeds:             { get: () => yneeds, set: setYneeds, deep: true },
+    drinklines:         { get: () => drinklines, set: setDrinklines, deep: true },
+    appearance:         { get: () => appearance, set: setAppearance, deep: true },
+    drive:              { get: () => drive, set: setDrive, deep: true },
+    general:            { get: () => general, set: setGeneral, deep: true },
+    darts:              { get: () => darts, set: setDarts, deep: true },
+    sexLines:           { get: () => sexLines, set: setSexLines, deep: true },
+    objQuotes:          { get: () => objQuotes, set: setObjQuotes, deep: true },
+    // --- images.ts ---
+    picset:             { get: () => picset, set: setPicset },
+    // --- backPackItems.ts ---
+    allowItems:         { get: () => allowItems, set: setAllowItems },
+    homeChampagne:      { get: () => homeChampagne, set: setHomeChampagne },
+    // --- locations.ts ---
+    emerBreak:          { get: () => emerBreak, set: setEmerBreak },
+    emerHold:           { get: () => emerHold, set: setEmerHold },
+    locations:          { get: () => locations, set: setLocations, deep: true },
+    sharedLoc:          { get: () => sharedLoc, set: setSharedLoc, deep: true },
+    // --- driveAround.ts ---
+    gasStation:         { get: () => gasStation, set: setGasStation },
+    // --- theBar.ts ---
+    bartopic:           { get: () => bartopic, set: setBartopic },
+    loser:              { get: () => loser, set: setLoser },
+    bar:                { get: () => bar, set: setBar, deep: true },
+    talkUnused:         { get: () => talkUnused, set: setTalkUnused, deep: true },
+    // --- theClub.ts ---
+    externalflirt:      { get: () => externalflirt, set: setExternalflirt },
+    wetPhoto:           { get: () => wetPhoto, set: setWetPhoto },
+    isNude:             { get: () => isNude, set: setIsNude },
+    posectr:            { get: () => posectr, set: setPosectr },
+    outfitctr:          { get: () => outfitctr, set: setOutfitctr },
+    club:               { get: () => club, set: setClub, deep: true },
+    // --- theatre.ts ---
+    rrMovieLineThresh:  { get: () => rrMovieLineThresh, set: setRrMovieLineThresh },
+    moviecounter:       { get: () => moviecounter, set: setMoviecounter },
+    moviechoice:        { get: () => moviechoice, set: setMoviechoice },
+    askedfavourite:     { get: () => askedfavourite, set: setAskedfavourite },
+    seenmovie:          { get: () => seenmovie, set: setSeenmovie },
+    theatre:            { get: () => theatre, set: setTheatre, deep: true },
+    // --- theMakeOut.ts ---
+    askedswim:          { get: () => askedswim, set: setAskedswim },
+    walkcounter:        { get: () => walkcounter, set: setWalkcounter },
+    makeOut:            { get: () => makeOut, set: setMakeOut, deep: true },
+    // --- herhome.ts ---
+    prepeed:            { get: () => prepeed, set: setPrepeed },
+    elevatorwaitcounter: { get: () => elevatorwaitcounter, set: setElevatorwaitcounter },
+    floorcounter:       { get: () => floorcounter, set: setFloorcounter },
+    herHome:            { get: () => herHome, set: setHerHome, deep: true },
+};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -136,6 +326,20 @@ function deepMerge(target: any, source: any): void {
     }
 }
 
+/** Keys whose window property is a forward bridge to gameState.
+ *  For these keys, `window.x` reads/writes gameState — the module variable
+ *  becomes stale after `connectToGameState()`. We must use window for
+ *  both read (createSave) and write (loadSave) of these keys.
+ */
+const FORWARD_BRIDGED_KEYS = new Set([
+    'money', 'attraction', 'shyness', 'lastmoney', 'lastattraction', 'lastshyness',
+    'flirtcounter', 'randcounter', 'owedfavor', 'late', 'flirtedflag', 'noflirtflag',
+    'shopping', 'maxflirts', 'maxkiss', 'maxfeel', 'randmax',
+    'clubclosingtime', 'theaterclosingtime', 'barclosingtime', 'timespeed',
+    'didintro', 'haveherpurse', 'changevenueflag', 'checkedherout', 'showedneed', 'playerbladder',
+    'thetime', 'hour', 'minute', 'meridian',
+]);
+
 // ---------------------------------------------------------------------------
 // Core save / load
 // ---------------------------------------------------------------------------
@@ -147,11 +351,18 @@ export function createSave(): Record<string, any> {
         timestamp: Date.now(),
     };
 
-    for (const key of SIMPLE_FIELDS) save[key] = w[key];
-    for (const key of DEEP_FIELDS) save[key] = deepClone(w[key]);
+    for (const [key, field] of Object.entries(FIELD_REGISTRY)) {
+        // Forward-bridged keys: read from window (which reads gameState)
+        // because the module variable is stale after connectToGameState().
+        if (FORWARD_BRIDGED_KEYS.has(key)) {
+            save[key] = w[key];
+        } else {
+            const val = field.get();
+            save[key] = field.deep ? deepClone(val) : val;
+        }
+    }
 
-    // Const objects exposed via Object.assign (shared reference, not defineProperty).
-    // Deep-clone captures mutable item counts, drank amounts, etc.
+    // Const objects: deep-clone captures mutable item counts, drank amounts, etc.
     save.backPackItems = deepClone(backPackItems);
     save.herpurse = deepClone(herpurse);
 
@@ -163,35 +374,36 @@ export function loadSave(save: Record<string, any>): void {
         throw new Error(`Save version ${save.version} not supported (expected ${SAVE_VERSION})`);
     }
 
-    const w = window as any;
-
-    // Restore scalars via window setters (writes to module-scoped lets)
-    for (const key of SIMPLE_FIELDS) {
-        if (key in save) w[key] = save[key];
-    }
-
-    // Restore objects/arrays via window setters (replaces module-scoped lets)
-    for (const key of DEEP_FIELDS) {
-        if (key in save) w[key] = deepClone(save[key]);
+    for (const [key, field] of Object.entries(FIELD_REGISTRY)) {
+        if (key in save) {
+            field.set(field.deep ? deepClone(save[key]) : save[key]);
+        }
     }
 
     // Const objects: can't reassign the module const, must merge into existing ref
     if (save.backPackItems) deepMerge(backPackItems, save.backPackItems);
     if (save.herpurse) deepMerge(herpurse, save.herpurse);
 
-    // Sync gameState's private backing fields from restored globals
-    syncGameState();
+    // Forward-bridged shims variables: window.x is overridden by
+    // connectToGameState() to read/write gameState.X instead of the module
+    // variable. The setters above wrote to the module variable, so we must
+    // also push the restored values through the window bridge to update
+    // gameState. (Reverse-bridged vars don't need this — window.x still
+    // reads the module variable for those.)
+    syncForwardBridges(save);
 }
 
-/** Push restored window globals into the typed gameState singleton.
- *  After connectToGameState(), all shims variables are bridged — the
- *  window property setter writes directly to gameState.  This function
- *  is kept as a hook for any future un-bridged variables.
+/**
+ * Push restored module values through window property bridges so that
+ * gameState (which owns the value via forward bridges) gets updated.
  */
-function syncGameState(): void {
-    // All shims variables (including time) are now bridged via
-    // connectToGameState().  Window property writes in loadSave()
-    // flow through to gameState automatically.
+function syncForwardBridges(save: Record<string, any>): void {
+    const w = window as any;
+    for (const key of FORWARD_BRIDGED_KEYS) {
+        if (key in save) {
+            w[key] = save[key];
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------

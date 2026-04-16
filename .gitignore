@@ -1,7 +1,8 @@
 /.idea
 /node_modules
 /dist
-.github/instructions.md
+.github/*
+_bmad*
 
 # .NET build artifacts
 **/bin/

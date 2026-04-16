@@ -16,6 +16,7 @@ export let askedswim = 0; // She's asked about a swim
 export function setAskedswim(val: number) { askedswim = val; }
 export let walkcounter = 0; // How far have you walked
 export function setWalkcounter(val: number) { walkcounter = val; }
+export function setMakeOut(val: any) { makeOut = val; }
 
 export function makeOutSetup(){
     fetchJson("locations/makeOut").then(makeOutJson);

@@ -1,0 +1,11 @@
+flow	area	expected_behavior_now	main_delta_observed	evidence_source	automation_status	confidence	risk_level	owner	notes
+Start game	Boot/init	Game loads to playable home/start state	Likely improved by init/state refactors	SceneIntegrationSmokeTests + manual	Partial	Medium	High		Confirm no startup regressions after bridge cleanup
+Navigation between locations	Routing/locations	Location links/actions move to intended scene	Navigation smoke tests added	NavigationSmokeTests + manual	Covered	High	High		Use as required smoke gate
+Dialogue action links	quotes/action registry	Clicking dialogue choices triggers intended action	Action delegation refactored in quotes.ts	SceneIntegrationSmokeTests + manual	Partial	Medium	High		Add focused test for data-action-fn callbacks
+Store buy flow	store/backpack	Buying item updates inventory/money and UI	buyItem/backpack behavior changed	YourHomeIntegrationTests + manual	Partial	Medium	High		Need dedicated store purchase assertion coverage
+Inventory use/select	backPackItems	Selecting/using item applies expected effects	Item selection and assertions changed	EndgameIntegrationTests + manual	Partial	Low	High		High-risk unknown edge cases remain
+Save/load roundtrip	saveLoad/gameState	Save then load restores equivalent playable state	saveLoad.ts introduced with UI exposure	YourHomeIntegrationTests + manual	Partial	Medium	High		Add deterministic save-load-save invariant check
+Pop-up dismissal	gameScreen/PopUps	Popups open/dismiss without blocking core flow	Popup dismissal handling changed	DriverExtensions + integration tests + manual	Partial	Medium	Medium		Verify no blocked-click regressions
+Darts minigame	games/darts	Minigame no longer crashes; score/flow stable	Crash fix commit present	Manual + targeted regression	Unknown	Low	Medium		Create one automated darts no-crash scenario
+Bedroom location key	locations/yourHome	Bedroom transitions resolve using canonical key	Key standardized to theBedroom	NavigationSmokeTests + YourHomeIntegrationTests + manual	Covered	High	Medium		Search for stale legacy key references
+Random seed determinism	core/test harness	Deterministic test path produces stable outcomes	Determinism test added	RandomSeedDeterminismTest	Covered	High	Low		Re-run multiple times to detect flake

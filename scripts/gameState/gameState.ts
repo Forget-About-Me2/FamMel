@@ -2,6 +2,9 @@ import {gameSettings, PersonSettings} from "../settings/gameSettings";
 import {getRandomValueFromNormalDistribution} from "../helperFiles/helperFunctions";
 import {Person} from "./Person";
 import { randomInt } from "../shims";
+import { yourbladurge, yourcustomurge, yourbladder, yourtummy, ymaxtummy, ymaxbeer, ydrankbeer, ynowpeeing } from '../yourbladder';
+import { bladurge } from '../bladder';
+import { girlname } from '../quotes';
 export enum LocationCategory {
     Start,
     Options,
@@ -301,18 +304,18 @@ class GameState {
             return;
         }
 
-        // Read legacy player globals through globalThis so initialization is
+        // Read legacy player globals so initialization is
         // consistent with setup()/save-load values and safe when missing.
-        const rawPlayerUrge = Number((globalThis as any).yourbladurge);
-        const rawPlayerCustomUrge = Number((globalThis as any).yourcustomurge);
+        const rawPlayerUrge = Number(yourbladurge);
+        const rawPlayerCustomUrge = Number(yourcustomurge);
         const playerUrge = Number.isFinite(rawPlayerUrge)
             ? rawPlayerUrge
             : (Number.isFinite(rawPlayerCustomUrge) ? rawPlayerCustomUrge : 500);
 
-        const rawPlayerBladder = Number((globalThis as any).yourbladder);
-        const rawPlayerTummy = Number((globalThis as any).yourtummy);
-        const rawPlayerMaxTummy = Number((globalThis as any).ymaxtummy);
-        const rawPlayerMaxAlcohol = Number((globalThis as any).ymaxbeer);
+        const rawPlayerBladder = Number(yourbladder);
+        const rawPlayerTummy = Number(yourtummy);
+        const rawPlayerMaxTummy = Number(ymaxtummy);
+        const rawPlayerMaxAlcohol = Number(ymaxbeer);
 
         this.Player = new Person({
             bladderUrge: playerUrge,
@@ -323,13 +326,13 @@ class GameState {
             minPercentage: 70
         });
 
-        const rawPlayerAlcohol = Number((globalThis as any).ydrankbeer);
+        const rawPlayerAlcohol = Number(ydrankbeer);
         this.Player.AlcoholInTummy = Number.isFinite(rawPlayerAlcohol) ? rawPlayerAlcohol : 0;
-        this.Player.NowPeeing = !!(globalThis as any).ynowpeeing;
+        this.Player.NowPeeing = !!ynowpeeing;
 
-        // Read legacy globals through globalThis so missing values don't throw at load time.
-        const rawGirlName = (globalThis as any).girlname;
-        const rawUrge = Number((globalThis as any).bladurge);
+        // Read legacy module variables for companion initialization.
+        const rawGirlName = girlname;
+        const rawUrge = Number(bladurge);
         const companionUrge = Number.isFinite(rawUrge) ? rawUrge : 250;
         const companionName = typeof rawGirlName === "string" && rawGirlName.length > 0
             ? rawGirlName

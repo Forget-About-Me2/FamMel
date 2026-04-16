@@ -147,6 +147,7 @@ export let emerBreak; //True if she rushed to the toilet after you opened the do
 export function setEmerBreak(val: any) { emerBreak = val; }
 export let emerHold; //True if you asked her to hold it.
 export function setEmerHold(val: any) { emerHold = val; }
+export function setLocations(val: any) { locations = val; }
 export function breakLoc(loc: any, curloc: string){
     // breakLoc: [0]=trying the key, [1]=she rushes past you
     const [tryingKey, sheRushesPast] = sharedLoc["breakLoc"];
