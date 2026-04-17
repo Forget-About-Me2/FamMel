@@ -7,13 +7,13 @@
 
 import { backPackItems, herpurse, allowItems, setAllowItems, homeChampagne, setHomeChampagne } from './backPackItems';
 import {
-    money, setMoney, thetime, setThetime, hour, setHour, minute, setMinute,
+    thetime, setThetime, hour, setHour, minute, setMinute,
     meridian, setMeridian, late, setLate, attraction, setAttraction, shyness, setShyness,
     flirtedflag, setFlirtedflag, flirtcounter, setFlirtcounter, noflirtflag, setNoflirtflag,
     checkedherout, setCheckedherout, haveherpurse, setHaveherpurse, owedfavor, setOwedfavor,
     changevenueflag, setChangevenueflag, shopping, setShopping, didintro, setDidintro,
     showedneed, setShowedneed, randcounter, setRandcounter,
-    lastmoney, setLastmoney, lastattraction, setLastattraction, lastshyness, setLastshyness,
+    lastattraction, setLastattraction, lastshyness, setLastshyness,
     maxflirts, setMaxflirts, randmax, setRandmax,
     clubclosingtime, setClubclosingtime, theaterclosingtime, setTheaterclosingtime,
     barclosingtime, setBarclosingtime, timespeed, setTimespeed,
@@ -106,7 +106,7 @@ interface FieldEntry {
 /** All saveable fields. Each entry reads/writes a module-scoped variable. */
 const FIELD_REGISTRY: Record<string, FieldEntry> = {
     // --- shims.ts — gameplay ---
-    money:              { get: () => money, set: setMoney },
+    money:              { get: () => gameState.Money, set: (v) => { gameState.Money = Number(v); } },
     thetime:            { get: () => thetime, set: setThetime },
     hour:               { get: () => hour, set: setHour },
     minute:             { get: () => minute, set: setMinute },
@@ -125,7 +125,7 @@ const FIELD_REGISTRY: Record<string, FieldEntry> = {
     didintro:           { get: () => didintro, set: setDidintro },
     showedneed:         { get: () => showedneed, set: setShowedneed },
     randcounter:        { get: () => randcounter, set: setRandcounter },
-    lastmoney:          { get: () => lastmoney, set: setLastmoney },
+    lastmoney:          { get: () => gameState.LastMoney, set: (v) => { gameState.LastMoney = Number(v); } },
     lastattraction:     { get: () => lastattraction, set: setLastattraction },
     lastshyness:        { get: () => lastshyness, set: setLastshyness },
     // --- shims.ts — config ---

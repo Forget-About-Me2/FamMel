@@ -8,7 +8,13 @@
 export let locStack: string[] = ["yourhome"];
 export function setLocStack(val: string[]) { locStack = val; }
 export let money: number = 200;
-export function setMoney(val: number) { money = val; }
+export function setMoney(val: number) {
+    money = Number(val);
+    const w = globalThis as any;
+    if (w?.gameState) {
+        w.gameState.Money = money;
+    }
+}
 export let thetime: number = 0;
 export function setThetime(val: number) { thetime = val; }
 export let hour: number = 7;
@@ -187,7 +193,13 @@ export function randomize(list: any[]): any[] {
 // Random counter for NPC behavior
 export let randcounter: number = 0;
 export function setRandcounter(val: number) { randcounter = val; }
-export function setLastmoney(val: number) { lastmoney = val; }
+export function setLastmoney(val: number) {
+    lastmoney = Number(val);
+    const w = globalThis as any;
+    if (w?.gameState) {
+        w.gameState.LastMoney = lastmoney;
+    }
+}
 export function setLastattraction(val: number) { lastattraction = val; }
 export function setLastshyness(val: number) { lastshyness = val; }
 export function setRandmax(val: number) { randmax = val; }
@@ -550,7 +562,7 @@ export function exposeShimsOnWindow(): void {
     // Mutable state — defineProperty keeps module and global in sync
     const props: Array<[string, () => any, (v: any) => void]> = [
         ['locStack',          () => locStack,          (v) => { locStack = v; }],
-        ['money',             () => money,             (v) => { money = v; }],
+        ['money',             () => ((window as any).gameState?.Money ?? money), (v) => { setMoney(v); }],
         ['thetime',           () => thetime,           (v) => { thetime = v; }],
         ['hour',              () => hour,              (v) => { hour = v; }],
         ['minute',            () => minute,            (v) => { minute = v; }],
@@ -574,7 +586,7 @@ export function exposeShimsOnWindow(): void {
         ['barclosingtime',    () => barclosingtime,    (v) => { barclosingtime = v; }],
         ['timespeed',         () => timespeed,         (v) => { timespeed = v; }],
         ['didintro',          () => didintro,          (v) => { didintro = v; }],
-        ['lastmoney',         () => lastmoney,         (v) => { lastmoney = v; }],
+        ['lastmoney',         () => ((window as any).gameState?.LastMoney ?? lastmoney), (v) => { setLastmoney(v); }],
         ['lastattraction',    () => lastattraction,    (v) => { lastattraction = v; }],
         ['lastshyness',       () => lastshyness,       (v) => { lastshyness = v; }],
         ['settings',          () => settings,          (v) => { settings = v; }],

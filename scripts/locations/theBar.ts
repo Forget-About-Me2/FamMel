@@ -1,5 +1,5 @@
 ﻿import { fetchJson, printList, sayText, cListener, cListenerGen, cListenerGenList, addListenersList, addSayText, callChoice, general, objQuotes, appearance, basegirl, girltalk } from '../quotes';
-import { pickrandom, randomchoice, randomIndex, randomInt, pushloc, poploc, locStack, thetime, barclosingtime, attraction, setAttraction, shyness, setShyness, checkedherout, money, setMoney } from '../shims';
+import { pickrandom, randomchoice, randomIndex, randomInt, pushloc, poploc, locStack, thetime, barclosingtime, attraction, setAttraction, shyness, setShyness, checkedherout } from '../shims';
 import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, flushdrank, drinkinggamethreshold, askcanhold, pstory, gottagoflag, notdesperate, setNotdesperate, notydesperate, setNotydesperate, nothdesperate, setNothdesperate, drankbeer, setDrankbeer, shespurted, bladder, tummy, setTummy } from '../bladder';
 import { displayyourneed, wetyourself, youpee, flushyourdrank, holdpeethresh, holdself, setHoldself, yourtummy, setYourtummy, yourbladder, setYourbladder, ydrankbeer, setYdrankbeer, youSpurted } from '../yourbladder';
 import { standobjs, haveItem, buyItem, backPackItems, allowItems, setAllowItems } from '../backPackItems';
@@ -137,7 +137,7 @@ export function barResp(choice: number){
 export function sellPanties(){
     const price = 20 + randomInt(20);
     sayText(["BARTENDER: I'll give you $" + price + " for those."]);
-    setMoney(money + price);
+    gameState.ReceiveMoney(price);
     backPackItems.wetPanties.value -= 1;
     let listenerList = [
         [[function () {buyItem("beer")}, objQuotes["buyChoices"]["beer"]], "buybeer"],

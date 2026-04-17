@@ -2,7 +2,8 @@
 
 // String prototype extensions — augment the global String interface
 // so TypeScript accepts .format() and .formatVars() calls everywhere.
-import { formatString, range, pickrandom, incrandom, randomInt, locStack, money, randcounter, setEndScreens } from './shims';
+import { formatString, range, pickrandom, incrandom, randomInt, locStack, randcounter, setEndScreens } from './shims';
+import { gameState } from './gameState/gameState';
 import { setToldstories } from './bladder';
 import { validateListenerList } from './validation';
 import { dartSetup } from './games/darts';
@@ -119,7 +120,7 @@ String.prototype.formatVars = function() {
         [/pantyColor/gm, pantycolor],
         [/timeheld/gm, timeheld.toString()],
         [/bladderAm/gm, bladder.toString()],
-        [/money/gm, money.toString()]
+        [/money/gm, gameState.Money.toString()]
     ];
 
     return replacements.reduce((text: string, [pattern, replacement]) =>
@@ -156,7 +157,7 @@ export function addGirlname(quotes: any[]){
 
 function addMoney(quotes: any[]){
     let result: any[] = [];
-    quotes.forEach(item => result.push(item.format([money])));
+    quotes.forEach(item => result.push(item.format([gameState.Money])));
     return result;
 }
 

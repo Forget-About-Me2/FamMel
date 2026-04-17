@@ -1,29 +1,183 @@
-# FamMel Single-GameState Migration Plan
+# FamMel Refactor Plan
 
-## Audience Note (C#-first)
+> Deep property ownership evidence, substate taxonomy, and row-level migration tables: see [docs/state-ownership-ledger.md](docs/state-ownership-ledger.md).
 
-This plan assumes you are stronger in C# than TypeScript.
+## Strategic Intent
 
-- Treat `gameState` like a C# POCO that owns all mutable fields.
-- Treat module `export let` variables like legacy static fields to remove.
-- Goal: one source of truth (`gameState`) + one serialization path (save/load).
+Migrate FamMel from a global-scope JS/legacy-shim game to a typed, module-based TypeScript codebase with a single canonical state owner (`gameState`), no bridge infrastructure, and a simple serialization path.
+
+Priority order: **correctness → testability → maintainability**. Boring incremental steps only. No flag days.
 
 ## End State
 
-- All mutable runtime state lives on `gameState` only.
-- Game logic reads/writes `gameState.X` directly.
+- Canonical gameplay state lives on `gameState`.
+- Non-gameplay mutable runtime state (UI/DOM/timers/transient interaction) stays outside `gameState`.
+- Game logic reads/writes canonical gameplay state through `gameState` domain APIs.
 - No `expose*OnWindow()` bridge functions.
 - No setter scaffolding (`setX(...)`) for migrated state.
-- Save/load serializes and restores `gameState` directly.
+- Save/load serializes canonical gameplay state from `gameState` only.
 - Player and companion bladder mechanics share one model (`Person`) with role-specific config values.
 
-## Current Snapshot (why this is hard today)
+## Boundary Rules (new baseline)
 
-- 203 exported setter functions.
-- 23 `expose*OnWindow()` functions.
-- `connectToGameState()` still bridges both directions.
-- saveLoad.ts currently carries bridge-aware complexity.
-- `GameState` already has the vast majority of needed fields (~180), so we can migrate by replacing call sites and deleting legacy variables.
+Use these rules before moving any variable:
+
+1. Keep in canonical `gameState` only if it changes gameplay outcomes or must survive save/load.
+2. Keep outside `gameState` if it is UI-only, DOM/runtime handle, timer, event subscription, or temporary interaction buffer.
+3. Derived values should be computed selectors, not stored as duplicated mutable fields.
+4. During migration, every concept gets one write owner. Bridges are one-direction only.
+
+Examples:
+
+- Canonical gameplay: money, attraction/shyness progression, inventory ownership, current location identity, simulation stats.
+- Outside canonical gameplay: open modal flags, CSS/layout flags, DOM nodes, action callback registries, formatting caches.
+
+---
+
+## Active Slices (WIP limit: 2)
+
+### Slice 1 — High-Risk Trio: Location stack cutover
+
+**Goal:** Eliminate dual-write on `locStack`/`LocStack`; typed `CurrentLocation` becomes the sole route authority.
+
+**Scope:** `scripts/shims.ts`, `scripts/main.ts`, `scripts/gameState/gameState.ts`, `scripts/saveLoad.ts`, and any module using `pushloc`/`poploc`/`locStack[0]`
+
+**Gate (done when):**
+- [ ] Gameplay routing does not depend on `pushloc`/`poploc` side effects
+- [ ] `locStack[0]` reads replaced by typed location predicates in migrated modules
+- [ ] Legacy location write path quarantined (read compatibility only)
+- [ ] Save/load persists canonical typed location identity
+- [ ] Build clean, typecheck clean, navigation userflow tests green (currently 12/12)
+
+**Blocker:** Script-era JS modules still use `pushloc`/`poploc` directly — audit needed before removal.
+
+---
+
+### Slice 2 — Row B: deferred fields resolution
+
+**Goal:** Resolve the 3 deferred Row B fields so Row B is fully closed.
+
+**Scope:** `DrankChamp`, `CheckedHerOut`, `ChangeVenueFlag` — call-site evidence pass, then migrate or formally defer with reason code and "decision by" date.
+
+**Gate (done when):**
+- [ ] Each field has exactly one write owner declared
+- [ ] No field remains deferred without an explicit reason code and deadline
+- [ ] Evidence documented in [docs/state-ownership-ledger.md](docs/state-ownership-ledger.md)
+- [ ] Build clean, typecheck clean, userflow tests green
+
+**Blocker:** None.
+
+---
+
+## Sequencing Rationale
+
+- Slice 1 before broad Row C–J migration: location stack is a cross-cutting dependency touching almost every venue module.
+- Slice 2 alongside Slice 1: small scope, clears Row B completely, low interference.
+- Bladder threshold convergence (Phase 1A) after location cutover: overlapping legacy-path complexity; safer once location is stable.
+- Row C–J migration after high-risk trio closed: broad moves become lower-risk once money ✅, location, and bladder are all canonical.
+- Phase 1b (saveLoad simplification) after Row C–J: simpler save/load is the reward for state ownership clarity.
+- Bridge removal (Phase 3) last: only possible once all writers are canonical.
+
+---
+
+## Coverage Confidence Gate
+
+Before each slice merges, all of the following must pass:
+
+1. Build: `node esbuild.config.mjs` exits 0.
+2. Typecheck: `npx tsc -p . --noEmit` exits 0 (or no net-new errors if temporary baseline is approved).
+3. Critical userflow smoke: start, navigation, dialogue/action, store/inventory, save/load — 100% pass in **2 consecutive runs**.
+4. For each changed high-impact area: automated test coverage or explicit manual verification evidence.
+5. No new flaky tests (2-run stability check for every new integration/UI test).
+6. Residual untested risk documented with owner and follow-up action.
+
+**Stop condition:** any critical-path userflow failure or non-deterministic failure blocks merge.
+
+> **Test prerequisite:** `UserFlowTests` Selenium suite requires a live dev server at `http://127.0.0.1:8080`. Run `npm run dev` before `dotnet test`.
+
+---
+
+## Parking Lot (ordered by dependency; no active WIP)
+
+### Ownership migrations (next up)
+
+- [ ] Phase 1A — Bladder model convergence: threshold ownership to `Person`; `bladder.ts`/`yourbladder.ts` become compatibility wrappers
+- [ ] Row D — `DriveState`: `WetTheCar`, `GasStation` (HIGH confidence, small — first row after location slice)
+- [ ] Row C — `SessionOrProgressState` (`Late`, `Shopping`); `SettingsState` (`PlayerBladder`); `RuntimeConfigState` (closing times, `TimeSpeed` — likely immutable config, not mutable state)
+- [ ] Row E — venue-scoped states: `BarState`, `ClubState`, `TheatreState`, `MakeOutState`, `HerHomeState`, `NavigationState`
+- [ ] Row F — `SettingsState` (user options); `CompanionContextState` (`HerOutfit`, `FavoriteMovie`, `SuggestedLoc`)
+- [ ] Row G — `CompanionProfileState` (`GirlName`, `BaseGirl`, `PantyColor`, etc.); `UIState` → move to `gameScreen` not `gameState`
+- [ ] Row H/I — companion/player bladder SimulationCore → `gameState.Companion`/`gameState.Player`; event flag sub-objects
+- [ ] Row J — move JSON content blobs off `gameState` to `ContentCache` singleton; `SexActions` → `RomanceState`
+- [ ] Row A — `RelationshipState`: `HavePurse`, `OwedFavour`
+
+### Infrastructure
+
+- [ ] Phase 1b — replace saveLoad.ts setter registry with simple transitional approach
+- [ ] Phase 2 Batch A — `drive.ts`, `images.ts` (small confidence batch)
+- [ ] Phase 2 Batch B–F — remaining module migrations (`settings.ts`, `fuckHer.ts`, location modules, `backPackItems.ts`, `quotes.ts`, `shims.ts`, `bladder.ts`, `yourbladder.ts`)
+- [ ] Phase 3 — delete all bridge infrastructure (`connectToGameState`, `expose*OnWindow`)
+- [ ] Phase 4 — final save/load simplification (direct `gameState` snapshot)
+- [ ] Phase 5 — naming consistency pass, JSDoc on lifecycle functions, "How State Works" README section
+
+### Known tech debt
+
+- [ ] 46 type errors in `backPackItems.ts` (`IBackpackItem`/`IContainer` missing `volume` + `HTMLElement` property access)
+- [ ] 7 type errors in `quotes.ts`
+- [ ] 6 type errors in `yourHome.ts` (`CurrentLocation` naming mismatch)
+- [ ] `TimeSinceLastFlirt` — likely dead state; confirm before removal
+- [ ] `RandMax` — unclear behavioral relevance after bridge removal
+- [ ] `PicSet` — purpose unclear vs render pipeline cache
+- [ ] JSON positional arrays in `Json/locations/` — convert to named-property objects (see `makeOut.JSON` `theYard` as target format)
+- [ ] `NoFlirtFlag`/`AllowedToFlirt` — inverse naming confusing; consider collapsing to one canonical flag
+- [ ] `Person.TimeSinceLastPeed` references global `lastpeetime` — migrate to `this.lastPeeTime`
+
+---
+
+## Completed
+
+| Slice | Completed | Notes |
+|---|---|---|
+| Money canonical ownership | 2026-04-17 | `setMoney`/`setLastmoney` push into gameState; save/load keys bind to gameState; all core TS call sites migrated |
+| Row B — InteractionState (8 fields) | 2026-04-16 | FlirtCounter, TimeSinceLastFlirt, AllowedToFlirt, ShowedNeed, FlirtedFlag, NoFlirtFlag, MaxFlirts, RandMax — commit e890344 |
+| Row B — RomanceState (7 fields) | 2026-04-17 | MaxKiss, MaxFeel, Arousal, KissCounter, FeelCounter, FuckingNow, ChampagneCounter |
+| Phase 0 forensics baseline | 2026-04-16 | Triage artifacts generated; preserve-all from current head strategy validated |
+| Random seed determinism | 2026-04-16 | 3 consecutive reruns passed (2/2 each) |
+| Navigation smoke (12/12) | 2026-04-16 | All navigation userflow tests green |
+| Save/load integration (5/5) | 2026-04-16 | SaveAndLoad + ExportAndImport passing |
+| Darts integration (1/1) | 2026-04-16 | Dark bar darts entry + first-round advance |
+| Full userflow suite (35/35) | 2026-04-16 | 35 succeeded, 1 explicit (`[Explicit]`) skipped |
+
+---
+
+## Archive — Deep Reference
+
+> The sections below are preserved reference material. Day-to-day execution uses the Active Slices board above. Detailed row-level ownership evidence belongs in [docs/state-ownership-ledger.md](docs/state-ownership-ledger.md).
+
+## Phase 0.5: Ownership Ledger And Cutover Contract (new)
+
+Purpose: stop split-brain state before further migration.
+
+Checklist:
+
+- [x] Create `docs/state-ownership-ledger.md` with one row per duplicated concept.
+- [ ] For each row, classify as `MOVE` (canonicalize in `gameState`), `ADAPT` (bridge for now), or `LEAVE` (intentionally outside canonical state).
+- [ ] Record exactly one write owner per row (`gameState` or legacy module).
+- [ ] Record bridge direction (`legacy -> gameState` or `gameState -> legacy`) and explicit removal trigger.
+- [ ] Add a guardrail rule: no new dual-write fields accepted.
+- [ ] Prioritize and complete first 3 high-risk rows: `money`, `locStack/currentLocation`, bladder thresholds.
+
+Progress note (2026-04-17):
+
+- Money row completed: writer call sites migrated to gameState in core TS modules, `setMoney`/`setLastmoney` now compatibility-write into gameState, save/load money keys bind to gameState, and residual formatting reads now use gameState-backed values.
+- Decision: keep legacy money forward-bridge keys temporarily as compatibility aliases only (not ownership).
+- Remaining in this trio: execute location and bladder rows.
+
+Exit criteria:
+
+- No top-priority concept has ambiguous ownership.
+- No bidirectional bridge remains for the first 3 high-risk rows.
+- A first migration slice can be executed concept-by-concept instead of file-by-file.
 
 ## Phase 0: Forensics And Value Recovery (must run first)
 
@@ -273,26 +427,26 @@ Probable substates from this row:
 
 Row B ownership evidence snapshot (2026-04-17):
 
-| Property | Primary writes observed | Cross-module reads observed | Confidence | Provisional owner | Next action |
-|---|---|---|---|---|---|
-| `FlirtCounter` | `actions.ts` via `setFlirtcounter`, `main.ts` decrements `gameState.Interactions.FlirtCounter` | `actions.ts`, `backPackItems.ts` | HIGH | `InteractionState` | keep as-is |
-| `TimeSinceLastFlirt` | no active writes found outside declaration/bridge | none obvious | LOW | `DEFER` | locate intended usage before migration step |
-| `AllowedToFlirt` | `main.ts` sets `gameState.Interactions.AllowedToFlirt = true` | none obvious | MEDIUM | `InteractionState` | keep in interaction until contrary evidence |
-| `ShowedNeed` | `bladder.ts` via `setShowedneed`, `main.ts` clears `gameState.Interactions.ShowedNeed` | `backPackItems.ts` conditions | HIGH | `InteractionState` | keep as interaction signal |
-| `FlirtedFlag` | `actions.ts` via `setFlirtedflag`, `drive.ts` resets | `backPackItems.ts` conditions | HIGH | `InteractionState` | keep as-is |
-| `NoFlirtFlag` | legacy setter path in `shims.ts` only | `backPackItems.ts` conditions | MEDIUM | `InteractionState` | keep, confirm write source during slice |
-| `MaxFlirts` | legacy setter path in `shims.ts` | `backPackItems.ts` conditions | MEDIUM | `InteractionState` | keep, confirm runtime configurability |
-| `RandMax` | legacy setter path in `shims.ts` | no clear direct reads beyond bridge | LOW | `DEFER` | confirm if still behaviorally relevant |
-| `MaxKiss` | legacy setter path in `shims.ts` | `actions.ts`, `fuckHer.ts`, `herhome.ts` via legacy import | HIGH | `RomanceState` | migrate with romance counters in same slice |
-| `MaxFeel` | legacy setter path in `shims.ts` | `actions.ts` gating | HIGH | `RomanceState` | migrate with romance counters in same slice |
-| `Arousal` | heavy writes in `actions.ts` and `fuckHer.ts` | heavy reads in `fuckHer.ts` | HIGH | `RomanceState` | migrate as first romance field |
-| `KissCounter` | writes in `actions.ts`, `fuckHer.ts` reset path | reads in `actions.ts`, `fuckHer.ts`, `herhome.ts` | HIGH | `RomanceState` | migrate with `Arousal` |
-| `FeelCounter` | writes in `actions.ts` | reads in `actions.ts` | HIGH | `RomanceState` | migrate with `Arousal` |
-| `FuckingNow` | writes in `fuckHer.ts` | reads in `bladder.ts` | HIGH | `RomanceState` | migrate with compatibility alias temporarily |
-| `ChampagneCounter` | writes in `backPackItems.ts` and legacy setter | reads in `backPackItems.ts`, `herhome.ts` | HIGH | `RomanceState` | migrate with champagne flow tests |
-| `DrankChamp` | writes via `setDrankChamp` in `backPackItems.ts` | reads in `fuckHer.ts` bridge mapping | MEDIUM | `DEFER` | resolve if it is romance pacing or session pacing |
-| `CheckedHerOut` | writes in `actions.ts`, `drive.ts` reset | imported/used in interaction-heavy paths | MEDIUM | `DEFER` | decide after one focused call-site pass |
-| `ChangeVenueFlag` | writes in `drive.ts`, `bladder.ts`, `main.ts` reset | checked in `bladder.ts` | MEDIUM | `DEFER` | likely `SessionOrProgressState`, verify first |
+| Property | Primary writes observed | Cross-module reads observed | Confidence | Provisional owner | Next action | Migration state | Your notes |
+|---|---|---|---|---|---|---|---|
+| `FlirtCounter` | `actions.ts` via `setFlirtcounter`, `main.ts` decrements `gameState.Interactions.FlirtCounter` | `actions.ts`, `backPackItems.ts` | HIGH | `InteractionState` | keep as-is | Migrated | Looks stable after Romance slice; keep as regression sentinel for interaction loop |
+| `TimeSinceLastFlirt` | no active writes found outside declaration/bridge | none obvious | LOW | `DEFER` | locate intended usage before migration step | Migrated | Might be dead state; confirm if any legacy timing mechanic still depends on it |
+| `AllowedToFlirt` | `main.ts` sets `gameState.Interactions.AllowedToFlirt = true` | none obvious | MEDIUM | `InteractionState` | keep in interaction until contrary evidence | Migrated | Name is clear, but semantic overlap with NoFlirtFlag should be documented |
+| `ShowedNeed` | `bladder.ts` via `setShowedneed`, `main.ts` clears `gameState.Interactions.ShowedNeed` | `backPackItems.ts` conditions | HIGH | `InteractionState` | keep as interaction signal | Migrated | Is fine name, maybe add to companion npc |
+| `FlirtedFlag` | `actions.ts` via `setFlirtedflag`, `drive.ts` resets | `backPackItems.ts` conditions | HIGH | `InteractionState` | keep as-is | Migrated | Reset behavior ties to venue transition; verify if all hard scene exits clear this |
+| `NoFlirtFlag` | legacy setter path in `shims.ts` only | `backPackItems.ts` conditions | MEDIUM | `InteractionState` | keep, confirm write source during slice | Migrated | Inverse naming with AllowedToFlirt is confusing; may collapse to one canonical flag |
+| `MaxFlirts` | legacy setter path in `shims.ts` | `backPackItems.ts` conditions | MEDIUM | `InteractionState` | keep, confirm runtime configurability | Migrated | Treat as tuning config if it never changes mid-run |
+| `RandMax` | legacy setter path in `shims.ts` | no clear direct reads beyond bridge | LOW | `DEFER` | confirm if still behaviorally relevant | Migrated | Candidate for deletion if unused after bridge removal |
+| `MaxKiss` | legacy setter path in `shims.ts` | `actions.ts`, `fuckHer.ts`, `herhome.ts` via legacy import | HIGH | `RomanceState` | migrate with romance counters in same slice | Migrated | I think this might be a constant actually |
+| `MaxFeel` | legacy setter path in `shims.ts` | `actions.ts` gating | HIGH | `RomanceState` | migrate with romance counters in same slice | Migrated | idem  |
+| `Arousal` | heavy writes in `actions.ts` and `fuckHer.ts` | heavy reads in `fuckHer.ts` | HIGH | `RomanceState` | migrate as first romance field | Migrated | Validate usage and philosphy behind it  |
+| `KissCounter` | writes in `actions.ts`, `fuckHer.ts` reset path | reads in `actions.ts`, `fuckHer.ts`, `herhome.ts` | HIGH | `RomanceState` | migrate with `Arousal` | Migrated |  |
+| `FeelCounter` | writes in `actions.ts` | reads in `actions.ts` | HIGH | `RomanceState` | migrate with `Arousal` | Migrated |  |
+| `FuckingNow` | writes in `fuckHer.ts` | reads in `bladder.ts` | HIGH | `RomanceState` | migrate with compatibility alias temporarily | Migrated |  |
+| `ChampagneCounter` | writes in `backPackItems.ts` and legacy setter | reads in `backPackItems.ts`, `herhome.ts` | HIGH | `RomanceState` | migrate with champagne flow tests | Migrated |  |
+| `DrankChamp` | writes via `setDrankChamp` in `backPackItems.ts` | reads in `fuckHer.ts` bridge mapping | MEDIUM | `DEFER` | resolve if it is romance pacing or session pacing | Deferred | This is actually a flag indicating champagne was drunk to determine whether she invites you to the bedroom. I think this might actualy be used as a counter which is not obvious from the name|
+| `CheckedHerOut` | writes in `actions.ts`, `drive.ts` reset | imported/used in interaction-heavy paths | MEDIUM | `DEFER` | decide after one focused call-site pass | Deferred | Could become richer attraction history event instead of raw flag |
+| `ChangeVenueFlag` | writes in `drive.ts`, `bladder.ts`, `main.ts` reset | checked in `bladder.ts` | MEDIUM | `DEFER` | likely `SessionOrProgressState`, verify first | Deferred | Name is imperative; consider VenueChangePending |
 
 Row B provisional sequencing (not locked):
 
@@ -320,7 +474,9 @@ Accumulated from rows A–J evidence passes. This supersedes the original Phase 
 | `RomanceState` | MaxKiss, MaxFeel, Arousal, KissCounter, FeelCounter, FuckingNow, ChampagneCounter | B | ✅ Migrated |
 | `RelationshipState` | HavePurse, OwedFavour | A | 🔲 Planned |
 | `DriveState` | WetTheCar, GasStation | D | 🔲 HIGH confidence — ready for Phase 2 Batch A |
-| `SettingsState` | HerOutfit, FavoriteMovie, SuggestedLoc, MultipleMoves, RstMoves, PhotoChoice, ShowStats, EnableImages, EnableAscii, PlayerGame + **PlayerBladder, ClubClosingTime, TheaterClosingTime, BarClosingTime, TimeSpeed (from Row C)** | F + C | 🔲 Planned; Row C config fields should migrate here, not stay in SessionOrProgressState |
+| `SettingsState` | ShowStats, EnableImages, EnableAscii, PlayerGame, MultipleMoves, RstMoves, PhotoChoice, PlayerBladder | F + C | 🔲 Planned; user-facing/toggle-style options only |
+| `RuntimeConfigState` *(new)* | ClubClosingTime, TheaterClosingTime, BarClosingTime, TimeSpeed | C | 🔲 Non-user-facing constants/tuning; keep out of user settings bucket |
+| `CompanionContextState` *(new)* | HerOutfit, FavoriteMovie, SuggestedLoc | F | 🔲 Companion preference/context values; not user settings |
 | `SessionOrProgressState` | Late, Shopping, BrokeIce, SawHerPee, ToldStories, LastStory | C + H | 🔲 Planned; Row C only contributes Late and Shopping after config fields split off |
 | `CompanionProfileState` *(new)* | PantyColor, GirlName, CustomGirlName, BaseGirl, GirlTalk, GirlGasp | G | 🔲 Discovered in Row G evidence pass; companion identity/appearance |
 | `UIState` *(new)* | Comma, ImagePrev, AllowItems | G | 🔲 Discovered in Row G; consider moving to `gameScreen` not `gameState` |
@@ -342,25 +498,25 @@ Accumulated from rows A–J evidence passes. This supersedes the original Phase 
 
 - [ ] Late
 - [ ] Shopping
-- [ ] PlayerBladder
-- [ ] ClubClosingTime
-- [ ] TheaterClosingTime
-- [ ] BarClosingTime
-- [ ] TimeSpeed
+- [ ] PlayerBladder -> SettingsState
+- [ ] ClubClosingTime -> RuntimeConfigState
+- [ ] TheaterClosingTime -> RuntimeConfigState
+- [ ] BarClosingTime -> RuntimeConfigState
+- [ ] TimeSpeed -> RuntimeConfigState
 
 Row C ownership evidence snapshot (2026-04-17):
 
-| Property | Primary writes observed | Cross-module reads observed | Confidence | Provisional owner | Notes |
-|---|---|---|---|---|---|
-| `Late` | shims.ts forward-bridge only | `bladder.ts` checks in pee loop | MEDIUM | `SessionOrProgressState` | Set when time > 75; genuine session state |
-| `Shopping` | `store.ts` via `setShopping(1)`, reset unclear | `store.ts` | HIGH | `SessionOrProgressState` | Single writer, scene-level session flag |
-| `PlayerBladder` | `settings.ts` via `setPlayerbladder`, `main.ts` reads from `gameSettings` | `main.ts`, `backPackItems.ts`, `theMakeOut.ts` | HIGH | **SettingsState (misclassified in Row C)** | This is a game option, not session state; `gameSettings.ts` already has `PlayerBladder`; migrate there |
-| `ClubClosingTime` | shims.ts default only | `theClub.ts`, `debugMenu.ts` | HIGH | **SettingsState (misclassified in Row C)** | Static config after init; `gameSettings.ts` already has `ClubClosingTime` |
-| `TheaterClosingTime` | shims.ts default only | `theatre.ts` | HIGH | **SettingsState (misclassified in Row C)** | Static config; `gameSettings.ts` has `TheaterClosingTime` |
-| `BarClosingTime` | shims.ts default only | `theBar.ts` | HIGH | **SettingsState (misclassified in Row C)** | Static config; `gameSettings.ts` has `BarClosingTime` |
-| `TimeSpeed` | shims.ts default only | `gameState.ts` tick math | HIGH | **SettingsState (misclassified in Row C)** | Config; `gameSettings.ts` has `TimeSpeed`; already used via `gameSettings.TimeSpeed` in tick |
+| Property | Primary writes observed | Cross-module reads observed | Confidence | Provisional owner | Notes | Migration state | Your notes |
+|---|---|---|---|---|---|---|---|
+| `Late` | shims.ts forward-bridge only | `bladder.ts` checks in pee loop | MEDIUM | `SessionOrProgressState` | Set when time > 75; genuine session state | Not migrated | hmm, could make sense in some sort of general time keeping block  |
+| `Shopping` | `store.ts` via `setShopping(1)`, reset unclear | `store.ts` | HIGH | `SessionOrProgressState` | Single writer, scene-level session flag | Not migrated | Could also make sense in like a thehome ownership |
+| `PlayerBladder` | `settings.ts` via `setPlayerbladder`, `main.ts` reads from `gameSettings` | `main.ts`, `backPackItems.ts`, `theMakeOut.ts` | HIGH | `SettingsState` | Game toggle option; should remain in user-settings ownership (rename candidate: `PlayerBladderEnabled`) | Not migrated | Might make sense to have it be called like playerBladderEnabled |
+| `ClubClosingTime` | shims.ts default only | `theClub.ts`, `debugMenu.ts` | HIGH | `RuntimeConfigState` | Static runtime tuning; not user-facing, and likely should live in config/constants instead of mutable game state | Not migrated | I don't think closingtype is currently an expose setting, but it is a constant so might not make sense to be in gamestate at all |
+| `TheaterClosingTime` | shims.ts default only | `theatre.ts` | HIGH | `RuntimeConfigState` | Static runtime tuning; not user-facing | Not migrated | Same as before |
+| `BarClosingTime` | shims.ts default only | `theBar.ts` | HIGH | `RuntimeConfigState` | Static runtime tuning; not user-facing | Not migrated | Idem  |
+| `TimeSpeed` | shims.ts default only | `gameState.ts` tick math | HIGH | `RuntimeConfigState` | Tick-rate tuning; runtime config, not player-facing option | Not migrated | Idem |
 
-> **New ownership type discovered:** `Late` and `Shopping` are true session progress flags. The remaining five fields (`PlayerBladder`, `*ClosingTime`, `TimeSpeed`) are **config/settings values** that are already duplicated in `gameSettings.ts`. Row C should be split: keep `Late` and `Shopping` here; move the config fields to SettingsState to eliminate the duplication.
+> **Updated ownership split:** `Late` and `Shopping` are true session progress flags. `PlayerBladder` belongs to user-facing `SettingsState`. `ClubClosingTime`, `TheaterClosingTime`, `BarClosingTime`, and `TimeSpeed` belong to non-user-facing `RuntimeConfigState` (and should likely be immutable config rather than mutable game state).
 
 #### Row D: DriveState
 
@@ -369,10 +525,10 @@ Row C ownership evidence snapshot (2026-04-17):
 
 Row D ownership evidence snapshot (2026-04-17):
 
-| Property | Primary writes observed | Cross-module reads observed | Confidence | Provisional owner | Notes |
-|---|---|---|---|---|---|
-| `WetTheCar` | `bladder.ts` via `setWetthecar(1)` | `drive.ts` (conditional quote) | HIGH | `DriveState` | Single writer (`bladder.ts`), single reader (`drive.ts`); classic drive scene outcome flag |
-| `GasStation` | `driveAround.ts` via `setGasStation` | `bladder.ts` cross-checks, `driveAround.ts` | HIGH | `DriveState` | Owned entirely by the drive-around flow; no cross-domain readers |
+| Property | Primary writes observed | Cross-module reads observed | Confidence | Provisional owner | Notes | Migration state | Your notes |
+|---|---|---|---|---|---|---|---|
+| `WetTheCar` | `bladder.ts` via `setWetthecar(1)` | `drive.ts` (conditional quote) | HIGH | `DriveState` | Single writer (`bladder.ts`), single reader (`drive.ts`); classic drive scene outcome flag | Not migrated | Good early migration candidate to validate DriveState batch mechanics |
+| `GasStation` | `driveAround.ts` via `setGasStation` | `bladder.ts` cross-checks, `driveAround.ts` | HIGH | `DriveState` | Owned entirely by the drive-around flow; no cross-domain readers | Not migrated | Potential rename to HasGasStationStop for boolean readability |
 
 Both fields are HIGH confidence. `DriveState` is the right owner. These are also eligible for an early confidence batch migration (Phase 2 Batch A).
 
@@ -400,27 +556,27 @@ Both fields are HIGH confidence. `DriveState` is the right owner. These are also
 
 Row E ownership evidence snapshot (2026-04-17):
 
-| Property | Primary writes observed | Cross-module reads observed | Confidence | Provisional owner | Notes |
-|---|---|---|---|---|---|
-| `BarTopic` | `theBar.ts` | `theBar.ts` | HIGH | `BarState` | Single-venue, single-module |
-| `Loser` | `theBar.ts` | `theBar.ts` | HIGH | `BarState` | Single-venue |
-| `ExternalFlirt` | `theClub.ts` | `bladder.ts` (3 reads), `drive.ts` (reset) | HIGH | `ClubState` | Cross-read by bladder but write-owned by club |
-| `WetPhoto` | `theClub.ts` | `theClub.ts` | HIGH | `ClubState` | Single-venue |
-| `IsNude` | `theClub.ts` | `theClub.ts`, `fuckHer.ts` | HIGH | `ClubState` | Used in sex flow too — worth tracking |
-| `PoseCtr` | `theClub.ts` | `theClub.ts` | HIGH | `ClubState` | Single-venue |
-| `OutfitCtr` | `theClub.ts` | `theClub.ts` | HIGH | `ClubState` | Single-venue |
-| `RrMovieLineThresh` | `theatre.ts` | `bladder.ts` (threshold check) | HIGH | `TheatreState` | Cross-read but write-owned by theatre |
-| `MovieCounter` | `theatre.ts` | `theatre.ts` | HIGH | `TheatreState` | Single-venue |
-| `MovieChoice` | `theatre.ts` | `theatre.ts` | HIGH | `TheatreState` | Single-venue |
-| `AskedFavourite` | `theatre.ts` | `theatre.ts` | HIGH | `TheatreState` | Single-venue |
-| `SeenMovie` | `theatre.ts` via `setSeenmovie` | `locations.ts`, `herhome.ts` | MEDIUM | `TheatreState` | Cross-module read for unlock logic; still theatre-owned |
-| `AskedSwim` | `theMakeOut.ts` | `theMakeOut.ts` | HIGH | `MakeOutState` | Single-venue |
-| `WalkCounter` | `theMakeOut.ts` | `theMakeOut.ts` | HIGH | `MakeOutState` | Single-venue |
-| `PrePeed` | `herhome.ts` via `setPrepeed` | `herhome.ts` | HIGH | `HerHomeState` | Single-venue |
-| `ElevatorWaitCounter` | `herhome.ts` | `herhome.ts` | HIGH | `HerHomeState` | Single-venue (from saveLoad import evidence) |
-| `FloorCounter` | `herhome.ts` (direct mutation) | `herhome.ts` | HIGH | `HerHomeState` | Single-venue |
-| `EmerBreak` | `locations.ts` | `locations.ts`, `bladder.ts` | MEDIUM | `NavigationState` (new) | Not venue-specific; fires during location transitions |
-| `EmerHold` | `locations.ts` | `locations.ts`, `bladder.ts` | MEDIUM | `NavigationState` (new) | Same as EmerBreak — navigation event flag |
+| Property | Primary writes observed | Cross-module reads observed | Confidence | Provisional owner | Notes | Migration state | Your notes |
+|---|---|---|---|---|---|---|---|
+| `BarTopic` | `theBar.ts` | `theBar.ts` | HIGH | `BarState` | Single-venue, single-module | Not migrated | Currently used to I believe give the index of the current bartopic in a json list somewhere.|
+| `Loser` | `theBar.ts` | `theBar.ts` | HIGH | `BarState` | Single-venue | Not migrated | This variavle name is non obvious what it's about |
+| `ExternalFlirt` | `theClub.ts` | `bladder.ts` (3 reads), `drive.ts` (reset) | HIGH | `ClubState` | Cross-read by bladder but write-owned by club | Not migrated | Consider rename to ExternalFlirtActive/happened for boolean intent |
+| `WetPhoto` | `theClub.ts` | `theClub.ts` | HIGH | `ClubState` | Single-venue | Not migrated | Might be clearer as WetPhotoTaken (event outcome naming) |
+| `IsNude` | `theClub.ts` | `theClub.ts`, `fuckHer.ts` | HIGH | `ClubState` | Used in sex flow too — worth tracking | Not migrated | Might make sense to be in companion class |
+| `PoseCtr` | `theClub.ts` | `theClub.ts` | HIGH | `ClubState` | Single-venue | Not migrated | This name is a bit vague |
+| `OutfitCtr` | `theClub.ts` | `theClub.ts` | HIGH | `ClubState` | Single-venue | Not migrated | this name is a bit vague |
+| `RrMovieLineThresh` | `theatre.ts` | `bladder.ts` (threshold check) | HIGH | `TheatreState` | Cross-read but write-owned by theatre | Not migrated | this name is a bit vague |
+| `MovieCounter` | `theatre.ts` | `theatre.ts` | HIGH | `TheatreState` | Single-venue | Not migrated | Confirm reset semantics on re-entry to avoid soft-locks |
+| `MovieChoice` | `theatre.ts` | `theatre.ts` | HIGH | `TheatreState` | Single-venue | Not migrated | Normalize to explicit constants/enum values if choices expand |
+| `AskedFavourite` | `theatre.ts` | `theatre.ts` | HIGH | `TheatreState` | Single-venue | Not migrated | Rename candidate: HasAskedFavourite |
+| `SeenMovie` | `theatre.ts` via `setSeenmovie` | `locations.ts`, `herhome.ts` | MEDIUM | `TheatreState` | Cross-module read for unlock logic; still theatre-owned | Not migrated | Couple migration with unlock-flow tests due cross-module reads |
+| `AskedSwim` | `theMakeOut.ts` | `theMakeOut.ts` | HIGH | `MakeOutState` | Single-venue | Not migrated | Could be a cooldown/once-per-scene flag; clarify intent in name |
+| `WalkCounter` | `theMakeOut.ts` | `theMakeOut.ts` | HIGH | `MakeOutState` | Single-venue | Not migrated | Clarify unit (steps/turns/scenes) in code comment or docs |
+| `PrePeed` | `herhome.ts` via `setPrepeed` | `herhome.ts` | HIGH | `HerHomeState` | Single-venue | Not migrated | I belive herhome is at the end of the game while the prepeed is only used once in the beginning |
+| `ElevatorWaitCounter` | `herhome.ts` | `herhome.ts` | HIGH | `HerHomeState` | Single-venue (from saveLoad import evidence) | Not migrated | Rename candidate: ElevatorWaitTurns |
+| `FloorCounter` | `herhome.ts` (direct mutation) | `herhome.ts` | HIGH | `HerHomeState` | Single-venue | Not migrated | Rename candidate: CurrentFloorStep |
+| `EmerBreak` | `locations.ts` | `locations.ts`, `bladder.ts` | MEDIUM | `NavigationState` (new) | Not venue-specific; fires during location transitions | Not migrated | Non obviou what this is for from the name |
+| `EmerHold` | `locations.ts` | `locations.ts`, `bladder.ts` | MEDIUM | `NavigationState` (new) | Same as EmerBreak — navigation event flag | Not migrated | Not obvious what this is for from the name |
 
 > **New ownership types discovered:**
 > - `BarState`, `ClubState`, `TheatreState`, `MakeOutState`, `HerHomeState`: venue-scoped sub-objects. `VenueState` as a single flat class would be too big — these are better as separate classes per venue, similar to how `RomanceState` is separate from `InteractionState`.
@@ -428,9 +584,9 @@ Row E ownership evidence snapshot (2026-04-17):
 
 #### Row F: SettingsState
 
-- [ ] HerOutfit
-- [ ] FavoriteMovie
-- [ ] SuggestedLoc
+- [ ] HerOutfit -> CompanionContextState
+- [ ] FavoriteMovie -> CompanionContextState
+- [ ] SuggestedLoc -> CompanionContextState
 - [ ] MultipleMoves
 - [ ] RstMoves
 - [ ] PhotoChoice
@@ -441,21 +597,24 @@ Row E ownership evidence snapshot (2026-04-17):
 
 Row F ownership evidence snapshot (2026-04-17):
 
-| Property | Primary writes observed | Cross-module reads observed | Confidence | Provisional owner | Notes |
-|---|---|---|---|---|---|
-| `HerOutfit` | `settings.ts` via `setHeroutfit` | `drive.ts`, `fuckHer.ts`, `herhome.ts`, `actions.ts`, `bladder.ts`, `backPackItems.ts` | HIGH | `SettingsState` | Wide read surface — companion appearance config; set during game setup |
-| `FavoriteMovie` | `settings.ts` | `theatre.ts` | HIGH | `SettingsState` | Companion preference set once |
-| `SuggestedLoc` | `locations.ts` (6 writes), `drive.ts` (reset) | `drive.ts` reads, `locations.ts` checks | HIGH | `SettingsState` | Technically a session-computed recommendation, but already on gameState root; migration is clean |
-| `MultipleMoves` | `settings.ts` | `fuckHer.ts` | HIGH | `SettingsState` | Game option |
-| `RstMoves` | `settings.ts` | `fuckHer.ts` | HIGH | `SettingsState` | Game option; flag to reset move set |
-| `PhotoChoice` | `settings.ts` | `images.ts` | HIGH | `SettingsState` | Set by player preference |
-| `ShowStats` | `settings.ts` | `gameScreen/statusBar.ts` | HIGH | `SettingsState` | UI preference |
-| `EnableImages` | `settings.ts`, `images.ts` | `images.ts` | HIGH | `SettingsState` | UI option |
-| `EnableAscii` | `settings.ts` | unclear | HIGH | `SettingsState` | UI option |
-| `PlayerGame` | `settings.ts` | unclear | MEDIUM | `SettingsState` | Unclear semantics — likely enable/disable player bladder mini-game |
+| Property | Primary writes observed | Cross-module reads observed | Confidence | Provisional owner | Notes | Migration state | Your notes |
+|---|---|---|---|---|---|---|---|
+| `HerOutfit` | `settings.ts` via `setHeroutfit` | `drive.ts`, `fuckHer.ts`, `herhome.ts`, `actions.ts`, `bladder.ts`, `backPackItems.ts` | HIGH | `CompanionContextState` | Companion context/identity value, not a user-facing setting toggle | Not migrated | Should initialize once and then mutate only from clothing/game events |
+| `FavoriteMovie` | `settings.ts` | `theatre.ts` | HIGH | `CompanionContextState` | Companion preference seed/context, not a player option menu toggle | Not migrated | If randomized, keep deterministic seed path for tests |
+| `SuggestedLoc` | `locations.ts` (6 writes), `drive.ts` (reset) | `drive.ts` reads, `locations.ts` checks | HIGH | `CompanionContextState` | Runtime recommendation context, not a user setting | Not migrated | Might eventually warrant a dedicated RecommendationState |
+| `MultipleMoves` | `settings.ts` | `fuckHer.ts` | HIGH | `SettingsState` | Game option | Not migrated | Name is opaque; ensure UI label explains behavior |
+| `RstMoves` | `settings.ts` | `fuckHer.ts` | HIGH | `SettingsState` | Game option; flag to reset move set | Not migrated | Rename candidate: ResetMovesEachTurn |
+| `PhotoChoice` | `settings.ts` | `images.ts` | HIGH | `SettingsState` | Set by player preference | Not migrated | Verify persistence contract between local storage and save/load |
+| `ShowStats` | `settings.ts` | `gameScreen/statusBar.ts` | HIGH | `SettingsState` | UI preference | Not migrated | Good first candidate in Settings migration slice |
+| `EnableImages` | `settings.ts`, `images.ts` | `images.ts` | HIGH | `SettingsState` | UI option | Not migrated | Validate fallback text flow when disabled |
+| `EnableAscii` | `settings.ts` | unclear | HIGH | `SettingsState` | UI option | Not migrated | Check whether this is mutually exclusive with EnableImages |
+| `PlayerGame` | `settings.ts` | unclear | MEDIUM | `SettingsState` | Unclear semantics — likely enable/disable player bladder mini-game | Not migrated | Clarify meaning before migration to avoid preserving hidden ambiguity |
 
-All Row F fields are HIGH/MEDIUM confidence, single-writer from `settings.ts`. Straightforward batch.  
-Note: `ClubClosingTime`, `TheaterClosingTime`, `BarClosingTime`, `TimeSpeed`, `PlayerBladder` from Row C also belong here — Row C should be reconciled against Row F.
+Row F is currently mixing multiple concerns.  
+Refined split:
+- keep true user-facing options in `SettingsState` (`ShowStats`, `EnableImages`, `EnableAscii`, `PlayerGame`, `MultipleMoves`, `RstMoves`, `PhotoChoice`, `PlayerBladder`)
+- move non-user-facing tuning constants (`*ClosingTime`, `TimeSpeed`) to `RuntimeConfigState`
+- move companion context fields (`HerOutfit`, `FavoriteMovie`, `SuggestedLoc`) to `CompanionContextState`
 
 #### Row G: NarrativeState
 
@@ -473,19 +632,19 @@ Note: `ClubClosingTime`, `TheaterClosingTime`, `BarClosingTime`, `TimeSpeed`, `P
 
 Row G ownership evidence snapshot (2026-04-17):
 
-| Property | Primary writes observed | Cross-module reads observed | Confidence | Provisional owner | Notes |
-|---|---|---|---|---|---|
-| `PantyColor` | `backPackItems.ts` (`setPantycolor`), `bladder.ts` | `bladder.ts`, `fuckHer.ts`, `herhome.ts` | HIGH | **CompanionProfileState** (new) | Companion appearance state, not generic narrative |
-| `GirlName` | `quotes.ts` / game init | `backPackItems.ts`, `herhome.ts`, `bladder.ts`, many | HIGH | **CompanionProfileState** (new) | Companion identity; wide reads, single init write |
-| `CustomGirlName` | `settings.ts` | `quotes.ts` | HIGH | **CompanionProfileState** (new) | Companion identity |
-| `BaseGirl` | `settings.ts` | `actions.ts`, `quotes.ts` | HIGH | **CompanionProfileState** (new) | Companion visual variant |
-| `GirlTalk` | `quotes.ts` / game init | Used across all dialogue | HIGH | **CompanionProfileState** (new) | Companion speech prefix |
-| `GirlGasp` | `quotes.ts` / game init | `bladder.ts`, `backPackItems.ts` | HIGH | **CompanionProfileState** (new) | Companion speech prefix variant |
-| `Comma` | `backPackItems.ts` | `backPackItems.ts` | HIGH | **UIState** (new) | Purely a rendering helper for the inventory description builder; not narrative state |
-| `ImagePrev` | `images.ts` | `images.ts` | HIGH | **UIState** (new) | Previous image cache for dedup; pure UI |
-| `AllowItems` | `main.ts`, `drive.ts`, `herhome.ts` (many callers) | `backPackItems.ts`, `herhome.ts` | HIGH | **UIState** (new) | Controls backpack button visibility; cross-venue UI gate |
-| `HomeChampagne` | `backPackItems.ts` | `backPackItems.ts`, `herhome.ts` | HIGH | **HerHomeState** | Already identified in Row E; poured/first-glass tracker for her home |
-| `PicSet` | unclear — bridge only visible | `images.ts` | LOW | `DEFER` | Purpose unclear; likely image rendering mode flag |
+| Property | Primary writes observed | Cross-module reads observed | Confidence | Provisional owner | Notes | Migration state | Your notes |
+|---|---|---|---|---|---|---|---|
+| `PantyColor` | `backPackItems.ts` (`setPantycolor`), `bladder.ts` | `bladder.ts`, `fuckHer.ts`, `herhome.ts` | HIGH | **CompanionProfileState** (new) | Companion appearance state, not generic narrative | Not migrated | Strong candidate to centralize writes through companion profile API |
+| `GirlName` | `quotes.ts` / game init | `backPackItems.ts`, `herhome.ts`, `bladder.ts`, many | HIGH | **CompanionProfileState** (new) | Companion identity; wide reads, single init write | Not migrated | Ensure cache invalidation if custom naming changes mid-run |
+| `CustomGirlName` | `settings.ts` | `quotes.ts` | HIGH | **CompanionProfileState** (new) | Companion identity | Not migrated | Document precedence between base/default/custom naming |
+| `BaseGirl` | `settings.ts` | `actions.ts`, `quotes.ts` | HIGH | **CompanionProfileState** (new) | Companion visual variant | Not migrated | Rename candidate: CompanionArchetype |
+| `GirlTalk` | `quotes.ts` / game init | Used across all dialogue | HIGH | **CompanionProfileState** (new) | Companion speech prefix | Not migrated | Could be derived from GirlName; avoid storing redundant string state |
+| `GirlGasp` | `quotes.ts` / game init | `bladder.ts`, `backPackItems.ts` | HIGH | **CompanionProfileState** (new) | Companion speech prefix variant | Not migrated | Could be derived from GirlName; avoid storing redundant string state |
+| `Comma` | `backPackItems.ts` | `backPackItems.ts` | HIGH | **UIState** (new) | Purely a rendering helper for the inventory description builder; not narrative state | Not migrated | High chance this can be removed and computed inline |
+| `ImagePrev` | `images.ts` | `images.ts` | HIGH | **UIState** (new) | Previous image cache for dedup; pure UI | Not migrated | Should remain session-only and excluded from save payload |
+| `AllowItems` | `main.ts`, `drive.ts`, `herhome.ts` (many callers) | `backPackItems.ts`, `herhome.ts` | HIGH | **UIState** (new) | Controls backpack button visibility; cross-venue UI gate | Not migrated | Rename candidate: IsItemUseEnabled |
+| `HomeChampagne` | `backPackItems.ts` | `backPackItems.ts`, `herhome.ts` | HIGH | **HerHomeState** | Already identified in Row E; poured/first-glass tracker for her home | Not migrated | Validate first-visit vs repeat-visit behavior after migration |
+| `PicSet` | unclear — bridge only visible | `images.ts` | LOW | `DEFER` | Purpose unclear; likely image rendering mode flag | Not migrated | Investigate if redundant with ImagePrev or render pipeline cache |
 
 > **New ownership types discovered:**
 > - `CompanionProfileState` (new): `PantyColor`, `GirlName`, `CustomGirlName`, `BaseGirl`, `GirlTalk`, `GirlGasp` are companion identity/appearance. These don't belong in NarrativeState — they belong on the companion model. Consider adding them to `dateNPC` / `Companion` or as a separate `CompanionProfileState`.
@@ -545,24 +704,53 @@ Scope note: split this row while migrating.
 
 Row H ownership evidence snapshot (2026-04-17):
 
-| Property | Lifecycle | Confidence | Provisional owner | Notes |
-|---|---|---|---|---|
-| `CustomUrge`, `MinUrge`, `MinPerc` | SimulationCore — per-companion urge threshold config | HIGH | `gameState.Companion` (Person) | Already on `Person` as simulation params |
-| `BladUrge`, `BladNeed`, `BladEmer`, `BladLose`, `BladCumLose`, `BladSexLose` | SimulationCore — urge thresholds | HIGH | `gameState.Companion` (Person) | Converge with `Person` bladder model |
-| `MaxTummy`, `MaxBeer`, `Tummy`, `Bladder` | SimulationCore — volume state | HIGH | `gameState.Companion` (Person) | Core simulation values |
-| `BladDec`, `BladDespDec`, `Seal` | SimulationCore — decay rates | HIGH | `gameState.Companion` (Person) | Rate constants; go with Person |
-| `BeerDecCounter`, `YBeerDecCounter` | Scene counters | MEDIUM | `gameState.Companion` (Person) or `SessionState` | Counting drink cycles — borderline |
-| `PeedTowels`, `PeedVase`, `PeedShot`, `PeedOutside` | Scene event flags | HIGH | `CompanionBladderEventState` | Outcome flags; not simulation-core — keep in Row H or separate event sub-object |
-| `LastPeeTime`, `TimeHeld` | SimulationCore — time tracking | HIGH | `gameState.Companion` (Person) | Used in desperation pacing |
-| `DrankBeer` | Session counter | MEDIUM | `gameState.Companion` (Person) | Tracks drinks for tummy simulation |
-| `NotDesperate`, `NotYDesperate`, `NotHDesperate` | Scene flags | MEDIUM | `CompanionBladderEventState` | Cooldown flags for vocalizations |
-| `SpurtThresh`, `YSpurtThresh`, `BribeAskThresh`, `BribeAskBase` | SimulationCore — event thresholds | HIGH | `gameState.Companion` (Person) | Rate/threshold constants |
-| `TumAvg` | SimulationCore | HIGH | `gameState.Companion` (Person) | Running average for tummy fill rate |
-| `RrLockedFlag` | Scene flag | HIGH | `CompanionBladderEventState` | Bathroom locked during rr scene |
-| `SheSpurted`, `WetLegs`, `WetHerPanties`, `NowPeeing` | Scene event flags | HIGH | `CompanionBladderEventState` | Outcome states |
-| `BrokeIce`, `SawHerPee` | Session progress | MEDIUM | `SessionOrProgressState` | Track unique events that don't reset between locations |
-| `GottaGoFlag`, `AskHoldItCounter`, `WaitCounter` | Scene flags | HIGH | `CompanionBladderEventState` | Short-lived scene interaction flags |
-| `ToldStories`, `LastStory` | Session progress | HIGH | `SessionOrProgressState` | Story tracking persists across locations |
+| Property | Lifecycle | Confidence | Provisional owner | Notes | Migration state | Your notes |
+|---|---|---|---|---|---|---|
+| `CustomUrge` | SimulationCore — per-companion urge threshold config | HIGH | `gameState.Companion` (Person) | Already on `Person` as simulation params | Not migrated |  |
+| `MinUrge` | SimulationCore — per-companion urge threshold config | HIGH | `gameState.Companion` (Person) | Already on `Person` as simulation params | Not migrated |  |
+| `MinPerc` | SimulationCore — per-companion urge threshold config | HIGH | `gameState.Companion` (Person) | Already on `Person` as simulation params | Not migrated |  |
+| `BladUrge` | SimulationCore — urge thresholds | HIGH | `gameState.Companion` (Person) | Converge with `Person` bladder model | Not migrated |  |
+| `BladNeed` | SimulationCore — urge thresholds | HIGH | `gameState.Companion` (Person) | Converge with `Person` bladder model | Not migrated |  |
+| `BladEmer` | SimulationCore — urge thresholds | HIGH | `gameState.Companion` (Person) | Converge with `Person` bladder model | Not migrated |  |
+| `BladLose` | SimulationCore — urge thresholds | HIGH | `gameState.Companion` (Person) | Converge with `Person` bladder model | Not migrated |  |
+| `BladCumLose` | SimulationCore — urge thresholds | HIGH | `gameState.Companion` (Person) | Converge with `Person` bladder model | Not migrated |  |
+| `BladSexLose` | SimulationCore — urge thresholds | HIGH | `gameState.Companion` (Person) | Converge with `Person` bladder model | Not migrated |  |
+| `MaxTummy` | SimulationCore — volume state | HIGH | `gameState.Companion` (Person) | Core simulation values | Not migrated |  |
+| `MaxBeer` | SimulationCore — volume state | HIGH | `gameState.Companion` (Person) | Core simulation values | Not migrated |  |
+| `Tummy` | SimulationCore — volume state | HIGH | `gameState.Companion` (Person) | Core simulation values | Not migrated |  |
+| `Bladder` | SimulationCore — volume state | HIGH | `gameState.Companion` (Person) | Core simulation values | Not migrated |  |
+| `BladDec` | SimulationCore — decay rates | HIGH | `gameState.Companion` (Person) | Rate constants; go with Person | Not migrated |  |
+| `BladDespDec` | SimulationCore — decay rates | HIGH | `gameState.Companion` (Person) | Rate constants; go with Person | Not migrated |  |
+| `Seal` | SimulationCore — decay rates | HIGH | `gameState.Companion` (Person) | Rate constants; go with Person | Not migrated |  |
+| `BeerDecCounter` | Scene counters | MEDIUM | `gameState.Companion` (Person) or `SessionState` | Counting drink cycles — borderline | Not migrated |  |
+| `YBeerDecCounter` | Scene counters | MEDIUM | `gameState.Companion` (Person) or `SessionState` | Counting drink cycles — borderline | Not migrated |  |
+| `PeedTowels` | Scene event flags | HIGH | `CompanionBladderEventState` | Outcome flags; not simulation-core — keep in Row H or separate event sub-object | Not migrated |  |
+| `PeedVase` | Scene event flags | HIGH | `CompanionBladderEventState` | Outcome flags; not simulation-core — keep in Row H or separate event sub-object | Not migrated |  |
+| `PeedShot` | Scene event flags | HIGH | `CompanionBladderEventState` | Outcome flags; not simulation-core — keep in Row H or separate event sub-object | Not migrated |  |
+| `PeedOutside` | Scene event flags | HIGH | `CompanionBladderEventState` | Outcome flags; not simulation-core — keep in Row H or separate event sub-object | Not migrated |  |
+| `LastPeeTime` | SimulationCore — time tracking | HIGH | `gameState.Companion` (Person) | Used in desperation pacing | Not migrated |  |
+| `TimeHeld` | SimulationCore — time tracking | HIGH | `gameState.Companion` (Person) | Used in desperation pacing | Not migrated |  |
+| `DrankBeer` | Session counter | MEDIUM | `gameState.Companion` (Person) | Tracks drinks for tummy simulation | Not migrated |  |
+| `NotDesperate` | Scene flags | MEDIUM | `CompanionBladderEventState` | Cooldown flags for vocalizations | Not migrated |  |
+| `NotYDesperate` | Scene flags | MEDIUM | `CompanionBladderEventState` | Cooldown flags for vocalizations | Not migrated |  |
+| `NotHDesperate` | Scene flags | MEDIUM | `CompanionBladderEventState` | Cooldown flags for vocalizations | Not migrated |  |
+| `SpurtThresh` | SimulationCore — event thresholds | HIGH | `gameState.Companion` (Person) | Rate/threshold constants | Not migrated |  |
+| `YSpurtThresh` | SimulationCore — event thresholds | HIGH | `gameState.Companion` (Person) | Rate/threshold constants | Not migrated |  |
+| `BribeAskThresh` | SimulationCore — event thresholds | HIGH | `gameState.Companion` (Person) | Rate/threshold constants | Not migrated |  |
+| `BribeAskBase` | SimulationCore — event thresholds | HIGH | `gameState.Companion` (Person) | Rate/threshold constants | Not migrated |  |
+| `TumAvg` | SimulationCore | HIGH | `gameState.Companion` (Person) | Running average for tummy fill rate | Not migrated |  |
+| `RrLockedFlag` | Scene flag | HIGH | `CompanionBladderEventState` | Bathroom locked during rr scene | Not migrated |  |
+| `SheSpurted` | Scene event flags | HIGH | `CompanionBladderEventState` | Outcome states | Not migrated |  |
+| `BrokeIce` | Session progress | MEDIUM | `SessionOrProgressState` | Track unique events that don't reset between locations | Not migrated |  |
+| `SawHerPee` | Session progress | MEDIUM | `SessionOrProgressState` | Track unique events that don't reset between locations | Not migrated |  |
+| `WetLegs` | Scene event flags | HIGH | `CompanionBladderEventState` | Outcome states | Not migrated |  |
+| `WetHerPanties` | Scene event flags | HIGH | `CompanionBladderEventState` | Outcome states | Not migrated |  |
+| `NowPeeing` | Scene event flags | HIGH | `CompanionBladderEventState` | Outcome states | Not migrated |  |
+| `GottaGoFlag` | Scene flags | HIGH | `CompanionBladderEventState` | Short-lived scene interaction flags | Not migrated |  |
+| `AskHoldItCounter` | Scene flags | HIGH | `CompanionBladderEventState` | Short-lived scene interaction flags | Not migrated |  |
+| `WaitCounter` | Scene flags | HIGH | `CompanionBladderEventState` | Short-lived scene interaction flags | Not migrated |  |
+| `ToldStories` | Session progress | HIGH | `SessionOrProgressState` | Story tracking persists across locations | Not migrated |  |
+| `LastStory` | Session progress | HIGH | `SessionOrProgressState` | Story tracking persists across locations | Not migrated |  |
 
 > **New sub-type clarification for Row H:** Splitting into two groups:
 > - **SimulationCore** → converge into `gameState.Companion` (`Person`): all threshold/volume/rate fields.
@@ -603,11 +791,32 @@ Row I ownership evidence snapshot (2026-04-17):
 
 Row I mirrors Row H exactly, with all fields belonging to `gameState.Player` (`Person`) for SimulationCore fields and a `PlayerBladderEventState` for scene flags. Confidence is HIGH for the split — the `Y*` prefix is exactly parallel to the companion's un-prefixed set.
 
-| Sub-group | Fields | Provisional owner |
-|---|---|---|
-| SimulationCore | `YourBladder`, `YourTummy`, `YourTumAvg`, `YourBladUrge`, `YourBladNeed`, `YourBladEmer`, `YourBladLose`, `YourBladCumLose`, `YourBladSexLose`, `YMaxTummy`, `YMaxBeer`, `YourCustomUrge`, `YMinUrge`, `YLastPeeTime`, `YTimeHeld` | `gameState.Player` (Person) |
-| DrinkCounters | `YDrankCocktails`, `YDrankSodas`, `YDrankWaters`, `YDrankBeers`, `YDrankBeer` | `gameState.Player` (Person) or `SessionState` |
-| Scene/event flags | `HoldSelf`, `YNowPeeing`, `YouSpurted`, `YRrLockedFlag` | `PlayerBladderEventState` (new) |
+| Property | Lifecycle | Provisional owner | Migration state | Your notes |
+|---|---|---|---|---|
+| `YourBladder` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YourTummy` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YourTumAvg` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `HoldSelf` | Scene/event flag | `PlayerBladderEventState` (new) | Not migrated |  |
+| `YourBladUrge` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YourBladNeed` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YourBladEmer` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YourBladLose` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YourBladCumLose` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YourBladSexLose` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YMaxTummy` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YMaxBeer` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YourCustomUrge` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YMinUrge` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YNowPeeing` | Scene/event flag | `PlayerBladderEventState` (new) | Not migrated |  |
+| `YLastPeeTime` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YTimeHeld` | SimulationCore | `gameState.Player` (Person) | Not migrated |  |
+| `YDrankCocktails` | Drink counter | `gameState.Player` (Person) or `SessionState` | Not migrated |  |
+| `YDrankSodas` | Drink counter | `gameState.Player` (Person) or `SessionState` | Not migrated |  |
+| `YDrankWaters` | Drink counter | `gameState.Player` (Person) or `SessionState` | Not migrated |  |
+| `YDrankBeers` | Drink counter | `gameState.Player` (Person) or `SessionState` | Not migrated |  |
+| `YDrankBeer` | Drink counter | `gameState.Player` (Person) or `SessionState` | Not migrated |  |
+| `YRrLockedFlag` | Scene/event flag | `PlayerBladderEventState` (new) | Not migrated |  |
+| `YouSpurted` | Scene/event flag | `PlayerBladderEventState` (new) | Not migrated |  |
 
 #### Row J: ContentCacheState
 
@@ -642,11 +851,36 @@ Row I mirrors Row H exactly, with all fields belonging to `gameState.Player` (`P
 
 Row J ownership evidence snapshot (2026-04-17):
 
-| Sub-group | Fields | Provisional owner | Notes |
-|---|---|---|---|
-| Deep mutable config | `Settings`, `StatsBars`, `EndScreens` | `ContentCacheState` or `gameSettings` | Loaded once, treated as config blobs; already on gameState |
-| Sex scene data | `SexActions`, `SexLines` | `ContentCacheState` | Loaded in `fuckHer.ts`; `SexActions` is the one mutable object (tracks action state) — split `SexActions` out as a runtime object, leave `SexLines` as cache |
-| Loaded JSON blobs | `CalledJsons`, `LocJson`, `FlirtResps`, `FeelUp`, `Kissing`, `YPeeLines`, `PeeLines`, `Needs`, `YNeeds`, `DrinkLines`, `Appearance`, `Drive`, `General`, `Darts`, `ObjQuotes`, `SharedLoc`, `Bar`, `TalkUnused`, `Club`, `Theatre`, `MakeOut`, `HerHome`, `Locations` | `ContentCacheState` | Read-only after load; true cache blobs |
+| Property | Category | Provisional owner | Notes | Migration state | Your notes |
+|---|---|---|---|---|---|
+| `Settings` | Deep mutable config | `ContentCacheState` or `gameSettings` | Loaded once, treated as config blobs; already on gameState | Not migrated |  |
+| `StatsBars` | Deep mutable config | `ContentCacheState` or `gameSettings` | Loaded once, treated as config blobs; already on gameState | Not migrated |  |
+| `EndScreens` | Deep mutable config | `ContentCacheState` or `gameSettings` | Loaded once, treated as config blobs; already on gameState | Not migrated |  |
+| `SexActions` | Sex scene data | `ContentCacheState` (should move to `RomanceState`) | Mutable runtime object (action queue/state) | Not migrated |  |
+| `CalledJsons` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `LocJson` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `FlirtResps` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `FeelUp` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `Kissing` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `YPeeLines` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `PeeLines` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `Needs` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `YNeeds` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `DrinkLines` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `Appearance` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `Drive` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `General` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `Darts` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `SexLines` | Sex scene data | `ContentCacheState` | Loaded in `fuckHer.ts`; cache lines | Not migrated |  |
+| `ObjQuotes` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `Locations` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `SharedLoc` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `Bar` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `TalkUnused` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `Club` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `Theatre` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `MakeOut` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
+| `HerHome` | Loaded JSON blob | `ContentCacheState` | Read-only after load; cache blob | Not migrated |  |
 
 > **Key observation for Row J:** These are **not runtime state** — they are load-once content blobs. They should not be serialized in save/load. Future action: move them off `gameState` entirely to a `ContentCache` singleton, leaving `gameState` only for mutable runtime state. `SexActions` is the one exception — it is mutable (tracks current action queue) and should live on `RomanceState`.
 

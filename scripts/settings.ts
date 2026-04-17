@@ -1,8 +1,9 @@
 import { fetchJson, c, setText, girlname, setGirlname, basegirl, setBasegirl, customgirlname, setCustomgirlname, girltalk, setGirltalk, girlgasp, setGirlgasp } from './quotes';
-import { formatAll, money, setMoney, playerbladder, setPlayerbladder, settings, setSettings, statsBars, setStatsBars } from './shims';
+import { formatAll, setMoney, playerbladder, setPlayerbladder, settings, setSettings, statsBars, setStatsBars } from './shims';
 import { initUrge, bladDec, setBladDec, bladDespDec, setBladDespDec, bladurge, setBladurge, customurge, setCustomurge, minperc, setMinperc, seal, setSeal } from './bladder';
 import { initYUrge, yourcustomurge, setYourcustomurge } from './yourbladder';
 import { displaypix, importimgs } from './images';
+import { gameState } from './gameState/gameState';
 
 export let enableimages: number = 1;
 export function setEnableimages(val: number) { enableimages = val; }
@@ -174,7 +175,7 @@ export function options() {
     if (!localStorage.disclaimer || localStorage.disclaimer === "true") checked.push(26)
     else checked.push(27);
 
-    vars[28] = [money];
+    vars[28] = [gameState.Money];
 
     checked.forEach(i => vars[i] = ["checked"]);
     let curtext = formatAll(settings.html, vars);
@@ -316,7 +317,7 @@ export function setyourcustbladurge() {
 
 export function setyourmoney() {
     setMoney(parseInt(document.GetRequiredElementById<HTMLInputElement>('yourmoney').value));
-    setLocal("money", money);
+    setLocal("money", gameState.Money);
 }
 
 export function setBladPer(){

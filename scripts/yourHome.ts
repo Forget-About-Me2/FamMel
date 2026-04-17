@@ -3,7 +3,7 @@ import { BladderState } from "./gameState/bladderState";
 
 import { gameSettings } from "./settings/gameSettings";
 import { loadLocationScene, printIntro, printAlways, printChoices, printChoicesList, printSDialogue, sayText, c, handleFlirt, cListenerGenList, printList, locjson, drinklines, calledjsons, girltalk, printDialogue } from './quotes';
-import { pushloc, incrandom, randomchoice, formatString, locStack, shopping, setShopping, money, setMoney, flirtedflag, setFlirtedflag, late, setLate, attraction, setAttraction, shyness, setShyness, maxflirts, thetime } from './shims';
+import { pushloc, incrandom, randomchoice, formatString, locStack, shopping, setShopping, flirtedflag, setFlirtedflag, late, setLate, attraction, setAttraction, shyness, setShyness, maxflirts, thetime } from './shims';
 import { displaygottavoc, flushdrank, phoneholdthresh, bladder, tummy, setTummy, maxtummy, askholditcounter, setAskholditcounter, waitcounter, setWaitcounter } from './bladder';
 import { displayyourneed, wetyourself, yourtummy, setYourtummy, ymaxtummy } from './yourbladder';
 import { haveItem, backPackItems, allowItems, setAllowItems } from './backPackItems';
@@ -56,10 +56,10 @@ function buy(number){
     const price = Number(item[1]);
     let curtext: any[] = [];
     let obj = backPackItems[item[2]];
-    if (money >= price){
+    if (gameState.Money >= price){
         curtext.push("You buy a "+ item[0]+ ".")
         obj.value += 1;
-        setMoney(money - price);
+        gameState.PayAmount(price);
         if (obj.hasOwnProperty("bottles"))
             obj.bottles?.push(6);
     } else curtext.push("You don't have enough money!");
