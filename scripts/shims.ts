@@ -361,11 +361,10 @@ export function connectToGameState(gs: any): void {
 
     const moduleNumericProps: Array<[string, string]> = [
         // fuckHer.ts state
-        ['arousal',        'Romance.Arousal'],
-        ['kisscounter',    'Romance.KissCounter'],
-        ['feelcounter',    'Romance.FeelCounter'],
-        ['fuckingnow',     'Romance.FuckingNow'],
-        ['champagnecounter','Romance.ChampagneCounter'],
+        // NOTE: Do not reverse-bridge Romance.* fields here.
+        // exposeFuckHerOnWindow() already maps window.<field> directly to
+        // gameState.Romance.<field>; adding reverse bridges causes a
+        // window -> gameState -> window accessor loop.
         ['drankChamp',     'DrankChamp'],
         // drive.ts state
         ['wetthecar',      'WetTheCar'],
@@ -533,7 +532,6 @@ export function connectToGameState(gs: any): void {
         ['theatre',        'Theatre'],
         ['makeOut',        'MakeOut'],
         ['herHome',        'HerHome'],
-        ['locStack',       'LegacyLocStack'],
     ];
 
     // Reverse bridge: define gs.X as a pass-through to window.x
@@ -550,6 +548,15 @@ export function connectToGameState(gs: any): void {
             enumerable: true,
         });
     }
+
+    // Keep legacy location stack on a direct module bridge to avoid
+    // accessor loops through window.locStack <-> gameState.LegacyLocStack.
+    definePropertyByPath(gs, 'LegacyLocStack', {
+        get: () => locStack,
+        set: (v: any) => { locStack = Array.isArray(v) ? v : []; },
+        configurable: true,
+        enumerable: true,
+    });
 }
 
 // ============================================================================

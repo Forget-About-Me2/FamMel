@@ -18,7 +18,7 @@ import {
     clubclosingtime, setClubclosingtime, theaterclosingtime, setTheaterclosingtime,
     barclosingtime, setBarclosingtime, timespeed, setTimespeed,
     playerbladder, setPlayerbladder,
-    locStack, setLocStack, settings, setSettings, statsBars, setStatsBars, endScreens, setEndScreens,
+    settings, setSettings, statsBars, setStatsBars, endScreens, setEndScreens,
 } from './shims';
 import {
     customurge, setCustomurge, minurge, setMinurge, minperc, setMinperc,
@@ -139,7 +139,8 @@ const FIELD_REGISTRY: Record<string, FieldEntry> = {
     timespeed:          { get: () => timespeed, set: setTimespeed },
     playerbladder:      { get: () => playerbladder, set: setPlayerbladder },
     // --- shims.ts — deep ---
-    locStack:           { get: () => locStack, set: setLocStack, deep: true },
+    // Canonical owner is gameState.LegacyLocStack.
+    legacyLocStack:     { get: () => gameState.LegacyLocStack, set: (v) => { gameState.LegacyLocStack = v; }, deep: true },
     settings:           { get: () => settings, set: setSettings, deep: true },
     statsBars:          { get: () => statsBars, set: setStatsBars, deep: true },
     endScreens:         { get: () => endScreens, set: setEndScreens, deep: true },

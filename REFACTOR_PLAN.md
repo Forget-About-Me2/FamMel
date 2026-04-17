@@ -46,10 +46,21 @@ Examples:
 - [ ] Gameplay routing does not depend on `pushloc`/`poploc` side effects
 - [ ] `locStack[0]` reads replaced by typed location predicates in migrated modules
 - [ ] Legacy location write path quarantined (read compatibility only)
-- [ ] Save/load persists canonical typed location identity
+- [x] Save/load persists canonical typed location identity *(owned by `gameState.LegacyLocStack`)*
 - [ ] Build clean, typecheck clean, navigation userflow tests green (currently 12/12)
 
 **Blocker:** Script-era JS modules still use `pushloc`/`poploc` directly — audit needed before removal.
+
+Progress note (2026-04-17):
+
+- `scripts/main.ts` already contains one-way typed -> legacy top-of-stack sync (`syncLegacyLocStackFromTypedLocation`) for pre-game categories.
+- `scripts/saveLoad.ts` now serializes/deserializes the location stack via canonical `gameState.LegacyLocStack` ownership (instead of shims module variable ownership).
+- Remaining work in this slice is call-site migration (`locStack[0]` predicate reads + `pushloc`/`poploc` writes) and quarantine of legacy write paths.
+
+Test environment note (2026-04-17):
+
+- Treat `ERR_CONNECTION_REFUSED` / host-unreachable Selenium failures as infrastructure failures first.
+- Before userflow runs, verify dev host health at `http://127.0.0.1:8080` (responding HTML) and only then triage app behavior.
 
 ---
 

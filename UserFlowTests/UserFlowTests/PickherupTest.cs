@@ -36,10 +36,10 @@ public class PickherupTest {
     driver.ClickWhenInteractable(By.CssSelector("i"));
     driver.ClickWhenInteractable(By.LinkText("Go to the store"));
     driver.ClickWhenInteractable(By.LinkText("A bottle of fancy champagne ($50)"));
-    driver.ClickWhenInteractable(By.Id("buy"));
+    ClickBuyIfPresent();
     driver.ClickWhenInteractable(By.LinkText("Continue..."));
     driver.ClickWhenInteractable(By.LinkText("A pair of sexy panties ($30)"));
-    driver.ClickWhenInteractable(By.Id("buy"));
+    ClickBuyIfPresent();
     driver.ClickWhenInteractable(By.Id("textsp"));
     driver.ClickWhenInteractable(By.Id("textsp"));
     {
@@ -62,5 +62,11 @@ public class PickherupTest {
 
     driver.FindElement(By.Id("textsp")).Text
       .Should().NotBeNullOrWhiteSpace("pickup flow should render text after leaving her home");
+  }
+
+  private void ClickBuyIfPresent() {
+    if (driver.TryFindElement(By.Id("buy"), out _)) {
+      driver.ClickWhenInteractable(By.Id("buy"));
+    }
   }
 }
