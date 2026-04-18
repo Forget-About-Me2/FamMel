@@ -59,6 +59,41 @@ Compatibility decision:
 - Step 3: Move simulation save/load ownership to `gameState.Player` and `gameState.Companion`.
 - Exit: no independent legacy threshold source of truth remains (`blad*` and `yourblad*` are aliases only or removed).
 
+### 4) Deferred Row B fields (partial closure)
+
+#### DrankChamp
+
+- Classification: MOVE
+- Canonical owner: `gameState.DrankChamp`
+- Write owner: `scripts/fuckHer.ts` via `setDrankChamp(...)` (now writes into `gameState`)
+- Save/load owner: `scripts/saveLoad.ts` key `drankChamp` bound to `gameState.DrankChamp`
+- Compatibility bridge: window `drankChamp` accessor now reads/writes `gameState.DrankChamp` through `exposeFuckHerOnWindow()`
+- Status: Complete
+
+#### CheckedHerOut
+
+- Classification: MOVE
+- Canonical owner: `gameState.Interactions.CheckedHerOut`
+- Write owner: gameplay writers set `gameState.Interactions.CheckedHerOut` directly (`scripts/actions.ts`, `scripts/drive.ts`)
+- Read migration evidence: dark-location checks now read canonical owner in `scripts/locations/theBar.ts`, `scripts/locations/theClub.ts`, `scripts/locations/theatre.ts`, `scripts/locations/theMakeOut.ts`
+- Save/load owner: `scripts/saveLoad.ts` key `checkedherout` bound to `gameState.Interactions.CheckedHerOut`
+- Compatibility bridge: legacy shim/global `checkedherout` remains as compatibility storage; canonical gameplay logic reads/writes `gameState`
+- Status: Complete
+
+#### ChangeVenueFlag
+
+- Classification: MOVE
+- Canonical owner: `gameState.Interactions.ChangeVenueFlag`
+- Write owner: gameplay writers set `gameState.Interactions.ChangeVenueFlag` directly (`scripts/drive.ts`, `scripts/locations/theClub.ts`, `scripts/locations/theatre.ts`, reset in `scripts/bladder.ts`)
+- Read migration evidence: `scripts/bladder.ts` now reads `gameState.Interactions.ChangeVenueFlag` in `showneed(...)`
+- Save/load owner: `scripts/saveLoad.ts` key `changevenueflag` bound to `gameState.Interactions.ChangeVenueFlag`
+- Compatibility bridge: legacy shim/global `changevenueflag` remains as compatibility storage; canonical gameplay logic reads/writes `gameState`
+- Status: Complete
+
+Row B deferred closure note:
+
+- Deferred fields `DrankChamp`, `CheckedHerOut`, and `ChangeVenueFlag` are all canonicalized to `gameState` owners.
+
 ## Validation Gate Per Concept
 
 1. `node esbuild.config.mjs`

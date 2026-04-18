@@ -1,5 +1,5 @@
 import { printList, printListSelection, printLList, printChoicesList, callChoice, sayText, c, cListener, cListenerGen, cListenerGenList, addSayText, addListenersList, voccurse, needs, peelines, appearance, girlname, girltalk, girlgasp, pantycolor, setPantycolor, general } from './quotes';
-import { pickrandom, randomchoice, range, gameRandom, randomInt, incrandom, pushloc, poploc, locStack, attraction, setAttraction, shyness, setShyness, thetime, changevenueflag, setChangevenueflag, haveherpurse, setHaveherpurse, owedfavor, setOwedfavor, randcounter, showedneed, setShowedneed } from './shims';
+import { pickrandom, randomchoice, range, gameRandom, randomInt, incrandom, pushloc, poploc, locStack, attraction, setAttraction, shyness, setShyness, thetime, haveherpurse, setHaveherpurse, owedfavor, setOwedfavor, randcounter, showedneed, setShowedneed } from './shims';
 import { haveItem, backPackItems, displaydrank, holdpurse, giveHer } from './backPackItems';
 import { nextstop } from './locations/driveAround';
 import { pdrinkinggame } from './locations/theBar';
@@ -256,7 +256,7 @@ export function showneed(curtext: any[] = []): any[] {
     if (bladder >= (bladlose - 2 * tuminc) && shyness < SHYNESS_ALWAYS_VOCALIZE) {
         if (externalflirt) curtext = voccurse(curtext);
         curtext = displaygottavoc(curtext);
-    } else if (changevenueflag) {
+    } else if (gameState.Interactions.ChangeVenueFlag) {
         // She's almost always going to ask to go if you're off somewhere
         if ((bladder >= blademer) ||
             (bladder >= bladneed && shyness < SHYNESS_VENUE_ASK)) {
@@ -288,7 +288,7 @@ export function showneed(curtext: any[] = []): any[] {
     } else if (showsRandomSymptom()) {
         curtext = displayneed(curtext);
     }
-    setChangevenueflag(0);
+    gameState.Interactions.ChangeVenueFlag = false;
     return curtext;
 }
 

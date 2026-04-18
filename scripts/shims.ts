@@ -143,6 +143,29 @@ export function poploc(): string | undefined {
     return locStack.shift();
 }
 
+const typedLocationTagByCategory: Record<number, string> = {
+    5: "yourhome",
+    6: "gostore",
+    7: "callher",
+    8: "drinkinggame",
+};
+
+/**
+ * Transitional location read adapter.
+ * Uses typed CurrentLocation when available and falls back to the legacy stack.
+ */
+export function getCurrentLocationTag(): string {
+    const w = globalThis as any;
+    const typedCategory = w?.gameState?.CurrentLocation?.category;
+    if (typeof typedCategory === "number") {
+        const mapped = typedLocationTagByCategory[typedCategory];
+        if (mapped) {
+            return mapped;
+        }
+    }
+    return locStack[0] ?? "";
+}
+
 export function randomchoice(n: number): boolean {
     return randomInt(n) === 0;
 }
@@ -361,11 +384,10 @@ export function connectToGameState(gs: any): void {
 
     const moduleNumericProps: Array<[string, string]> = [
         // fuckHer.ts state
-        // NOTE: Do not reverse-bridge Romance.* fields here.
+        // NOTE: Do not reverse-bridge Romance.* fields or DrankChamp here.
         // exposeFuckHerOnWindow() already maps window.<field> directly to
-        // gameState.Romance.<field>; adding reverse bridges causes a
+        // gameState.<field>; adding reverse bridges causes a
         // window -> gameState -> window accessor loop.
-        ['drankChamp',     'DrankChamp'],
         // drive.ts state
         ['wetthecar',      'WetTheCar'],
         // locations.ts state
@@ -620,6 +642,7 @@ export function exposeShimsOnWindow(): void {
     w.randomInt = randomInt;
     w.pushloc = pushloc;
     w.poploc = poploc;
+    w.getCurrentLocationTag = getCurrentLocationTag;
     w.randomchoice = randomchoice;
     w.incrandom = incrandom;
     w.pickrandom = pickrandom;

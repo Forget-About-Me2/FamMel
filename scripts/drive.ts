@@ -1,5 +1,5 @@
 import { printChoicesList, printIntro, printAlways, sayText, locationMCSetup, appearance, drive, girltalk, printDialogue } from './quotes';
-import { pickrandom, incrandom, randomchoice, pushloc, locStack, changevenueflag, setChangevenueflag, checkedherout, setCheckedherout, flirtedflag, setFlirtedflag } from './shims';
+import { pickrandom, incrandom, randomchoice, pushloc, getCurrentLocationTag, flirtedflag, setFlirtedflag } from './shims';
 import { showneed, displayneed, gottagoflag, rrlockedflag, setRrlockedflag } from './bladder';
 import { displayyourneed } from './yourbladder';
 import { updateSuggestedLocation, printLocationMenu } from './locations';
@@ -15,8 +15,8 @@ export function setWetthecar(val: number) { wetthecar = val; }
 //  This function is used to leave ANY location and drive off.
 //
 export function leavehm() {
-    setChangevenueflag(1);
-    setCheckedherout(0);
+    gameState.Interactions.ChangeVenueFlag = true;
+    gameState.Interactions.CheckedHerOut = false;
     gameState.Romance.KissCounter = 0;
     gameState.Romance.FeelCounter = 0;
     setRrlockedflag(0);
@@ -45,7 +45,7 @@ export function leavehm() {
 export function driveout() {
     setAllowItems(1);
     let curtext: any[] = [];
-    if (locStack[0] !== "driveout") {
+    if (getCurrentLocationTag() !== "driveout") {
         pushloc("driveout");
         locationMCSetup("driveout", drive);
         curtext = printIntro(curtext, 0);

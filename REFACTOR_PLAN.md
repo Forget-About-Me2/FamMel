@@ -57,6 +57,26 @@ Progress note (2026-04-17):
 - `scripts/saveLoad.ts` now serializes/deserializes the location stack via canonical `gameState.LegacyLocStack` ownership (instead of shims module variable ownership).
 - Remaining work in this slice is call-site migration (`locStack[0]` predicate reads + `pushloc`/`poploc` writes) and quarantine of legacy write paths.
 
+Progress note (2026-04-18):
+
+- Deferred Row B field `DrankChamp` is now canonicalized to `gameState.DrankChamp` in runtime + save/load paths (`scripts/fuckHer.ts`, `scripts/saveLoad.ts`, `scripts/backPackItems.ts`).
+- Deferred Row B field `CheckedHerOut` is now canonicalized to `gameState.Interactions.CheckedHerOut` in runtime + save/load paths (`scripts/shims.ts`, `scripts/saveLoad.ts`, `scripts/locations/theBar.ts`, `scripts/locations/theClub.ts`, `scripts/locations/theatre.ts`, `scripts/locations/theMakeOut.ts`).
+- Deferred Row B field `ChangeVenueFlag` is now canonicalized to `gameState.Interactions.ChangeVenueFlag` in runtime + save/load paths (`scripts/shims.ts`, `scripts/saveLoad.ts`, `scripts/bladder.ts`, `scripts/drive.ts`, `scripts/locations/theClub.ts`, `scripts/locations/theatre.ts`).
+
+Progress note (2026-04-18, location read-path tranche):
+
+- Added transitional typed-first location read adapter `getCurrentLocationTag()` in `scripts/shims.ts` (falls back to legacy `locStack[0]`).
+- Migrated `scripts/yourHome.ts` off direct `locStack[0]` reads to the adapter for scene reload checks and continue-routing tags.
+- Migrated `scripts/actions.ts` off direct `locStack[0]` reads to the adapter for flirt routing, continue tags, and hot tub checks.
+- Migrated `scripts/store.ts` off direct `locStack[0]` reads to the adapter for go-store stack checks.
+- Migrated `scripts/quotes.ts` off direct `locStack[0]` reads to the adapter for `curloc` routing and flirt choice variants.
+- Migrated `scripts/herhome.ts` off direct `locStack[0]` reads to the adapter for pickup/elevator/key-search/home entry routing checks.
+- Migrated `scripts/drive.ts` and `scripts/fuckHer.ts` off direct `locStack[0]` reads to the adapter for drive/bedroom/sex-entry routing checks.
+- Migrated `scripts/locations/driveAround.ts` off direct `locStack[0]` reads for continue-tag routing.
+- Migrated `scripts/locations/theBar.ts`, `scripts/locations/theClub.ts`, `scripts/locations/theatre.ts`, and `scripts/locations/theMakeOut.ts` off direct `locStack[0]` reads for venue entry/state predicate checks.
+- Migrated `scripts/backPackItems.ts` off direct `locStack[0]` reads for buy/use eligibility and continue-tag routing checks.
+- Slice 1 sequencing narrowed: finish read-path cutover file-by-file before migrating `pushloc`/`poploc` write paths.
+
 Test environment note (2026-04-17):
 
 - Treat `ERR_CONNECTION_REFUSED` / host-unreachable Selenium failures as infrastructure failures first.
@@ -71,10 +91,26 @@ Test environment note (2026-04-17):
 **Scope:** `DrankChamp`, `CheckedHerOut`, `ChangeVenueFlag` — call-site evidence pass, then migrate or formally defer with reason code and "decision by" date.
 
 **Gate (done when):**
-- [ ] Each field has exactly one write owner declared
-- [ ] No field remains deferred without an explicit reason code and deadline
-- [ ] Evidence documented in [docs/state-ownership-ledger.md](docs/state-ownership-ledger.md)
-- [ ] Build clean, typecheck clean, userflow tests green
+- [x] Each field has exactly one write owner declared
+- [x] No field remains deferred without an explicit reason code and deadline
+- [x] Evidence documented in [docs/state-ownership-ledger.md](docs/state-ownership-ledger.md)
+- [x] Build clean, typecheck clean, userflow tests green
+
+Progress note (2026-04-18):
+
+- `DrankChamp` ownership migrated to canonical `gameState.DrankChamp` (legacy local field removed as write owner).
+- `CheckedHerOut` ownership migrated to canonical `gameState.Interactions.CheckedHerOut`.
+- `ChangeVenueFlag` ownership migrated to canonical `gameState.Interactions.ChangeVenueFlag`.
+
+Slice status note (2026-04-18):
+
+- Slice 2 deferred Row B fields are now fully resolved (`DrankChamp`, `CheckedHerOut`, `ChangeVenueFlag`).
+
+Validation note (2026-04-18):
+
+- Build and typecheck are green.
+- Save/load recursion blocker resolved by removing `DrankChamp` reverse bridge loop in `scripts/shims.ts`.
+- Userflow suite is green in 2 consecutive runs: 35/35 succeeded (1 explicit test still not part of non-explicit run).
 
 **Blocker:** None.
 

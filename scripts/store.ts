@@ -1,5 +1,5 @@
 import { loadLocationScene, printAlways, printAllChoices, sayText } from './quotes';
-import { pushloc, locStack, setLocStack, shopping, setShopping } from './shims';
+import { pushloc, getCurrentLocationTag, shopping, setShopping } from './shims';
 import { displayyourneed } from './yourbladder';
 import { gameState } from './gameState/gameState';
 import { BladderState } from './gameState/bladderState';
@@ -10,7 +10,7 @@ import { prepeed, setPrepeed } from './herhome';
 // Buy stuff at the store.
 export function goStore() {
     setAllowItems(1);
-    if (locStack[0] !== "gostore") {
+    if (getCurrentLocationTag() !== "gostore") {
         pushloc("gostore");
         setShopping(1);
     }

@@ -1,5 +1,5 @@
 ﻿import { formatAllVarsList, formatAllVars, printList, sayText, cListenerGen, cListenerGenList, callChoice, sexLines, setSexLines, appearance, pantycolor } from './quotes';
-import { pickrandom, pushloc, poploc, locStack, thetime } from './shims';
+import { pickrandom, pushloc, poploc, getCurrentLocationTag, thetime } from './shims';
 import { showneed, displayneed, flushdrank, holdit, allowpee, bladder, bladlose, gottagoflag, wetherpanties, lastpeetime, timeheld, setTimeheld } from './bladder';
 import { displayyourneed } from './yourbladder';
 import { kissher } from './actions';
@@ -15,8 +15,7 @@ export function setKisscounter(val: number) { gameState.Romance.KissCounter = va
 export function setFeelcounter(val: number) { gameState.Romance.FeelCounter = val; }
 export function setFuckingnow(val: number) { gameState.Romance.FuckingNow = val; }
 export function setChampagnecounter(val: number) { gameState.Romance.ChampagneCounter = val; }
-export let drankChamp = 0; // Time since last champagne glass was drunk.
-export function setDrankChamp(val: number) { drankChamp = val; }
+export function setDrankChamp(val: number) { gameState.DrankChamp = Number(val); }
 export function setSexActions(val: any) { sexActions = val; }
 
 export function deepClone(value: any) {
@@ -265,7 +264,7 @@ export function fuckHerSetup(data: any){
 export function haveSex(location: string){
     let curtext: any[] = [];
     let sexQuotes = sexLines[location];
-    if (locStack[0]!== "haveSex"){
+    if (getCurrentLocationTag()!== "haveSex"){
         gameState.Romance.KissCounter = 0;
         gameState.Romance.Arousal = 0;
         pushloc("haveSex");
@@ -507,7 +506,7 @@ export function fuckTry(location: string) {
 
 export function theBedroom() {
     let curtext: any[] = [];
-    if (locStack[0] !== "theBedroom") {
+    if (getCurrentLocationTag() !== "theBedroom") {
         pushloc("theBedroom");
         curtext.push(sexLines["followBed"]);
         if (bladder > bladlose-25)
@@ -668,7 +667,7 @@ export function exposeFuckHerOnWindow(): void {
         ['feelcounter', () => gameState.Romance.FeelCounter, (v) => { gameState.Romance.FeelCounter = v; }],
         ['fuckingnow', () => gameState.Romance.FuckingNow, (v) => { gameState.Romance.FuckingNow = v; }],
         ['champagnecounter', () => gameState.Romance.ChampagneCounter, (v) => { gameState.Romance.ChampagneCounter = v; }],
-        ['drankChamp', () => drankChamp, (v) => { drankChamp = v; }],
+        ['drankChamp', () => gameState.DrankChamp, (v) => { gameState.DrankChamp = Number(v); }],
         ['sexActions', () => sexActions, (v) => { sexActions = v; }],
     ];
     for (const [name, getter, setter] of props) {

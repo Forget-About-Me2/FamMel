@@ -1,5 +1,5 @@
 import { printList, printListSelection, printAllChoicesList, callChoice, sayText, c, cListener, cListenerGenList, addListenersList, addSayText, addGirlTalk, formatAllVarsList, fetchJson, setText, handleFlirt, objQuotes, setObjQuotes, needs, drinklines, appearance, girlname, girltalk, girlgasp, pantycolor, setPantycolor, comma, setComma } from './quotes';
-import { randomchoice, pickrandom, randomIndex, formatAll, locStack, attraction, setAttraction, shyness, setShyness, haveherpurse, setHaveherpurse, maxflirts, noflirtflag, flirtedflag, showedneed, playerbladder } from './shims';
+import { randomchoice, pickrandom, randomIndex, formatAll, getCurrentLocationTag, locStack, attraction, setAttraction, shyness, setShyness, haveherpurse, setHaveherpurse, maxflirts, noflirtflag, flirtedflag, showedneed, playerbladder } from './shims';
 import { peein, displayneed, displayholdquip, indepee, showneed, tummy, setTummy, maxtummy, setMaxtummy, maxbeer, setMaxbeer, drankbeer, setDrankbeer, gottagoflag, askholditcounter, setAskholditcounter, bribeAskBase, setBribeAskBase, bribeaskthresh, setBribeaskthresh, wetlegs, setWetlegs, brokeice } from './bladder';
 import { ypeein, yourtummy, setYourtummy, ymaxtummy, setYmaxtummy, ymaxbeer, setYmaxbeer, ydrankbeer, setYdrankbeer } from './yourbladder';
 import { openPopUp } from './pop-up';
@@ -9,7 +9,7 @@ import { assertExists } from './helperFiles/helperFunctions';
 import { gameState } from './gameState/gameState';
 import { BladderState } from './gameState/bladderState';
 import { heroutfit } from './settings';
-import { drankChamp, setDrankChamp } from './fuckHer';
+import { setDrankChamp } from './fuckHer';
 
 export interface IBackpackItem {
     bpName: string;
@@ -520,6 +520,7 @@ function setupBuyFormListeners(item: string, obj, value: number, price: number, 
 export function buyItem2(item, value, price){
     let curtext: any[] = [];
     let listenerList: any[] = [];
+    const currentLocationTag = getCurrentLocationTag();
     let again = function (){
         buyItem(item);
     }
@@ -538,7 +539,7 @@ export function buyItem2(item, value, price){
         listenerList.push([[again, "Try again."], "buyItem"]);
         choice = callChoice(["curloc", "Forget it."], choice);
     } else {
-        if (!playOnly.includes(locStack[0]))
+        if (!playOnly.includes(currentLocationTag))
             curtext = printList(curtext, objQuotes["buyItem2"][3]);
         else
             curtext = printList(curtext, objQuotes["buyItem2"][4]);
@@ -768,7 +769,8 @@ export function selectitem(selecteditem){
 }
 
 function buildItemActions(clickedObj): string {
-    const canUseItems = !noItemLoc.includes(locStack[0])
+    const currentLocationTag = getCurrentLocationTag();
+    const canUseItems = !noItemLoc.includes(currentLocationTag)
         && locStack.length !== 0
         && clickedObj.functions
         && allowItems;
@@ -776,15 +778,15 @@ function buildItemActions(clickedObj): string {
 
     // Item is restricted to specific locations — only show if we're in one
     if (clickedObj.locations)
-        return clickedObj.locations.includes(locStack[0])
+        return clickedObj.locations.includes(currentLocationTag)
             ? printAllChoicesList([], clickedObj.functions).join("")
             : "";
 
     // Item is banned at this location
-    if (clickedObj.banLocs?.includes(locStack[0])) return "";
+    if (clickedObj.banLocs?.includes(currentLocationTag)) return "";
 
     let html = "";
-    const companionPresent = !playOnly.includes(locStack[0]);
+    const companionPresent = !playOnly.includes(currentLocationTag);
 
     // Companion-targeted actions (give her the item, use on her, etc.)
     if (companionPresent)
@@ -955,7 +957,7 @@ function executeDrink(item: string, mode: DrinkMode) {
         curtext = generateDrinkQuotes(curtext, drink, mode);
         applyDrinkStats(drink, mode);
     }
-    curtext = c([locStack[0], "Continue..."], curtext);
+    curtext = c([getCurrentLocationTag(), "Continue..."], curtext);
     sayText(curtext);
 }
 
@@ -993,7 +995,7 @@ export function champagneNow() {
     const [champIntro, champFirstTime, champOk, champReluctant, champRefuseIntro, champRefuse] =
         drinklines["champagne"];
 
-    if (locStack[0] === "theHome") {
+    if (getCurrentLocationTag() === "theHome") {
         curtext = printList(curtext, champIntro);
         if (!homeChampagne) {
             curtext = printList(curtext, champFirstTime);

@@ -1,5 +1,5 @@
 import { fetchJson, printList, sayText, cListenerGen, cListenerGenList, appearance, general, objQuotes } from '../quotes';
-import { pickrandom, randomchoice, pushloc, poploc, formatAll, locStack, thetime, theaterclosingtime, attraction, setAttraction, shyness, setShyness, changevenueflag, setChangevenueflag, owedfavor, setOwedfavor, checkedherout } from '../shims';
+import { pickrandom, randomchoice, pushloc, poploc, formatAll, getCurrentLocationTag, thetime, theaterclosingtime, attraction, setAttraction, shyness, setShyness, owedfavor, setOwedfavor } from '../shims';
 import { showneed, noteholding, interpbladder, wetherself, preventpee, holdit, allowpee, gottagoflag } from '../bladder';
 import { displayyourneed, wetyourself, youpee } from '../yourbladder';
 import { standobjs, haveItem, buyItem, backPackItems, allowItems, setAllowItems } from '../backPackItems';
@@ -42,17 +42,18 @@ export function theTheatre(){
     setAllowItems(1);
     let curtext: any[] = [];
     let listenerList: any[] = [];
+    const currentLocationTag = getCurrentLocationTag();
     // theatre: [0]=revisit from drive, [1]=first arrival, [2]=ambient
     const [theatreRevisit, theatreArrival, theatreAmbient] = theatre["theatre"];
-    if (locations.theTheatre.visited && locStack[0] === "driveout" && thetime < theaterclosingtime){
+    if (locations.theTheatre.visited && currentLocationTag === "driveout" && thetime < theaterclosingtime){
         curtext = printList(curtext, theatreRevisit);
         sayText(curtext);
         listenerList.push([[driveout, general["continue"]], "driveOut"]);
         if (haveItem("theTheatreKey")) {
             listenerList.push([[reTheatre, sharedLoc["choices"]["returnKey"]], "reTheatre"]);
         }
-    } else if ((thetime < theaterclosingtime) || locStack[0] === "theTheatre"){
-        if (locStack[0] !== "theTheatre") {
+    } else if ((thetime < theaterclosingtime) || currentLocationTag === "theTheatre"){
+        if (currentLocationTag !== "theTheatre") {
             curtext = printList(curtext, theatreArrival);
             pushloc("theTheatre");
             locations.theTheatre.visited = 1;
@@ -190,7 +191,7 @@ export function preMoviePee(curtext: any[] = []) {
     pushloc("domovie");
     moviecounter = 0;
     seenmovie = 0;
-    setChangevenueflag(1);//TODO probs delete
+    gameState.Interactions.ChangeVenueFlag = true;//TODO probs delete
     curtext = displayyourneed(curtext);
     curtext = showneed(curtext);
     curtext = printList(curtext, theatre["watchMovie"][10]); // preMovieBathroom
@@ -222,7 +223,7 @@ export function domovie() {
     if (moviecounter >= 7) {
         curtext = printList(curtext, theatre["watchMovie"][8]); // movieEnds
         poploc();
-        setChangevenueflag(1);
+        gameState.Interactions.ChangeVenueFlag = true;
     } else {
         curtext.push(theatre["favouriteMovie"][moviechoice]["plot"][moviecounter]);
     }
@@ -346,7 +347,7 @@ export function darkTheatre() {
     let listenerList: any[] = [];
     // darkTheatre: [0]=first entry, [1]=ambient
     const [darkEntry, darkAmbient] = theatre["darkTheatre"];
-    if (locStack[0] !== "darkTheatre") {
+    if (getCurrentLocationTag() !== "darkTheatre") {
         curtext = printList(curtext, darkEntry);
         pushloc("darkTheatre");
     } else {
@@ -366,7 +367,7 @@ export function darkTheatre() {
         listenerList.push([[stealSoda, objQuotes["stealChoices"]["soda"]], "stealSoda"]);
         listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
         listenerList.push([[feelup, general["feelUp"]], "feelUp"]);
-        if (!checkedherout) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);
+        if (!gameState.Interactions.CheckedHerOut) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);
         if (gameState.Player.bladderState >= BladderState.Urge) listenerList.push([[youpee, theatre["choices"]["youPee"]], "youPee"]);
         listenerList.push([[leavehm, theatre["choices"]["leaveHm"]], "leaveHm"]);
     }

@@ -1,5 +1,5 @@
 ﻿import { fetchJson, printList, sayText, cListenerGen, cListenerGenList, general, appearance, girlname, pantycolor, setPantycolor } from '../quotes';
-import { pickrandom, randomchoice, pushloc, poploc, formatAll, locStack, attraction, setAttraction, shyness, setShyness, flirtcounter, setFlirtcounter, checkedherout, playerbladder } from '../shims';
+import { pickrandom, randomchoice, pushloc, poploc, formatAll, getCurrentLocationTag, attraction, setAttraction, shyness, setShyness, flirtcounter, setFlirtcounter, playerbladder } from '../shims';
 import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, gomakeoutthresh, hottubthresh, flushdrank, bladder, setBladder, tummy, setTummy, gottagoflag, blademer } from '../bladder';
 import { displayyourneed, wetyourself, ypeeoutside, yPeeInTub, yourbladder, setYourbladder, yourtummy, setYourtummy, yourblademer } from '../yourbladder';
 import { standobjs, backPackItems, allowItems, setAllowItems } from '../backPackItems';
@@ -38,7 +38,7 @@ export function theMakeOut() {
     let listenerList: any[] = [];
     // theMakeOut: [0]=arrival (attraction high enough), [1]=attraction too low, [2]=ambient, [3]=rejection
     const [makeOutArrival, attractionLow, makeOutAmbient, makeOutRejection] = makeOut["theMakeOut"];
-    if (locStack[0] !== "theMakeOut") {
+    if (getCurrentLocationTag() !== "theMakeOut") {
         if (attraction > gomakeoutthresh) {
             curtext = printList(curtext, makeOutArrival);
             pushloc("theMakeOut");
@@ -143,7 +143,7 @@ export function theWalk() {
     //          [4]=gate inviting, [5]=gate leads to beach
     const [walkStart, walkAmbient, gateExamine, gateLocked,
            gateInviting, gateToBeach] = makeOut["theWalk"];
-    if (locStack[0] !== "theWalk") {
+    if (getCurrentLocationTag() !== "theWalk") {
         curtext = printList(curtext, walkStart);
         walkcounter = 0;
         pushloc("theWalk");
@@ -216,7 +216,7 @@ export function theYard() {
     const yardEntry = makeOut["theYard"]["entry"];
     const yardAmbient = makeOut["theYard"]["ambient"];
     const yardDesc = makeOut["theYard"]["description"];
-    if (locStack[0] !== "theYard") {
+    if (getCurrentLocationTag() !== "theYard") {
         curtext = printList(curtext, yardEntry);
         pushloc("theYard");
     } else {
@@ -238,7 +238,7 @@ export function theYard() {
             listenerList.push([[kissher, "Kiss her."], "kissHer"]);
             listenerList.push([[feelup, "Feel her up."], "FeelUp"]);
                 curtext = standobjs(curtext, listenerList);
-            if (!checkedherout) listenerList.push([[checkherout, "Check her out."], "checkHerOut"]);
+            if (!gameState.Interactions.CheckedHerOut) listenerList.push([[checkherout, "Check her out."], "checkHerOut"]);
             if (gameState.Player.bladderState >= BladderState.Urge) listenerList.push([[ypeeoutside, "Pee outside."], "yPeeOutside"]);
         }
         listenerList.push([[exitYard, "Leave the yard."], "goBack"]);
@@ -286,7 +286,7 @@ export function theHotTub() {
     const tubEntry = makeOut["theYard"]["tubEntry"];
     const tubAmbient = makeOut["theYard"]["tubAmbient"];
     let curtext: any[] = []
-    if (locStack[0] !== "theHotTub") {
+    if (getCurrentLocationTag() !== "theHotTub") {
         curtext = printList(curtext, tubEntry);
         pushloc("theHotTub");
     } else {
@@ -341,7 +341,7 @@ export function theBeach() {
     setAllowItems(1);
     let curtext: any[] = [];
     const [beachArrival, beachAmbient, askSwim] = makeOut["theBeach"];
-    if (locStack[0] !== "theBeach") {
+    if (getCurrentLocationTag() !== "theBeach") {
         curtext = printList(curtext, beachArrival);
         pushloc("theBeach");
         askedswim = 0;
@@ -375,7 +375,7 @@ export function theBeach() {
                 listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
                 listenerList.push([[feelup, general["feelUp"]], "FeelUp"]);
                 curtext = standobjs(curtext, listenerList);
-                if (!checkedherout) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);
+                if (!gameState.Interactions.CheckedHerOut) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);
                 if (gameState.Player.bladderState >= BladderState.Urge) listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "yPeeOutside"]);
                 if (attraction > 100 && shyness < 10)
                     listenerList.push([[function () {haveSex("theBeach")}, makeOut["choices"]["makeOut"]], "sexTub"]);

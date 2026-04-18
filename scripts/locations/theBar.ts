@@ -1,5 +1,5 @@
 ﻿import { fetchJson, printList, sayText, cListener, cListenerGen, cListenerGenList, addListenersList, addSayText, callChoice, general, objQuotes, appearance, basegirl, girltalk } from '../quotes';
-import { pickrandom, randomchoice, randomIndex, randomInt, pushloc, poploc, locStack, thetime, barclosingtime, attraction, setAttraction, shyness, setShyness, checkedherout } from '../shims';
+import { pickrandom, randomchoice, randomIndex, randomInt, pushloc, poploc, getCurrentLocationTag, thetime, barclosingtime, attraction, setAttraction, shyness, setShyness } from '../shims';
 import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, flushdrank, drinkinggamethreshold, askcanhold, pstory, gottagoflag, notdesperate, setNotdesperate, notydesperate, setNotydesperate, nothdesperate, setNothdesperate, drankbeer, setDrankbeer, shespurted, bladder, tummy, setTummy } from '../bladder';
 import { displayyourneed, wetyourself, youpee, flushyourdrank, holdpeethresh, holdself, setHoldself, yourtummy, setYourtummy, yourbladder, setYourbladder, ydrankbeer, setYdrankbeer, youSpurted } from '../yourbladder';
 import { standobjs, haveItem, buyItem, backPackItems, allowItems, setAllowItems } from '../backPackItems';
@@ -39,18 +39,19 @@ export function thebar(){
     setAllowItems(1);
     let curtext: any[] = [];
     let listenerList: any[] = [];
+    const currentLocationTag = getCurrentLocationTag();
     // theBar: [0]=revisit from drive, [1]=first arrival, [2]=ambient narration
     const [barRevisit, barArrival, barAmbient] = bar["theBar"];
-    if (locStack[0] === "driveout" && locations.theBar.visited && thetime < barclosingtime){
+    if (currentLocationTag === "driveout" && locations.theBar.visited && thetime < barclosingtime){
         curtext = printList(curtext, barRevisit);
         sayText(curtext);
         if (haveItem("theBarKey")) {
             listenerList.push([[rebar, sharedLoc["choices"]["returnKey"]], "reBar"]);
         }
         listenerList.push([[driveout, general["continue"]], "driveOut"]);
-    } else if (!((thetime < barclosingtime) || locStack[0] === "thebar")) itsClosed("theBar", darkBar, "darkBar");
+    } else if (!((thetime < barclosingtime) || currentLocationTag === "thebar")) itsClosed("theBar", darkBar, "darkBar");
     else {
-        if (locStack[0] !== "thebar"){
+        if (currentLocationTag !== "thebar"){
             curtext = printList(curtext, barArrival);
             pushloc("thebar");
             locations.theBar.visited = 1;
@@ -198,7 +199,7 @@ export function darkBar(){
        curtext = printList(curtext, stillNeedsToPee);
        setEmerHold(0);
    }
-   else if (locStack[0] !== "darkBar") {
+    else if (getCurrentLocationTag() !== "darkBar") {
        curtext = printList(curtext, enterClosedBar);
        pushloc("darkBar");
    }
@@ -223,7 +224,7 @@ export function darkBar(){
            [[feelup, general["feelUp"]], "feelUp"],
            [[playDarts, bar["choices"]["playDarts"]], "playDarts"]
            );
-       if (!checkedherout){
+       if (!gameState.Interactions.CheckedHerOut){
            listenerList.push([[checkherout, general["checkHerOut"]], "checkOut"]);
        }
        if (gameState.Player.bladderState >= BladderState.Urge) {

@@ -10,8 +10,8 @@ import {
     thetime, setThetime, hour, setHour, minute, setMinute,
     meridian, setMeridian, late, setLate, attraction, setAttraction, shyness, setShyness,
     flirtedflag, setFlirtedflag, flirtcounter, setFlirtcounter, noflirtflag, setNoflirtflag,
-    checkedherout, setCheckedherout, haveherpurse, setHaveherpurse, owedfavor, setOwedfavor,
-    changevenueflag, setChangevenueflag, shopping, setShopping, didintro, setDidintro,
+    haveherpurse, setHaveherpurse, owedfavor, setOwedfavor,
+    shopping, setShopping, didintro, setDidintro,
     showedneed, setShowedneed, randcounter, setRandcounter,
     lastattraction, setLastattraction, lastshyness, setLastshyness,
     maxflirts, setMaxflirts, randmax, setRandmax,
@@ -53,7 +53,7 @@ import {
 } from './yourbladder';
 import { gameState } from './gameState/gameState';
 import {
-    drankChamp, setDrankChamp,
+    setDrankChamp,
     sexActions, setSexActions,
 } from './fuckHer';
 import { wetthecar, setWetthecar } from './drive';
@@ -117,10 +117,10 @@ const FIELD_REGISTRY: Record<string, FieldEntry> = {
     flirtedflag:        { get: () => flirtedflag, set: setFlirtedflag },
     flirtcounter:       { get: () => flirtcounter, set: setFlirtcounter },
     noflirtflag:        { get: () => noflirtflag, set: setNoflirtflag },
-    checkedherout:      { get: () => checkedherout, set: setCheckedherout },
+    checkedherout:      { get: () => (gameState.Interactions.CheckedHerOut ? 1 : 0), set: (v) => { gameState.Interactions.CheckedHerOut = !!v; } },
     haveherpurse:       { get: () => haveherpurse, set: setHaveherpurse },
     owedfavor:          { get: () => owedfavor, set: setOwedfavor },
-    changevenueflag:    { get: () => changevenueflag, set: setChangevenueflag },
+    changevenueflag:    { get: () => (gameState.Interactions.ChangeVenueFlag ? 1 : 0), set: (v) => { gameState.Interactions.ChangeVenueFlag = !!v; } },
     shopping:           { get: () => shopping, set: setShopping },
     didintro:           { get: () => didintro, set: setDidintro },
     showedneed:         { get: () => showedneed, set: setShowedneed },
@@ -222,7 +222,7 @@ const FIELD_REGISTRY: Record<string, FieldEntry> = {
     feelcounter:        { get: () => gameState.Romance.FeelCounter, set: (v) => { gameState.Romance.FeelCounter = v; } },
     fuckingnow:         { get: () => gameState.Romance.FuckingNow, set: (v) => { gameState.Romance.FuckingNow = v; } },
     champagnecounter:   { get: () => gameState.Romance.ChampagneCounter, set: (v) => { gameState.Romance.ChampagneCounter = v; } },
-    drankChamp:         { get: () => drankChamp, set: setDrankChamp },
+    drankChamp:         { get: () => gameState.DrankChamp, set: setDrankChamp },
     sexActions:         { get: () => sexActions, set: setSexActions, deep: true },
     // --- drive.ts ---
     wetthecar:          { get: () => wetthecar, set: setWetthecar },
@@ -337,7 +337,7 @@ const FORWARD_BRIDGED_KEYS = new Set([
     'flirtcounter', 'randcounter', 'owedfavor', 'late', 'flirtedflag', 'noflirtflag',
     'shopping', 'maxflirts', 'randmax',
     'clubclosingtime', 'theaterclosingtime', 'barclosingtime', 'timespeed',
-    'didintro', 'haveherpurse', 'changevenueflag', 'checkedherout', 'showedneed', 'playerbladder',
+    'didintro', 'haveherpurse', 'showedneed', 'playerbladder',
     'thetime', 'hour', 'minute', 'meridian',
 ]);
 

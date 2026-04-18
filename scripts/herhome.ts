@@ -1,5 +1,5 @@
 ﻿import { fetchJson, fetchAndCacheJson, getMLocations, printList, sayText, cListenerGen, cListenerGenList, addSayText, voccurse, locjson, appearance, setAppearance, girlname, pantycolor } from './quotes';
-import { pushloc, poploc, pickrandom, randomchoice, randomize, locStack, thetime, attraction, setAttraction, shyness, setShyness } from './shims';
+import { pushloc, poploc, pickrandom, randomchoice, randomize, getCurrentLocationTag, thetime, attraction, setAttraction, shyness, setShyness } from './shims';
 import { showneed, displayneed, displaygottavoc, noteholding, preventpee, flushdrank, allowpee, wetherself, bladder, bladlose, gottagoflag, setGottagoflag, askholditcounter, setAskholditcounter, waitcounter, setWaitcounter } from './bladder';
 import { displayyourneed, wetyourself, youpee } from './yourbladder';
 import { standobjs, haveItem, backPackItems, allowItems, setAllowItems } from './backPackItems';
@@ -44,7 +44,7 @@ export function homeConditions() {
 
 export function herhome() {
     //This chooses the appropriate function to continue in the location herhome
-    if (locStack[0] === "yourhome")
+    if (getCurrentLocationTag() === "yourhome")
         fetchJson("appearance").then(function(data) {
             setAppearance(data);
             pickup();
@@ -57,7 +57,7 @@ export function herhome() {
 export function pickup() {
     setAllowItems(1);
     let curtext: any[] = [];
-    if (locStack[0] !== "pickup") { // happens first time only.
+    if (getCurrentLocationTag() !== "pickup") { // happens first time only.
         getMLocations("herhome", "pickup");
         pushloc("pickup");
         curtext.push(locjson["goOver"].formatVars());
@@ -143,7 +143,7 @@ export function elevatorWait() {
     setAllowItems(1);
     let curtext: any[] = [];
     let listenerList: any[] = [];
-    if (locStack[0] !== "theElevator") {
+    if (getCurrentLocationTag() !== "theElevator") {
         pushloc("theElevator");
         curtext.push(herHome["goElevator"].formatVars());
         listenerList.push([[elevatorWait, "Continue..."], "elevatorWait"]);
@@ -260,7 +260,7 @@ export function keyBadExcuse(){
 
 export function lookForKeys() {
     let curtext: any[] = [];
-    if (locStack[0] !== "lookForKeys"){
+    if (getCurrentLocationTag() !== "lookForKeys"){
         pushloc("lookForKeys");
         curtext = printList(curtext, herHome["offersPurse"]);
         curtext = showneed(curtext);
@@ -284,7 +284,7 @@ export function lookForKeys() {
 
 export function theHome() {
     setAllowItems(1);
-    if (locStack[0] !== "theHome")
+    if (getCurrentLocationTag() !== "theHome")
         pushloc("theHome")
     let curtext = [herHome["atHome"].formatVars()];
     let listerList: any[] = [];

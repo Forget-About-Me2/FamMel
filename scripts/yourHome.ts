@@ -3,7 +3,7 @@ import { BladderState } from "./gameState/bladderState";
 
 import { gameSettings } from "./settings/gameSettings";
 import { loadLocationScene, printIntro, printAlways, printChoices, printChoicesList, printSDialogue, sayText, c, handleFlirt, cListenerGenList, printList, locjson, drinklines, calledjsons, girltalk, printDialogue } from './quotes';
-import { pushloc, incrandom, randomchoice, formatString, locStack, shopping, setShopping, flirtedflag, setFlirtedflag, late, setLate, attraction, setAttraction, shyness, setShyness, maxflirts, thetime } from './shims';
+import { pushloc, incrandom, randomchoice, formatString, getCurrentLocationTag, shopping, setShopping, flirtedflag, setFlirtedflag, late, setLate, attraction, setAttraction, shyness, setShyness, maxflirts, thetime } from './shims';
 import { displaygottavoc, flushdrank, phoneholdthresh, bladder, tummy, setTummy, maxtummy, askholditcounter, setAskholditcounter, waitcounter, setWaitcounter } from './bladder';
 import { displayyourneed, wetyourself, yourtummy, setYourtummy, ymaxtummy } from './yourbladder';
 import { haveItem, backPackItems, allowItems, setAllowItems } from './backPackItems';
@@ -21,12 +21,13 @@ let onphone = 0; // Flag for being on the phone with her
 export function yourHome() {
     setAllowItems(1);
     let curtext: string[] = [];
+    const currentLocationTag = getCurrentLocationTag();
     if (!gameState.DidIntro) {
         loadLocationScene("yourhome", "yourhome");
         gameState.DidIntro = true;
         curtext = printIntro(curtext, 0);
     } else {
-        if (locStack[0] !== "yourhome" || onphone || shopping) {
+        if (currentLocationTag !== "yourhome" || onphone || shopping) {
             loadLocationScene("yourhome", "yourhome");
             onphone = 0;
             setShopping(0);
@@ -77,7 +78,7 @@ export function callHer() {
     const companion = gameState.Companion;
     setAllowItems(1);
     let curtext: any[] = [];
-    if (locStack[0] !== "callher") {
+    if (getCurrentLocationTag() !== "callher") {
         setFlirtedflag(0);
         pushloc("callher");
         loadLocationScene("yourhome", "callher")
@@ -258,7 +259,7 @@ function yPreDrink() {
     } else {
         curtext = printList(curtext, yDrinkLines[1] || ["Your stomach feels too full to drink more right now."]);
     }
-    curtext = c([locStack[0], "Continue..."], curtext);
+    curtext = c([getCurrentLocationTag(), "Continue..."], curtext);
     sayText(curtext);
 }
 
@@ -306,7 +307,7 @@ function ignorecell() {
     const callData = getYourHomeCallData();
     let curtext = [callData.ignorecell];
     setAttraction(attraction - 1);
-    curtext = c([locStack[0], "Continue..."], curtext);
+    curtext = c([getCurrentLocationTag(), "Continue..."], curtext);
     sayText(curtext);
 }
 

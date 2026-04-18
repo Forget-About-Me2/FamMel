@@ -1,5 +1,5 @@
 import { callChoice, sayText, c, printList, cListenerGenList, flirtresps, appearance, feelUp, kissing, girlname, basegirl } from './quotes';
-import { pickrandom, incrandom, locStack, randcounter, attraction, setAttraction, shyness, setShyness, flirtcounter, setFlirtcounter, flirtedflag, setFlirtedflag, checkedherout, setCheckedherout } from './shims';
+import { pickrandom, incrandom, getCurrentLocationTag, randcounter, attraction, setAttraction, shyness, setShyness, flirtcounter, setFlirtcounter, flirtedflag, setFlirtedflag } from './shims';
 import { haveSex } from './fuckHer';
 import { gameState } from './gameState/gameState';
 import { BladderState } from './gameState/bladderState';
@@ -7,9 +7,10 @@ import { heroutfit } from './settings';
 
 export function flirt_l() {
     let curtext: any[] = []
+    const currentLocationTag = getCurrentLocationTag();
     setShyness(shyness - 1);
     if (flirtcounter < 1) {
-        if (locStack[0] === "callher")
+        if (currentLocationTag === "callher")
             curtext.push(flirtresps["lowcell"][randcounter]);
         else
             curtext.push(flirtresps["low"][randcounter]);
@@ -20,15 +21,16 @@ export function flirt_l() {
         curtext.push(flirtresps["neutral"][0])
     setFlirtcounter(flirtcounter + 3);
     setFlirtedflag(flirtedflag + 1);
-    c([locStack[0], "Continue..."], curtext);
+    c([currentLocationTag, "Continue..."], curtext);
     sayText(curtext);
 }
 
 export function flirt_m() {
     let curtext: any[] = [];
+    const currentLocationTag = getCurrentLocationTag();
     setShyness(shyness - 2);
     if (flirtcounter < 1) {
-        if (locStack[0] === "callher")
+        if (currentLocationTag === "callher")
             curtext.push(flirtresps["lowcell"][randcounter]);
         else
             curtext.push(flirtresps["low"][randcounter]);
@@ -36,7 +38,7 @@ export function flirt_m() {
         setAttraction(attraction + 3);
     }
     if (flirtcounter === 1) {
-        if (locStack[0] === "callher")
+        if (currentLocationTag === "callher")
             curtext.push(flirtresps["medcell"][randcounter]);
         else
             curtext.push(flirtresps["med"][randcounter]);
@@ -48,13 +50,14 @@ export function flirt_m() {
     }
     setFlirtcounter(flirtcounter + 3);
     setFlirtedflag(flirtedflag + 1);
-    c([locStack[0], "Continue..."], curtext);
+    c([currentLocationTag, "Continue..."], curtext);
     sayText(curtext);
 }
 
 //High level responses only available when attraction is >35.
 export function flirt_h() {
     let curtext: any[] = [];
+    const currentLocationTag = getCurrentLocationTag();
     if (attraction > 35 && shyness < 70) {
         curtext.push(flirtresps["high"][randcounter]);
         incrandom();
@@ -66,12 +69,12 @@ export function flirt_h() {
     }
     setFlirtcounter(flirtcounter + 4);
     setFlirtedflag(flirtedflag + 1);
-    c([locStack[0], "Continue..."], curtext);
+    c([currentLocationTag, "Continue..."], curtext);
     sayText(curtext);
 }
 
 export function checkherout() {
-    setCheckedherout(1);
+    gameState.Interactions.CheckedHerOut = true;
     let curtext = [pickrandom(appearance["girls"][basegirl]["stareather"][heroutfit])];
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
@@ -80,7 +83,8 @@ export function checkherout() {
 export function feelup() {
     gameState.Romance.FeelCounter += 1;
     let curtext: any[] = [];
-    if (locStack[0] !== "thehottub") {
+    const currentLocationTag = getCurrentLocationTag();
+    if (currentLocationTag !== "thehottub") {
         curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelher"]));
         if (gameState.Companion.bladderState >= BladderState.Emergency) curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelpee"]));
         else curtext.push(pickrandom(appearance["clothes"][heroutfit]["feelres"]));
@@ -91,7 +95,7 @@ export function feelup() {
     }
     if (flirtcounter > 1 && attraction > 35) {
         curtext.push(pickrandom(feelUp["resp"]));
-        if (locStack[0] !== "thehottub")
+        if (currentLocationTag !== "thehottub")
             curtext.push("She" + pickrandom(feelUp["you"]));
         else
             curtext.push("She" + pickrandom(feelUp["youTub"]));
@@ -101,7 +105,7 @@ export function feelup() {
             gameState.Romance.Arousal += 1;
         }
     } else if (attraction > 20) {
-        if (locStack[0] !== "thehottub")
+        if (currentLocationTag !== "thehottub")
             curtext.push(girlname + pickrandom(feelUp["you"]));
         else
             curtext.push(girlname + pickrandom(feelUp["youTub"]));
@@ -122,6 +126,7 @@ export function feelup() {
 
 export function kissher(curtext: any[] = [], sexLoc?: string) {
     gameState.Romance.KissCounter += 1;
+    const currentLocationTag = getCurrentLocationTag();
     const [kissAttempt, kissRejected, kissPleasedResponse, kissReturnedKiss, kissPassionateReturn] = kissing["diag"];
     curtext = printList(curtext, kissAttempt);
     if (attraction < 10 || (flirtcounter > 1 && attraction < 20)) {
@@ -152,7 +157,7 @@ export function kissher(curtext: any[] = [], sexLoc?: string) {
         }
     } else {
         if (gameState.Companion.bladderState < BladderState.Emergency) {
-            if (locStack[0] !== "thehottub") {
+            if (currentLocationTag !== "thehottub") {
                 curtext.push(pickrandom(kissing["sxy"]));
                 gameState.Romance.Arousal += 8;
             }
@@ -162,7 +167,7 @@ export function kissher(curtext: any[] = [], sexLoc?: string) {
             }
             incrandom();
         } else {
-            if (locStack[0] !== "thehottub") {
+            if (currentLocationTag !== "thehottub") {
                 curtext.push(pickrandom(kissing["pee"]));
                 gameState.Romance.Arousal += 10;
             }

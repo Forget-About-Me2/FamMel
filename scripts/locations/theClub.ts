@@ -1,5 +1,5 @@
 ﻿import { fetchJson, printList, sayText, cListenerGen, cListenerGenList, general, objQuotes, appearance, girlname, pantycolor } from '../quotes';
-import { pickrandom, randomchoice, pushloc, poploc, locStack, thetime, clubclosingtime, changevenueflag, setChangevenueflag, attraction, setAttraction, checkedherout } from '../shims';
+import { pickrandom, randomchoice, pushloc, poploc, getCurrentLocationTag, thetime, clubclosingtime, attraction, setAttraction } from '../shims';
 import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, holdit, allowpee, displayholdquip, photoGameThresholds, bladder, gottagoflag, askholditcounter, setAskholditcounter } from '../bladder';
 import { displayyourneed, wetyourself, youpee } from '../yourbladder';
 import { standobjs, haveItem, buyItem, backPackItems, allowItems, setAllowItems } from '../backPackItems';
@@ -40,15 +40,16 @@ export function theClub() {
     setAllowItems(1);
     let curtext: any[] = [];
     let listenerList: any[] = []
+    const currentLocationTag = getCurrentLocationTag();
     // theClub: [0]=revisit from drive, [1]=first arrival, [2]=ambient, [3]=go dance intro
     const [clubRevisit, clubArrival, clubAmbient, goDanceIntro] = club["theClub"];
-    if (locations.theClub.visited && locStack[0] === "driveout" && thetime < clubclosingtime) {
+    if (locations.theClub.visited && currentLocationTag === "driveout" && thetime < clubclosingtime) {
         curtext = printList(curtext, clubRevisit);
         if (haveItem("theClubKey"))
             listenerList.push([[reClub, sharedLoc["choices"]["returnKey"]], "reClub"]);
         listenerList.push([[driveout, general["continue"]], "driveOut"]);
-    } else if ((thetime < clubclosingtime) || locStack[0] === "theClub") {
-            if (locStack[0] !== "theClub" && locStack[0] !== "doDance") {
+        } else if ((thetime < clubclosingtime) || currentLocationTag === "theClub") {
+            if (currentLocationTag !== "theClub" && currentLocationTag !== "doDance") {
                 curtext = printList(curtext, clubArrival);
                 pushloc("theClub");
                 locations.theClub.visited = 1;
@@ -107,7 +108,7 @@ export function reClub() {
 
 export function goDance(){
     pushloc("doDance");
-    setChangevenueflag(1);
+    gameState.Interactions.ChangeVenueFlag = true;
     const goDanceIntro = club["theClub"][3];
     let curtext = showneed();
     curtext = displayyourneed(curtext);
@@ -170,7 +171,7 @@ export function darkClub() {
         curtext.push(club["emerHold"].formatVars());
         setEmerHold(0);
     }
-    else if (locStack[0] !== "darkClub") {
+    else if (getCurrentLocationTag() !== "darkClub") {
         curtext.push(club["darkClubEnter"].formatVars());
         pushloc("darkClub");
     } else {
@@ -190,7 +191,7 @@ export function darkClub() {
             sayText(curtext);
             listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
             listenerList.push([[feelup, general["feelUp"]], "feelUp"]);
-            if (!checkedherout)
+            if (!gameState.Interactions.CheckedHerOut)
                 listenerList.push([[checkherout, general["checkHerOut"]], "checkOut"]);
             if (gameState.Player.bladderState >= BladderState.Urge)
                 listenerList.push([[youpee, club["choices"]["youPee"]], "youPee"]);
@@ -248,7 +249,7 @@ export function photoGame() {
     if (wetPhoto) {
         wetPhoto = 0;
         go("goback");
-    } else if (locStack[0] !== "photogame") {
+    } else if (getCurrentLocationTag() !== "photogame") {
         pushloc("photogame");
         curtext = displayholdquip(curtext);
         posectr = 0;

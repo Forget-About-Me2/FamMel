@@ -2,7 +2,7 @@
 
 // String prototype extensions — augment the global String interface
 // so TypeScript accepts .format() and .formatVars() calls everywhere.
-import { formatString, range, pickrandom, incrandom, randomInt, locStack, randcounter, setEndScreens } from './shims';
+import { formatString, range, pickrandom, incrandom, randomInt, getCurrentLocationTag, randcounter, setEndScreens } from './shims';
 import { gameState } from './gameState/gameState';
 import { setToldstories } from './bladder';
 import { validateListenerList } from './validation';
@@ -247,7 +247,7 @@ export function printAllChoicesList(curtext: any[], list: any[]){
 
 export function callChoice(choice: any[], curtext: any[]=[]){
     if(choice[0] === "curloc") {
-        return c([locStack[0], choice[1]], curtext);
+        return c([getCurrentLocationTag(), choice[1]], curtext);
     } else {
         return c(choice, curtext);
     }
@@ -647,20 +647,21 @@ function shePeeSetup(data){
 
 
 export function handleFlirt(listenerList: any[]){
+    const currentLocationTag = getCurrentLocationTag();
     let low = "low";
     let med = "med";
     let high = "high";
-    if(locStack[0] === "callher"){
+    if(currentLocationTag === "callher"){
         low += "cell";
         med += "cell";
-    } else if (locStack[0] === "theHotTub"){
+    } else if (currentLocationTag === "theHotTub"){
         low += "Naked";
         med += "Naked";
         high += "Naked";
     }
     listenerList.push([[flirt_l, flirtFormat(flirtquotes[low][randcounter])], "flirt_l"])
     incrandom();
-    if (randomInt(7) === 0 && locStack[0] !== "callher"){
+    if (randomInt(7) === 0 && currentLocationTag !== "callher"){
         listenerList.push([[flirt_h, flirtFormat(flirtquotes[high][randcounter])], "flirt_h"]);
     } else {
         listenerList.push([[flirt_m, flirtFormat(flirtquotes[med][randcounter])], "flirt_m"]);

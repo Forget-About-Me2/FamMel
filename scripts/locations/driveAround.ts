@@ -5,7 +5,7 @@ import { displayyourneed, wetyourself, ypeein } from '../yourbladder';
 import { standobjs, haveItem, setAllowItems } from '../backPackItems';
 import { driveout } from '../drive';
 import { gottagoflag } from '../bladder';
-import { locStack } from '../shims';
+import { getCurrentLocationTag } from '../shims';
 import { gameState } from '../gameState/gameState';
 import { BladderState } from '../gameState/bladderState';
 
@@ -60,7 +60,7 @@ export function driveAround(){
         if (gasStation) {
             listenerList.push([[station, "Stop at the gas station"], "gasStation"]);
         }
-        curtext = c([locStack[0], "Continue..."], curtext);
+        curtext = c([getCurrentLocationTag(), "Continue..."], curtext);
         addSayText(curtext);
         cListenerGenList(listenerList);
     }
