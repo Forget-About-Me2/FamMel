@@ -25,7 +25,7 @@ export let minperc = 75; //Percentage of the minimumvalue of the bladder
 export function setMinperc(val: number) { minperc = val; }
 
 export let bladurge = 250; // Level where she feels the first urge
-export function setBladurge(val: number) { bladurge = val; }
+export function setBladurge(val: number) { updateurge(val); }
 export let bladneed = bladurge * 2; // Level where she continuously needs to go
 export let blademer = bladurge * 3; // Level where it becomes an emergency
 export let bladlose = bladurge * 3 + 150; // Level where she loses control
@@ -33,15 +33,40 @@ export let bladcumlose = bladurge * 4; // Level where she spurts as she cums
 export let bladsexlose = bladurge * 5; // Level where she can't control it during sex
 
 export let maxtummy = 250; // Drink capacity of stomach
-export function setMaxtummy(val: number) { maxtummy = val; }
+export function setMaxtummy(val: number) {
+    maxtummy = Number(val) || 0;
+    if (gameState.Companion) {
+        gameState.Companion.MaxTummy = maxtummy;
+    }
+}
 export let maxbeer = 500; // Beer capacity of stomach
-export function setMaxbeer(val: number) { maxbeer = val; }
+export function setMaxbeer(val: number) {
+    maxbeer = Number(val) || 0;
+    if (gameState.Companion) {
+        gameState.Companion.MaxAlcohol = maxbeer;
+    }
+}
 
 // Legacy global state used across script-style JS files.
 export let tummy = 0;
-export function setTummy(val: number) { tummy = val; }
+export function setTummy(val: number) {
+    tummy = Number(val) || 0;
+    if (gameState.Companion) {
+        gameState.Companion.Tummy = tummy;
+    }
+}
 export let bladder = 0;
-export function setBladder(val: number) { bladder = val; }
+export function setBladder(val: number) {
+    bladder = Number(val) || 0;
+    if (gameState.Companion) {
+        gameState.Companion.Bladder = bladder;
+    }
+}
+
+export function drainBladderBy(amount: number) {
+    const drainAmount = Math.max(0, Number(amount) || 0);
+    setBladder(bladder - drainAmount);
+}
 
 export let bladDec = 1;
 export function setBladDec(val: number) { bladDec = val; }
@@ -62,7 +87,12 @@ export let peedoutside = 0; // has she peed outside
 //  The following are used by her to complain about how long she's
 // been waiting and how much she's drunk.
 export let lastpeetime = 0;  // When did she last go?
-export function setLastpeetime(val: number) { lastpeetime = val; }
+export function setLastpeetime(val: number) {
+    lastpeetime = Number(val) || 0;
+    if (gameState.Companion) {
+        gameState.Companion.LastPeeTime = lastpeetime;
+    }
+}
 export let timeheld = 0; // for stats
 export function setTimeheld(val: number) { timeheld = val; }
 
@@ -125,7 +155,12 @@ export function setWetlegs(val: number) { wetlegs = val; }
 export let wetherpanties = 0; // did she ever wet herself?
 export function setWetherpanties(val: number) { wetherpanties = val; }
 export let nowpeeing = 0; // flag: she is currently peeing
-export function setNowpeeing(val: number) { nowpeeing = val; }
+export function setNowpeeing(val: number) {
+    nowpeeing = Number(val) || 0;
+    if (gameState.Companion) {
+        gameState.Companion.NowPeeing = !!nowpeeing;
+    }
+}
 
 export let gottagoflag = 0; // has she just asked to use the restroom
 export function setGottagoflag(val: number) { gottagoflag = val; }
@@ -146,15 +181,13 @@ export function initUrge(urge: number) {
 export function updateurge(newurge: number) {
     if (newurge < minurge) newurge = minurge;
     newurge = Math.round(newurge);
-    bladurge = newurge;
-    bladneed = newurge * 2; // Level where she continuously needs to go
-    blademer = newurge * 3; // Level where it becomes an emergency
-    bladlose = newurge * 3 + 150; // Level where she loses control
-    bladcumlose = newurge * 4; // Level where she spurts as she cums
-    bladsexlose = newurge * 5; // Level where she can't control it during sex
-
-    // Sync to Person (source of truth) when available
     gameState.Companion?.setUrge(newurge);
+    bladurge = gameState.Companion?.bladderUrge ?? newurge;
+    bladneed = gameState.Companion?.bladderNeed ?? newurge * 2;
+    blademer = gameState.Companion?.bladderEmer ?? newurge * 3;
+    bladlose = gameState.Companion?.bladderLose ?? (newurge * 3 + 150);
+    bladcumlose = gameState.Companion?.bladderCumLose ?? newurge * 4;
+    bladsexlose = gameState.Companion?.bladderSexLose ?? newurge * 5;
 }
 
 // Slightly randomizes the calculated tuminc
@@ -216,14 +249,14 @@ export function flushdrank() {
         if (item.hasOwnProperty("shedrank"))
             item.shedrank = 0;
     });
-    bladder = 0;
+    setBladder(0);
     askholditcounter = 0;
     waitcounter = 0;
     gottagoflag = 0;
-    lastpeetime = thetime;
+    setLastpeetime(thetime);
     rrlockedflag = 0;
     shespurted = 0;
-    nowpeeing = 1;
+    setNowpeeing(1);
     bribeaskthresh = bribeAskBase;
 }
 
@@ -950,7 +983,7 @@ export function peein3(item: string) {
                 else
                     //Not desperate but the item is too small to hold it all
                     curtext = printList(curtext, list[9]);
-                bladder -= containerVolume;
+                drainBladderBy(containerVolume);
                 waitcounter = 4;
             } else {
                 //The item can hold her full bladder content
@@ -1217,7 +1250,7 @@ export function wetherself3t() {
 
 export function spurtedherself(curtext: any[], listenerList: any[]): [any[], any[]] {
     console.log("test: spurtedherself");
-    bladder -= 50;
+    drainBladderBy(50);
     spurtthresh -= 0.1 * spurtthresh;
     shespurted = 1;
     curtext.push(pickrandom(needs["spurtquote"]));
@@ -1580,16 +1613,16 @@ export function exposeBladderOnWindow() {
         ["customurge", () => customurge, (v) => { customurge = v; }],
         ["minurge", () => minurge, (v) => { minurge = v; }],
         ["minperc", () => minperc, (v) => { minperc = v; }],
-        ["bladurge", () => bladurge, (v) => { bladurge = v; }],
+        ["bladurge", () => bladurge, (v) => { setBladurge(v); }],
         ["bladneed", () => bladneed, (v) => { bladneed = v; }],
         ["blademer", () => blademer, (v) => { blademer = v; }],
         ["bladlose", () => bladlose, (v) => { bladlose = v; }],
         ["bladcumlose", () => bladcumlose, (v) => { bladcumlose = v; }],
         ["bladsexlose", () => bladsexlose, (v) => { bladsexlose = v; }],
-        ["maxtummy", () => maxtummy, (v) => { maxtummy = v; }],
-        ["maxbeer", () => maxbeer, (v) => { maxbeer = v; }],
-        ["tummy", () => tummy, (v) => { tummy = v; }],
-        ["bladder", () => bladder, (v) => { bladder = v; }],
+        ["maxtummy", () => maxtummy, (v) => { setMaxtummy(v); }],
+        ["maxbeer", () => maxbeer, (v) => { setMaxbeer(v); }],
+        ["tummy", () => tummy, (v) => { setTummy(v); }],
+        ["bladder", () => bladder, (v) => { setBladder(v); }],
         ["bladDec", () => bladDec, (v) => { bladDec = v; }],
         ["bladDespDec", () => bladDespDec, (v) => { bladDespDec = v; }],
         ["seal", () => seal, (v) => { seal = v; }],
@@ -1599,7 +1632,7 @@ export function exposeBladderOnWindow() {
         ["peedvase", () => peedvase, (v) => { peedvase = v; }],
         ["peedshot", () => peedshot, (v) => { peedshot = v; }],
         ["peedoutside", () => peedoutside, (v) => { peedoutside = v; }],
-        ["lastpeetime", () => lastpeetime, (v) => { lastpeetime = v; }],
+        ["lastpeetime", () => lastpeetime, (v) => { setLastpeetime(v); }],
         ["timeheld", () => timeheld, (v) => { timeheld = v; }],
         ["drankbeer", () => drankbeer, (v) => { drankbeer = v; }],
         ["notdesperate", () => notdesperate, (v) => { notdesperate = v; }],
@@ -1616,7 +1649,7 @@ export function exposeBladderOnWindow() {
         ["sawherpee", () => sawherpee, (v) => { sawherpee = v; }],
         ["wetlegs", () => wetlegs, (v) => { wetlegs = v; }],
         ["wetherpanties", () => wetherpanties, (v) => { wetherpanties = v; }],
-        ["nowpeeing", () => nowpeeing, (v) => { nowpeeing = v; }],
+        ["nowpeeing", () => nowpeeing, (v) => { setNowpeeing(v); }],
         ["gottagoflag", () => gottagoflag, (v) => { gottagoflag = v; }],
         ["askholditcounter", () => askholditcounter, (v) => { askholditcounter = v; }],
         ["waitcounter", () => waitcounter, (v) => { waitcounter = v; }],

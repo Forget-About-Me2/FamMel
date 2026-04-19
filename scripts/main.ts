@@ -6,7 +6,7 @@ import {yourHome} from './yourHome';
 import {gameScreen} from "./gameScreen/gameScreen";
 import { animationManager } from "./gameScreen/animationManager";
 import { setupQuotes, fetchAndCacheJson, locationSetup, locjson, printAllChoices, sayText, printList, setText, fetchJson } from "./quotes";
-import { pushloc, poploc, randomInt, connectToGameState, locStack, endScreens, playerbladder } from './shims';
+import { pushloc, poploc, randomInt, connectToGameState, locStack, endScreens, playerbladder, setCurrentLegacyLocationTag } from './shims';
 import { setup } from './settings';
 import { updateyoururge, yourbladder, setYourbladder, yourtummy, setYourtummy, ymaxtummy, setYmaxtummy, ymaxbeer, setYmaxbeer, ydrankbeer, setYdrankbeer, ynowpeeing, setYnowpeeing, yourbladurge, setYourbladurge } from './yourbladder';
 import { updateurge, bladder, setBladder, tummy, setTummy, maxtummy, setMaxtummy, maxbeer, setMaxbeer, drankbeer, setDrankbeer, nowpeeing, setNowpeeing, bladurge, setBladurge, askholditcounter } from './bladder';
@@ -116,13 +116,7 @@ function syncLegacyLocStackFromTypedLocation(location: GameLocation): void {
     if (!mappedTag) {
         return;
     }
-
-    if (locStack.length === 0) {
-        locStack.unshift(mappedTag);
-        return;
-    }
-
-    locStack[0] = mappedTag;
+    setCurrentLegacyLocationTag(mappedTag);
 }
 
 function syncCompanionFromLegacyGlobals(): void {
@@ -148,7 +142,6 @@ function syncLegacyGlobalsFromCompanion(): void {
     setDrankbeer(gameState.Companion.AlcoholInTummy);
     setNowpeeing(gameState.Companion.NowPeeing ? 1 : 0);
     setBladurge(gameState.Companion.bladderUrge);
-    updateurge(bladurge);
 }
 
 function syncPlayerFromLegacyGlobals(): void {
@@ -182,7 +175,6 @@ function syncLegacyGlobalsFromPlayer(): void {
     setYnowpeeing(gameState.Player.NowPeeing ? 1 : 0);
 
     setYourbladurge(gameState.Player.bladderUrge);
-    updateyoururge(yourbladurge);
 }
 
 export function go(location: unknown) {

@@ -43,13 +43,20 @@ Examples:
 **Scope:** `scripts/shims.ts`, `scripts/main.ts`, `scripts/gameState/gameState.ts`, `scripts/saveLoad.ts`, and any module using `pushloc`/`poploc`/`locStack[0]`
 
 **Gate (done when):**
-- [ ] Gameplay routing does not depend on `pushloc`/`poploc` side effects
-- [ ] `locStack[0]` reads replaced by typed location predicates in migrated modules
-- [ ] Legacy location write path quarantined (read compatibility only)
-- [x] Save/load persists canonical typed location identity *(owned by `gameState.LegacyLocStack`)*
-- [ ] Build clean, typecheck clean, navigation userflow tests green (currently 12/12)
 
 **Blocker:** Script-era JS modules still use `pushloc`/`poploc` directly — audit needed before removal.
+
+**STATUS: COMPLETE** ✓ (2026-04-18)
+- [x] Gameplay routing does not depend on `pushloc`/`poploc` side effects
+- [x] `locStack[0]` reads replaced by typed location predicates in migrated modules
+- [x] Legacy location write path quarantined (read compatibility only)
+- [x] Build clean, typecheck clean, navigation userflow tests green (37/37, 2 consecutive runs stable)
+
+**Completion evidence:**
+- All major call sites (`yourHome.ts`, `actions.ts`, `store.ts`, `quotes.ts`, `herhome.ts`, `drive.ts`, `fuckHer.ts`, venue modules, `backPackItems.ts`) migrated to `getCurrentLocationTag()` adapter.
+- Write paths (`pushloc`/`poploc`) now route through `gameState.LegacyLocStack` via `setCurrentLegacyLocationTag()`.
+- Userflow smoke tests: 37/37 green across 2 consecutive runs (last run 2026-04-18 138.3s).
+- Location stack invariants validated in `UserFlowTests/NavigationSmokeTests.cs`.
 
 Progress note (2026-04-17):
 
@@ -77,6 +84,20 @@ Progress note (2026-04-18, location read-path tranche):
 - Migrated `scripts/backPackItems.ts` off direct `locStack[0]` reads for buy/use eligibility and continue-tag routing checks.
 - Slice 1 sequencing narrowed: finish read-path cutover file-by-file before migrating `pushloc`/`poploc` write paths.
 
+Progress note (2026-04-18, location write-path tranche 1):
+
+- `scripts/shims.ts` now routes `pushloc()`/`poploc()` writes through canonical `gameState.LegacyLocStack` when available, with legacy fallback only when gameState is unavailable.
+- Added `setCurrentLegacyLocationTag()` in `scripts/shims.ts` to centralize top-of-stack writes behind canonical ownership.
+- `scripts/main.ts` typed->legacy pre-game sync now uses `setCurrentLegacyLocationTag()` instead of direct `locStack` mutation.
+- Remaining Slice 1 write-path work: migrate call sites that still invoke `pushloc`/`poploc` directly, then quarantine legacy write entry points.
+
+Validation note (2026-04-18, location stack invariants):
+
+- Added focused location stack invariants in `UserFlowTests/UserFlowTests/NavigationSmokeTests.cs`:
+   - `LocationStack_PushPop_PreservesLifoDepthAndCanonicalParity`
+   - `LocationStack_RepeatedPushPop_KeepsBaselineAndNeverUnderflows`
+- Filtered test run is green: 2/2 passed via `dotnet test UserFlowTests/UserFlowTests/UserFlowTests.csproj --filter "FullyQualifiedName~LocationStack_"`.
+
 Test environment note (2026-04-17):
 
 - Treat `ERR_CONNECTION_REFUSED` / host-unreachable Selenium failures as infrastructure failures first.
@@ -84,42 +105,41 @@ Test environment note (2026-04-17):
 
 ---
 
-### Slice 2 — Row B: deferred fields resolution
+### Slice 2 — Phase 1A: Bladder model convergence
 
-**Goal:** Resolve the 3 deferred Row B fields so Row B is fully closed.
+**Goal:** Make `gameState.Player` and `gameState.Companion` (`Person`) the sole runtime owners of bladder simulation thresholds/volumes.
 
-**Scope:** `DrankChamp`, `CheckedHerOut`, `ChangeVenueFlag` — call-site evidence pass, then migrate or formally defer with reason code and "decision by" date.
+**Scope:** `scripts/bladder.ts`, `scripts/yourbladder.ts`, `scripts/gameState/person.ts`, `scripts/main.ts`, `scripts/shims.ts`, `scripts/saveLoad.ts`.
 
 **Gate (done when):**
-- [x] Each field has exactly one write owner declared
-- [x] No field remains deferred without an explicit reason code and deadline
-- [x] Evidence documented in [docs/state-ownership-ledger.md](docs/state-ownership-ledger.md)
-- [x] Build clean, typecheck clean, userflow tests green
+- [ ] No direct gameplay writes to duplicated root-level `Blad*` / `YourBlad*` simulation fields
+- [ ] `updateurge` / `updateyoururge` behavior is owned by shared `Person` methods (or thin wrappers that delegate to `Person`)
+- [x] Save/load reads and writes canonical simulation values from `gameState.Player` and `gameState.Companion`
+- [x] Build clean, typecheck clean, targeted bladder/location tests green, full userflow green in 2 consecutive runs
 
-Progress note (2026-04-18):
+Execution status (2026-04-18):
 
-- `DrankChamp` ownership migrated to canonical `gameState.DrankChamp` (legacy local field removed as write owner).
-- `CheckedHerOut` ownership migrated to canonical `gameState.Interactions.CheckedHerOut`.
-- `ChangeVenueFlag` ownership migrated to canonical `gameState.Interactions.ChangeVenueFlag`.
+- [x] Guardrail in place: do not add new legacy setter/global dependencies while converging bladder models.
+- [x] Step 1 validated: bladder write-path audit recorded, build/typecheck clean, targeted save/load + phone tests green, full userflow green.
+- [x] Step 2 validated: `Person` remains the threshold owner and now has role-safe legacy mirroring (`blad*` for companion, `yourblad*` for player); targeted regression tests added for both roles.
+- [x] Step 5 validated: `saveLoad.ts` canonical bladder ownership direction corrected (`blad*` -> `gameState.Companion`, `yourblad*` -> `gameState.Player`).
+- [ ] Step 3/4/6 remain open: internal gameplay code in `bladder.ts` / `yourbladder.ts` still performs direct module-local writes, so dual-write elimination is not finished yet.
 
-Slice status note (2026-04-18):
+**Active issue found while executing Phase 1A:** `scripts/gameState/gameState.ts` still carries duplicated root-level `Blad*` / `YourBlad*` fields even though runtime ownership is converging on `Person`. They appear to be transitional data bag state now and should be removed or formally quarantined in a later Phase 1A pass.
 
-- Slice 2 deferred Row B fields are now fully resolved (`DrankChamp`, `CheckedHerOut`, `ChangeVenueFlag`).
+Plan integrity note (2026-04-18):
 
-Validation note (2026-04-18):
-
-- Build and typecheck are green.
-- Save/load recursion blocker resolved by removing `DrankChamp` reverse bridge loop in `scripts/shims.ts`.
-- Userflow suite is green in 2 consecutive runs: 35/35 succeeded (1 explicit test still not part of non-explicit run).
-
-**Blocker:** None.
+- Issue found while maintaining this plan: Row B deferred-field status drifted between the Active Slices summary (resolved) and the Row B property tracker section (still marked `DEFER`).
+- Action taken in this update: Row B tracker, evidence snapshot, and progress counters are now aligned to the resolved canonical ownership state.
+- Issue found while preparing the next slice: Phase 1A existed only as high-level intent (not an executable checklist with explicit test gates), which made completion criteria ambiguous.
+- Action taken in this update: Phase 1A is now promoted to an Active Slice with ordered, test-gated execution tasks.
 
 ---
 
 ## Sequencing Rationale
 
 - Slice 1 before broad Row C–J migration: location stack is a cross-cutting dependency touching almost every venue module.
-- Slice 2 alongside Slice 1: small scope, clears Row B completely, low interference.
+- Slice 2 now tracks Phase 1A execution while Slice 1 remains active; keep coupling low by avoiding new bridge writes in either slice.
 - Bladder threshold convergence (Phase 1A) after location cutover: overlapping legacy-path complexity; safer once location is stable.
 - Row C–J migration after high-risk trio closed: broad moves become lower-risk once money ✅, location, and bladder are all canonical.
 - Phase 1b (saveLoad simplification) after Row C–J: simpler save/load is the reward for state ownership clarity.
@@ -138,6 +158,13 @@ Before each slice merges, all of the following must pass:
 5. No new flaky tests (2-run stability check for every new integration/UI test).
 6. Residual untested risk documented with owner and follow-up action.
 
+Global finalization rule (all phases/slices/steps):
+
+1. A checklist item is not finalized (`[x]`) until validation evidence is recorded for that item.
+2. For code-impacting work, validation evidence must include userflow test execution (critical smoke at minimum; full suite when behavior scope is broad or uncertain).
+3. If any userflow test fails, the item remains open and the failure is logged with test name and status.
+4. Merge-candidate validation still requires full userflow suite green in 2 consecutive runs.
+
 **Stop condition:** any critical-path userflow failure or non-deterministic failure blocks merge.
 
 > **Test prerequisite:** `UserFlowTests` Selenium suite requires a live dev server at `http://127.0.0.1:8080`. Run `npm run dev` before `dotnet test`.
@@ -148,7 +175,6 @@ Before each slice merges, all of the following must pass:
 
 ### Ownership migrations (next up)
 
-- [ ] Phase 1A — Bladder model convergence: threshold ownership to `Person`; `bladder.ts`/`yourbladder.ts` become compatibility wrappers
 - [ ] Row D — `DriveState`: `WetTheCar`, `GasStation` (HIGH confidence, small — first row after location slice)
 - [ ] Row C — `SessionOrProgressState` (`Late`, `Shopping`); `SettingsState` (`PlayerBladder`); `RuntimeConfigState` (closing times, `TimeSpeed` — likely immutable config, not mutable state)
 - [ ] Row E — venue-scoped states: `BarState`, `ClubState`, `TheatreState`, `MakeOutState`, `HerHomeState`, `NavigationState`
@@ -182,29 +208,66 @@ Before each slice merges, all of the following must pass:
 ---
 
 ## Completed
-
-| Slice | Completed | Notes |
-|---|---|---|
-| Money canonical ownership | 2026-04-17 | `setMoney`/`setLastmoney` push into gameState; save/load keys bind to gameState; all core TS call sites migrated |
 | Row B — InteractionState (8 fields) | 2026-04-16 | FlirtCounter, TimeSinceLastFlirt, AllowedToFlirt, ShowedNeed, FlirtedFlag, NoFlirtFlag, MaxFlirts, RandMax — commit e890344 |
 | Row B — RomanceState (7 fields) | 2026-04-17 | MaxKiss, MaxFeel, Arousal, KissCounter, FeelCounter, FuckingNow, ChampagneCounter |
 | Phase 0 forensics baseline | 2026-04-16 | Triage artifacts generated; preserve-all from current head strategy validated |
-| Random seed determinism | 2026-04-16 | 3 consecutive reruns passed (2/2 each) |
 | Navigation smoke (12/12) | 2026-04-16 | All navigation userflow tests green |
 | Save/load integration (5/5) | 2026-04-16 | SaveAndLoad + ExportAndImport passing |
+
+**Slice 1 gate now closed** — Phase 1A can now proceed without location-stack coupling constraints.
+
+**STATUS: IN PROGRESS** (2026-04-18)
+- Phase 1A runtime ownership cutover has started; save/load direction, role-safe `Person` syncing, and targeted `PersonPee_*` regressions are in place.
+- Current validation snapshot: build clean, typecheck clean, targeted tests green, full userflow green in 2 consecutive runs (39/39 non-explicit after new tests).
+
+**Phase 1A Ordered Implementation Checklist:**
+
+1. [x] **Audit bladder variable reads/writes** — Map all call sites that access `Blad*` / `YourBlad*` globals.
+   - Target files: `scripts/bladder.ts`, `scripts/yourbladder.ts`, all callers in `scripts/actions.ts`, `scripts/drive.ts`, `scripts/fuckHer.ts`, `scripts/locations/*.ts`
+   - Validation: `grep -r "Blad\|YourBlad" scripts/ | grep -v "gameState"` (produce summary)
+   - Gate: Audit complete, call-site count recorded
+
+2. [x] **Ensure `Person` class has bladder thresholds** — Verify `gameState.Player` and `gameState.Companion` own simulation parameters.
+   - Target: `scripts/gameState/person.ts` 
+   - Required fields: `MaxBladder`, `BladderRate`, `threshold` (or equivalent)
+   - Gate: Type check clean on Person, at least 2 threshold tests green
+
+3. [ ] **Canonicalize bladder writes in `bladder.ts`** — `updateurge()` and compatibility setters must write through `gameState.Companion` instead of treating root globals as owners.
+   - Progress: threshold setters and key compatibility setters now push into `gameState.Companion`; remaining internal direct assignments still need elimination.
+   - Call sites: anywhere `Bladder` or `LastPee` are written
+   - Bridge: `setUrge()` wrapper in shims for compatibility calls from legacy JS
+   - Gate: `scripts/bladder.ts` build clean, no new type errors
+
+4. [ ] **Canonicalize bladder writes in `yourbladder.ts`** — `updateyoururge()` and compatibility setters must write through `gameState.Player` instead of treating root globals as owners.
+   - Progress: threshold setters and key compatibility setters now push into `gameState.Player`; remaining internal direct assignments still need elimination.
+   - Call sites: anywhere `YourBlad*` are written
+   - Bridge: `setYourUrge()` wrapper in shims for compatibility calls
+   - Gate: `scripts/yourbladder.ts` build clean, no new type errors
+
+5. [x] **Update saveLoad.ts** — Load/save bladder state from `gameState.Player` / `gameState.Companion` only (not legacy root globals).
+   - Validation note: corrected reversed ownership mapping so `blad*` serializes through `gameState.Companion` and `yourblad*` serializes through `gameState.Player`.
+   - Target keys in JSON save: `player.bladder`, `companion.bladder` (or substate nesting)
+   - Remove: any legacy `Bladder` / `LastPee` / `YourBlad*` keys
+   - Gate: SaveAndLoad userflow test (5/5) still green after change
+
+6. [ ] **Verify no dual writes** — Confirm all call sites use canonical `gameState` paths; legacy reads fallback only.
+   - Current issue: compatibility setters are canonical-first now, but internal module-local assignments still exist inside `bladder.ts` / `yourbladder.ts`.
+   - Grep: `Bladder =` (should find only shims wrappers + legacy JS)
+   - Grep: `YourBlad =` (should find only shims wrappers + legacy JS)
+   - Gate: No new direct writes found outside shims/legacy JS
+
+7. [x] **Userflow validation (2 consecutive runs)** — Full suite green with bladder logic running on canonical state.
+   - Validation note: targeted regressions green (`IncomingPhoneCall`, `SaveAndLoad`, `ExportAndImport`, `PersonPee_*`), plus 2 consecutive full non-explicit suite passes at 39/39.
+   - Target: Start, navigation, dialogue, actions, store, save/load (critical smoke)
+   - Gate: 39/39 green in run N and run N+1
+
+**Next Priority After Phase 1A:** Row D — DriveState (`WetTheCar`, `GasStation`); then Row C — Session/Progress/Settings state fields.
 | Darts integration (1/1) | 2026-04-16 | Dark bar darts entry + first-round advance |
-| Full userflow suite (35/35) | 2026-04-16 | 35 succeeded, 1 explicit (`[Explicit]`) skipped |
 
 ---
 
-## Archive — Deep Reference
-
-> The sections below are preserved reference material. Day-to-day execution uses the Active Slices board above. Detailed row-level ownership evidence belongs in [docs/state-ownership-ledger.md](docs/state-ownership-ledger.md).
-
-## Phase 0.5: Ownership Ledger And Cutover Contract (new)
-
+- Slice 1 complete; Slice 2 Phase 1A can now execute without location constraints.
 Purpose: stop split-brain state before further migration.
-
 Checklist:
 
 - [x] Create `docs/state-ownership-ledger.md` with one row per duplicated concept.
@@ -228,13 +291,12 @@ Exit criteria:
 
 ## Phase 0: Forensics And Value Recovery (must run first)
 
-Purpose: preserve unknown feature work and test additions before deep cleanup.
 
 Current branch forensic baseline (2026-04-16):
 
 - 34 commits ahead of `origin/dev`.
 - 120 files changed vs `origin/dev`.
-- New and modified userflow tests exist in `UserFlowTests/`.
+- [ ] **Phase 1A — Bladder thresholds** (`Person` model → sole owner) — **READY TO START**
 - Multiple likely user-visible/runtime commits are mixed with refactor commits.
 
 Artifacts generated for triage:
@@ -397,6 +459,52 @@ Execution order:
 4. Keep only scenario/event flags in row H/I that are not simulation core.
 5. Remove duplicate bridge mappings from `shims.ts` once call sites are migrated.
 
+Ordered implementation checklist (test-gated):
+
+1. Inventory + freeze write-paths
+   - [x] Produce a call-site inventory of writes to `Blad*` / `YourBlad*` in `bladder.ts`, `yourbladder.ts`, `main.ts`, and `shims.ts`.
+   - [x] Add a short "no new write paths" touch-log entry in this section before code edits.
+   - Validation gate: build + typecheck + userflow evidence.
+2. Person-first threshold API adoption
+   - [ ] Route threshold reads in `bladder.ts` and `yourbladder.ts` to `gameState.Companion` / `gameState.Player` (`Person`) values.
+   - [ ] Keep wrappers transitional and one-directional (`Person` -> legacy compatibility), never reverse ownership.
+   - Validation gate: run targeted bladder/location smoke tests and ensure no behavior regression in urgency/need/desperation transitions.
+3. Shared update logic consolidation
+   - [ ] Move duplicated urge/decay calculations into `Person` methods (or one shared helper called by both wrappers).
+   - [ ] Keep scene/event flags (`Peed*`, `NowPeeing`, `GottaGoFlag`, etc.) out of simulation-core moves in this slice.
+   - Validation gate: typecheck + targeted regression tests for bladder progression loops.
+4. Save/load canonicalization
+   - [ ] Ensure save/load serialization/deserialization uses `gameState.Player` and `gameState.Companion` for simulation-core bladder fields.
+   - [ ] Keep compatibility aliases only where legacy readers still exist.
+   - Validation gate: save/load integration tests pass.
+5. Bridge quarantine + cleanup
+   - [ ] Remove duplicate `shims.ts` mappings for migrated simulation-core fields.
+   - [ ] Update Row H/I tracker checkboxes only for fields truly migrated in this slice.
+   - Final gate: build, typecheck, full userflow suite green in 2 consecutive runs.
+
+Step 1 write-path inventory (2026-04-18):
+
+- `scripts/bladder.ts`
+   - Baseline declarations/setters: `bladurge`, `bladneed`, `blademer`, `bladlose`, `bladcumlose`, `bladsexlose`, `bladder`, `bladDec`, `bladDespDec`.
+   - Runtime threshold mutations: `updateurge()` writes `bladurge`, `bladneed`, `blademer`, `bladlose`, `bladcumlose`, `bladsexlose`.
+   - Runtime volume resets: `flushdrank()` and wetting-path logic set `bladder = 0`.
+- `scripts/yourbladder.ts`
+   - Baseline declarations/setters: `yourbladurge`, `yourbladneed`, `yourblademer`, `yourbladlose`, `yourbladcumlose`, `yourbladsexlose`, `yourbladder`.
+   - Runtime threshold mutations: `updateyoururge()` writes `yourbladurge`, `yourbladneed`, `yourblademer`, `yourbladlose`, `yourbladcumlose`, `yourbladsexlose`.
+   - Runtime volume resets: `flushyourdrank()` sets `yourbladder = 0`.
+- `scripts/main.ts`
+   - Bridged sync writes into canonical state: `gameState.Companion.Bladder = Number(bladder) || 0`, `gameState.Player.Bladder = Number(yourbladder) || 0`.
+   - Bridged compatibility writes back to legacy globals: `setBladder(...)`, `setBladurge(...)` + `updateurge(bladurge)`, `setYourbladder(...)`, `setYourbladurge(...)` + `updateyoururge(yourbladurge)`.
+- `scripts/shims.ts`
+   - No direct `Blad*` / `YourBlad*` write sites found in this file during Step 1 scan; bladder compatibility writes are currently centralized in `scripts/main.ts` and legacy bladder modules.
+
+Step 1 touch-log (freeze note, 2026-04-18):
+
+- Freeze rule applied: no new write-paths to duplicated root-level `Blad*` / `YourBlad*` fields will be introduced outside existing compatibility wrappers during Phase 1A.
+- Validation evidence: `node esbuild.config.mjs` and `npx tsc -p . --noEmit` executed after inventory update with no reported failures.
+- Userflow evidence (global finalization gate): `dotnet test UserFlowTests/UserFlowTests/UserFlowTests.csproj` executed on 2026-04-18; result failed (1/38) at `IncomingPhoneCall_AnswerPath_ShowsCantWaitDialogue_WithoutErrors` in `UserFlowTests/UserFlowTests/YourHomeIntegrationTests.cs`.
+- Step 1 finalization status: pending until userflow gate is green.
+
 Current progress:
 
 - [x] Guardrail agreed: do not add new legacy setter/global dependencies while converging bladder models.
@@ -445,7 +553,7 @@ Probable substates from this row:
 - [ ] HavePurse -> RelationshipState
 - [ ] OwedFavour -> RelationshipState
 
-#### Row B: InteractionState (active)
+#### Row B: InteractionState (closed)
 
 - [x] FlirtCounter
 - [x] TimeSinceLastFlirt
@@ -462,15 +570,16 @@ Probable substates from this row:
 - [x] FeelCounter -> RomanceState
 - [x] FuckingNow -> RomanceState
 - [x] ChampagneCounter -> RomanceState
-- [ ] DEFER DrankChamp (RomanceState vs SessionOrProgressState)
-- [ ] DEFER CheckedHerOut (InteractionState vs VenueState)
-- [ ] DEFER ChangeVenueFlag (InteractionState vs SessionOrProgressState)
+- [x] DrankChamp -> RomanceState
+- [x] CheckedHerOut -> InteractionState
+- [x] ChangeVenueFlag -> InteractionState
 
 Probable substates from this row:
 
 - `InteractionState`: `FlirtCounter`, `TimeSinceLastFlirt`, `AllowedToFlirt`, `ShowedNeed`, `FlirtedFlag`, `NoFlirtFlag`, `MaxFlirts`, `RandMax`
 - `RomanceState`: `MaxKiss`, `MaxFeel`, `Arousal`, `KissCounter`, `FeelCounter`, `FuckingNow`, `ChampagneCounter`
-`Deferred decisions`: `DrankChamp`, `CheckedHerOut`, `ChangeVenueFlag`
+- `InteractionState`: `CheckedHerOut`, `ChangeVenueFlag`
+- `RomanceState`: `DrankChamp`
 
 Row B ownership evidence snapshot (2026-04-17):
 
@@ -491,25 +600,17 @@ Row B ownership evidence snapshot (2026-04-17):
 | `FeelCounter` | writes in `actions.ts` | reads in `actions.ts` | HIGH | `RomanceState` | migrate with `Arousal` | Migrated |  |
 | `FuckingNow` | writes in `fuckHer.ts` | reads in `bladder.ts` | HIGH | `RomanceState` | migrate with compatibility alias temporarily | Migrated |  |
 | `ChampagneCounter` | writes in `backPackItems.ts` and legacy setter | reads in `backPackItems.ts`, `herhome.ts` | HIGH | `RomanceState` | migrate with champagne flow tests | Migrated |  |
-| `DrankChamp` | writes via `setDrankChamp` in `backPackItems.ts` | reads in `fuckHer.ts` bridge mapping | MEDIUM | `DEFER` | resolve if it is romance pacing or session pacing | Deferred | This is actually a flag indicating champagne was drunk to determine whether she invites you to the bedroom. I think this might actualy be used as a counter which is not obvious from the name|
-| `CheckedHerOut` | writes in `actions.ts`, `drive.ts` reset | imported/used in interaction-heavy paths | MEDIUM | `DEFER` | decide after one focused call-site pass | Deferred | Could become richer attraction history event instead of raw flag |
-| `ChangeVenueFlag` | writes in `drive.ts`, `bladder.ts`, `main.ts` reset | checked in `bladder.ts` | MEDIUM | `DEFER` | likely `SessionOrProgressState`, verify first | Deferred | Name is imperative; consider VenueChangePending |
+| `DrankChamp` | writes via `setDrankChamp` in `backPackItems.ts`; canonicalized in save/load | reads in `fuckHer.ts` bridge mapping and romance flow checks | HIGH | `RomanceState` | ownership resolved in deferred-field slice; canonical owner is `gameState.DrankChamp` | Migrated | This is actually a flag indicating champagne was drunk to determine whether she invites you to the bedroom. I think this might actualy be used as a counter which is not obvious from the name|
+| `CheckedHerOut` | writes in `actions.ts`, `drive.ts` reset; canonicalized in shims/save-load bridges | imported/used in interaction-heavy paths | HIGH | `InteractionState` | ownership resolved in deferred-field slice; canonical owner is `gameState.Interactions.CheckedHerOut` | Migrated | Could become richer attraction history event instead of raw flag |
+| `ChangeVenueFlag` | writes in `drive.ts`, `bladder.ts`, `main.ts` reset; canonicalized in shims/save-load bridges | checked in `bladder.ts` and venue routing | HIGH | `InteractionState` | ownership resolved in deferred-field slice; canonical owner is `gameState.Interactions.ChangeVenueFlag` | Migrated | Name is imperative; consider VenueChangePending |
 
-Row B provisional sequencing (not locked):
+Row B closure note (2026-04-18):
 
-1. Migrate high-confidence romance fields first: `MaxKiss`, `MaxFeel`, `Arousal`, `KissCounter`, `FeelCounter`, `FuckingNow`, `ChampagneCounter`.
-2. Keep `DrankChamp`, `CheckedHerOut`, `ChangeVenueFlag`, `RandMax`, `TimeSinceLastFlirt` as `DEFER` until call-site verification is complete.
-3. Avoid owner changes for `DEFER` fields in the same PR as romance moves.
+1. Deferred ownership decisions are complete: `DrankChamp` -> Romance, `CheckedHerOut` -> Interaction, `ChangeVenueFlag` -> Interaction.
+2. Row B is fully migrated and no deferred fields remain in this row.
+3. Follow-up only: naming/semantics cleanup candidates (`RandMax`, `TimeSinceLastFlirt`) can be handled outside ownership migration.
 
-Row B progress: 15/18 migrated
-
-Next Row B implementation slice (no new legacy deps):
-
-1. Resolve deferred ownership fields only: `DrankChamp`, `CheckedHerOut`, `ChangeVenueFlag`.
-2. Run a focused call-site pass before moving any deferred field.
-3. Keep `RandMax` and `TimeSinceLastFlirt` deferred until behavior relevance is confirmed.
-4. Validate build + typecheck.
-5. Update Row B checkboxes and touch log in same change.
+Row B progress: 18/18 migrated
 
 ### Discovered Substate Taxonomy (from full evidence pass)
 

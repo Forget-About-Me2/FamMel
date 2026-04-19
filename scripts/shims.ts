@@ -6,7 +6,23 @@
 // Game state variables (initial values)
 // ============================================================================
 export let locStack: string[] = ["yourhome"];
-export function setLocStack(val: string[]) { locStack = val; }
+function resolveLegacyLocStackOwner(): string[] {
+    const w = globalThis as any;
+    if (Array.isArray(w?.gameState?.LegacyLocStack)) {
+        return w.gameState.LegacyLocStack;
+    }
+    return locStack;
+}
+
+export function setLocStack(val: string[]) {
+    const nextStack = Array.isArray(val) ? val : [];
+    locStack = nextStack;
+
+    const w = globalThis as any;
+    if (w?.gameState) {
+        w.gameState.LegacyLocStack = nextStack;
+    }
+}
 export let money: number = 200;
 export function setMoney(val: number) {
     money = Number(val);
@@ -136,11 +152,33 @@ export function randomInt(maxExclusive: number): number {
 // Utility functions
 // ============================================================================
 export function pushloc(loc: string): void {
-    locStack.unshift(loc);
+    const stack = resolveLegacyLocStackOwner();
+    stack.unshift(loc);
+    if (stack !== locStack) {
+        locStack = stack;
+    }
 }
 
 export function poploc(): string | undefined {
-    return locStack.shift();
+    const stack = resolveLegacyLocStackOwner();
+    const popped = stack.shift();
+    if (stack !== locStack) {
+        locStack = stack;
+    }
+    return popped;
+}
+
+export function setCurrentLegacyLocationTag(locationTag: string): void {
+    const stack = resolveLegacyLocStackOwner();
+    if (stack.length === 0) {
+        stack.unshift(locationTag);
+    } else {
+        stack[0] = locationTag;
+    }
+
+    if (stack !== locStack) {
+        locStack = stack;
+    }
 }
 
 const typedLocationTagByCategory: Record<number, string> = {
@@ -590,7 +628,7 @@ export function exposeShimsOnWindow(): void {
 
     // Mutable state — defineProperty keeps module and global in sync
     const props: Array<[string, () => any, (v: any) => void]> = [
-        ['locStack',          () => locStack,          (v) => { locStack = v; }],
+        ['locStack',          () => locStack,          (v) => { setLocStack(v); }],
         ['money',             () => ((window as any).gameState?.Money ?? money), (v) => { setMoney(v); }],
         ['thetime',           () => thetime,           (v) => { thetime = v; }],
         ['hour',              () => hour,              (v) => { hour = v; }],

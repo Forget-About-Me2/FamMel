@@ -133,6 +133,248 @@ public class NavigationSmokeTests
         AssertNoRuntimeErrors("gamestart→yourhome");
     }
 
+    [Test]
+    public void LocationStack_PushPop_PreservesLifoDepthAndCanonicalParity()
+    {
+        StartGameAndWait();
+
+        var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            try {
+                // Reset baseline stack through the legacy global setter path.
+                window.locStack = ['yourhome'];
+
+                pushloc('driveout');
+                pushloc('thebar');
+
+                const depthAfterPush = Array.isArray(locStack) ? locStack.length : -1;
+                const topAfterPush = Array.isArray(locStack) ? String(locStack[0]) : '';
+
+                const popped1 = String(poploc() ?? '');
+                const popped2 = String(poploc() ?? '');
+
+                const finalDepth = Array.isArray(locStack) ? locStack.length : -1;
+                const finalTop = Array.isArray(locStack) ? String(locStack[0]) : '';
+
+                const canonical = Array.isArray(window.gameState?.LegacyLocStack)
+                    ? window.gameState.LegacyLocStack
+                    : [];
+
+                const parity = JSON.stringify(locStack) === JSON.stringify(canonical);
+
+                return JSON.stringify({
+                    depthAfterPush,
+                    topAfterPush,
+                    popped1,
+                    popped2,
+                    finalDepth,
+                    finalTop,
+                    parity
+                });
+            } catch (e) {
+                window.__testErrors = window.__testErrors || [];
+                window.__testErrors.push(String((e && e.stack) || e));
+                return JSON.stringify({ error: String((e && e.stack) || e) });
+            }
+        ")?.ToString();
+
+        result.Should().NotBeNullOrWhiteSpace();
+        result.Should().Contain("\"depthAfterPush\":3");
+        result.Should().Contain("\"topAfterPush\":\"thebar\"");
+        result.Should().Contain("\"popped1\":\"thebar\"");
+        result.Should().Contain("\"popped2\":\"driveout\"");
+        result.Should().Contain("\"finalDepth\":1");
+        result.Should().Contain("\"finalTop\":\"yourhome\"");
+        result.Should().Contain("\"parity\":true");
+
+        AssertNoRuntimeErrors("location-stack-lifo");
+    }
+
+    [Test]
+    public void LocationStack_RepeatedPushPop_KeepsBaselineAndNeverUnderflows()
+    {
+        StartGameAndWait();
+
+        var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            try {
+                window.locStack = ['yourhome'];
+
+                let underflow = false;
+                for (let i = 0; i < 25; i++) {
+                    pushloc('callher');
+                    if ((locStack?.length ?? 0) < 1) {
+                        underflow = true;
+                        break;
+                    }
+                    const popped = poploc();
+                    if (String(popped ?? '') !== 'callher') {
+                        underflow = true;
+                        break;
+                    }
+                    if ((locStack?.length ?? 0) < 1) {
+                        underflow = true;
+                        break;
+                    }
+                }
+
+                const currentTag = typeof getCurrentLocationTag === 'function'
+                    ? String(getCurrentLocationTag())
+                    : '';
+
+                const finalDepth = Array.isArray(locStack) ? locStack.length : -1;
+                const finalTop = Array.isArray(locStack) ? String(locStack[0]) : '';
+                const parity = JSON.stringify(locStack)
+                    === JSON.stringify(Array.isArray(window.gameState?.LegacyLocStack)
+                        ? window.gameState.LegacyLocStack
+                        : []);
+
+                return JSON.stringify({ underflow, finalDepth, finalTop, currentTag, parity });
+            } catch (e) {
+                window.__testErrors = window.__testErrors || [];
+                window.__testErrors.push(String((e && e.stack) || e));
+                return JSON.stringify({ error: String((e && e.stack) || e) });
+            }
+        ")?.ToString();
+
+        result.Should().NotBeNullOrWhiteSpace();
+        result.Should().Contain("\"underflow\":false");
+        result.Should().Contain("\"finalDepth\":1");
+        result.Should().Contain("\"finalTop\":\"yourhome\"");
+        result.Should().Contain("\"currentTag\":\"yourhome\"");
+        result.Should().Contain("\"parity\":true");
+
+        AssertNoRuntimeErrors("location-stack-repeat");
+    }
+
+    [Test]
+    public void PersonPee_CompanionSyncsCompanionLegacyThresholdsOnly()
+    {
+        StartGameAndWait();
+
+        var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            try {
+                const gs = window.gameState;
+                window.bladurge = 250;
+                window.yourbladurge = 500;
+                gs.Companion.setUrge(250);
+                gs.Companion.Bladder = gs.Companion.bladderLose + 25;
+                gs.Companion.NowPeeing = false;
+                gs.Companion.LastPeeTime = -1;
+
+                gs.Companion.pee();
+
+                return JSON.stringify({
+                    companionBladder: gs.Companion.Bladder,
+                    companionNowPeeing: gs.Companion.NowPeeing,
+                    companionLastPeeTime: gs.Companion.LastPeeTime,
+                    companionLegacyUrge: window.bladurge,
+                    companionCanonicalUrge: gs.Companion.bladderUrge,
+                    playerLegacyUrge: window.yourbladurge
+                });
+            } catch (e) {
+                window.__testErrors = window.__testErrors || [];
+                window.__testErrors.push(String((e && e.stack) || e));
+                return JSON.stringify({ error: String((e && e.stack) || e) });
+            }
+        ")?.ToString();
+
+        result.Should().NotBeNullOrWhiteSpace();
+        result.Should().Contain("\"companionBladder\":0");
+        result.Should().Contain("\"companionNowPeeing\":true");
+        result.Should().NotContain("\"companionLastPeeTime\":-1");
+        result.Should().Contain("\"playerLegacyUrge\":500");
+
+        AssertNoRuntimeErrors("companion-pee-sync");
+    }
+
+    [Test]
+    public void PersonPee_PlayerSyncsPlayerLegacyThresholdsOnly()
+    {
+        StartGameAndWait();
+
+        var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            try {
+                const gs = window.gameState;
+                window.bladurge = 250;
+                window.yourbladurge = 500;
+                gs.Player.setUrge(500);
+                gs.Player.Bladder = gs.Player.bladderLose + 25;
+                gs.Player.NowPeeing = false;
+                gs.Player.LastPeeTime = -1;
+
+                gs.Player.pee();
+
+                return JSON.stringify({
+                    playerBladder: gs.Player.Bladder,
+                    playerNowPeeing: gs.Player.NowPeeing,
+                    playerLastPeeTime: gs.Player.LastPeeTime,
+                    playerLegacyUrge: window.yourbladurge,
+                    playerCanonicalUrge: gs.Player.bladderUrge,
+                    companionLegacyUrge: window.bladurge
+                });
+            } catch (e) {
+                window.__testErrors = window.__testErrors || [];
+                window.__testErrors.push(String((e && e.stack) || e));
+                return JSON.stringify({ error: String((e && e.stack) || e) });
+            }
+        ")?.ToString();
+
+        result.Should().NotBeNullOrWhiteSpace();
+        result.Should().Contain("\"playerBladder\":0");
+        result.Should().Contain("\"playerNowPeeing\":true");
+        result.Should().NotContain("\"playerLastPeeTime\":-1");
+        result.Should().Contain("\"companionLegacyUrge\":250");
+
+        AssertNoRuntimeErrors("player-pee-sync");
+    }
+
+    [Test]
+    public void BladderGlobals_WindowAssignment_KeepsCanonicalParity_SameTick()
+    {
+        StartGameAndWait();
+
+        var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            try {
+                const gs = window.gameState;
+
+                window.bladder = 321;
+                window.yourbladder = 654;
+                window.bladurge = 275;
+                window.yourbladurge = 525;
+                window.nowpeeing = 1;
+                window.ynowpeeing = 0;
+                window.lastpeetime = 777;
+                window.ylastpeetime = 888;
+
+                return JSON.stringify({
+                    companionBladderParity: gs.Companion.Bladder === window.bladder,
+                    playerBladderParity: gs.Player.Bladder === window.yourbladder,
+                    companionUrgeParity: gs.Companion.bladderUrge === window.bladurge,
+                    playerUrgeParity: gs.Player.bladderUrge === window.yourbladurge,
+                    companionNowPeeingParity: gs.Companion.NowPeeing === true,
+                    playerNowPeeingParity: gs.Player.NowPeeing === false,
+                    companionLastPeeTimeParity: gs.Companion.LastPeeTime === window.lastpeetime,
+                    playerLastPeeTimeParity: gs.Player.LastPeeTime === window.ylastpeetime
+                });
+            } catch (e) {
+                window.__testErrors = window.__testErrors || [];
+                window.__testErrors.push(String((e && e.stack) || e));
+                return JSON.stringify({ error: String((e && e.stack) || e) });
+            }
+        ")?.ToString();
+
+        result.Should().NotBeNullOrWhiteSpace();
+        result.Should().Contain("\"companionBladderParity\":true");
+        result.Should().Contain("\"playerBladderParity\":true");
+        result.Should().Contain("\"companionUrgeParity\":true");
+        result.Should().Contain("\"playerUrgeParity\":true");
+        result.Should().Contain("\"companionNowPeeingParity\":true");
+        result.Should().Contain("\"playerNowPeeingParity\":true");
+        result.Should().Contain("\"companionLastPeeTimeParity\":true");
+        result.Should().Contain("\"playerLastPeeTimeParity\":true");
+
+        AssertNoRuntimeErrors("bladder-global-parity");
+    }
+
     private void StartGameAndWait()
     {
         _driver.Navigate().GoToUrl(BaseUrl);

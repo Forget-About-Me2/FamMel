@@ -141,23 +141,41 @@ const FIELD_REGISTRY: Record<string, FieldEntry> = {
     // --- shims.ts — deep ---
     // Canonical owner is gameState.LegacyLocStack.
     legacyLocStack:     { get: () => gameState.LegacyLocStack, set: (v) => { gameState.LegacyLocStack = v; }, deep: true },
+    
+    // --- gameState.Companion (bladder.ts migration) ---
+    bladurge:           { get: () => gameState.Companion.bladderUrge, set: (v) => { gameState.Companion.setUrge(v); } },
+    bladneed:           { get: () => gameState.Companion.bladderNeed, set: () => {} }, // Read-only computed from bladderUrge
+    blademer:           { get: () => gameState.Companion.bladderEmer, set: () => {} }, // Read-only computed from bladderUrge
+    bladlose:           { get: () => gameState.Companion.bladderLose, set: () => {} }, // Read-only computed from bladderUrge
+    bladcumlose:        { get: () => gameState.Companion.bladderCumLose, set: () => {} }, // Read-only computed from bladderUrge
+    bladsexlose:        { get: () => gameState.Companion.bladderSexLose, set: () => {} }, // Read-only computed from bladderUrge
+    maxtummy:           { get: () => gameState.Companion.MaxTummy, set: (v) => { gameState.Companion.MaxTummy = v; } },
+    maxbeer:            { get: () => gameState.Companion.MaxAlcohol, set: (v) => { gameState.Companion.MaxAlcohol = v; } },
+    tummy:              { get: () => gameState.Companion.Tummy, set: (v) => { gameState.Companion.Tummy = v; } },
+    bladder:            { get: () => gameState.Companion.Bladder, set: (v) => { gameState.Companion.Bladder = v; } },
+    nowpeeing:          { get: () => gameState.Companion.NowPeeing, set: (v) => { gameState.Companion.NowPeeing = !!Number(v); } },
+    lastpeetime:        { get: () => gameState.Companion.LastPeeTime, set: (v) => { gameState.Companion.LastPeeTime = v; } },
+
+    // --- gameState.Player (yourbladder.ts migration) ---
+    yourbladder:        { get: () => gameState.Player.Bladder, set: (v) => { gameState.Player.Bladder = v; } },
+    yourtummy:          { get: () => gameState.Player.Tummy, set: (v) => { gameState.Player.Tummy = v; } },
+    yourbladurge:       { get: () => gameState.Player.bladderUrge, set: (v) => { gameState.Player.setUrge(v); } },
+    yourbladneed:       { get: () => gameState.Player.bladderNeed, set: () => {} }, // Read-only computed from bladderUrge
+    yourblademer:       { get: () => gameState.Player.bladderEmer, set: () => {} }, // Read-only computed from bladderUrge
+    yourbladlose:       { get: () => gameState.Player.bladderLose, set: () => {} }, // Read-only computed from bladderUrge
+    yourbladcumlose:    { get: () => gameState.Player.bladderCumLose, set: () => {} }, // Read-only computed from bladderUrge
+    yourbladsexlose:    { get: () => gameState.Player.bladderSexLose, set: () => {} }, // Read-only computed from bladderUrge
+    ymaxtummy:          { get: () => gameState.Player.MaxTummy, set: (v) => { gameState.Player.MaxTummy = v; } },
+    ymaxbeer:           { get: () => gameState.Player.MaxAlcohol, set: (v) => { gameState.Player.MaxAlcohol = v; } },
+    ynowpeeing:         { get: () => gameState.Player.NowPeeing, set: (v) => { gameState.Player.NowPeeing = !!Number(v); } },
+    ylastpeetime:       { get: () => gameState.Player.LastPeeTime, set: (v) => { gameState.Player.LastPeeTime = v; } },
     settings:           { get: () => settings, set: setSettings, deep: true },
     statsBars:          { get: () => statsBars, set: setStatsBars, deep: true },
     endScreens:         { get: () => endScreens, set: setEndScreens, deep: true },
-    // --- bladder.ts ---
+    // --- bladder.ts — legacy compatibility (for gradual migration) ---
     customurge:         { get: () => customurge, set: setCustomurge },
     minurge:            { get: () => minurge, set: setMinurge },
     minperc:            { get: () => minperc, set: setMinperc },
-    bladurge:           { get: () => bladurge, set: setBladurge },
-    bladneed:           { get: () => bladneed, set: setBladneed },
-    blademer:           { get: () => blademer, set: setBlademer },
-    bladlose:           { get: () => bladlose, set: setBladlose },
-    bladcumlose:        { get: () => bladcumlose, set: setBladcumlose },
-    bladsexlose:        { get: () => bladsexlose, set: setBladsexlose },
-    maxtummy:           { get: () => maxtummy, set: setMaxtummy },
-    maxbeer:            { get: () => maxbeer, set: setMaxbeer },
-    tummy:              { get: () => tummy, set: setTummy },
-    bladder:            { get: () => bladder, set: setBladder },
     bladDec:            { get: () => bladDec, set: setBladDec },
     bladDespDec:        { get: () => bladDespDec, set: setBladDespDec },
     seal:               { get: () => seal, set: setSeal },
@@ -167,7 +185,6 @@ const FIELD_REGISTRY: Record<string, FieldEntry> = {
     peedvase:           { get: () => peedvase, set: setPeedvase },
     peedshot:           { get: () => peedshot, set: setPeedshot },
     peedoutside:        { get: () => peedoutside, set: setPeedoutside },
-    lastpeetime:        { get: () => lastpeetime, set: setLastpeetime },
     timeheld:           { get: () => timeheld, set: setTimeheld },
     drankbeer:          { get: () => drankbeer, set: setDrankbeer },
     notdesperate:       { get: () => notdesperate, set: setNotdesperate },
@@ -184,30 +201,16 @@ const FIELD_REGISTRY: Record<string, FieldEntry> = {
     sawherpee:          { get: () => sawherpee, set: setSawherpee },
     wetlegs:            { get: () => wetlegs, set: setWetlegs },
     wetherpanties:      { get: () => wetherpanties, set: setWetherpanties },
-    nowpeeing:          { get: () => nowpeeing, set: setNowpeeing },
     gottagoflag:        { get: () => gottagoflag, set: setGottagoflag },
     askholditcounter:   { get: () => askholditcounter, set: setAskholditcounter },
     waitcounter:        { get: () => waitcounter, set: setWaitcounter },
     // --- bladder.ts — deep ---
     toldstories:        { get: () => toldstories, set: setToldstories, deep: true },
     lastStory:          { get: () => lastStory, set: setLastStory, deep: true },
-    // --- yourbladder.ts ---
-    yourbladder:        { get: () => yourbladder, set: setYourbladder },
-    yourtummy:          { get: () => yourtummy, set: setYourtummy },
     yourtumavg:         { get: () => yourtumavg, set: setYourtumavg },
     holdself:           { get: () => holdself, set: setHoldself },
-    yourbladurge:       { get: () => yourbladurge, set: setYourbladurge },
-    yourbladneed:       { get: () => yourbladneed, set: setYourbladneed },
-    yourblademer:       { get: () => yourblademer, set: setYourblademer },
-    yourbladlose:       { get: () => yourbladlose, set: setYourbladlose },
-    yourbladcumlose:    { get: () => yourbladcumlose, set: setYourbladcumlose },
-    yourbladsexlose:    { get: () => yourbladsexlose, set: setYourbladsexlose },
-    ymaxtummy:          { get: () => ymaxtummy, set: setYmaxtummy },
-    ymaxbeer:           { get: () => ymaxbeer, set: setYmaxbeer },
     yourcustomurge:     { get: () => yourcustomurge, set: setYourcustomurge },
     yminurge:           { get: () => yminurge, set: setYminurge },
-    ynowpeeing:         { get: () => ynowpeeing, set: setYnowpeeing },
-    ylastpeetime:       { get: () => ylastpeetime, set: setYlastpeetime },
     ytimeheld:          { get: () => ytimeheld, set: setYtimeheld },
     ydrankcocktails:    { get: () => ydrankcocktails, set: setYdrankcocktails },
     ydranksodas:        { get: () => ydranksodas, set: setYdranksodas },

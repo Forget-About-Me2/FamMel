@@ -5,6 +5,8 @@ import {BladderState} from "./bladderState";
 import { IBackpackItem, IDrink } from "../backPackItems";
 import { lastpeetime, minperc } from "../bladder";
 
+export type LegacyBladderMirror = "companion" | "player";
+
 export class Person {
     private _bladderUrge: number;
     private _timeLastBreakingSeal: number = 0;
@@ -34,6 +36,21 @@ export class Person {
      * @private
      */
     private lastAskedToHoldTime: number = 0;
+    private readonly legacyBladderMirror: LegacyBladderMirror;
+
+    /**
+     * Getter for lastPeeTime — when the person last peed (for save/load serialization).
+     */
+    get LastPeeTime(): number {
+        return this.lastPeeTime;
+    }
+
+    /**
+     * Setter for lastPeeTime.
+     */
+    set LastPeeTime(v: number) {
+        this.lastPeeTime = v;
+    }
 
     /**
      * A number to represent the amount of alcohol in the tummy.
@@ -147,6 +164,9 @@ export class Person {
             }
         }
 
+        this.Bladder = 0;
+        this.NowPeeing = true;
+        this.lastPeeTime = gameState.Time.totalTime;
         this.syncThresholdsToLegacy();
         this.ItemsDrankSinceLastPee = [];
     }
@@ -165,6 +185,16 @@ export class Person {
      */
     private syncThresholdsToLegacy() {
         const w = window as any;
+        if (this.legacyBladderMirror === "player") {
+            w.yourbladurge = this._bladderUrge;
+            w.yourbladneed = this.bladderNeed;
+            w.yourblademer = this.bladderEmer;
+            w.yourbladlose = this.bladderLose;
+            w.yourbladcumlose = this.bladderCumLose;
+            w.yourbladsexlose = this.bladderSexLose;
+            return;
+        }
+
         w.bladurge = this._bladderUrge;
         w.bladneed = this.bladderNeed;
         w.blademer = this.bladderEmer;
@@ -197,11 +227,12 @@ export class Person {
     }
 
     get TimeSinceLastPeed() {
-        return gameState.Time.timeSince(lastpeetime);
+        return gameState.Time.timeSince(this.lastPeeTime);
     }
 
-    constructor(settings: PersonSettings) {
+    constructor(settings: PersonSettings, legacyBladderMirror: LegacyBladderMirror = "companion") {
         this._bladderUrge = settings.bladderUrge;
+        this.legacyBladderMirror = legacyBladderMirror;
         this.MinUrge = settings.bladderUrge * minperc / 100
         this.Bladder = settings.startBladderVolume;
         this.Tummy = settings.startTummyVolume;

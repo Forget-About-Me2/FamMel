@@ -7,16 +7,31 @@ import { rrMovieLineThresh } from './locations/theatre';
 
 //Your bladder variables
 export let yourbladder = 500;
-export function setYourbladder(val: number) { yourbladder = val; }
+export function setYourbladder(val: number) {
+    yourbladder = Number(val) || 0;
+    if (gameState.Player) {
+        gameState.Player.Bladder = yourbladder;
+    }
+}
+
+export function drainYourBladderBy(amount: number) {
+    const drainAmount = Math.max(0, Number(amount) || 0);
+    setYourbladder(yourbladder - drainAmount);
+}
 export let yourtummy = 200;
-export function setYourtummy(val: number) { yourtummy = val; }
+export function setYourtummy(val: number) {
+    yourtummy = Number(val) || 0;
+    if (gameState.Player) {
+        gameState.Player.Tummy = yourtummy;
+    }
+}
 export let yourtumavg = yourtummy;
 export let holdself = 0;
 export function setHoldself(val: number) { holdself = val; }
 export const holdpeethresh = 3; //Chance you'll still pee yourself even though you're holding your dick.
 
 export let yourbladurge = 500; // Level where you feel the first urge
-export function setYourbladurge(val: number) { yourbladurge = val; }
+export function setYourbladurge(val: number) { updateyoururge(val); }
 export let yourbladneed = yourbladurge * 2; // Level where you continuously needs to go
 export let yourblademer = yourbladurge * 3; // Level where it becomes an emergency
 export let yourbladlose = yourbladurge * 3 + 150; // Level where you lose control
@@ -24,19 +39,40 @@ export let yourbladcumlose = yourbladurge * 4; // Level where you lose it as you
 export let yourbladsexlose = yourbladurge * 5; // Level where you can't control it during sex
 
 export let ymaxtummy = 500; // Drink capacity of stomach
-export function setYmaxtummy(val: number) { ymaxtummy = val; }
+export function setYmaxtummy(val: number) {
+    ymaxtummy = Number(val) || 0;
+    if (gameState.Player) {
+        gameState.Player.MaxTummy = ymaxtummy;
+    }
+}
 export let ymaxbeer = 1000; // Beer capacity of stomach
-export function setYmaxbeer(val: number) { ymaxbeer = val; }
+export function setYmaxbeer(val: number) {
+    ymaxbeer = Number(val) || 0;
+    if (gameState.Player) {
+        gameState.Player.MaxAlcohol = ymaxbeer;
+    }
+}
 
 export let yourcustomurge = 500;
 export function setYourcustomurge(val: number) { yourcustomurge = val; }
 export let yminurge = 375; // min bladder urge
 export let ynowpeeing = 0; // flag: you are currently peeing
-export function setYnowpeeing(val: number) { ynowpeeing = val; }
+export function setYnowpeeing(val: number) {
+    ynowpeeing = Number(val) || 0;
+    if (gameState.Player) {
+        gameState.Player.NowPeeing = !!ynowpeeing;
+    }
+}
 
 //  The following are used to keep track of what you drank and when you last went
 // Might be used later on.
 export let ylastpeetime = 0;  // When did you last go?
+export function setYlastpeetime(val: number) {
+    ylastpeetime = Number(val) || 0;
+    if (gameState.Player) {
+        gameState.Player.LastPeeTime = ylastpeetime;
+    }
+}
 export let ytimeheld = 0; // for stats
 
 export let ydrankcocktails = 0;
@@ -59,12 +95,13 @@ export function initYUrge(urge: number){
 export function updateyoururge(newurge: number) {
     if (newurge < yminurge) newurge = yminurge;
     newurge = Math.round(newurge);
-    yourbladurge = newurge;
-    yourbladneed = newurge * 2;
-    yourblademer = newurge * 3;
-    yourbladlose = newurge * 3 + 150;
-    yourbladcumlose = newurge * 4;
-    yourbladsexlose = newurge * 5
+    gameState.Player?.setUrge(newurge);
+    yourbladurge = gameState.Player?.bladderUrge ?? newurge;
+    yourbladneed = gameState.Player?.bladderNeed ?? newurge * 2;
+    yourblademer = gameState.Player?.bladderEmer ?? newurge * 3;
+    yourbladlose = gameState.Player?.bladderLose ?? (newurge * 3 + 150);
+    yourbladcumlose = gameState.Player?.bladderCumLose ?? newurge * 4;
+    yourbladsexlose = gameState.Player?.bladderSexLose ?? newurge * 5;
 }
 
 export function flushyourdrank() {
@@ -79,14 +116,14 @@ export function flushyourdrank() {
         }
     }
 
-    yourbladder = 0;
+    setYourbladder(0);
     ydrankwaters = 0;
     ydrankcocktails = 0;
     ydrankbeers = 0;
     ydranksodas = 0;
-    ylastpeetime = thetime;
+    setYlastpeetime(thetime);
     yrrlockedflag = 0;
-    ynowpeeing = 1;
+    setYnowpeeing(1);
 }
 
 //TODO lose control when bursting on the way
@@ -296,7 +333,7 @@ export function ypeein3(item: string, yneedtype: number){
                     curtext.push(peeResult[yneedtype][PARTIAL_FILL]);
                 if (yourbladder > yourblademer)
                     curtext.push("YOU: Damn. That's not much better.");
-                yourbladder -= containerVolume;
+                drainYourBladderBy(containerVolume);
             } else {
                 //The item can hold your full bladder contents
                 curtext.push(peeResult[yneedtype][1]);
@@ -485,14 +522,13 @@ export function setYourblademer(val: number) { yourblademer = val; }
 export function setYourbladlose(val: number) { yourbladlose = val; }
 export function setYourbladcumlose(val: number) { yourbladcumlose = val; }
 export function setYourbladsexlose(val: number) { yourbladsexlose = val; }
-export function setYlastpeetime(val: number) { ylastpeetime = val; }
 export function setYtimeheld(val: number) { ytimeheld = val; }
 export function setYdrankcocktails(val: number) { ydrankcocktails = val; }
 export function setYdrankwaters(val: number) { ydrankwaters = val; }
 export function setYdrankbeers(val: any) { ydrankbeers = val; }
 export function setYrrlockedflag(val: number) { yrrlockedflag = val; }
 export function spurtedyourself(curtext: any[]) {
-    yourbladder -= 50;
+    drainYourBladderBy(50);
     setYspurtthresh(yspurtthresh - 0.1 * yspurtthresh);
     youSpurted = 1;
     curtext.push(yneeds["spurtquote"]);
@@ -502,11 +538,11 @@ export function spurtedyourself(curtext: any[]) {
 
 export function exposeYourBladderOnWindow() {
     const mutableVars: [string, () => any, (v: any) => void][] = [
-        ["yourbladder", () => yourbladder, (v) => { yourbladder = v; }],
+        ["yourbladder", () => yourbladder, (v) => { setYourbladder(v); }],
         ["yourtummy", () => yourtummy, (v) => { yourtummy = v; }],
         ["yourtumavg", () => yourtumavg, (v) => { yourtumavg = v; }],
         ["holdself", () => holdself, (v) => { holdself = v; }],
-        ["yourbladurge", () => yourbladurge, (v) => { yourbladurge = v; }],
+        ["yourbladurge", () => yourbladurge, (v) => { setYourbladurge(v); }],
         ["yourbladneed", () => yourbladneed, (v) => { yourbladneed = v; }],
         ["yourblademer", () => yourblademer, (v) => { yourblademer = v; }],
         ["yourbladlose", () => yourbladlose, (v) => { yourbladlose = v; }],
@@ -516,8 +552,8 @@ export function exposeYourBladderOnWindow() {
         ["ymaxbeer", () => ymaxbeer, (v) => { ymaxbeer = v; }],
         ["yourcustomurge", () => yourcustomurge, (v) => { yourcustomurge = v; }],
         ["yminurge", () => yminurge, (v) => { yminurge = v; }],
-        ["ynowpeeing", () => ynowpeeing, (v) => { ynowpeeing = v; }],
-        ["ylastpeetime", () => ylastpeetime, (v) => { ylastpeetime = v; }],
+        ["ynowpeeing", () => ynowpeeing, (v) => { setYnowpeeing(v); }],
+        ["ylastpeetime", () => ylastpeetime, (v) => { setYlastpeetime(v); }],
         ["ytimeheld", () => ytimeheld, (v) => { ytimeheld = v; }],
         ["ydrankcocktails", () => ydrankcocktails, (v) => { ydrankcocktails = v; }],
         ["ydranksodas", () => ydranksodas, (v) => { ydranksodas = v; }],

@@ -311,7 +311,7 @@ class GameState {
             startMaxTummy: Number.isFinite(rawPlayerMaxTummy) ? rawPlayerMaxTummy : 500,
             startMaxAlcohol: Number.isFinite(rawPlayerMaxAlcohol) ? rawPlayerMaxAlcohol : 1000,
             minPercentage: 70
-        });
+        }, "player");
 
         const rawPlayerAlcohol = Number(ydrankbeer);
         this.Player.AlcoholInTummy = Number.isFinite(rawPlayerAlcohol) ? rawPlayerAlcohol : 0;
@@ -433,7 +433,7 @@ class dateNPC extends Person{
     }
 
     constructor(settings: PersonSettings, name: string) {
-        super(settings);
+        super(settings, "companion");
         this.name = name;
     }
 }
