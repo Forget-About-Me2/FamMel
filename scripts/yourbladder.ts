@@ -143,13 +143,15 @@ export function updateyoururge(newurge: number) {
 }
 
 export function flushyourdrank() {
+    const { bladderUrge, bladderEmer, bladderLose } = getPlayerBladderThresholds();
+
     //  Derate bladder capacity if you loses it...
     if (bladDec) {
-        if (yourbladder >= yourbladlose) updateyoururge(yourbladurge * 9 / 10);
-        else if (yourbladder >= yourblademer && bladDespDec) updateyoururge(yourbladurge * 9.5 / 10);
+        if (yourbladder >= bladderLose) updateyoururge(bladderUrge * 9 / 10);
+        else if (yourbladder >= bladderEmer && bladDespDec) updateyoururge(bladderUrge * 9.5 / 10);
         //bladder decays based on breaking the seal can only happen once an hour
         else if (seal && ydrankbeer > 15 && ybeerdecCounter > 30) {
-            updateyoururge(yourbladurge * 9.5 / 10);
+            updateyoururge(bladderUrge * 9.5 / 10);
             setYbeerdecCounter(0);
         }
     }
@@ -170,6 +172,7 @@ export function youpee() {
     let curtext: any[] = [];
     setGottagoflag(0);
     let peed = 0;
+    const { bladderLose } = getPlayerBladderThresholds();
     const currentLocation = locStack[0];
     // ypeelines["thehome"]: [0]=asking to use toilet, [1]=peeing description
     const [askToiletLines, peeDescription] = ypeelines["thehome"];
@@ -195,19 +198,19 @@ export function youpee() {
         curtext = youbathroomlocked(curtext);
     } else if (currentLocation === "darkBar" || currentLocation === "darkTheatre" || currentLocation === "darkclub") {
         //TODO potentially cycle between quotes
-        if (yourbladder > yourbladlose - 25)
+        if (yourbladder > bladderLose - 25)
             curtext.push(ypeelines["youpeeprivate"][0]);
         else
             curtext.push(ypeelines["youpeeprivate2"][0]);
         flushyourdrank();
     } else {
-        if (yourbladder > yourbladlose - 25 && !peed)
+        if (yourbladder > bladderLose - 25 && !peed)
             curtext.push(pickrandom(ypeelines["youpeeprivate"]));
         else if (!peed)
             curtext.push(pickrandom(ypeelines["youpeeprivate2"]));
         flushyourdrank();
     }
-    if (yourbladder >= yourbladlose - 25 && currentLocation !== "thehottub") curtext = youbegtoilet(curtext);
+    if (yourbladder >= bladderLose - 25 && currentLocation !== "thehottub") curtext = youbegtoilet(curtext);
     else {
         curtext = c([currentLocation, "Continue..."], curtext);
     }
@@ -216,6 +219,7 @@ export function youpee() {
 
 export function youbathroomlocked(curtext: any[]): any[] {
     const locked = ypeelines["locked"];
+    const { bladderNeed, bladderEmer } = getPlayerBladderThresholds();
     //Description of the situation
     if (locStack[0] === "thebar")
         curtext = printList(curtext, locked["bar"]);
@@ -225,9 +229,9 @@ export function youbathroomlocked(curtext: any[]): any[] {
     const [emergencyReaction, uncomfortableReaction, unfulfilledReaction] = locked["urgency"];
 
     //Description of your reaction, based on how badly you have to go
-    if (yourbladder > yourblademer)
+    if (yourbladder > bladderEmer)
         curtext.push(emergencyReaction);
-    else if (yourbladder > yourbladneed)
+    else if (yourbladder > bladderNeed)
         curtext.push(uncomfortableReaction);
     else
         curtext.push(unfulfilledReaction);
@@ -263,14 +267,28 @@ export function youbegtoilet(curtext: any[]): any[] {
     return curtext;
 }
 
+function getPlayerBladderThresholds() {
+    const player = gameState.Player;
+    return {
+        bladderUrge: player?.bladderUrge ?? yourbladurge,
+        bladderNeed: player?.bladderNeed ?? yourbladneed,
+        bladderEmer: player?.bladderEmer ?? yourblademer,
+        bladderLose: player?.bladderLose ?? yourbladlose,
+        bladderCumLose: player?.bladderCumLose ?? yourbladcumlose,
+        bladderSexLose: player?.bladderSexLose ?? yourbladsexlose,
+    };
+}
+
 export function displayyourneed(curtext: any[]): any[] {
-    if (yourbladder >= yourbladlose && !holdself) {
+    const { bladderUrge, bladderNeed, bladderEmer, bladderLose } = getPlayerBladderThresholds();
+
+    if (yourbladder >= bladderLose && !holdself) {
         curtext.push(pickrandom(yneeds["burst"]));
-    } else if (yourbladder > yourblademer) {
+    } else if (yourbladder > bladderEmer) {
         curtext.push(pickrandom(yneeds["desperate"]));
-    } else if (yourbladder > yourbladneed) {
+    } else if (yourbladder > bladderNeed) {
         curtext.push(pickrandom(yneeds["need"]));
-    } else if (yourbladder > yourbladurge) {
+    } else if (yourbladder > bladderUrge) {
         curtext.push(pickrandom(yneeds["urge"]));
     } else if (locStack[0] === "drinkinggame") {
         curtext.push(pickrandom(yneeds["empty"]));
@@ -298,11 +316,12 @@ export function ypeein(item: string){
     //   [6] = result (indexed by urgency, then [0]=partial/[1]=full)
     const [initialQuotes, drivingHandoff, standingHandoff, unzipDescription,
            desperatePeeing, normalPeeing, peeResult] = list;
+    const { bladderNeed, bladderEmer } = getPlayerBladderThresholds();
 
     let yneedtype = URGENCY_MILD;
-    if (yourbladder>yourblademer)
+    if (yourbladder > bladderEmer)
         yneedtype = URGENCY_DESPERATE;
-    else if (yourbladder>yourbladneed)
+    else if (yourbladder > bladderNeed)
         yneedtype = URGENCY_MODERATE;
     //When you're alone you don't have an interaction with her.
     if (playOnly.includes(locStack[0])) {
@@ -353,7 +372,9 @@ export function ypeein2(item: string, yneedtype: number){
 export function ypeein3(item: string, yneedtype: number){
     const URGENCY_DESPERATE = 2;
     let curtext: any[] = [];
-    if (yourbladder < yourbladurge){
+    const { bladderUrge, bladderEmer } = getPlayerBladderThresholds();
+
+    if (yourbladder < bladderUrge){
         curtext.push("You try your best, but you just can't manage to push anything out.");
         curtext.push("With a sigh, you zip your trousers back up.");
         curtext.push("<b>You:</b> It's not happening, I'll try again later when my bladder is a bit fuller.");
@@ -369,7 +390,7 @@ export function ypeein3(item: string, yneedtype: number){
                     curtext.push(peeResult[yneedtype][FULL_FILL]);
                 else
                     curtext.push(peeResult[yneedtype][PARTIAL_FILL]);
-                if (yourbladder > yourblademer)
+                if (yourbladder > bladderEmer)
                     curtext.push("YOU: Damn. That's not much better.");
                 drainYourBladderBy(containerVolume);
             } else {
@@ -401,7 +422,9 @@ export function yPeeInTub() {
 //   11=watched pee car, 12=she touches you
 export function ypeeoutside() {
     let curtext: any[] = [];
-    if (yourbladder < yourblademer)
+    const { bladderEmer } = getPlayerBladderThresholds();
+
+    if (yourbladder < bladderEmer)
         curtext = printList(curtext, ypeelines["peeOutside"][0]); // casual announcement
     else {
         curtext = printList(curtext, ypeelines["peeOutside"][1]); // desperate announcement
@@ -576,7 +599,7 @@ export function exposeYourBladderOnWindow() {
         ["yourtummy", () => yourtummy, (v) => { setYourtummy(v); }],
         ["yourtumavg", () => yourtumavg, (v) => { yourtumavg = v; }],
         ["holdself", () => holdself, (v) => { holdself = v; }],
-        ["yourbladurge", () => yourbladurge, (v) => { setYourbladurge(v); }],
+        ["yourbladurge", () => getPlayerBladderThresholds().bladderUrge, (v) => { setYourbladurge(v); }],
         ["ymaxtummy", () => ymaxtummy, (v) => { setYmaxtummy(v); }],
         ["ymaxbeer", () => ymaxbeer, (v) => { setYmaxbeer(v); }],
         ["yourcustomurge", () => yourcustomurge, (v) => { yourcustomurge = v; }],
@@ -597,11 +620,11 @@ export function exposeYourBladderOnWindow() {
     }
     // Derived thresholds are read-only — computed from urge, direct writes are illegal.
     for (const [name, getter] of [
-        ["yourbladneed", () => yourbladneed],
-        ["yourblademer", () => yourblademer],
-        ["yourbladlose", () => yourbladlose],
-        ["yourbladcumlose", () => yourbladcumlose],
-        ["yourbladsexlose", () => yourbladsexlose],
+        ["yourbladneed", () => getPlayerBladderThresholds().bladderNeed],
+        ["yourblademer", () => getPlayerBladderThresholds().bladderEmer],
+        ["yourbladlose", () => getPlayerBladderThresholds().bladderLose],
+        ["yourbladcumlose", () => getPlayerBladderThresholds().bladderCumLose],
+        ["yourbladsexlose", () => getPlayerBladderThresholds().bladderSexLose],
     ] as [string, () => number][]) {
         Object.defineProperty(window, name, { get: getter, configurable: true });
     }

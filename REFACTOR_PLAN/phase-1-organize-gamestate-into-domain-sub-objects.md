@@ -103,6 +103,9 @@ Step 1 touch-log (freeze note, 2026-04-18):
 Current progress:
 
 - [x] Guardrail agreed: do not add new legacy setter/global dependencies while converging bladder models.
+- [x] Player read-only threshold consumers in `yourbladder.ts` (`youpee()`, `displayyourneed()`, `youbathroomlocked()`, `ypeein()`, `ypeein3()`, `ypeeoutside()`) now read canonical `gameState.Player` thresholds first, with legacy `yourblad*` values retained only as fallback compatibility mirrors.
+- [x] `flushyourdrank()` now reads canonical `gameState.Player` thresholds (`bladderUrge`, `bladderEmer`, `bladderLose`) first for decay branch decisions, while preserving existing compatibility write paths through `updateyoururge(...)`.
+- [x] Window compatibility getters for `yourblad*` in `exposeYourBladderOnWindow()` now read canonical `gameState.Player` thresholds first, eliminating remaining direct legacy threshold read call sites in `yourbladder.ts` outside fallback mirror plumbing.
 - [ ] Next implementation slice: move threshold ownership to `Person` without expanding legacy imports or legacy setter calls in `main.ts`.
 - [ ] Remaining: migrate call sites that still read threshold globals directly in `bladder.ts` / `yourbladder.ts`.
 
@@ -648,4 +651,4 @@ Row J ownership evidence snapshot (2026-04-17):
 | 2026-04-17 | FeelCounter | migrated | Romance | pending | Row B romance ownership slice |
 | 2026-04-17 | FuckingNow | migrated | Romance | pending | Row B romance ownership slice |
 | 2026-04-17 | ChampagneCounter | migrated | Romance | pending | Row B romance ownership slice |
-
+
