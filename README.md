@@ -9,6 +9,16 @@ The game is also offered on the following sites:
 * [Latest release](http://fammel.unaux.com/) [mirror]
 * [development version](http://famtest.unaux.com/)
 
+# Userflow Tests
+End-to-end behavior is verified by Selenium-based NUnit tests in `UserFlowTests/`.
+
+Use these tests to validate player-visible behavior across startup, navigation, choices/actions,
+state migration compatibility, and save/load flows.
+
+Quick entry point:
+
+* `UserFlowTests/README.md`
+
 
 # Debugging
 There is a list of usefull debug functions defined in the "debugFunctions.js" file.
@@ -35,3 +45,23 @@ Notes:
 * The game now always starts with a random seed.
 * `?seed=12345` (or `setRandomSeed(12345)`) overrides that startup seed.
 * Seeded randomness now drives gameplay and animation randomness used by both TS and legacy JS files.
+
+# State Ownership Notes (Migration)
+
+During migration, some gameplay values still exist in two places:
+
+* Canonical typed owner (for example `gameState.Companion.Bladder`)
+* Legacy global mirror (for example `bladder`)
+
+When writing state, use compatibility setters such as `setBladder`, `setTummy`, `setYourbladder`, and `setYourtummy`.
+
+Why:
+
+* They route writes to canonical gameState ownership when available.
+* They keep legacy global mirrors synchronized for script-style code that has not been migrated yet.
+* They prevent split-brain state caused by direct `x = ...` assignments in gameplay logic.
+
+Migration rule of thumb:
+
+* Reads may temporarily come from legacy globals in old scripts.
+* Writes should go through compatibility setters (or directly to gameState in fully migrated modules).

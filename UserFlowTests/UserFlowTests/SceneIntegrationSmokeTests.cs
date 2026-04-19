@@ -35,6 +35,7 @@ public class SceneIntegrationSmokeTests
     }
 
     [TestCaseSource(nameof(SceneFunctions))]
+    [Description("Smoke-checks each scene entry function for successful render and absence of browser runtime errors.")]
     public void SceneEntryPoints_Render_WithoutRuntimeErrors(string sceneFunctionName)
     {
         StartGame();

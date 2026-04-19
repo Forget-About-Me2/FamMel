@@ -8,3 +8,4 @@ _bmad*
 **/bin/
 **/obj/
 Selenium/*
+.github/copilot-instructions.md

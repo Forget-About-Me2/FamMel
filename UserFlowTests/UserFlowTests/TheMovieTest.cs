@@ -17,7 +17,8 @@ public class TheMovieTest {
   }
 
   [Test]
-  public void theMovie() {
+  [Description("Exercises the theatre path end-to-end and asserts movie interaction choices advance without runtime errors.")]
+  public void MovieScene_TheatreFlow_RendersAndAdvancesWithoutRuntimeErrors() {
     driver.Navigate().GoToUrl("http://127.0.0.1:8080/index.html?seed=3594826295");
     driver.Manage().Window.Size = new System.Drawing.Size(1936, 1048);
 

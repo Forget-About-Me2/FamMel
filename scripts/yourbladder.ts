@@ -7,6 +7,17 @@ import { rrMovieLineThresh } from './locations/theatre';
 
 //Your bladder variables
 export let yourbladder = 500;
+/**
+ * Compatibility setter for player bladder volume.
+ *
+ * Usage:
+ * - Use this when code writes player bladder state.
+ * - Avoid direct `yourbladder = ...` assignments in gameplay code.
+ *
+ * Relevance:
+ * - Runtime ownership is converging to `gameState.Player.Bladder`.
+ * - Legacy `yourbladder` remains available for script-style/global consumers.
+ */
 export function setYourbladder(val: number) {
     yourbladder = Number(val) || 0;
     if (gameState.Player) {
@@ -19,6 +30,17 @@ export function drainYourBladderBy(amount: number) {
     setYourbladder(yourbladder - drainAmount);
 }
 export let yourtummy = 200;
+/**
+ * Compatibility setter for player tummy volume.
+ *
+ * Usage:
+ * - Use this when code writes player tummy state.
+ * - Avoid direct `yourtummy = ...` assignments in gameplay code.
+ *
+ * Relevance:
+ * - Runtime ownership is converging to `gameState.Player.Tummy`.
+ * - Legacy `yourtummy` remains for script-style/global compatibility.
+ */
 export function setYourtummy(val: number) {
     yourtummy = Number(val) || 0;
     if (gameState.Player) {

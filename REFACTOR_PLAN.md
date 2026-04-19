@@ -164,6 +164,8 @@ Global finalization rule (all phases/slices/steps):
 2. For code-impacting work, validation evidence must include userflow test execution (critical smoke at minimum; full suite when behavior scope is broad or uncertain).
 3. If any userflow test fails, the item remains open and the failure is logged with test name and status.
 4. Merge-candidate validation still requires full userflow suite green in 2 consecutive runs.
+5. Any issue discovered during execution must be logged immediately in this plan with owner impact and follow-up action before marking the affected item complete.
+6. When touching compatibility setters, bridge paths, or canonical-vs-legacy ownership logic, add/update usage-and-relevance documentation (JSDoc at function level plus a short project-level note when behavior expectations change).
 
 **Stop condition:** any critical-path userflow failure or non-deterministic failure blocks merge.
 
@@ -232,8 +234,8 @@ Global finalization rule (all phases/slices/steps):
    - Required fields: `MaxBladder`, `BladderRate`, `threshold` (or equivalent)
    - Gate: Type check clean on Person, at least 2 threshold tests green
 
-3. [ ] **Canonicalize bladder writes in `bladder.ts`** — `updateurge()` and compatibility setters must write through `gameState.Companion` instead of treating root globals as owners.
-   - Progress: threshold setters and key compatibility setters now push into `gameState.Companion`; remaining internal direct assignments still need elimination.
+3. [x] **Canonicalize bladder writes in `bladder.ts`** — `updateurge()` and compatibility setters must write through `gameState.Companion` instead of treating root globals as owners.
+   - Validation note (2026-04-19): removed remaining direct gameplay `bladder = ...` writes in runtime branches (`holdit`, `peephone`, `pGirlsRoom2`, `pTogether2`) and routed them through `setBladder(...)` so canonical companion state is now write authority with legacy mirroring.
    - Call sites: anywhere `Bladder` or `LastPee` are written
    - Bridge: `setUrge()` wrapper in shims for compatibility calls from legacy JS
    - Gate: `scripts/bladder.ts` build clean, no new type errors
@@ -251,7 +253,7 @@ Global finalization rule (all phases/slices/steps):
    - Gate: SaveAndLoad userflow test (5/5) still green after change
 
 6. [ ] **Verify no dual writes** — Confirm all call sites use canonical `gameState` paths; legacy reads fallback only.
-   - Current issue: compatibility setters are canonical-first now, but internal module-local assignments still exist inside `bladder.ts` / `yourbladder.ts`.
+   - Current issue: compatibility setters are canonical-first now, but internal module-local assignments still exist inside `yourbladder.ts`.
    - Grep: `Bladder =` (should find only shims wrappers + legacy JS)
    - Grep: `YourBlad =` (should find only shims wrappers + legacy JS)
    - Gate: No new direct writes found outside shims/legacy JS

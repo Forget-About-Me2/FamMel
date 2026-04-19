@@ -20,7 +20,8 @@ public class PickherupTest {
     driver.Quit();
   }
   [Test]
-  public void pickherup() {
+  [Description("Covers the phone->store->second call->pickup route and verifies the pickup branch renders successfully.")]
+  public void PickHerUp_PhoneAndStoreProgression_ReachesPickupFlow() {
     driver.Navigate().GoToUrl("http://localhost:8080?seed=20260307");
     driver.Manage().Window.Size = new System.Drawing.Size(1268, 1042);
     driver.SetGameSeed(20260307);

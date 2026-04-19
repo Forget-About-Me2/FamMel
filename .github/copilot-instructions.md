@@ -170,6 +170,15 @@ When working on refactors, be proactive about keeping REFACTOR_PLAN.md up to dat
 ## Testing
 Be proactive about running tests and update the integration tests
 
+When adding or changing `UserFlowTests` / Selenium / integration tests, optimize for readability, not just coverage.
+
+- Test names should describe the gameplay scenario and expected outcome, not just the function under test.
+- If a test sets up migration-bridge state, dual canonical-vs-legacy state, or other non-obvious preconditions, add a short summary comment or XML doc explaining the gameplay situation and the bug/regression being guarded.
+- Inside browser `ExecuteScript(...)` blocks, add brief step comments for setup, act, and collect/assert phases when the intent would otherwise be opaque.
+- Assertion messages should explain the behavior in plain language (`what should happen and why`), not just restate the field name.
+- Prefer making the test readable in the code itself over relying on external README documentation to explain it.
+- When a test is hard to understand because the production path is too technical, add the minimum inline narrative needed so a contributor can understand the scenario without already knowing the migration internals.
+
 ## Documentation
 When touching a function during refactor work, assess whether it needs a JSDoc comment. Add documentation when:
 - The function's purpose is non-obvious from its name and parameters

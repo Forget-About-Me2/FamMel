@@ -49,18 +49,46 @@ export function setMaxbeer(val: number) {
 
 // Legacy global state used across script-style JS files.
 export let tummy = 0;
+/**
+ * Compatibility setter for companion tummy volume.
+ *
+ * Usage:
+ * - Use this when code writes the shared companion tummy value.
+ * - Do not assign `tummy = ...` directly in gameplay logic.
+ *
+ * Relevance:
+ * - Canonical owner is `gameState.Companion.Tummy` once gameState is initialized.
+ * - Legacy `tummy` remains as a mirror for script-style code that still reads globals.
+ */
 export function setTummy(val: number) {
-    tummy = Number(val) || 0;
+    const nextTummy = Number(val) || 0;
     if (gameState.Companion) {
-        gameState.Companion.Tummy = tummy;
+        gameState.Companion.Tummy = nextTummy;
+        tummy = gameState.Companion.Tummy;
+        return;
     }
+    tummy = nextTummy;
 }
 export let bladder = 0;
+/**
+ * Compatibility setter for companion bladder volume.
+ *
+ * Usage:
+ * - Use this for all runtime writes to companion bladder state.
+ * - Do not assign `bladder = ...` directly in gameplay logic.
+ *
+ * Relevance:
+ * - Canonical owner is `gameState.Companion.Bladder` once gameState is initialized.
+ * - Legacy `bladder` stays in sync as a mirror for unmigrated global-scope code.
+ */
 export function setBladder(val: number) {
-    bladder = Number(val) || 0;
+    const nextBladder = Number(val) || 0;
     if (gameState.Companion) {
-        gameState.Companion.Bladder = bladder;
+        gameState.Companion.Bladder = nextBladder;
+        bladder = gameState.Companion.Bladder;
+        return;
     }
+    bladder = nextBladder;
 }
 
 export function drainBladderBy(amount: number) {
@@ -88,10 +116,13 @@ export let peedoutside = 0; // has she peed outside
 // been waiting and how much she's drunk.
 export let lastpeetime = 0;  // When did she last go?
 export function setLastpeetime(val: number) {
-    lastpeetime = Number(val) || 0;
+    const nextLastPeeTime = Number(val) || 0;
     if (gameState.Companion) {
-        gameState.Companion.LastPeeTime = lastpeetime;
+        gameState.Companion.LastPeeTime = nextLastPeeTime;
+        lastpeetime = gameState.Companion.LastPeeTime;
+        return;
     }
+    lastpeetime = nextLastPeeTime;
 }
 export let timeheld = 0; // for stats
 export function setTimeheld(val: number) { timeheld = val; }
@@ -156,10 +187,13 @@ export let wetherpanties = 0; // did she ever wet herself?
 export function setWetherpanties(val: number) { wetherpanties = val; }
 export let nowpeeing = 0; // flag: she is currently peeing
 export function setNowpeeing(val: number) {
-    nowpeeing = Number(val) || 0;
+    const nextNowPeeing = Number(val) || 0;
     if (gameState.Companion) {
-        gameState.Companion.NowPeeing = !!nowpeeing;
+        gameState.Companion.NowPeeing = !!nextNowPeeing;
+        nowpeeing = gameState.Companion.NowPeeing ? 1 : 0;
+        return;
     }
+    nowpeeing = nextNowPeeing;
 }
 
 export let gottagoflag = 0; // has she just asked to use the restroom
@@ -629,7 +663,7 @@ export function holdit() {
                     curtext.push(holdPhonePanic);
                     curtext.push(holdPhoneLosing);
                     curtext.push(holdPhoneWet);
-                    bladder = 0;
+                    setBladder(0);
                     waitcounter = 0;
                     askholditcounter = 0;
                     setAttraction(0);
@@ -645,7 +679,7 @@ export function holdit() {
             curtext.push(holdPhoneHangUp);
             //She's not holding it while on the phone
             setAttraction(attraction - 5);
-            bladder = 0;
+            setBladder(0);
             curtext = callChoice(["curloc", "Continue..."], curtext);
         } else {
             curtext.push(holdRefusal);
@@ -873,7 +907,7 @@ export function peephone() {
         }
     } else {
         curtext = printLList(curtext, peelines["peephone"], PHONE_PEE_HANGUP);
-        bladder = 0;
+        setBladder(0);
     }
     curtext = c([locStack[0], "Continue..."], curtext);
     sayText(curtext);
@@ -1360,7 +1394,7 @@ export function pgirlsroom() {
 
 export function pGirlsRoom2() {
     let curtext = printList([], peelines["pgirlsroom"][3]); // She pulls you into stall
-    if (bladder < bladlose - 10) bladder = bladlose - 10;
+    if (bladder < bladlose - 10) setBladder(bladlose - 10);
     curtext = displayneed(curtext);
     curtext = printList(curtext, peelines["pgirlsroom"][4]); // Toilet sight increases urgency
     sayText(curtext);
@@ -1394,7 +1428,7 @@ export function pTogether2() {
     let listenerList: any[] = [];
     if (!randomchoice(rrlockedthresh)) {
         curtext = printList(curtext, peelines["ptogether"][4]); // Peeks into stall
-        if (bladder < bladlose - 10) bladder = bladlose - 10;
+        if (bladder < bladlose - 10) setBladder(bladlose - 10);
         curtext = displayneed(curtext);
         curtext = printList(curtext, peelines["ptogether"][5]); // Toilet urgency
         listenerList.push([[pTogether3, "Continue..."], "peeTogether"]);

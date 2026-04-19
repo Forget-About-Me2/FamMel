@@ -133,6 +133,15 @@ public class NavigationSmokeTests
         AssertNoRuntimeErrors("gamestart→yourhome");
     }
 
+    /// <summary>
+    /// The game tracks where you are using a stack of location names (locStack).
+    /// "Push" adds a location on top (you go somewhere new),
+    /// "Pop" removes the top (you go back to where you were).
+    ///
+    /// This test verifies the stack works like a proper last-in-first-out stack
+    /// and that the legacy global array stays in sync with the canonical
+    /// gameState.LegacyLocStack mirror.
+    /// </summary>
     [Test]
     public void LocationStack_PushPop_PreservesLifoDepthAndCanonicalParity()
     {
@@ -140,25 +149,29 @@ public class NavigationSmokeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                // Reset baseline stack through the legacy global setter path.
+                // Start with just 'yourhome' on the stack
                 window.locStack = ['yourhome'];
 
+                // Navigate: yourhome -> driveout -> thebar
                 pushloc('driveout');
                 pushloc('thebar');
 
+                // Stack should now be: [thebar, driveout, yourhome] (3 deep, thebar on top)
                 const depthAfterPush = Array.isArray(locStack) ? locStack.length : -1;
                 const topAfterPush = Array.isArray(locStack) ? String(locStack[0]) : '';
 
-                const popped1 = String(poploc() ?? '');
-                const popped2 = String(poploc() ?? '');
+                // Go back twice: thebar -> driveout -> yourhome
+                const popped1 = String(poploc() ?? '');  // should return 'thebar'
+                const popped2 = String(poploc() ?? '');  // should return 'driveout'
 
+                // Should be back to just yourhome
                 const finalDepth = Array.isArray(locStack) ? locStack.length : -1;
                 const finalTop = Array.isArray(locStack) ? String(locStack[0]) : '';
 
+                // Check the canonical mirror matches the legacy global
                 const canonical = Array.isArray(window.gameState?.LegacyLocStack)
                     ? window.gameState.LegacyLocStack
                     : [];
-
                 const parity = JSON.stringify(locStack) === JSON.stringify(canonical);
 
                 return JSON.stringify({
@@ -178,17 +191,37 @@ public class NavigationSmokeTests
         ")?.ToString();
 
         result.Should().NotBeNullOrWhiteSpace();
-        result.Should().Contain("\"depthAfterPush\":3");
-        result.Should().Contain("\"topAfterPush\":\"thebar\"");
-        result.Should().Contain("\"popped1\":\"thebar\"");
-        result.Should().Contain("\"popped2\":\"driveout\"");
-        result.Should().Contain("\"finalDepth\":1");
-        result.Should().Contain("\"finalTop\":\"yourhome\"");
-        result.Should().Contain("\"parity\":true");
+
+        // After two pushes onto a 1-deep stack, depth should be 3
+        result.Should().Contain("\"depthAfterPush\":3",
+            "stack should be 3 deep after pushing driveout and thebar");
+        result.Should().Contain("\"topAfterPush\":\"thebar\"",
+            "most recently pushed location should be on top");
+
+        // Pops should return locations in reverse push order
+        result.Should().Contain("\"popped1\":\"thebar\"",
+            "first pop should return the last pushed location (thebar)");
+        result.Should().Contain("\"popped2\":\"driveout\"",
+            "second pop should return driveout");
+
+        // Back to baseline
+        result.Should().Contain("\"finalDepth\":1",
+            "after popping both, only yourhome should remain");
+        result.Should().Contain("\"finalTop\":\"yourhome\"",
+            "yourhome should be the remaining location");
+
+        // Old and new state systems agree on the stack contents
+        result.Should().Contain("\"parity\":true",
+            "legacy locStack global and canonical gameState mirror must match");
 
         AssertNoRuntimeErrors("location-stack-lifo");
     }
 
+    /// <summary>
+    /// Stress test: push and pop the same location 25 times in a row.
+    /// The stack should always return to its baseline (just 'yourhome')
+    /// and never underflow (go below 1 entry) or lose track of where you are.
+    /// </summary>
     [Test]
     public void LocationStack_RepeatedPushPop_KeepsBaselineAndNeverUnderflows()
     {
@@ -200,28 +233,36 @@ public class NavigationSmokeTests
 
                 let underflow = false;
                 for (let i = 0; i < 25; i++) {
+                    // Push a location, verify stack didn't break
                     pushloc('callher');
                     if ((locStack?.length ?? 0) < 1) {
                         underflow = true;
                         break;
                     }
+
+                    // Pop it back off, verify we got the right one
                     const popped = poploc();
                     if (String(popped ?? '') !== 'callher') {
                         underflow = true;
                         break;
                     }
+
+                    // Stack should still have at least yourhome
                     if ((locStack?.length ?? 0) < 1) {
                         underflow = true;
                         break;
                     }
                 }
 
+                // After 25 round-trips, we should still be at yourhome
                 const currentTag = typeof getCurrentLocationTag === 'function'
                     ? String(getCurrentLocationTag())
                     : '';
 
                 const finalDepth = Array.isArray(locStack) ? locStack.length : -1;
                 const finalTop = Array.isArray(locStack) ? String(locStack[0]) : '';
+
+                // Canonical mirror should still match
                 const parity = JSON.stringify(locStack)
                     === JSON.stringify(Array.isArray(window.gameState?.LegacyLocStack)
                         ? window.gameState.LegacyLocStack
@@ -236,15 +277,36 @@ public class NavigationSmokeTests
         ")?.ToString();
 
         result.Should().NotBeNullOrWhiteSpace();
-        result.Should().Contain("\"underflow\":false");
-        result.Should().Contain("\"finalDepth\":1");
-        result.Should().Contain("\"finalTop\":\"yourhome\"");
-        result.Should().Contain("\"currentTag\":\"yourhome\"");
-        result.Should().Contain("\"parity\":true");
+
+        // No underflow detected during 25 push/pop cycles
+        result.Should().Contain("\"underflow\":false",
+            "stack should never underflow during repeated push/pop cycles");
+
+        // Still exactly 1 entry (yourhome) at the bottom
+        result.Should().Contain("\"finalDepth\":1",
+            "stack should return to baseline depth of 1 after all cycles");
+        result.Should().Contain("\"finalTop\":\"yourhome\"",
+            "yourhome should remain as the base location");
+        result.Should().Contain("\"currentTag\":\"yourhome\"",
+            "getCurrentLocationTag should report yourhome");
+
+        // Old and new state agree
+        result.Should().Contain("\"parity\":true",
+            "legacy locStack and canonical mirror must stay in sync after stress test");
 
         AssertNoRuntimeErrors("location-stack-repeat");
     }
 
+    /// <summary>
+    /// When the companion pees, her bladder state should reset correctly
+    /// and ONLY her globals should be affected — not the player's.
+    ///
+    /// Background: During migration, bladder state exists in two places:
+    ///   - Canonical: gameState.Companion (typed object)
+    ///   - Legacy: window.bladder, window.bladurge, etc. (old globals)
+    /// The pee() method must update the companion side without touching
+    /// the player's separate globals (window.yourbladurge).
+    /// </summary>
     [Test]
     public void PersonPee_CompanionSyncsCompanionLegacyThresholdsOnly()
     {
@@ -253,15 +315,23 @@ public class NavigationSmokeTests
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
                 const gs = window.gameState;
-                window.bladurge = 250;
-                window.yourbladurge = 500;
+
+                // --- SETUP: give companion and player different urge values ---
+                // Companion urge = 250, Player urge = 500.
+                // This lets us verify pee() only touches the companion side.
+                window.bladurge = 250;       // companion's legacy urge global
+                window.yourbladurge = 500;    // player's legacy urge global (should NOT change)
                 gs.Companion.setUrge(250);
+
+                // Fill companion's bladder past the point of no return
                 gs.Companion.Bladder = gs.Companion.bladderLose + 25;
                 gs.Companion.NowPeeing = false;
                 gs.Companion.LastPeeTime = -1;
 
+                // --- ACT: companion pees ---
                 gs.Companion.pee();
 
+                // --- COLLECT: check what changed ---
                 return JSON.stringify({
                     companionBladder: gs.Companion.Bladder,
                     companionNowPeeing: gs.Companion.NowPeeing,
@@ -278,14 +348,31 @@ public class NavigationSmokeTests
         ")?.ToString();
 
         result.Should().NotBeNullOrWhiteSpace();
-        result.Should().Contain("\"companionBladder\":0");
-        result.Should().Contain("\"companionNowPeeing\":true");
-        result.Should().NotContain("\"companionLastPeeTime\":-1");
-        result.Should().Contain("\"playerLegacyUrge\":500");
+
+        // After peeing, her bladder should be empty
+        result.Should().Contain("\"companionBladder\":0",
+            "companion's bladder should be 0 after peeing");
+
+        // The NowPeeing flag should be set (she is mid-pee)
+        result.Should().Contain("\"companionNowPeeing\":true",
+            "companion should be flagged as currently peeing");
+
+        // LastPeeTime should have been updated from its initial -1
+        result.Should().NotContain("\"companionLastPeeTime\":-1",
+            "companion's last-pee timestamp should have been updated");
+
+        // Crucially: the PLAYER's urge should be untouched at 500
+        result.Should().Contain("\"playerLegacyUrge\":500",
+            "player's urge global must not be affected by companion peeing");
 
         AssertNoRuntimeErrors("companion-pee-sync");
     }
 
+    /// <summary>
+    /// Mirror of the companion test above, but for the player character.
+    /// When the player pees, only the player's state should reset —
+    /// the companion's globals (window.bladurge) must stay untouched.
+    /// </summary>
     [Test]
     public void PersonPee_PlayerSyncsPlayerLegacyThresholdsOnly()
     {
@@ -294,15 +381,21 @@ public class NavigationSmokeTests
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
                 const gs = window.gameState;
-                window.bladurge = 250;
-                window.yourbladurge = 500;
+
+                // --- SETUP: companion urge = 250, player urge = 500 ---
+                window.bladurge = 250;       // companion's legacy urge (should NOT change)
+                window.yourbladurge = 500;    // player's legacy urge
                 gs.Player.setUrge(500);
+
+                // Fill player's bladder past the breaking point
                 gs.Player.Bladder = gs.Player.bladderLose + 25;
                 gs.Player.NowPeeing = false;
                 gs.Player.LastPeeTime = -1;
 
+                // --- ACT: player pees ---
                 gs.Player.pee();
 
+                // --- COLLECT ---
                 return JSON.stringify({
                     playerBladder: gs.Player.Bladder,
                     playerNowPeeing: gs.Player.NowPeeing,
@@ -319,14 +412,37 @@ public class NavigationSmokeTests
         ")?.ToString();
 
         result.Should().NotBeNullOrWhiteSpace();
-        result.Should().Contain("\"playerBladder\":0");
-        result.Should().Contain("\"playerNowPeeing\":true");
-        result.Should().NotContain("\"playerLastPeeTime\":-1");
-        result.Should().Contain("\"companionLegacyUrge\":250");
+
+        // After peeing, player's bladder should be empty
+        result.Should().Contain("\"playerBladder\":0",
+            "player's bladder should be 0 after peeing");
+
+        // NowPeeing flag should be set
+        result.Should().Contain("\"playerNowPeeing\":true",
+            "player should be flagged as currently peeing");
+
+        // LastPeeTime should have been updated from -1
+        result.Should().NotContain("\"playerLastPeeTime\":-1",
+            "player's last-pee timestamp should have been updated");
+
+        // Crucially: the COMPANION's urge should still be 250
+        result.Should().Contain("\"companionLegacyUrge\":250",
+            "companion's urge global must not be affected by player peeing");
 
         AssertNoRuntimeErrors("player-pee-sync");
     }
 
+    /// <summary>
+    /// Verifies the bridge between old globals and new gameState stays in sync.
+    ///
+    /// The game has two parallel state systems during migration:
+    ///   OLD: window.bladder, window.yourbladder, window.nowpeeing, etc.
+    ///   NEW: gameState.Companion.Bladder, gameState.Player.Bladder, etc.
+    ///
+    /// When old code writes to a global (e.g. window.bladder = 321),
+    /// the new canonical state must reflect the same value immediately.
+    /// If this breaks, the UI shows one value while game logic uses another.
+    /// </summary>
     [Test]
     public void BladderGlobals_WindowAssignment_KeepsCanonicalParity_SameTick()
     {
@@ -336,15 +452,17 @@ public class NavigationSmokeTests
             try {
                 const gs = window.gameState;
 
-                window.bladder = 321;
-                window.yourbladder = 654;
-                window.bladurge = 275;
-                window.yourbladurge = 525;
-                window.nowpeeing = 1;
-                window.ynowpeeing = 0;
-                window.lastpeetime = 777;
-                window.ylastpeetime = 888;
+                // --- Simulate old-style code writing directly to globals ---
+                window.bladder = 321;         // companion bladder fill level
+                window.yourbladder = 654;     // player bladder fill level
+                window.bladurge = 275;        // companion first-urge threshold
+                window.yourbladurge = 525;    // player first-urge threshold
+                window.nowpeeing = 1;         // companion is mid-pee (truthy)
+                window.ynowpeeing = 0;        // player is NOT mid-pee
+                window.lastpeetime = 777;     // companion's last pee timestamp
+                window.ylastpeetime = 888;    // player's last pee timestamp
 
+                // --- Check: does the new gameState mirror match? ---
                 return JSON.stringify({
                     companionBladderParity: gs.Companion.Bladder === window.bladder,
                     playerBladderParity: gs.Player.Bladder === window.yourbladder,
@@ -363,16 +481,88 @@ public class NavigationSmokeTests
         ")?.ToString();
 
         result.Should().NotBeNullOrWhiteSpace();
-        result.Should().Contain("\"companionBladderParity\":true");
-        result.Should().Contain("\"playerBladderParity\":true");
-        result.Should().Contain("\"companionUrgeParity\":true");
-        result.Should().Contain("\"playerUrgeParity\":true");
-        result.Should().Contain("\"companionNowPeeingParity\":true");
-        result.Should().Contain("\"playerNowPeeingParity\":true");
-        result.Should().Contain("\"companionLastPeeTimeParity\":true");
-        result.Should().Contain("\"playerLastPeeTimeParity\":true");
+
+        // Each "parity" field should be true: the old global and new gameState agree
+        result.Should().Contain("\"companionBladderParity\":true",
+            "companion bladder: global and gameState should match");
+        result.Should().Contain("\"playerBladderParity\":true",
+            "player bladder: global and gameState should match");
+        result.Should().Contain("\"companionUrgeParity\":true",
+            "companion urge threshold: global and gameState should match");
+        result.Should().Contain("\"playerUrgeParity\":true",
+            "player urge threshold: global and gameState should match");
+        result.Should().Contain("\"companionNowPeeingParity\":true",
+            "companion now-peeing flag: global and gameState should match");
+        result.Should().Contain("\"playerNowPeeingParity\":true",
+            "player now-peeing flag: global and gameState should match");
+        result.Should().Contain("\"companionLastPeeTimeParity\":true",
+            "companion last-pee time: global and gameState should match");
+        result.Should().Contain("\"playerLastPeeTimeParity\":true",
+            "player last-pee time: global and gameState should match");
 
         AssertNoRuntimeErrors("bladder-global-parity");
+    }
+
+    /// <summary>
+    /// Exercises a specific gameplay branch: you ask the companion to hold it
+    /// while she's on the phone at the store, but attraction is too low so she
+    /// refuses and relieves herself.
+    ///
+    /// The bug this guards against: before the migration fix, holdit() wrote
+    /// `bladder = 0` directly to the legacy global, leaving
+    /// gameState.Companion.Bladder out of sync (still showing the old value).
+    /// Now it must use setBladder(0) so both sides agree.
+    /// </summary>
+    [Test]
+    public void HoldIt_PhoneRefusal_ZeroesCanonicalCompanionBladder()
+    {
+        StartGameAndWait();
+
+        var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            try {
+                const gs = window.gameState;
+
+                // --- SETUP: simulate being on the phone at the store ---
+                // locStack[0] = 'gostore' triggers the phone-call branch in holdit()
+                window.locStack = ['gostore'];
+
+                // Low attraction means she will refuse to hold it
+                window.attraction = 0;
+
+                // Give her a non-zero bladder so we can verify it gets zeroed
+                window.bladder = 420;
+
+                // --- ACT: ask her to hold it (she refuses, relieves herself) ---
+                holdit();
+
+                // --- COLLECT: both state systems should show bladder = 0 ---
+                return JSON.stringify({
+                    companionBladder: gs.Companion.Bladder,
+                    legacyBladder: window.bladder,
+                    parity: gs.Companion.Bladder === window.bladder
+                });
+            } catch (e) {
+                window.__testErrors = window.__testErrors || [];
+                window.__testErrors.push(String((e && e.stack) || e));
+                return JSON.stringify({ error: String((e && e.stack) || e) });
+            }
+        ")?.ToString();
+
+        result.Should().NotBeNullOrWhiteSpace();
+
+        // After she relieves herself, canonical state should be 0
+        result.Should().Contain("\"companionBladder\":0",
+            "canonical gameState bladder should be 0 after she relieves herself");
+
+        // The old global should also be 0
+        result.Should().Contain("\"legacyBladder\":0",
+            "legacy global bladder should be 0 after she relieves herself");
+
+        // Both must agree
+        result.Should().Contain("\"parity\":true",
+            "canonical and legacy bladder must match after holdit() phone refusal");
+
+        AssertNoRuntimeErrors("holdit-phone-refusal");
     }
 
     private void StartGameAndWait()
