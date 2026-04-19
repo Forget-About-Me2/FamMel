@@ -9,6 +9,7 @@
 // Window-exposed singletons (from app.ts)
 // ============================================================================
 declare var gameState: any;
+declare var runtimeContext: any;
 declare var gameScreen: any;
 
 // ============================================================================

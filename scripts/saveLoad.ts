@@ -22,8 +22,7 @@ import {
 } from './shims';
 import {
     customurge, setCustomurge, minurge, setMinurge, minperc, setMinperc,
-    bladurge, setBladurge, bladneed, setBladneed, blademer, setBlademer,
-    bladlose, setBladlose, bladcumlose, setBladcumlose, bladsexlose, setBladsexlose,
+    bladurge, setBladurge,
     maxtummy, setMaxtummy, maxbeer, setMaxbeer, tummy, setTummy, bladder, setBladder,
     bladDec, setBladDec, bladDespDec, setBladDespDec, seal, setSeal,
     beerdecCounter, setBeerdecCounter, ybeerdecCounter, setYbeerdecCounter,
@@ -41,9 +40,6 @@ import {
 import {
     yourbladder, setYourbladder, yourtummy, setYourtummy, yourtumavg, setYourtumavg,
     holdself, setHoldself, yourbladurge, setYourbladurge,
-    yourbladneed, setYourbladneed, yourblademer, setYourblademer,
-    yourbladlose, setYourbladlose, yourbladcumlose, setYourbladcumlose,
-    yourbladsexlose, setYourbladsexlose,
     ymaxtummy, setYmaxtummy, ymaxbeer, setYmaxbeer, yourcustomurge, setYourcustomurge,
     yminurge, setYminurge, ynowpeeing, setYnowpeeing,
     ylastpeetime, setYlastpeetime, ytimeheld, setYtimeheld,

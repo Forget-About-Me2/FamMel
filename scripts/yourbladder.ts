@@ -60,6 +60,27 @@ export let yourbladlose = yourbladurge * 3 + 150; // Level where you lose contro
 export let yourbladcumlose = yourbladurge * 4; // Level where you lose it as you cum
 export let yourbladsexlose = yourbladurge * 5; // Level where you can't control it during sex
 
+/**
+ * Mirrors the canonical player urge back into the legacy module-scoped threshold globals.
+ *
+ * Usage:
+ * - Call this from canonical player-state owners that need to refresh legacy read compatibility.
+ * - Do not use this as a gameplay write path; gameplay should still set `gameState.Player` urge.
+ *
+ * Relevance:
+ * - Derived thresholds are legacy mirrors of the canonical first-urge value.
+ * - Keeping this as an explicit helper avoids round-tripping derived legacy values back into canonical state.
+ */
+export function syncPlayerLegacyThresholdsFromCanonical(urge: number) {
+    const normalizedUrge = Math.round(Number(urge) || 0);
+    yourbladurge = normalizedUrge;
+    yourbladneed = normalizedUrge * 2;
+    yourblademer = normalizedUrge * 3;
+    yourbladlose = normalizedUrge * 3 + 150;
+    yourbladcumlose = normalizedUrge * 4;
+    yourbladsexlose = normalizedUrge * 5;
+}
+
 export let ymaxtummy = 500; // Drink capacity of stomach
 export function setYmaxtummy(val: number) {
     ymaxtummy = Number(val) || 0;
@@ -118,12 +139,7 @@ export function updateyoururge(newurge: number) {
     if (newurge < yminurge) newurge = yminurge;
     newurge = Math.round(newurge);
     gameState.Player?.setUrge(newurge);
-    yourbladurge = gameState.Player?.bladderUrge ?? newurge;
-    yourbladneed = gameState.Player?.bladderNeed ?? newurge * 2;
-    yourblademer = gameState.Player?.bladderEmer ?? newurge * 3;
-    yourbladlose = gameState.Player?.bladderLose ?? (newurge * 3 + 150);
-    yourbladcumlose = gameState.Player?.bladderCumLose ?? newurge * 4;
-    yourbladsexlose = gameState.Player?.bladderSexLose ?? newurge * 5;
+    syncPlayerLegacyThresholdsFromCanonical(gameState.Player?.bladderUrge ?? newurge);
 }
 
 export function flushyourdrank() {
@@ -539,11 +555,7 @@ export let youSpurted = 0;
 export function setYouSpurted(val: number) { youSpurted = val; }
 export function setYourtumavg(val: number) { yourtumavg = val; }
 export function setYminurge(val: number) { yminurge = val; }
-export function setYourbladneed(val: number) { yourbladneed = val; }
-export function setYourblademer(val: number) { yourblademer = val; }
-export function setYourbladlose(val: number) { yourbladlose = val; }
-export function setYourbladcumlose(val: number) { yourbladcumlose = val; }
-export function setYourbladsexlose(val: number) { yourbladsexlose = val; }
+
 export function setYtimeheld(val: number) { ytimeheld = val; }
 export function setYdrankcocktails(val: number) { ydrankcocktails = val; }
 export function setYdrankwaters(val: number) { ydrankwaters = val; }
@@ -561,17 +573,12 @@ export function spurtedyourself(curtext: any[]) {
 export function exposeYourBladderOnWindow() {
     const mutableVars: [string, () => any, (v: any) => void][] = [
         ["yourbladder", () => yourbladder, (v) => { setYourbladder(v); }],
-        ["yourtummy", () => yourtummy, (v) => { yourtummy = v; }],
+        ["yourtummy", () => yourtummy, (v) => { setYourtummy(v); }],
         ["yourtumavg", () => yourtumavg, (v) => { yourtumavg = v; }],
         ["holdself", () => holdself, (v) => { holdself = v; }],
         ["yourbladurge", () => yourbladurge, (v) => { setYourbladurge(v); }],
-        ["yourbladneed", () => yourbladneed, (v) => { yourbladneed = v; }],
-        ["yourblademer", () => yourblademer, (v) => { yourblademer = v; }],
-        ["yourbladlose", () => yourbladlose, (v) => { yourbladlose = v; }],
-        ["yourbladcumlose", () => yourbladcumlose, (v) => { yourbladcumlose = v; }],
-        ["yourbladsexlose", () => yourbladsexlose, (v) => { yourbladsexlose = v; }],
-        ["ymaxtummy", () => ymaxtummy, (v) => { ymaxtummy = v; }],
-        ["ymaxbeer", () => ymaxbeer, (v) => { ymaxbeer = v; }],
+        ["ymaxtummy", () => ymaxtummy, (v) => { setYmaxtummy(v); }],
+        ["ymaxbeer", () => ymaxbeer, (v) => { setYmaxbeer(v); }],
         ["yourcustomurge", () => yourcustomurge, (v) => { yourcustomurge = v; }],
         ["yminurge", () => yminurge, (v) => { yminurge = v; }],
         ["ynowpeeing", () => ynowpeeing, (v) => { setYnowpeeing(v); }],
@@ -588,8 +595,19 @@ export function exposeYourBladderOnWindow() {
     for (const [name, getter, setter] of mutableVars) {
         Object.defineProperty(window, name, { get: getter, set: setter, configurable: true });
     }
+    // Derived thresholds are read-only — computed from urge, direct writes are illegal.
+    for (const [name, getter] of [
+        ["yourbladneed", () => yourbladneed],
+        ["yourblademer", () => yourblademer],
+        ["yourbladlose", () => yourbladlose],
+        ["yourbladcumlose", () => yourbladcumlose],
+        ["yourbladsexlose", () => yourbladsexlose],
+    ] as [string, () => number][]) {
+        Object.defineProperty(window, name, { get: getter, configurable: true });
+    }
 
     Object.assign(window, {
+        syncPlayerLegacyThresholdsFromCanonical,
         holdpeethresh,
         initYUrge, updateyoururge, flushyourdrank, displayyourneed,
         youpee, ypeein, ypeein2, ypeein3,

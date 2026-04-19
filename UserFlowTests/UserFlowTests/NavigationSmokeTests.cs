@@ -504,6 +504,82 @@ public class NavigationSmokeTests
     }
 
     /// <summary>
+    /// During Phase 1A cutover, the player's derived threshold globals remain
+    /// legacy mirrors, and canonical player updates must keep those mirrors in
+    /// parity after pee-driven urge decay.
+    ///
+    /// This guards the supported contract: old code may still read the legacy
+    /// threshold globals, but those values must be recomputed from canonical
+    /// player state instead of acting as independent write targets.
+    /// </summary>
+    [Test]
+    public void PlayerPee_CanonicalUrgeDecay_KeepsLegacyDerivedThresholdParity()
+    {
+        StartGameAndWait();
+
+        var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
+            try {
+                const gs = window.gameState;
+
+                // Set a known canonical urge and force a pee decay path (> lose threshold => 10% decay).
+                gs.Player.setUrge(500);
+                gs.Player.Bladder = gs.Player.bladderLose + 25;
+                gs.Player.NowPeeing = false;
+
+                gs.Player.pee();
+
+                return JSON.stringify({
+                    canonicalUrge: gs.Player.bladderUrge,
+                    canonicalNeed: gs.Player.bladderNeed,
+                    canonicalEmer: gs.Player.bladderEmer,
+                    canonicalLose: gs.Player.bladderLose,
+                    canonicalCumLose: gs.Player.bladderCumLose,
+                    canonicalSexLose: gs.Player.bladderSexLose,
+                    legacyUrge: window.yourbladurge,
+                    legacyNeed: window.yourbladneed,
+                    legacyEmer: window.yourblademer,
+                    legacyLose: window.yourbladlose,
+                    legacyCumLose: window.yourbladcumlose,
+                    legacySexLose: window.yourbladsexlose
+                });
+            } catch (e) {
+                window.__testErrors = window.__testErrors || [];
+                window.__testErrors.push(String((e && e.stack) || e));
+                return JSON.stringify({ error: String((e && e.stack) || e) });
+            }
+        ")?.ToString();
+
+        result.Should().NotBeNullOrWhiteSpace();
+
+        result.Should().Contain("\"canonicalUrge\":450",
+            "player pee decay should reduce the canonical urge from 500 to 450");
+        result.Should().Contain("\"legacyUrge\":450",
+            "legacy player urge mirror should stay in parity with canonical state after pee decay");
+        result.Should().Contain("\"canonicalNeed\":900",
+            "canonical need threshold should be recomputed from the decayed urge");
+        result.Should().Contain("\"legacyNeed\":900",
+            "legacy need threshold should stay in parity with the canonical value after pee decay");
+        result.Should().Contain("\"canonicalEmer\":1350",
+            "canonical emergency threshold should be recomputed from the decayed urge");
+        result.Should().Contain("\"legacyEmer\":1350",
+            "legacy emergency threshold should stay in parity with the canonical value after pee decay");
+        result.Should().Contain("\"canonicalLose\":1500",
+            "canonical lose-control threshold should be recomputed from the decayed urge");
+        result.Should().Contain("\"legacyLose\":1500",
+            "legacy lose-control threshold should stay in parity with the canonical value after pee decay");
+        result.Should().Contain("\"canonicalCumLose\":1800",
+            "canonical cum-lose threshold should be recomputed from the decayed urge");
+        result.Should().Contain("\"legacyCumLose\":1800",
+            "legacy cum-lose threshold should stay in parity with the canonical value after pee decay");
+        result.Should().Contain("\"canonicalSexLose\":2250",
+            "canonical sex-lose threshold should be recomputed from the decayed urge");
+        result.Should().Contain("\"legacySexLose\":2250",
+            "legacy sex-lose threshold should stay in parity with the canonical value after pee decay");
+
+        AssertNoRuntimeErrors("player-derived-threshold-mirror-sync");
+    }
+
+    /// <summary>
     /// Exercises a specific gameplay branch: you ask the companion to hold it
     /// while she's on the phone at the store, but attraction is too low so she
     /// refuses and relieves herself.

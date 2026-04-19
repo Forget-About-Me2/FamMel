@@ -51,7 +51,7 @@ class RomanceState {
 }
 
 
-class GameState {
+class RuntimeContext {
     Player!: Person;
     Companion!: dateNPC;
     private initialized = false;
@@ -493,4 +493,13 @@ export class GameLocation {
     private static readonly PreGameLocations = [LocationCategory.Start, LocationCategory.Options, LocationCategory.ExplainImg, LocationCategory.HideScreen, LocationCategory.CustomGirl];
 }
 
-export const gameState = new GameState();
+/**
+ * Transitional runtime container name while ownership is migrated.
+ * End-state intent: keep `gameState` as the canonical run-state identity.
+ */
+export const runtimeContext = new RuntimeContext();
+
+/**
+ * Compatibility alias for existing imports/callers during the context split.
+ */
+export const gameState = runtimeContext;

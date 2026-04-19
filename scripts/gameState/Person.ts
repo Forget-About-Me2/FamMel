@@ -180,27 +180,22 @@ export class Person {
     }
 
     /**
-     * Pushes the Person's bladder thresholds back to the legacy module-scoped
-     * variables via window bridge setters. Called after Person.pee() decay.
+     * Pushes the Person's bladder thresholds back to legacy compatibility mirrors.
+     * The player path uses an explicit helper so derived legacy thresholds do not
+     * round-trip back into canonical urge ownership through window setters.
      */
     private syncThresholdsToLegacy() {
         const w = window as any;
         if (this.legacyBladderMirror === "player") {
-            w.yourbladurge = this._bladderUrge;
-            w.yourbladneed = this.bladderNeed;
-            w.yourblademer = this.bladderEmer;
-            w.yourbladlose = this.bladderLose;
-            w.yourbladcumlose = this.bladderCumLose;
-            w.yourbladsexlose = this.bladderSexLose;
+            if (typeof w.syncPlayerLegacyThresholdsFromCanonical === "function") {
+                w.syncPlayerLegacyThresholdsFromCanonical(this._bladderUrge);
+            }
             return;
         }
 
-        w.bladurge = this._bladderUrge;
-        w.bladneed = this.bladderNeed;
-        w.blademer = this.bladderEmer;
-        w.bladlose = this.bladderLose;
-        w.bladcumlose = this.bladderCumLose;
-        w.bladsexlose = this.bladderSexLose;
+        if (typeof w.syncCompanionLegacyThresholdsFromCanonical === "function") {
+            w.syncCompanionLegacyThresholdsFromCanonical(this._bladderUrge);
+        }
     }
 
     /**

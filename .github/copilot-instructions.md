@@ -11,6 +11,13 @@ npx tsc -p . --noEmit          # Type-check only (no output)
 
 ## Architecture Overview
 
+## Architecture Decision Authority
+
+- Copilot must not make architectural decisions for this project.
+- If a task involves architecture trade-offs (module boundaries, ownership, migration strategy, public contracts, or large structural changes), present options and defer the final decision to the user.
+- Copilot should act as a guide and execute directly assigned tasks exactly as requested.
+- The user is experienced in C# and business-oriented systems, not game development; tailor explanations to that background and bridge game-specific concepts using familiar business/system design analogies.
+
 This project is a **browser-based game** that's mid-migration from JavaScript to TypeScript. It uses two parallel systems:
 
 ### Two Worlds: Modules vs Scripts

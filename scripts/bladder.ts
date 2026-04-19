@@ -212,6 +212,17 @@ export function initUrge(urge: number) {
 }
 
 // noinspection DuplicatedCode
+export function syncCompanionLegacyThresholdsFromCanonical(urge: number) {
+    const normalizedUrge = Math.round(Number(urge) || 0);
+    bladurge = normalizedUrge;
+    bladneed = normalizedUrge * 2;
+    blademer = normalizedUrge * 3;
+    bladlose = normalizedUrge * 3 + 150;
+    bladcumlose = normalizedUrge * 4;
+    bladsexlose = normalizedUrge * 5;
+}
+
+// noinspection DuplicatedCode
 export function updateurge(newurge: number) {
     if (newurge < minurge) newurge = minurge;
     newurge = Math.round(newurge);
@@ -730,11 +741,7 @@ export function setToldstories(val: any[]) { toldstories = val; }
 export let lastStory;
 export function setLastStory(val: any) { lastStory = val; }
 export function setMinurge(val: number) { minurge = val; }
-export function setBladneed(val: number) { bladneed = val; }
-export function setBlademer(val: number) { blademer = val; }
-export function setBladlose(val: number) { bladlose = val; }
-export function setBladcumlose(val: number) { bladcumlose = val; }
-export function setBladsexlose(val: number) { bladsexlose = val; }
+
 export function setBeerdecCounter(val: number) { beerdecCounter = val; }
 export function setPeedtowels(val: number) { peedtowels = val; }
 export function setPeedvase(val: number) { peedvase = val; }
@@ -1648,11 +1655,6 @@ export function exposeBladderOnWindow() {
         ["minurge", () => minurge, (v) => { minurge = v; }],
         ["minperc", () => minperc, (v) => { minperc = v; }],
         ["bladurge", () => bladurge, (v) => { setBladurge(v); }],
-        ["bladneed", () => bladneed, (v) => { bladneed = v; }],
-        ["blademer", () => blademer, (v) => { blademer = v; }],
-        ["bladlose", () => bladlose, (v) => { bladlose = v; }],
-        ["bladcumlose", () => bladcumlose, (v) => { bladcumlose = v; }],
-        ["bladsexlose", () => bladsexlose, (v) => { bladsexlose = v; }],
         ["maxtummy", () => maxtummy, (v) => { setMaxtummy(v); }],
         ["maxbeer", () => maxbeer, (v) => { setMaxbeer(v); }],
         ["tummy", () => tummy, (v) => { setTummy(v); }],
@@ -1693,6 +1695,16 @@ export function exposeBladderOnWindow() {
     for (const [name, getter, setter] of mutableVars) {
         Object.defineProperty(window, name, { get: getter, set: setter, configurable: true });
     }
+    // Derived thresholds are read-only — computed from urge, direct writes are illegal.
+    for (const [name, getter] of [
+        ["bladneed", () => bladneed],
+        ["blademer", () => blademer],
+        ["bladlose", () => bladlose],
+        ["bladcumlose", () => bladcumlose],
+        ["bladsexlose", () => bladsexlose],
+    ] as [string, () => number][]) {
+        Object.defineProperty(window, name, { get: getter, configurable: true });
+    }
 
     // Constants — direct assignment
     Object.assign(window, {
@@ -1704,6 +1716,7 @@ export function exposeBladderOnWindow() {
 
     // Functions — direct assignment
     Object.assign(window, {
+        syncCompanionLegacyThresholdsFromCanonical,
         initUrge, updateurge, interpbladder, calcTuminc, randtuminc,
         flushdrank, showneed, displayneed, displaygottavoc, displayholdquip,
         displaywaited, noteholding,
