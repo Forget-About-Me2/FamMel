@@ -8,9 +8,11 @@ This section is the day-to-day operating mode when the full plan feels overwhelm
 - Stop after that target is validated and committed.
 - Do not chain extra cleanup tasks in the same session.
 
-### Rule 2: Keep WIP to 1
+### Rule 2: Keep WIP low (default 1, hard cap 2)
 
-- Treat only one active task as "in progress" at any time.
+- Default to one active task in progress.
+- A second active task is allowed only when it directly unblocks the first task.
+- Never exceed two active tasks total. 
 - If a task requires touching more than 3 files, split it before starting.
 
 ### Rule 3: Use the minimum validation gate
@@ -42,4 +44,4 @@ For each session, require only:
 - Validation run:
 - Result:
 - Follow-up (single next step):
-
+

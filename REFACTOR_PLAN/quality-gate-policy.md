@@ -21,7 +21,7 @@ After each logical edit or small batch of edits **during** a refactor session:
 Before merging a completed refactor slice:
 
 1. **Build + Typecheck:** Clean (no errors).
-2. **Full userflow userflow twice:** Complete critical smoke suite (start, navigation, dialogue/action, store/inventory, save/load, **all 37+ navigation tests**) — must pass in **2 consecutive runs** (stability check).
+2. **Full userflow twice:** Complete critical smoke suite (start, navigation, dialogue/action, store/inventory, save/load, **all 37+ navigation tests**) — must pass in **2 consecutive runs** (stability check).
 3. **Manual regression for under-covered slices:** Replay gameplay scenarios that the userflow suite doesn't cover:
    - If bladder thresholds changed, play until pee state changes occur; verify legacy mirrors refresh correctly.
    - If location stack changed, navigate between 5+ venues and verify no stack corruption or soft-lock.
@@ -40,4 +40,4 @@ Before merging a completed refactor slice:
 If in doubt, ask: "Would a player in gameplay hit this change?" If yes, add a focused test; if no, it's not focused-scope for that session.
 
 ---
-
+
