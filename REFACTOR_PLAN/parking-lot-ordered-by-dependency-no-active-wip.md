@@ -14,8 +14,9 @@
 ### Infrastructure
 
 - [ ] Phase 1b — replace saveLoad.ts setter registry with simple transitional approach
-- [ ] Phase 2 Batch A — `drive.ts`, `images.ts` (small confidence batch)
-- [ ] Phase 2 Batch B–F — remaining module migrations (`settings.ts`, `fuckHer.ts`, location modules, `backPackItems.ts`, `quotes.ts`, `shims.ts`, `bladder.ts`, `yourbladder.ts`)
+- [ ] Phase 2 Batch B1b — strengthen attraction/shyness bridge hardening (depends on B1a complete)
+- [ ] Phase 2 Batch B2 — migrate attraction/shyness call sites to canonical reads/writes; retire bridge fallback (depends on B1b)
+- [ ] Phase 2 Batches A, B, C–F — module ownership migrations *(status tracked in phase-2 doc; listed here for dependency ordering only)*
 - [ ] Phase 3 — delete all bridge infrastructure (`connectToGameState`, `expose*OnWindow`)
 - [ ] Phase 4 — final save/load simplification (direct `gameState` snapshot)
 - [ ] Phase 5 — naming consistency pass, JSDoc on lifecycle functions, "How State Works" README section
@@ -33,4 +34,4 @@
 - [ ] `Person.TimeSinceLastPeed` references global `lastpeetime` — migrate to `this.lastPeeTime`
 
 ---
-
+

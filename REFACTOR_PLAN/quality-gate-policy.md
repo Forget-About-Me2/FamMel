@@ -36,8 +36,14 @@ Before merging a completed refactor slice:
 - **Bladder thresholds (Slice 2 Phase 1A):** Run `PersonPee_*` and `BladderGlobals_*` userflow tests (4 tests, ~15s).
 - **Save/Load (Phase 1b):** Run `SaveLoad_*` userflow tests (2–3 tests, ~20s).
 - **Companion state (any companion-specific change):** Run `PersonPee_Companion*` to verify companion thresholds don't interfere (1 test, ~5s).
+- **Attraction/shyness NaN contract (Phase 2 Batch B1a):** Four contract gates must pass: (1) load gate — no NaN after hydration from legacy save; (2) default gate — fresh start initializes to numeric defaults; (3) round-trip gate — serialize/deserialize preserves numeric equality; (4) bridge parity gate — `attraction` global equals `gameState.Companion.Attraction` at a known sync point. Run `AttractionShyness_*` userflow tests when available.
 
 If in doubt, ask: "Would a player in gameplay hit this change?" If yes, add a focused test; if no, it's not focused-scope for that session.
 
 ---
+
+### Test Environment Note
+
+- Treat `ERR_CONNECTION_REFUSED` / host-unreachable Selenium failures as infrastructure failures first.
+- Before userflow runs, verify dev host health at `http://127.0.0.1:8080` (responding HTML) and only then triage app behavior.
 

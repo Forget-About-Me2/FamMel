@@ -118,3 +118,23 @@ Plan integrity note (2026-04-18):
 
 ---
 
+### Slice 3 — Phase 2 Batch B1a: Attraction/Shyness NaN Contract + Canonical-First Hydration
+
+**Goal:** Add canonical write APIs for attraction/shyness in `gameState`; standardize NaN handling as explicit no-op; align save/load hydration to canonical-first ordering.
+
+**Scope:** `scripts/gameState/gameState.ts`, `scripts/shims.ts`, `scripts/saveLoad.ts`, `scripts/globals.d.ts`, targeted `UserFlowTests`.
+
+**Sequencing note:** B1a started ahead of Batches A and B. Batches A and B have module-level dependencies; B1a is a clean atomic unit with no A/B prerequisite. Batches A and B remain pending in phase-2.
+
+**Gate (done when):**
+- [ ] Bridge crossing verified: legacy setter updates canonical value after init.
+- [ ] Bridge no-op path verified: invalid numeric input does not mutate current/last values and does not throw.
+- [ ] Pre-init compatibility verified: valid numeric updates legacy globals; invalid numeric is no-op; no runtime throw.
+- [ ] Save/load round-trip verified for attraction/shyness with canonical-first hydration and matching numeric contract.
+- [ ] Targeted userflow assertions pass for attraction/shyness paths.
+- [ ] Build clean, typecheck clean, full userflow green in 2 consecutive runs.
+
+**STATUS: In progress** (2026-04-20)
+
+---
+

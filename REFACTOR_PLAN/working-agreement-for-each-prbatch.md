@@ -22,3 +22,17 @@ Each batch should include:
 3. If Copilot adds more than 15 lines of narrative, condense to bullets before merge.
 4. If a new doc is created, it must declare owner, purpose, and lifecycle (active, reference, or archive).
 
+## Rollback Policy
+
+If a batch passes quality gates but introduces a runtime regression observable in the browser:
+1. Revert the batch commit in full. Do not attempt partial rollback of individual files.
+2. Record the failure mode in `completed.md` as a failed attempt entry with date and symptom.
+3. Re-enter the batch as a new slice with the failure mode documented and root cause addressed first.
+
+## Batch Exit Criteria (required)
+
+Each batch spec must include a "done when" statement before execution begins. Minimum bar:
+- All affected legacy references updated or explicitly deprecated with a removal target.
+- No net-new console errors on affected screens.
+- Integration tests pass for touched state fields (round-trip through save/load where applicable).
+

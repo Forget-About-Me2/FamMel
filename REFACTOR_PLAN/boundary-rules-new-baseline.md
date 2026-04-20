@@ -5,6 +5,7 @@ Use these rules before moving any variable:
 1. Keep in canonical `gameState` only if it changes gameplay outcomes or must survive save/load.
 2. Keep outside `gameState` if it is UI-only, DOM/runtime handle, timer, event subscription, or temporary interaction buffer.
 3. Derived values should be computed selectors, not stored as duplicated mutable fields.
+	> *Exception (migration window): Transitional compatibility mirrors are permitted when a legacy module still writes directly to a field and cannot be migrated atomically. The mirror must be one-directional (canonical → legacy), declared in the batch spec, and have an explicit removal target.*
 4. During migration, every concept gets one write owner. Bridges are one-direction only.
 
 Examples:
@@ -13,4 +14,4 @@ Examples:
 - Outside canonical gameplay: open modal flags, CSS/layout flags, DOM nodes, action callback registries, formatting caches.
 
 ---
-
+

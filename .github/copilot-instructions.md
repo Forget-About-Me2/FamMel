@@ -13,7 +13,6 @@ npx tsc -p . --noEmit          # Type-check only (no output)
 
 ## Architecture Decision Authority
 
-- Copilot must not make architectural decisions for this project.
 - If a task involves architecture trade-offs (module boundaries, ownership, migration strategy, public contracts, or large structural changes), present options and defer the final decision to the user.
 - Copilot should act as a guide and execute directly assigned tasks exactly as requested.
 - The user is experienced in C# and business-oriented systems, not game development; tailor explanations to that background and bridge game-specific concepts using familiar business/system design analogies.
@@ -198,6 +197,8 @@ Don't add boilerplate docs to trivial one-liners or self-explanatory helpers.
 
 ## Keeping instructions up to date
 Be proactive in suggesting improvements to the instructions, if you notice they are out of date, incomplete or in other ways lacking prompt the user.
+
+- If the user corrects Copilot (facts, preferences, constraints, or approach), capture a concise lesson immediately (create/update the relevant memory note) before continuing with implementation.
 
 ## Prompting user
 When there are multiple paths a refactor or solution can go, prompt the user to make the choice or give feedback
