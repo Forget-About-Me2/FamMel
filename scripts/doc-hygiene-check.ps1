@@ -1,5 +1,7 @@
 param(
-    [string]$RepoRoot = "."
+    [string]$RepoRoot = ".",
+    [int]$MaxCommitsSinceDocsRefresh = 5,
+    [string]$DocsAnchorPath = "docs/index.md"
 )
 
 Set-StrictMode -Version Latest
@@ -16,6 +18,23 @@ function Add-Error([string]$message) {
 
 function Read-Text([string]$path) {
     return Get-Content -Raw -Encoding UTF8 -Path $path
+}
+
+function Try-RunGit([string[]]$args) {
+    $output = & git @args 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        return $null
+    }
+
+    if ($null -eq $output) {
+        return ""
+    }
+
+    if ($output -is [array]) {
+        return ($output -join "`n").Trim()
+    }
+
+    return [string]$output
 }
 
 # 1) Deprecated artifacts should be deleted once they have no consumers.
@@ -37,6 +56,35 @@ $deprecatedArtifacts = @(
 foreach ($path in $deprecatedArtifacts) {
     if (Test-Path $path) {
         Add-Error("Deprecated artifact should be deleted: $path")
+    }
+}
+
+# 1b) Ensure documentation is refreshed periodically to prevent drift.
+if ($MaxCommitsSinceDocsRefresh -lt 1) {
+    Add-Error("MaxCommitsSinceDocsRefresh must be >= 1 (received: $MaxCommitsSinceDocsRefresh)")
+}
+
+if (-not (Test-Path $DocsAnchorPath)) {
+    Add-Error("Docs anchor file is missing: $DocsAnchorPath")
+}
+
+$insideWorkTree = Try-RunGit @("rev-parse", "--is-inside-work-tree")
+if ($insideWorkTree -eq "true") {
+    $docChanges = Try-RunGit @("status", "--porcelain", "--", "docs")
+    if ([string]::IsNullOrWhiteSpace($docChanges)) {
+        $anchorCommit = Try-RunGit @("log", "-1", "--format=%H", "--", $DocsAnchorPath)
+        if ([string]::IsNullOrWhiteSpace($anchorCommit)) {
+            Add-Error("No committed history found for docs anchor: $DocsAnchorPath")
+        } else {
+            $commitsSinceAnchorRaw = Try-RunGit @("rev-list", "--count", "$anchorCommit..HEAD")
+            $commitsSinceAnchor = 0
+
+            if (-not [int]::TryParse($commitsSinceAnchorRaw, [ref]$commitsSinceAnchor)) {
+                Add-Error("Unable to parse commit count since docs anchor: '$commitsSinceAnchorRaw'")
+            } elseif ($commitsSinceAnchor -gt $MaxCommitsSinceDocsRefresh) {
+                Add-Error("Documentation drift risk: $commitsSinceAnchor commits since '$DocsAnchorPath' was last updated (max allowed: $MaxCommitsSinceDocsRefresh). Recheck docs and regenerate if needed.")
+            }
+        }
     }
 }
 
