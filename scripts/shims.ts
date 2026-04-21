@@ -46,9 +46,33 @@ export function setPlayerbladder(val: any) { playerbladder = val; }
 
 // Interaction / flirt state
 export let attraction: number = 10;
-export function setAttraction(val: number) { attraction = val; }
+export function syncLegacyAttractionMirror(value: number) { attraction = value; }
+export function setAttraction(val: number) {
+    const w = globalThis as any;
+    if (!Number.isFinite(val)) {
+        return;
+    }
+
+    if (w?.gameState?.isInitialized) {
+        w.gameState.setAttraction(val);
+        return;
+    }
+    attraction = val;
+}
 export let shyness: number = 90;
-export function setShyness(val: number) { shyness = val; }
+export function syncLegacyShynessMirror(value: number) { shyness = value; }
+export function setShyness(val: number) {
+    const w = globalThis as any;
+    if (!Number.isFinite(val)) {
+        return;
+    }
+
+    if (w?.gameState?.isInitialized) {
+        w.gameState.setShyness(val);
+        return;
+    }
+    shyness = val;
+}
 export let flirtedflag: number = 0;
 export function setFlirtedflag(val: number) { flirtedflag = val; }
 export let flirtcounter: number = 0;
@@ -326,6 +350,20 @@ export function connectToGameState(gs: any): void {
         Object.defineProperty(current, last, descriptor);
     };
 
+    const setCanonicalBridgeValue = (path: string, value: any): void => {
+        if (path === 'Attraction' && typeof gs.setAttraction === 'function') {
+            gs.setAttraction(value);
+            return;
+        }
+
+        if (path === 'Shyness' && typeof gs.setShyness === 'function') {
+            gs.setShyness(value);
+            return;
+        }
+
+        setByPath(gs, path, value);
+    };
+
     // ========================================================================
     // FORWARD bridges — shims-owned variables.
     // These module vars are NOT read/written by module code after init, so
@@ -370,7 +408,7 @@ export function connectToGameState(gs: any): void {
         if (cur !== undefined) setByPath(gs, gsProp, cur);
         Object.defineProperty(w, globalName, {
             get: () => getByPath(gs, gsProp),
-            set: (v: any) => { setByPath(gs, gsProp, v); },
+            set: (v: any) => { setCanonicalBridgeValue(gsProp, v); },
             configurable: true,
             enumerable: true,
         });
@@ -636,8 +674,8 @@ export function exposeShimsOnWindow(): void {
         ['meridian',          () => meridian,          (v) => { meridian = v; }],
         ['late',              () => late,              (v) => { late = v; }],
         ['playerbladder',     () => playerbladder,     (v) => { playerbladder = v; }],
-        ['attraction',        () => attraction,        (v) => { attraction = v; }],
-        ['shyness',           () => shyness,           (v) => { shyness = v; }],
+        ['attraction',        () => attraction,        (v) => { setAttraction(v); }],
+        ['shyness',           () => shyness,           (v) => { setShyness(v); }],
         ['flirtedflag',       () => flirtedflag,       (v) => { flirtedflag = v; }],
         ['flirtcounter',      () => flirtcounter,      (v) => { flirtcounter = v; }],
         ['noflirtflag',       () => noflirtflag,       (v) => { noflirtflag = v; }],
@@ -689,6 +727,10 @@ export function exposeShimsOnWindow(): void {
     w.formatString = formatString;
     w.formatAll = formatAll;
     w.randomize = randomize;
+    w.setAttraction = setAttraction;
+    w.setShyness = setShyness;
+    w.__syncLegacyAttractionMirror = syncLegacyAttractionMirror;
+    w.__syncLegacyShynessMirror = syncLegacyShynessMirror;
 }
 
 // Self-expose at module load time so that window globals are available

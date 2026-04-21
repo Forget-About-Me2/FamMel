@@ -61,6 +61,10 @@ class RuntimeContext {
     private _money: number = gameSettings.StartMoney;
     private _attraction: number = 10;
     private _shyness: number = 90;
+    private static readonly MinAttraction = 0;
+    private static readonly MaxAttraction = 130;
+    private static readonly MinShyness = 0;
+    private static readonly MaxShyness = 100;
     readonly LocStack : GameLocation[] = [];
     private _randCounter = randomInt(gameSettings.RandCounterMax);
 
@@ -337,6 +341,10 @@ class RuntimeContext {
         this.initialized = true;
     }
 
+    public get isInitialized(): boolean {
+        return this.initialized;
+    }
+
     pushLoc(location: GameLocation) {
         this.LocStack.unshift(location);
     }
@@ -400,12 +408,74 @@ class RuntimeContext {
         this._attraction = value;
     }
 
+    /**
+     * Sets canonical attraction state and mirrors to the legacy global.
+     *
+     * Numeric contract: accepts finite number inputs only. Non-finite values
+     * (`NaN`, `Infinity`, `-Infinity`) are deterministic no-op.
+     *
+     * Bridge contract: legacy compatibility setters in shims delegate here after
+     * runtime initialization. This method is the authoritative write path.
+     *
+     * Side effects on valid write: (1) LastAttraction is set to the prior
+     * canonical value, (2) Attraction is updated with the clamped value,
+     * (3) window.attraction is mirrored to that clamped value. All three
+     * updates occur atomically in one execution.
+     *
+     * @param value Numeric value to set. Must be finite.
+     * @side-effect Updates LastAttraction to the prior canonical value.
+     * @side-effect Updates window.attraction to mirror the canonical value.
+     */
+    setAttraction(value: number): void {
+        if (!Number.isFinite(value)) {
+            return;
+        }
+
+        const clamped = Math.max(RuntimeContext.MinAttraction, Math.min(RuntimeContext.MaxAttraction, value));
+        const previous = this._attraction;
+
+        this.LastAttraction = previous;
+        this._attraction = clamped;
+        (globalThis as any).__syncLegacyAttractionMirror(clamped);
+    }
+
     get Shyness(): number {
         return this._shyness;
     }
 
     set Shyness(value: number) {
         this._shyness = value;
+    }
+
+    /**
+     * Sets canonical shyness state and mirrors to the legacy global.
+     *
+     * Numeric contract: accepts finite number inputs only. Non-finite values
+     * (`NaN`, `Infinity`, `-Infinity`) are deterministic no-op.
+     *
+     * Bridge contract: legacy compatibility setters in shims delegate here after
+     * runtime initialization. This method is the authoritative write path.
+     *
+     * Side effects on valid write: (1) LastShyness is set to the prior
+     * canonical value, (2) Shyness is updated with the clamped value,
+     * (3) window.shyness is mirrored to that clamped value. All three
+     * updates occur atomically in one execution.
+     *
+     * @param value Numeric value to set. Must be finite.
+     * @side-effect Updates LastShyness to the prior canonical value.
+     * @side-effect Updates window.shyness to mirror the canonical value.
+     */
+    setShyness(value: number): void {
+        if (!Number.isFinite(value)) {
+            return;
+        }
+
+        const clamped = Math.max(RuntimeContext.MinShyness, Math.min(RuntimeContext.MaxShyness, value));
+        const previous = this._shyness;
+
+        this.LastShyness = previous;
+        this._shyness = clamped;
+        (globalThis as any).__syncLegacyShynessMirror(clamped);
     }
 
     get CurRandCounter() : number {

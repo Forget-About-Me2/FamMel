@@ -8,7 +8,14 @@
 // ============================================================================
 // Window-exposed singletons (from app.ts)
 // ============================================================================
-declare var gameState: any;
+interface LegacyBridgeGameState {
+	isInitialized: boolean;
+	setAttraction(value: number): void;
+	setShyness(value: number): void;
+	[key: string]: any;
+}
+
+declare var gameState: LegacyBridgeGameState;
 declare var runtimeContext: any;
 declare var gameScreen: any;
 
@@ -19,3 +26,5 @@ declare var gameScreen: any;
 // ============================================================================
 declare function cellphone(): void;
 declare function GetRequiredElementById<T extends HTMLElement>(id: string): T;
+declare function setAttraction(value: number): void;
+declare function setShyness(value: number): void;
