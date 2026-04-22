@@ -7,10 +7,11 @@ import {gameScreen} from "./gameScreen/gameScreen";
 import { animationManager } from "./gameScreen/animationManager";
 import { setupQuotes, fetchAndCacheJson, locationSetup, locjson, printAllChoices, sayText, printList, setText, fetchJson } from "./quotes";
 import { pushloc, poploc, randomInt, connectToGameState, locStack, endScreens, playerbladder, setCurrentLegacyLocationTag } from './shims';
-import { setup } from './settings';
+import { hydrateSettingsToGameState, setup } from './settings';
 import { updateyoururge, yourbladder, setYourbladder, yourtummy, setYourtummy, ymaxtummy, setYmaxtummy, ymaxbeer, setYmaxbeer, ydrankbeer, setYdrankbeer, ynowpeeing, setYnowpeeing, yourbladurge, setYourbladurge } from './yourbladder';
 import { updateurge, bladder, setBladder, tummy, setTummy, maxtummy, setMaxtummy, maxbeer, setMaxbeer, drankbeer, setDrankbeer, nowpeeing, setNowpeeing, bladurge, setBladurge, askholditcounter } from './bladder';
 import { allowItems, setAllowItems } from './backPackItems';
+import { hydrateSexSceneStateToGameState } from './fuckHer';
 
 /**
  * Main program loop that handles location transitions and game state updates
@@ -263,6 +264,8 @@ export async function start() {
     // Keep typed settings in sync with legacy setup() localStorage behavior.
     try { gameSettings.PlayerBladder = !!playerbladder; } catch {}
     gameState.init();
+    hydrateSettingsToGameState();
+    hydrateSexSceneStateToGameState();
     animationManager.start();
     // Connect window bridges to gameState — auto-seeds from current window values.
     connectToGameState(gameState);

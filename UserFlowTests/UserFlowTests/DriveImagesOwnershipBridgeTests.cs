@@ -4,7 +4,7 @@ using AwesomeAssertions;
 namespace UserFlowTests;
 
 /// <summary>
-/// Story 1.1 coverage for canonical ownership of imgs/wetthecar/picset.
+/// Coverage for canonical ownership of imgs/wetthecar/picset.
 /// Guards bridge behavior across pre-init and post-init compatibility paths.
 /// </summary>
 [TestFixture]

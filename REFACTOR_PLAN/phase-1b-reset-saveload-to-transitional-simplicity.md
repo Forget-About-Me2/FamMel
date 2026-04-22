@@ -1,5 +1,7 @@
 # Phase 1b: Reset Save/Load To Transitional Simplicity
 
+Planning note (2026-04-22): "transitional" here means simpler implementation path, not introducing new compatibility layers. Any work from this phase must still follow the no-compatibility rule.
+
 Purpose: remove the over-engineered registry so migration work is easier to reason about.
 
 - [ ] Replace saveLoad.ts field registry/setter graph with a simple transitional approach.
@@ -10,4 +12,4 @@ Purpose: remove the over-engineered registry so migration work is easier to reas
 Exit criteria:
 - saveLoad.ts is understandable without tracing 100+ imports.
 - Existing save/load tests pass.
-
+

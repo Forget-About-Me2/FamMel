@@ -1,5 +1,7 @@
 # Phase 1: Organize GameState Into Domain Sub-Objects
 
+Planning note (2026-04-22): This document contains valuable ownership discovery history, but parts of its execution guidance predate the no-compatibility-layer rule. Treat it as reference/history unless a section is explicitly re-approved in the active wave plan.
+
 Purpose: consolidate the 100+ scattered fields on GameState into logically grouped sub-objects (InteractionState, VenueState, CompanionState, etc.) so the architecture reflects domain logic instead of chaos.
 
 Current state: Partially done — fields have been added to GameState but remain flat and scattered.

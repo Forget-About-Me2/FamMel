@@ -520,10 +520,6 @@ export function connectToGameState(gs: any): void {
         ['elevatorwaitcounter','ElevatorWaitCounter'],
         ['floorcounter',   'FloorCounter'],
         // settings.ts state
-        ['multiplemoves',  'MultipleMoves'],
-        ['rstmoves',       'RstMoves'],
-        ['showstats',      'ShowStats'],
-        ['enableimages',   'EnableImages'],
         ['enableascii',    'EnableAscii'],
         ['playerGame',     'PlayerGame'],
         // quotes.ts state
@@ -631,7 +627,6 @@ export function connectToGameState(gs: any): void {
         ['settings',       'Settings'],
         ['statsBars',      'StatsBars'],
         ['endScreens',     'EndScreens'],
-        ['sexActions',     'SexActions'],
         ['calledjsons',    'CalledJsons'],
         ['locjson',        'LocJson'],
         ['flirtresps',     'FlirtResps'],

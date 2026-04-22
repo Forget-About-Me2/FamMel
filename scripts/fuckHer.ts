@@ -15,8 +15,34 @@ export function setKisscounter(val: number) { gameState.Romance.KissCounter = va
 export function setFeelcounter(val: number) { gameState.Romance.FeelCounter = val; }
 export function setFuckingnow(val: number) { gameState.Romance.FuckingNow = val; }
 export function setChampagnecounter(val: number) { gameState.Romance.ChampagneCounter = val; }
-export function setDrankChamp(val: number) { gameState.DrankChamp = Number(val); }
-export function setSexActions(val: any) { sexActions = val; }
+let stagedDrankChamp = 0;
+
+export function setDrankChamp(val: number) {
+    const normalizedValue = Number(val);
+    if (!Number.isFinite(normalizedValue)) {
+        return;
+    }
+
+    if (!gameState.isInitialized) {
+        stagedDrankChamp = normalizedValue;
+        return;
+    }
+
+    gameState.setDrankChamp(normalizedValue);
+    stagedDrankChamp = gameState.DrankChamp;
+}
+
+export function setSexActions(val: any) {
+    const normalizedState = normalizeSexActions(val);
+
+    if (!gameState.isInitialized) {
+        sexActions = normalizedState;
+        return;
+    }
+
+    gameState.setSexActions(normalizedState);
+    sexActions = gameState.SexActions;
+}
 
 export function deepClone(value: any) {
     return JSON.parse(JSON.stringify(value));
@@ -52,8 +78,8 @@ export function objReset(this: any) {
     });
 }
 
-//This object is used to keep track of everything related to the sexActions
-export let sexActions = {
+function createSexActionsState() {
+    return {
     clothes:{
         skirt:{
             on: 1,
@@ -237,7 +263,68 @@ export let sexActions = {
     noTubUse: function(item){
         return this.actions[item].noTub;
     }
+};
 }
+
+function normalizeSexActions(value: any) {
+    const normalizedState = createSexActionsState();
+
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+        normalizedState.init();
+        return normalizedState;
+    }
+
+    const incoming = value as Record<string, any>;
+    const incomingClothes = incoming.clothes;
+    const incomingActions = incoming.actions;
+
+    if (incomingClothes && typeof incomingClothes === 'object') {
+        for (const clothName of normalizedState.clothes.clothNames) {
+            const incomingCloth = incomingClothes[clothName];
+            if (incomingCloth && typeof incomingCloth === 'object') {
+                const onValue = Number(incomingCloth.on);
+                if (Number.isFinite(onValue)) {
+                    normalizedState.clothes[clothName].on = onValue === 0 ? 0 : 1;
+                }
+            }
+        }
+    }
+
+    if (incomingActions && typeof incomingActions === 'object') {
+        for (const actionName of normalizedState.actions.actionList()) {
+            const incomingAction = incomingActions[actionName];
+            if (incomingAction && typeof incomingAction === 'object') {
+                const performedValue = Number(incomingAction.performed);
+                if (Number.isFinite(performedValue)) {
+                    normalizedState.actions[actionName].performed = performedValue === 0 ? 0 : 1;
+                }
+            }
+        }
+    }
+
+    const incomingFuckingNow = Number(incoming.fuckingNow);
+    if (Number.isFinite(incomingFuckingNow)) {
+        normalizedState.fuckingNow = incomingFuckingNow === 0 ? 0 : 1;
+    }
+
+    normalizedState.init();
+    return normalizedState;
+}
+
+/**
+ * Seeds sex-scene state into canonical GameState after initialization.
+ * Pre-init compatibility writes remain staged until start() executes this bridge once.
+ */
+export function hydrateSexSceneStateToGameState(): void {
+    gameState.setDrankChamp(stagedDrankChamp);
+    gameState.setSexActions(normalizeSexActions(sexActions));
+    stagedDrankChamp = gameState.DrankChamp;
+    sexActions = gameState.SexActions;
+}
+
+//This object is used to keep track of everything related to the sexActions
+export let sexActions = createSexActionsState();
+
 export function fuckHerSetup(data: any){
     setSexLines(data);
     Object.keys(sexLines).forEach(loc => {
@@ -667,8 +754,8 @@ export function exposeFuckHerOnWindow(): void {
         ['feelcounter', () => gameState.Romance.FeelCounter, (v) => { gameState.Romance.FeelCounter = v; }],
         ['fuckingnow', () => gameState.Romance.FuckingNow, (v) => { gameState.Romance.FuckingNow = v; }],
         ['champagnecounter', () => gameState.Romance.ChampagneCounter, (v) => { gameState.Romance.ChampagneCounter = v; }],
-        ['drankChamp', () => gameState.DrankChamp, (v) => { gameState.DrankChamp = Number(v); }],
-        ['sexActions', () => sexActions, (v) => { sexActions = v; }],
+        ['drankChamp', () => gameState.isInitialized ? gameState.DrankChamp : stagedDrankChamp, (v) => { setDrankChamp(v); }],
+        ['sexActions', () => gameState.isInitialized ? gameState.SexActions : sexActions, (v) => { setSexActions(v); }],
     ];
     for (const [name, getter, setter] of props) {
         Object.defineProperty(w, name, { get: getter, set: setter, configurable: true, enumerable: true });

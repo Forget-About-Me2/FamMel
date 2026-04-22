@@ -10,8 +10,18 @@
 // ============================================================================
 interface LegacyBridgeGameState {
 	isInitialized: boolean;
+	IsImagesEnabled: boolean;
+	IsStatsVisible: boolean;
+	IsMultipleMovesEnabled: boolean;
+	IsMovesAutoReset: boolean;
 	setAttraction(value: number): void;
 	setShyness(value: number): void;
+	setIsImagesEnabled(value: number | boolean): void;
+	setIsStatsVisible(value: number | boolean): void;
+	setIsMultipleMovesEnabled(value: number | boolean): void;
+	setIsMovesAutoReset(value: number | boolean): void;
+	setDrankChamp(value: number): void;
+	setSexActions(value: any): void;
 	[key: string]: any;
 }
 

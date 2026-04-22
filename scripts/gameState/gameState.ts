@@ -143,11 +143,11 @@ class RuntimeContext {
     HerOutfit: string = "jeans";
     FavoriteMovie: string = "theurge";
     SuggestedLoc: string = "thebar";
-    MultipleMoves: number = 1;
-    RstMoves: number = 0;
+    private _isMultipleMovesEnabled = true;
+    private _isMovesAutoReset = false;
     PhotoChoice: any = undefined;
-    ShowStats: number = 1;
-    EnableImages: number = 1;
+    private _isStatsVisible = true;
+    private _isImagesEnabled = true;
     EnableAscii: number = 0;
     PlayerGame: number = 0;
 
@@ -344,6 +344,99 @@ class RuntimeContext {
 
     public get isInitialized(): boolean {
         return this.initialized;
+    }
+
+    private normalizeLegacyToggle(value: number | boolean): boolean | undefined {
+        if (typeof value === "boolean") {
+            return value;
+        }
+
+        const numericValue = Number(value);
+        if (!Number.isFinite(numericValue)) {
+            return undefined;
+        }
+
+        return numericValue !== 0;
+    }
+
+    /**
+     * Canonical setter for the images-enabled runtime flag.
+     * Accepts legacy numeric 0/1 writes and ignores invalid numeric input.
+     */
+    setIsImagesEnabled(value: number | boolean): void {
+        const normalized = this.normalizeLegacyToggle(value);
+        if (typeof normalized === "undefined") {
+            return;
+        }
+
+        this._isImagesEnabled = normalized;
+    }
+
+    get IsImagesEnabled(): boolean {
+        return this._isImagesEnabled;
+    }
+
+    /**
+     * Canonical setter for the stats-visible runtime flag.
+     * Accepts legacy numeric 0/1 writes and ignores invalid numeric input.
+     */
+    setIsStatsVisible(value: number | boolean): void {
+        const normalized = this.normalizeLegacyToggle(value);
+        if (typeof normalized === "undefined") {
+            return;
+        }
+
+        this._isStatsVisible = normalized;
+    }
+
+    get IsStatsVisible(): boolean {
+        return this._isStatsVisible;
+    }
+
+    /**
+     * Canonical setter for the repeat-sex-actions toggle.
+     * Accepts legacy numeric 0/1 writes and ignores invalid numeric input.
+     */
+    setIsMultipleMovesEnabled(value: number | boolean): void {
+        const normalized = this.normalizeLegacyToggle(value);
+        if (typeof normalized === "undefined") {
+            return;
+        }
+
+        this._isMultipleMovesEnabled = normalized;
+    }
+
+    get IsMultipleMovesEnabled(): boolean {
+        return this._isMultipleMovesEnabled;
+    }
+
+    /**
+     * Canonical setter for the sex-action reset policy.
+     * Accepts legacy numeric 0/1 writes and ignores invalid numeric input.
+     */
+    setIsMovesAutoReset(value: number | boolean): void {
+        const normalized = this.normalizeLegacyToggle(value);
+        if (typeof normalized === "undefined") {
+            return;
+        }
+
+        this._isMovesAutoReset = normalized;
+    }
+
+    get IsMovesAutoReset(): boolean {
+        return this._isMovesAutoReset;
+    }
+
+    setDrankChamp(value: number): void {
+        if (!Number.isFinite(value)) {
+            return;
+        }
+
+        this.DrankChamp = Number(value);
+    }
+
+    setSexActions(value: any): void {
+        this.SexActions = value;
     }
 
     pushLoc(location: GameLocation) {

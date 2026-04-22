@@ -21,6 +21,8 @@ If you read only 3 files, read these:
 
 - [Parking Lot (ordered by dependency; no active WIP)](parking-lot-ordered-by-dependency-no-active-wip.md)
 - [Sequencing Rationale](sequencing-rationale.md)
+- [Phase 2: Canonical Ownership Cutover Waves](phase-2-move-state-ownership-to-gamestate-batches.md)
+- [Wave 1 Plan: Test Framework Realignment](wave-1-test-framework-realignment.md)
 
 ### Rules And Boundaries
 
@@ -39,7 +41,7 @@ If you read only 3 files, read these:
 
 - [Phase 1: Organize GameState Into Domain Sub-Objects](phase-1-organize-gamestate-into-domain-sub-objects.md)
 - [Phase 1b: Reset Save/Load To Transitional Simplicity](phase-1b-reset-saveload-to-transitional-simplicity.md)
-- [Phase 2: Move State Ownership To gameState (Batches)](phase-2-move-state-ownership-to-gamestate-batches.md)
+- [Phase 2: Canonical Ownership Cutover Waves](phase-2-move-state-ownership-to-gamestate-batches.md)
 - [Phase 3: Remove Bridge Infrastructure](phase-3-remove-bridge-infrastructure.md)
 - [Phase 4: Final Save/Load Simplification](phase-4-final-saveload-simplification.md)
 - [Phase 5: Developer-Focused Hardening](phase-5-developer-focused-hardening.md)

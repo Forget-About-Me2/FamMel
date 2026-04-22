@@ -6,14 +6,12 @@ import { displaypix, importimgs } from './images';
 import { gameState } from './gameState/gameState';
 
 export let enableimages: number = 1;
-export function setEnableimages(val: number) { enableimages = val; }
 export let enableascii: number = 0;
 export function setEnableascii(val: number) { enableascii = val; }
 export let playerGame: number = 0;
 export function setPlayerGame(val: number) { playerGame = val; }
 
 export let showstats = 1; // 1 = Show her bladder state, etc.
-export function setShowstats(val: number) { showstats = val; }
 // Girl Selection Parameters
 export let photoChoice; //How she's dressed for photogame
 export function setPhotoChoice(val: any) { photoChoice = val; }
@@ -28,9 +26,116 @@ export function setHeroutfit(val: string) { heroutfit = val; }
                           //  Possible values: skirt, jeans
 
 export let multiplemoves = 1; //Whether sex moves can be repeated during a make-out session
-export function setMultiplemoves(val: number) { multiplemoves = val; }
 export let rstmoves = 0; //Whether the sex moves reset after a make-out session
-export function setRstmoves(val: number) { rstmoves = val; }
+
+function normalizeLegacyToggleValue(value: number | boolean): number | undefined {
+    if (typeof value === 'boolean') {
+        return value ? 1 : 0;
+    }
+
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue)) {
+        return undefined;
+    }
+
+    return numericValue === 0 ? 0 : 1;
+}
+
+function syncStory12LegacySettingsFromCanonical(): void {
+    enableimages = gameState.IsImagesEnabled ? 1 : 0;
+    showstats = gameState.IsStatsVisible ? 1 : 0;
+    multiplemoves = gameState.IsMultipleMovesEnabled ? 1 : 0;
+    rstmoves = gameState.IsMovesAutoReset ? 1 : 0;
+}
+
+/**
+ * Seeds canonical settings exactly once after initialization.
+ * Pre-init localStorage and compatibility writes remain staged in module state
+ * until start() calls this lifecycle bridge.
+ */
+export function hydrateSettingsToGameState(): void {
+    gameState.setIsImagesEnabled(enableimages);
+    gameState.setIsStatsVisible(showstats);
+    gameState.setIsMultipleMovesEnabled(multiplemoves);
+    gameState.setIsMovesAutoReset(rstmoves);
+    syncStory12LegacySettingsFromCanonical();
+}
+
+/**
+ * Legacy compatibility setter for the enableimages global/save key.
+ * It stages before init and delegates to the canonical GameState owner after init.
+ */
+export function setEnableimages(val: number | boolean) {
+    const normalizedValue = normalizeLegacyToggleValue(val);
+    if (typeof normalizedValue === 'undefined') {
+        return;
+    }
+
+    if (!gameState.isInitialized) {
+        enableimages = normalizedValue;
+        return;
+    }
+
+    gameState.setIsImagesEnabled(normalizedValue);
+    syncStory12LegacySettingsFromCanonical();
+}
+
+/**
+ * Legacy compatibility setter for the showstats global/save key.
+ * It stages before init and delegates to the canonical GameState owner after init.
+ */
+export function setShowstats(val: number | boolean) {
+    const normalizedValue = normalizeLegacyToggleValue(val);
+    if (typeof normalizedValue === 'undefined') {
+        return;
+    }
+
+    if (!gameState.isInitialized) {
+        showstats = normalizedValue;
+        return;
+    }
+
+    gameState.setIsStatsVisible(normalizedValue);
+    syncStory12LegacySettingsFromCanonical();
+}
+
+/**
+ * Legacy compatibility setter for the multiplemoves global/save key.
+ * It stages before init and delegates to the canonical GameState owner after init.
+ */
+export function setMultiplemoves(val: number | boolean) {
+    const normalizedValue = normalizeLegacyToggleValue(val);
+    if (typeof normalizedValue === 'undefined') {
+        return;
+    }
+
+    if (!gameState.isInitialized) {
+        multiplemoves = normalizedValue;
+        return;
+    }
+
+    gameState.setIsMultipleMovesEnabled(normalizedValue);
+    syncStory12LegacySettingsFromCanonical();
+}
+
+/**
+ * Legacy compatibility setter for the rstmoves global/save key.
+ * It stages before init and delegates to the canonical GameState owner after init.
+ */
+export function setRstmoves(val: number | boolean) {
+    const normalizedValue = normalizeLegacyToggleValue(val);
+    if (typeof normalizedValue === 'undefined') {
+        return;
+    }
+
+    if (!gameState.isInitialized) {
+        rstmoves = normalizedValue;
+        return;
+    }
+
+    gameState.setIsMovesAutoReset(normalizedValue);
+    syncStory12LegacySettingsFromCanonical();
+}
 
 export function setup(){
     fetchJson("options").then(function (data){
@@ -245,18 +350,18 @@ export function setheroutfit(outfitname: string) {
 export function setImagesShow(value: number){
     switch(value){
         case 0:
-            enableimages = 0;
+            setEnableimages(0);
             enableascii = 0;
             setLocal("images", "off");
             break;
         case 1:
             enableascii = 1;
-            enableimages = 0;
+            setEnableimages(0);
             setLocal("images", "ascii");
             break;
         case 2:
             enableascii = 0;
-            enableimages = 1;
+            setEnableimages(1);
             displaypix("pixurge");
             setLocal("images", "images");
             break;
@@ -264,7 +369,7 @@ export function setImagesShow(value: number){
 }
 
 export function setStatsShow(choice: number){
-    showstats = choice;
+    setShowstats(choice);
     if (showstats){
         setLocal("showstats", "true");
     } else {
@@ -273,7 +378,7 @@ export function setStatsShow(choice: number){
 }
 
 export function setMultipleMoves(choice: number){
-    multiplemoves = choice;
+    setMultiplemoves(choice);
     if(multiplemoves){
         setLocal("multiplemoves", "true");
     } else {
@@ -282,7 +387,7 @@ export function setMultipleMoves(choice: number){
 }
 
 export function setRstMoves(choice: number){
-    rstmoves=choice;
+    setRstmoves(choice);
     if(rstmoves){
         setLocal("rstmoves", "true");
     } else {
@@ -375,7 +480,7 @@ export function setPlayGame(choice: number){
 }
 
 export function setjpgimgs() {
-    enableimages = 1;
+    setEnableimages(1);
     enableascii = 0;
     displaypix("pixurge");
 }
@@ -496,14 +601,14 @@ export function setgirl(hername: string) {
 export function exposeSettingsOnWindow(): void {
     const w = window as any;
     const props: Array<[string, () => any, (v: any) => void]> = [
-        ['showstats', () => showstats, (v) => { showstats = v; }],
+        ['showstats', () => showstats, (v) => { setShowstats(v); }],
         ['photoChoice', () => photoChoice, (v) => { photoChoice = v; }],
         ['favoritemovie', () => favoritemovie, (v) => { favoritemovie = v; }],
         ['suggestedloc', () => suggestedloc, (v) => { suggestedloc = v; }],
         ['heroutfit', () => heroutfit, (v) => { heroutfit = v; }],
-        ['multiplemoves', () => multiplemoves, (v) => { multiplemoves = v; }],
-        ['rstmoves', () => rstmoves, (v) => { rstmoves = v; }],
-        ['enableimages', () => enableimages, (v) => { enableimages = v; }],
+        ['multiplemoves', () => multiplemoves, (v) => { setMultiplemoves(v); }],
+        ['rstmoves', () => rstmoves, (v) => { setRstmoves(v); }],
+        ['enableimages', () => enableimages, (v) => { setEnableimages(v); }],
         ['enableascii', () => enableascii, (v) => { enableascii = v; }],
         ['playerGame', () => playerGame, (v) => { playerGame = v; }],
     ];

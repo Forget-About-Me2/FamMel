@@ -1,5 +1,7 @@
 # Parking Lot (ordered by dependency; no active WIP)
 
+Planning note (2026-04-22): this backlog is ordered for post-reboot sequencing and assumes no compatibility-layer additions.
+
 ### Ownership migrations (next up)
 
 - [ ] Row D — `DriveState`: `WetTheCar`, `GasStation` (HIGH confidence, small — first row after location slice)
@@ -14,9 +16,8 @@
 ### Infrastructure
 
 - [ ] Phase 1b — replace saveLoad.ts setter registry with simple transitional approach
-- [ ] Phase 2 Batch B1b — strengthen attraction/shyness bridge hardening (depends on B1a complete)
-- [ ] Phase 2 Batch B2 — migrate attraction/shyness call sites to canonical reads/writes; retire bridge fallback (depends on B1b)
-- [ ] Phase 2 Batches A, B, C–F — module ownership migrations *(status tracked in phase-2 doc; listed here for dependency ordering only)*
+- [ ] Wave 1 — [test framework realignment](wave-1-test-framework-realignment.md) (move compatibility/bridge assertions out of C# UserFlowTests)
+- [ ] Wave 2 — domain cutovers in priority order (navigation -> settings/money -> bladder)
 - [ ] Phase 3 — delete all bridge infrastructure (`connectToGameState`, `expose*OnWindow`)
 - [ ] Phase 4 — final save/load simplification (direct `gameState` snapshot)
 - [ ] Phase 5 — naming consistency pass, JSDoc on lifecycle functions, "How State Works" README section

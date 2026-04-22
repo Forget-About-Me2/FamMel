@@ -1,5 +1,43 @@
 # Active Slices (WIP limit: 2)
 
+## Current mode
+
+- Planning phase only. Do not execute implementation changes from this file unless explicitly authorized.
+- Use this file to define scope, gates, sequencing, and ownership.
+
+## Global execution policy (effective 2026-04-22)
+
+1. No compatibility layers anymore.
+2. No new bridges, mirrors, dual-write paths, or compatibility-only globals.
+3. Any slice that cannot complete without compatibility code must be re-scoped into a deletable vertical cutover.
+4. "Done" requires less legacy runtime surface than before the slice started.
+5. Enforcement is convention + explicit review checklist + plan tracking; do not rely on CI hard-fail for migration-policy policing.
+
+### Slice T1 — Test framework realignment (compatibility tests out of UserFlow/C#)
+
+**Goal:** Keep `UserFlowTests` focused on player-observable integration flows and migrate compatibility/bridge logic tests to the JS/TS low-level lane.
+
+**Scope:**
+
+- `UserFlowTests/UserFlowTests/AttractionShynessBridgeTests.cs`
+- `UserFlowTests/UserFlowTests/DriveImagesOwnershipBridgeTests.cs`
+- `UserFlowTests/UserFlowTests/SettingsSexSceneOwnershipBridgeTests.cs`
+- New/updated JS/TS low-level test lane files for equivalent canonical/legacy transition assertions
+
+**Gate (done when):**
+
+- [ ] Compatibility/bridge assertions are no longer authored in C# UserFlow test classes.
+- [ ] UserFlow C# suite keeps only player-observable behavior scenarios.
+- [ ] Equivalent low-level assertions exist in JS/TS test lane and are runnable locally.
+- [ ] Test docs clearly state lane ownership: userflow in C#, low-level compatibility in JS/TS.
+
+**STATUS: In progress** (2026-04-22)
+
+Execution notes:
+
+- This is a framework cleanup and ownership realignment slice, not a gameplay behavior change.
+- If a compatibility assertion is required temporarily, track it as migration debt with explicit removal owner/date.
+
 ### Slice 1 — High-Risk Trio: Location stack cutover
 
 **Goal:** Eliminate dual-write on `locStack`/`LocStack`; typed `CurrentLocation` becomes the sole route authority.
@@ -13,7 +51,7 @@
 **STATUS: COMPLETE** ✓ (2026-04-18)
 - [x] Gameplay routing does not depend on `pushloc`/`poploc` side effects
 - [x] `locStack[0]` reads replaced by typed location predicates in migrated modules
-- [x] Legacy location write path quarantined (read compatibility only)
+- [x] Legacy location write path eliminated from canonical gameplay routing
 - [x] Build clean, typecheck clean, navigation userflow tests green (37/37, 2 consecutive runs stable)
 
 **Completion evidence:**
@@ -136,6 +174,11 @@ Plan integrity note (2026-04-18):
 
 **STATUS: In progress** (2026-04-20)
 
+Policy update (2026-04-22):
+
+- Re-scope remaining B1a work to remove compatibility indirection instead of extending it.
+- Any open task that depends on new bridge behavior is now invalid and must be replaced by direct canonical ownership cutover.
+
 ---
 
 ### Slice 4 — Story 1.1: Drive/Images Canonical Ownership Hardening
@@ -188,6 +231,34 @@ Exit criteria for compatibility mode:
 - Zero direct writes to legacy image globals outside approved bridge adapters.
 - Canonical-only save path for image payload is verified by tests.
 - Focused drive/images userflow + required build/typecheck gates pass.
+
+---
+
+### Slice 5 — Story 1.2: Settings and Sex-Scene Canonical Ownership
+
+**Goal:** Complete Story 1.2 runtime ownership migration for settings toggles and sex-scene state while preserving legacy globals, save payload shape, and `haveSex()` behavior.
+
+**Scope:** `scripts/gameState/gameState.ts`, `scripts/settings.ts`, `scripts/fuckHer.ts`, `scripts/main.ts`, `scripts/shims.ts`, `scripts/saveLoad.ts`, `scripts/globals.d.ts`, `UserFlowTests/UserFlowTests/SettingsSexSceneOwnershipBridgeTests.cs`.
+
+**Gate (done when):**
+- [x] Story 1.2 settings globals stage before init and delegate to canonical boolean owners after init.
+- [x] `drankChamp` and `sexActions` stage before init, hydrate once, and keep post-init canonical ownership without reverse-bridge recursion.
+- [x] Save/load remains on legacy key names and restores canonical/legacy parity for Story 1.2 fields.
+- [x] Build clean, typecheck clean, focused Story 1.2 userflow tests green.
+
+**STATUS: COMPLETE** ✓ (2026-04-22)
+
+Completion evidence (2026-04-22):
+- `scripts/gameState/gameState.ts` now owns Story 1.2 canonical boolean flags via `IsImagesEnabled`, `IsStatsVisible`, `IsMultipleMovesEnabled`, and `IsMovesAutoReset`, with deterministic no-op setters for invalid numeric compatibility writes.
+- `scripts/settings.ts` now stages Story 1.2 compatibility writes before init, hydrates them once in `start()`, and delegates post-init writes through canonical setters while preserving legacy numeric mirrors.
+- `scripts/fuckHer.ts` now stages `drankChamp`, normalizes malformed `sexActions` payloads to a safe playable shape, and delegates post-init compatibility writes to canonical `gameState` ownership.
+- `scripts/shims.ts` no longer reverse-bridges Story 1.2 settings or `sexActions`, preventing write bounce/re-entry loops.
+- `scripts/saveLoad.ts` now reads Story 1.2 settings/sex-scene state from canonical-first paths while preserving legacy persisted key names.
+- `UserFlowTests/UserFlowTests/SettingsSexSceneOwnershipBridgeTests.cs` added focused coverage for pre-init staging, post-init canonical sync, no-bounce setter execution, round-trip save/load, and malformed recovery; filtered run is green (4/4).
+- Validation gates executed: `node esbuild.config.mjs`, `npx tsc -p . --noEmit`, `dotnet test ... --filter "FullyQualifiedName~SettingsSexSceneOwnershipBridgeTests"`.
+
+Risk note:
+- `haveSex()` still reads transitional numeric mirrors from `scripts/settings.ts`, but those mirrors are now hydrated from and synchronized to canonical GameState ownership. A future slice can remove the mirrors entirely once the remaining script-style consumers are cut over.
 
 ---
 
