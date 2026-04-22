@@ -8,8 +8,31 @@ import { gameState } from './gameState/gameState';
 import { externalflirt, setExternalflirt } from './locations/theClub';
 import { suggestedloc, setSuggestedloc, heroutfit } from './settings';
 
-export let wetthecar = 0; // Seat of the car is wet
-export function setWetthecar(val: number) { wetthecar = val; }
+export let hasWetTheCar = 0; // Seat of the car is wet
+/**
+ * Compatibility setter for legacy/global `wetthecar` writes.
+ *
+ * Post-init, canonical owner is `gameState.HasWetTheCar`. Pre-init writes stay
+ * in legacy module scope to preserve startup bridge behavior.
+ */
+export function setHasWetTheCar(val: number) {
+    const nextValue = Number(val);
+    if (!Number.isFinite(nextValue)) {
+        return;
+    }
+
+    if (gameState.isInitialized) {
+        gameState.HasWetTheCar = nextValue;
+        hasWetTheCar = gameState.HasWetTheCar;
+        return;
+    }
+
+    hasWetTheCar = nextValue;
+}
+
+function getHasWetTheCar(): number {
+    return gameState.isInitialized ? gameState.HasWetTheCar : hasWetTheCar;
+}
 
 //
 //  This function is used to leave ANY location and drive off.
@@ -50,7 +73,7 @@ export function driveout() {
         locationMCSetup("driveout", drive);
         curtext = printIntro(curtext, 0);
         setSuggestedloc("none");
-        if (wetthecar)
+        if (getHasWetTheCar())
             curtext.push(appearance["clothes"][heroutfit]["soakedseatquote"]);
         else
             curtext = printIntro(curtext, 1);
@@ -76,10 +99,11 @@ export function driveout() {
 export function exposeDriveOnWindow(): void {
     const w = window as any;
     Object.defineProperty(w, 'wetthecar', {
-        get() { return wetthecar; },
-        set(v) { wetthecar = v; },
+        get() { return getHasWetTheCar(); },
+        set(v) { setHasWetTheCar(v); },
         configurable: true, enumerable: true,
     });
+    w.__getLegacyHasWetTheCarValue = () => hasWetTheCar;
     w.leavehm = leavehm;
     w.driveout = driveout;
 }

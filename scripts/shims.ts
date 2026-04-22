@@ -450,6 +450,36 @@ export function connectToGameState(gs: any): void {
         configurable: true, enumerable: true,
     });
 
+    // Images migration bridge: canonical owner is gameState.Imgs.
+    // Seed once from pre-init legacy module values; runtime writes continue
+    // through the existing images.ts window bridge (window.imgs -> setImgs).
+    const legacyImgs = typeof w.__getLegacyImgsValue === 'function'
+        ? w.__getLegacyImgsValue()
+        : w.imgs;
+    if (legacyImgs !== undefined && typeof gs.setImgs === 'function') {
+        gs.setImgs(legacyImgs);
+    }
+
+    // Drive/images scalar migration seeds.
+    // Preserve pre-init legacy writes by hydrating canonical fields once during
+    // bridge connection. Runtime writes stay on their module-owned window
+    // bridges (isCarWet/picset setters) to keep legacy mirrors synchronized.
+    const legacyHasWetTheCar = typeof w.__getLegacyHasWetTheCarValue === 'function'
+        ? w.__getLegacyHasWetTheCarValue()
+        : w.wetthecar;
+    const seededHasWetTheCar = Number(legacyHasWetTheCar);
+    if (Number.isFinite(seededHasWetTheCar)) {
+        gs.HasWetTheCar = seededHasWetTheCar;
+    }
+
+    const legacyPicSet = typeof w.__getLegacyPicsetValue === 'function'
+        ? w.__getLegacyPicsetValue()
+        : w.picset;
+    const seededPicSet = Number(legacyPicSet);
+    if (Number.isFinite(seededPicSet)) {
+        gs.PicSet = seededPicSet;
+    }
+
     // ========================================================================
     // REVERSE bridges — non-shims module variables.
     // These vars are read/written by their module code via the local `let`
@@ -464,8 +494,6 @@ export function connectToGameState(gs: any): void {
         // exposeFuckHerOnWindow() already maps window.<field> directly to
         // gameState.<field>; adding reverse bridges causes a
         // window -> gameState -> window accessor loop.
-        // drive.ts state
-        ['wetthecar',      'WetTheCar'],
         // locations.ts state
         ['emerBreak',      'EmerBreak'],
         ['emerHold',       'EmerHold'],
@@ -503,8 +531,6 @@ export function connectToGameState(gs: any): void {
         // backPackItems.ts state
         ['allowItems',     'AllowItems'],
         ['homeChampagne',  'HomeChampagne'],
-        // images.ts state
-        ['picset',         'PicSet'],
         // bladder.ts state
         ['customurge',     'CustomUrge'],
         ['minurge',        'MinUrge'],

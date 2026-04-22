@@ -11,7 +11,7 @@ import { assertExists } from './helperFiles/helperFunctions';
 import { heroutfit } from './settings';
 import { theatre, rrMovieLineThresh } from './locations/theatre';
 import { gasStation } from './locations/driveAround';
-import { wetthecar, setWetthecar } from './drive';
+import { setHasWetTheCar } from './drive';
 
 //This file contains all functions related to peeing
 //TODO organize this better
@@ -1232,7 +1232,7 @@ export function wetherself2c() {
     flushdrank();
     wetlegs = 1;
     wetherpanties = 1;
-    setWetthecar(1);
+    setHasWetTheCar(1);
     sayText(curtext);
     cListenerGen([wetherself3c, "Continue..."], "wetherself3c");
 }

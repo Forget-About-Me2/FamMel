@@ -103,7 +103,7 @@ class RuntimeContext {
     DrankChamp: number = 0;
 
     // drive state
-    WetTheCar: number = 0;
+    HasWetTheCar: number = 0;
 
     // locations.ts state
     EmerBreak: number = 0;
@@ -167,6 +167,7 @@ class RuntimeContext {
 
     // images.ts state
     PicSet: number = 0;
+    private _imgs: Record<string, Record<string, string>> = RuntimeContext.createDefaultImgsMap();
 
     // bladder.ts state
     CustomUrge: number = 250;
@@ -485,6 +486,104 @@ class RuntimeContext {
     incRandCounter() : void {
         const increment = 1 + randomInt(2);
         this._randCounter = (this._randCounter + increment) % gameSettings.RandCounterMax;
+    }
+
+    private static readonly DefaultImageGirls = ["Jennifer", "Karen", "Laura", "Melissa"];
+
+    private static createDefaultImgsMap(): Record<string, Record<string, string>> {
+        const defaults: Record<string, Record<string, string>> = {};
+        for (const girl of RuntimeContext.DefaultImageGirls) {
+            defaults[girl] = {};
+        }
+        return defaults;
+    }
+
+    private static isObjectRecord(value: unknown): value is Record<string, unknown> {
+        return typeof value === "object" && value !== null && !Array.isArray(value);
+    }
+
+    /**
+     * Canonical image-map sanitizer used by setImgs/import paths.
+     *
+     * It accepts loose object input and returns a stable map where each girl
+     * key points to a string-only image dictionary. Missing default girls are
+     * added with empty dictionaries, and malformed nested values are replaced
+     * with empty dictionaries.
+     */
+    private static normalizeImgs(input: Record<string, unknown>): Record<string, Record<string, string>> {
+        const normalized: Record<string, Record<string, string>> = {};
+
+        for (const [girlName, imageMap] of Object.entries(input)) {
+            if (!RuntimeContext.isObjectRecord(imageMap)) {
+                normalized[girlName] = {};
+                continue;
+            }
+
+            const perGirl: Record<string, string> = {};
+            for (const [imageKey, urlValue] of Object.entries(imageMap)) {
+                if (typeof urlValue === "string") {
+                    perGirl[imageKey] = urlValue;
+                }
+            }
+            normalized[girlName] = perGirl;
+        }
+
+        for (const girl of RuntimeContext.DefaultImageGirls) {
+            if (!RuntimeContext.isObjectRecord(normalized[girl])) {
+                normalized[girl] = {};
+            }
+        }
+
+        return normalized;
+    }
+
+    /**
+     * Canonical image-map owner for drive/images migration.
+     *
+     * Getter returns the live stored reference by design to preserve legacy
+     * compatibility with script-style callers that read nested maps.
+     */
+    get Imgs(): Record<string, Record<string, string>> {
+        return this._imgs;
+    }
+
+    /**
+     * Canonical setter for image maps used by images.ts bridge paths.
+     * Invalid inputs are deterministic no-op.
+     */
+    setImgs(nextImgs: unknown): void {
+        if (!RuntimeContext.isObjectRecord(nextImgs)) {
+            return;
+        }
+
+        this._imgs = RuntimeContext.normalizeImgs(nextImgs);
+    }
+
+    resetImgsToDefault(): void {
+        this._imgs = RuntimeContext.createDefaultImgsMap();
+    }
+
+    /**
+     * Imports `localStorage["imgs"]` into canonical state with resilient
+     * defaults. Missing/invalid payloads reset to defaults.
+     */
+    tryImportImgsFromStorage(): void {
+        const raw = globalThis.localStorage?.getItem("imgs");
+        if (!raw) {
+            this.resetImgsToDefault();
+            return;
+        }
+
+        try {
+            const parsed = JSON.parse(raw);
+            if (!RuntimeContext.isObjectRecord(parsed)) {
+                this.resetImgsToDefault();
+                return;
+            }
+            this.setImgs(parsed);
+        } catch {
+            this.resetImgsToDefault();
+        }
     }
 }
 

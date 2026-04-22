@@ -195,3 +195,29 @@ docker run -p 8080:8080 fammel
 3. Run the full test suite after state-ownership changes
 4. Update `REFACTOR_PLAN/` docs as part of the work (not as a follow-up)
 5. Update `CHANGELOG.md` for player-facing changes only
+
+---
+
+## Image Map Normalization (Drive/Images Migration)
+
+The image editor now routes image-map writes through normalization logic in both:
+- `scripts/images.ts` (`normalizeImgsMap`)
+- `scripts/gameState/gameState.ts` (`normalizeImgs`)
+
+This exists to keep compatibility input flexible while keeping runtime state deterministic.
+
+Normalization rules:
+- Input must be an object (non-object values are ignored by callers).
+- Each top-level key is treated as a girl name.
+- If a girl's value is not an object, that girl is normalized to `{}`.
+- For valid girl objects, only string values are retained as image URLs.
+- Default girls are always present after normalization:
+	- `Jennifer`
+	- `Karen`
+	- `Laura`
+	- `Melissa`
+- Additional custom girl keys are preserved.
+
+Practical outcome:
+- Corrupted or partial payloads from `localStorage["imgs"]` do not crash image flows.
+- Canonical `gameState.Imgs` keeps a predictable shape for UI reads and save/load.

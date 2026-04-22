@@ -52,7 +52,7 @@ import {
     setDrankChamp,
     sexActions, setSexActions,
 } from './fuckHer';
-import { wetthecar, setWetthecar } from './drive';
+import { setHasWetTheCar } from './drive';
 import {
     enableimages, setEnableimages, enableascii, setEnableascii, playerGame, setPlayerGame,
     showstats, setShowstats, photoChoice, setPhotoChoice, favoritemovie, setFavoritemovie,
@@ -69,7 +69,7 @@ import {
     appearance, setAppearance, drive, setDrive, general, setGeneral,
     darts, setDarts, sexLines, setSexLines, objQuotes, setObjQuotes,
 } from './quotes';
-import { picset, setPicset } from './images';
+import { setPicset } from './images';
 import { emerBreak, setEmerBreak, emerHold, setEmerHold, locations, setLocations, sharedLoc, setSharedLoc } from './locations';
 import { gasStation, setGasStation } from './locations/driveAround';
 import { bartopic, setBartopic, loser, setLoser, bar, setBar, talkUnused, setTalkUnused } from './locations/theBar';
@@ -97,6 +97,7 @@ interface FieldEntry {
     get: () => any;
     set: (v: any) => void;
     deep?: boolean; // true = deep-clone on save/load
+    clone?: (v: any) => any; // optional field-specific clone semantics
 }
 
 /** All saveable fields. Each entry reads/writes a module-scoped variable. */
@@ -224,7 +225,7 @@ const FIELD_REGISTRY: Record<string, FieldEntry> = {
     drankChamp:         { get: () => gameState.DrankChamp, set: setDrankChamp },
     sexActions:         { get: () => sexActions, set: setSexActions, deep: true },
     // --- drive.ts ---
-    wetthecar:          { get: () => wetthecar, set: setWetthecar },
+    wetthecar:          { get: () => gameState.HasWetTheCar, set: setHasWetTheCar },
     // --- settings.ts ---
     enableimages:       { get: () => enableimages, set: setEnableimages },
     enableascii:        { get: () => enableascii, set: setEnableascii },
@@ -261,7 +262,8 @@ const FIELD_REGISTRY: Record<string, FieldEntry> = {
     sexLines:           { get: () => sexLines, set: setSexLines, deep: true },
     objQuotes:          { get: () => objQuotes, set: setObjQuotes, deep: true },
     // --- images.ts ---
-    picset:             { get: () => picset, set: setPicset },
+    imgs:               { get: () => gameState.Imgs, set: (v) => { gameState.setImgs(v); }, deep: true, clone: cloneImgsSnapshot },
+    picset:             { get: () => gameState.PicSet, set: setPicset },
     // --- backPackItems.ts ---
     allowItems:         { get: () => allowItems, set: setAllowItems },
     homeChampagne:      { get: () => homeChampagne, set: setHomeChampagne },
@@ -311,6 +313,30 @@ function deepClone(obj: any): any {
     return JSON.parse(JSON.stringify(obj));
 }
 
+function cloneWithStructuredClone<T>(value: T): T {
+    if (typeof structuredClone === 'function') {
+        return structuredClone(value);
+    }
+
+    if (value == null || typeof value !== 'object') {
+        return value;
+    }
+
+    if (Array.isArray(value)) {
+        return value.map(item => cloneWithStructuredClone(item)) as T;
+    }
+
+    const clone: Record<string, any> = {};
+    for (const key of Object.keys(value as Record<string, any>)) {
+        clone[key] = cloneWithStructuredClone((value as Record<string, any>)[key]);
+    }
+    return clone as T;
+}
+
+function cloneImgsSnapshot(value: any): any {
+    return cloneWithStructuredClone(value);
+}
+
 /** Replace all own keys in target with those from source (recursive for objects). */
 function deepMerge(target: any, source: any): void {
     for (const key of Object.keys(target)) {
@@ -355,11 +381,17 @@ export function createSave(): Record<string, any> {
         // Forward-bridged keys: read from window (which reads gameState)
         // because the module variable is stale after connectToGameState().
         if (FORWARD_BRIDGED_KEYS.has(key)) {
-            save[key] = w[key];
-        } else {
-            const val = field.get();
-            save[key] = field.deep ? deepClone(val) : val;
+            const bridgedValue = w[key];
+            save[key] = field.clone
+                ? field.clone(bridgedValue)
+                : (field.deep ? deepClone(bridgedValue) : bridgedValue);
+            continue;
         }
+
+        const val = field.get();
+        save[key] = field.clone
+            ? field.clone(val)
+            : (field.deep ? deepClone(val) : val);
     }
 
     // Const objects: deep-clone captures mutable item counts, drank amounts, etc.
@@ -376,7 +408,10 @@ export function loadSave(save: Record<string, any>): void {
 
     for (const [key, field] of Object.entries(FIELD_REGISTRY)) {
         if (key in save) {
-            field.set(field.deep ? deepClone(save[key]) : save[key]);
+            const incoming = field.clone
+                ? field.clone(save[key])
+                : (field.deep ? deepClone(save[key]) : save[key]);
+            field.set(incoming);
         }
     }
 

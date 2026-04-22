@@ -138,3 +138,56 @@ Plan integrity note (2026-04-18):
 
 ---
 
+### Slice 4 — Story 1.1: Drive/Images Canonical Ownership Hardening
+
+**Goal:** Finalize Story 1.1 execution readiness by locking canonical ownership and bridge/persistence contracts for `imgs`, `wetthecar`, and `picset` before implementation.
+
+**Scope:** `_bmad-output/implementation-artifacts/spec-1-1-drive-and-images-migration.md`, `scripts/gameState/gameState.ts`, `scripts/images.ts`, `scripts/drive.ts`, `scripts/shims.ts`, `scripts/saveLoad.ts`, `UserFlowTests/UserFlowTests/DriveImagesOwnershipBridgeTests.cs`.
+
+**Gate (done when):**
+- [x] Spec explicitly defines canonical-only write authority for image state (`gameState.Imgs`); legacy globals are compatibility facade only.
+- [x] Spec defines deterministic startup/hydration order and persistence precedence (canonical wins over legacy fallback).
+- [x] Bridge contract is one-way toward canonical ownership and idempotent under repeated setup.
+- [x] Quality gates are explicit and measurable: deterministic replay, bridge parity, focused userflow, and no-flake requirement.
+- [x] Active slice includes risk/mitigation/owner and a rollback trigger.
+
+**STATUS: COMPLETE** ✓ (2026-04-22)
+
+Execution checklist (consensus-ordered):
+- [x] Lock ownership contract text in Story 1.1 spec using SHALL language and glossary definitions.
+- [x] Add startup order + hydration tie-break section (canonical persisted payload precedence, legacy fallback behavior).
+- [x] Add bridge invariants: canonical-first read/write, pre-init fallback behavior, and idempotent setup requirement.
+- [x] Add persistence contract section for conflict resolution and backward-compatible hydration mapping.
+- [x] Add deterministic quality gates and acceptance mapping (contract completeness, bridge parity, determinism, regression safety, coverage-to-risk).
+- [x] Add/update focused test plan for `DriveImagesOwnershipBridgeTests` with boundary and corrupted-payload cases.
+
+Completion evidence (2026-04-22):
+- Canonical owner methods added in `scripts/gameState/gameState.ts`: `Imgs`, `setImgs`, `resetImgsToDefault`, `tryImportImgsFromStorage`.
+- `scripts/images.ts` migrated to canonical-first image ownership with pre-init legacy-only fallback and invalid-input no-op handling.
+- Bridge seeding and one-way ownership alignment completed in `scripts/shims.ts` for `imgs`, `wetthecar`, and `picset` pre-init compatibility.
+- `scripts/drive.ts` wet-seat bridge now enforces finite numeric no-op contract and post-init canonical routing.
+- `scripts/saveLoad.ts` now persists `imgs` through `FIELD_REGISTRY` with field-level structured clone semantics and canonical live reads for `wetthecar`/`picset`.
+- New focused integration suite `UserFlowTests/UserFlowTests/DriveImagesOwnershipBridgeTests.cs` is green: 6/6 passed.
+- Build and typecheck gates are green: `node esbuild.config.mjs`, `npx tsc -p . --noEmit`.
+- Smoke filter gate executed; no smoke-tagged tests currently present (`Category=Smoke` => 0 discovered).
+
+Risk register (Story 1.1):
+- Risk: hidden divergence between canonical and legacy image state during initialization/bridge transitions.
+- Likelihood: medium.
+- Impact: high (silent state drift and hard-to-triage regressions in image rendering/drive flow).
+- Mitigation: deterministic startup ordering, bridge parity assertions, idempotent bridge setup, and deterministic replay gate.
+- Owner: Murat (quality gate definition) + implementation owner for execution.
+
+Rollback trigger:
+- Any failed deterministic replay or bridge parity regression in touched flows triggers commit-level rollback of the Story 1.1 migration slice.
+
+Sequencing note:
+- Story 1.1 drive/images hardening is a prerequisite for downstream bridge-removal and save/load simplification batches touching image consumers.
+
+Exit criteria for compatibility mode:
+- Zero direct writes to legacy image globals outside approved bridge adapters.
+- Canonical-only save path for image payload is verified by tests.
+- Focused drive/images userflow + required build/typecheck gates pass.
+
+---
+
