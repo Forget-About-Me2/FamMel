@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
     test: {
         environment: 'jsdom',
-        include: ['tests/**/*.test.ts'], // Updated to reflect new test folder
+        include: ['tests/**/*.test.ts'],
         setupFiles: ['scripts/test/vitest.setup.ts'],
     },
 });
