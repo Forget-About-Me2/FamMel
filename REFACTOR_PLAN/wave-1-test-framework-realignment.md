@@ -1,6 +1,6 @@
 # Wave 1 Plan: Test Framework Realignment (1 Week)
 
-Planning status: planning-only artifact. No code execution is implied by this file.
+Planning status: execution bootstrap started on 2026-04-23. The JS/TS low-level lane now exists, but the broader Wave 1 assertion migration remains pending.
 
 ## Objective
 
@@ -8,7 +8,7 @@ Move compatibility/bridge-focused assertions out of C# `UserFlowTests` and into 
 
 ## Timebox
 
-1 week (5 working days), planning and preparation only unless execution phase is explicitly approved.
+1 week (5 working days). Planning is complete; execution is now in the bootstrap phase for the JS/TS test lane only.
 
 ## Included files (planning focus)
 
@@ -122,17 +122,31 @@ Planning outcome for this class:
 1. No assertions retained in C# UserFlow lane.
 2. Entire class is a migration candidate out of `UserFlowTests`.
 
+## Executed bootstrap (2026-04-23)
+
+1. Added `vitest` and `jsdom` to the repo devDependencies.
+2. Added `npm run test:unit` as the local entry point for the JS/TS low-level lane.
+3. Added `vitest.config.ts` with `jsdom` environment and `scripts/**/*.test.ts` discovery.
+4. Added `scripts/test/vitest.setup.ts` to load document helpers and resolve repo-local `JSON/...` fetches during import-time setup.
+5. Added `scripts/gameState/gameState.test.ts` as the initial smoke test proving the lane can import canonical TS runtime state.
+6. Verified the bootstrap with `npx vitest run scripts/gameState/gameState.test.ts`, `npx tsc -p . --noEmit`, and `node esbuild.config.mjs`.
+
 ## Proposed JS/TS test file plan (draft)
 
-1. `scripts/__tests__/bridge/attraction-shyness.bridge.spec.ts`
-2. `scripts/__tests__/bridge/drive-images.bridge.spec.ts`
-3. `scripts/__tests__/bridge/settings-sexscene.bridge.spec.ts`
+1. `scripts/gameState/gameState.test.ts` (bootstrap smoke test already implemented)
+2. `scripts/__tests__/bridge/attraction-shyness.bridge.spec.ts`
+3. `scripts/__tests__/bridge/drive-images.bridge.spec.ts`
+4. `scripts/__tests__/bridge/settings-sexscene.bridge.spec.ts`
 
 Responsibility split:
 
 1. `attraction-shyness.bridge.spec.ts`: pre-init/post-init write routing, clamp/no-op, last-value contracts.
 2. `drive-images.bridge.spec.ts`: canonical default structure, import behavior, round-trip parity, invalid-input behavior.
 3. `settings-sexscene.bridge.spec.ts`: staged writes, canonical sync, normalization rules, malformed save recovery.
+
+## Execution handoff note
+
+Wave 1 is no longer blocked on the absence of a JS/TS test runner. The next execution slice is to move the first compatibility/bridge assertions into dedicated JS/TS tests while keeping the C# userflow classes intact until parity is proven.
 
 ## Proposed C# cleanup list (planning)
 

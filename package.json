@@ -6,14 +6,18 @@
     "typescript": "^5.8.3"
   },
   "devDependencies": {
+    "@types/node": "^25.6.0",
     "@types/showdown": "^2.0.6",
     "concurrently": "^8.2.0",
     "esbuild": "^0.27.3",
-    "live-server": "^1.2.2"
+    "jsdom": "^26.1.0",
+    "live-server": "^1.2.2",
+    "vitest": "^3.2.4"
   },
   "scripts": {
     "build": "node esbuild.config.mjs",
     "watch": "node esbuild.config.mjs --watch",
+    "test:unit": "vitest run",
     "typecheck": "npx tsc -p . --noEmit",
     "dev": "concurrently \"npm:watch\" \"npx live-server --no-browser --port=8080\""
   }

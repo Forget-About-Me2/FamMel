@@ -36,6 +36,9 @@
 Execution notes:
 
 - This is a framework cleanup and ownership realignment slice, not a gameplay behavior change.
+- JS/TS lane bootstrap completed on 2026-04-23: `vitest` + `jsdom` installed, `npm run test:unit` added, `vitest.config.ts` added, `scripts/test/vitest.setup.ts` added, and `scripts/gameState/gameState.test.ts` passes as the first smoke test.
+- Bootstrap validation completed: `npx vitest run scripts/gameState/gameState.test.ts`, `npx tsc -p . --noEmit`, and `node esbuild.config.mjs`.
+- Remaining work in Slice T1 is assertion migration and C# cleanup; the lane bootstrap alone does not satisfy the slice gate yet.
 - If a compatibility assertion is required temporarily, track it as migration debt with explicit removal owner/date.
 
 ### Slice 1 — High-Risk Trio: Location stack cutover
