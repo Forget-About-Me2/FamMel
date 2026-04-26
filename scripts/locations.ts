@@ -11,8 +11,8 @@ import { displayyourneed } from './yourbladder';
 import { backPackItems, haveItem } from './backPackItems';
 import { suggestedloc, setSuggestedloc } from './settings';
 import { seenmovie } from './locations/theatre';
-import { gameState } from './gameState/gameState';
-import { BladderState } from './gameState/bladderState';
+import { runtimeContext } from './gameState/runtimeContext';
+import { BladderLevel } from './gameState/bladderLevel';
 
 //Object containing all locations and information connected to that location
 //Initialised with all locations to be iterated over later.
@@ -45,7 +45,7 @@ export function updateSuggestedLocation(){
         setSuggestedloc("themovie");
     } else if (shyness < 60 && attraction > 30 && !locations.theClub.visited) {
         setSuggestedloc("theclub");
-    } else if (gameState.Companion.bladderState >= BladderState.Need && shyness < 50 && !locations.theBar.visited) {
+    } else if (runtimeContext.Companion.bladderState >= BladderLevel.Need && shyness < 50 && !locations.theBar.visited) {
         setSuggestedloc("thebar");
     }
 }
@@ -121,7 +121,7 @@ export function itsClosed(locname: string, fun: () => void, curloc: string) {
     let list = new Array(arrivalLines.length).fill([theloc]);
     let temp = formatAll(arrivalLines, list);
     curtext = printList(curtext, temp);
-    if (gameState.Companion.bladderState >= BladderState.Emergency) {
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency) {
         curtext = printList(curtext, emergencyQuote);
         curtext = displaygottavoc(curtext);
     }
@@ -156,7 +156,7 @@ export function breakLoc(loc: any, curloc: string){
 
     let curtext = printList(tryingKey, [] as any[]);
     let listenerList: any[] = [];
-    if (gameState.Companion.bladderState >= BladderState.Emergency){
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency){
         //There's a 30% chance she'll run to the bathroom as soon as you break in.
         if (randomchoice(3)) {
             curtext.push(pickrandom(heroThanksUrgent));

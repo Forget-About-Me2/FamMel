@@ -1,7 +1,7 @@
 import { gameSettings } from "../settings/gameSettings";
 import { ImageType } from "../settings/imageType";
-import { BladderState } from "../gameState/bladderState";
-import { gameState } from "../gameState/gameState";
+import { BladderLevel } from "../gameState/bladderLevel";
+import { runtimeContext } from "../gameState/runtimeContext";
 import { randomInt } from "../shims";
 import { imageManager } from "./imageManager";
 import { nowpeeing, bladder } from "../bladder";
@@ -60,7 +60,7 @@ class AnimationManager {
     }
 
     private tick(): void {
-        const subject = gameState.Companion;
+        const subject = runtimeContext.Companion;
         const type = gameSettings.ImageSettings.ImageType;
         const isPeeing = subject?.NowPeeing ?? !!nowpeeing;
         const bladderState = subject?.bladderState ?? this.getLegacyBladderState();
@@ -88,7 +88,7 @@ class AnimationManager {
         this.timerId = window.setTimeout(() => this.tick(), delay);
     }
 
-    private computeFrameIndex(bladderState: BladderState, isPeeing: boolean): number {
+    private computeFrameIndex(bladderState: BladderLevel, isPeeing: boolean): number {
         if (isPeeing) {
             const ch = this.peeingLoop.charAt(this.artIndex);
             return this.alphaDecodeIndex(ch);
@@ -99,42 +99,42 @@ class AnimationManager {
         return this.alphaDecodeIndex(ch);
     }
 
-    private getLegacyBladderState(): BladderState {
+    private getLegacyBladderState(): BladderLevel {
         const legacyBladder = Number(bladder);
-        const companion = gameState.Companion;
+        const companion = runtimeContext.Companion;
 
         if (!Number.isFinite(legacyBladder) || !companion) {
-            return BladderState.Empty;
+            return BladderLevel.Empty;
         }
         if (legacyBladder < companion.bladderUrge) {
-            return BladderState.Empty;
+            return BladderLevel.Empty;
         }
         if (legacyBladder < companion.bladderNeed) {
-            return BladderState.Urge;
+            return BladderLevel.Urge;
         }
         if (legacyBladder < companion.bladderEmer) {
-            return BladderState.Need;
+            return BladderLevel.Need;
         }
         if (legacyBladder < companion.bladderLose) {
-            return BladderState.Emergency;
+            return BladderLevel.Emergency;
         }
-        return BladderState.Lose;
+        return BladderLevel.Lose;
     }
 
-    private mapBladderStateToLoopIndex(state: BladderState): number {
+    private mapBladderStateToLoopIndex(state: BladderLevel): number {
         // 0: Empty, 1: Urge, 2: Need, 3: Emergency, 4: Lose/CumLose/SexLose
         switch (state) {
-            case BladderState.Empty:
+            case BladderLevel.Empty:
                 return 0;
-            case BladderState.Urge:
+            case BladderLevel.Urge:
                 return 1;
-            case BladderState.Need:
+            case BladderLevel.Need:
                 return 2;
-            case BladderState.Emergency:
+            case BladderLevel.Emergency:
                 return 3;
-            case BladderState.Lose:
-            case BladderState.CumLose:
-            case BladderState.SexLose:
+            case BladderLevel.Lose:
+            case BladderLevel.CumLose:
+            case BladderLevel.SexLose:
             default:
                 return 4;
         }

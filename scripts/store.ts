@@ -1,8 +1,8 @@
 import { loadLocationScene, printAlways, printAllChoices, sayText } from './quotes';
 import { pushloc, getCurrentLocationTag, shopping, setShopping } from './shims';
 import { displayyourneed } from './yourbladder';
-import { gameState } from './gameState/gameState';
-import { BladderState } from './gameState/bladderState';
+import { runtimeContext } from './gameState/runtimeContext';
+import { BladderLevel } from './gameState/bladderLevel';
 import { allowItems, setAllowItems } from './backPackItems';
 import { askholditcounter, setAskholditcounter, waitcounter, setWaitcounter, bladder, setBladder } from './bladder';
 import { prepeed, setPrepeed } from './herhome';
@@ -15,13 +15,13 @@ export function goStore() {
         setShopping(1);
     }
     loadLocationScene("yourhome", "store");
-    if (askholditcounter > 0 && gameState.Companion.bladderState >= BladderState.Emergency && gameState.Companion.bladderState < BladderState.Lose && !waitcounter) {
+    if (askholditcounter > 0 && runtimeContext.Companion.bladderState >= BladderLevel.Emergency && runtimeContext.Companion.bladderState < BladderLevel.Lose && !waitcounter) {
         cellphone();
     } else {
-        if (!askholditcounter && gameState.Companion.bladderState >= BladderState.Need) {
+        if (!askholditcounter && runtimeContext.Companion.bladderState >= BladderLevel.Need) {
             setBladder(0);
         }
-        if (gameState.Companion.bladderState >= BladderState.Lose) {
+        if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) {
             setBladder(0);
             setPrepeed(1);
         }

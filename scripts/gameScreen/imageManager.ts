@@ -1,5 +1,5 @@
 import { gameSettings } from "../settings/gameSettings";
-import { BladderState } from "../gameState/bladderState";
+import { BladderLevel } from "../gameState/bladderLevel";
 import { BaseCompanion } from "../models/baseCompanion";
 import { ImageType } from "../settings/imageType";
 
@@ -28,7 +28,7 @@ class ImageManager {
      * Render a configured image for the current base girl and given bladder state.
      * If no URL is configured, the area is left blank.
      */
-    renderImageFor(state: BladderState): void {
+    renderImageFor(state: BladderLevel): void {
         const el = this.picEl;
         if (!el) return;
 

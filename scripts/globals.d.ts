@@ -38,3 +38,4 @@ declare function cellphone(): void;
 declare function GetRequiredElementById<T extends HTMLElement>(id: string): T;
 declare function setAttraction(value: number): void;
 declare function setShyness(value: number): void;
+

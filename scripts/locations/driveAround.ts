@@ -6,8 +6,8 @@ import { standobjs, haveItem, setAllowItems } from '../backPackItems';
 import { driveout } from '../drive';
 import { gottagoflag } from '../bladder';
 import { getCurrentLocationTag } from '../shims';
-import { gameState } from '../gameState/gameState';
-import { BladderState } from '../gameState/bladderState';
+import { runtimeContext } from '../gameState/runtimeContext';
+import { BladderLevel } from '../gameState/bladderLevel';
 
 let driveRound: any; //JSON quotes for location
 
@@ -38,11 +38,11 @@ export function driveAround(){
     gasStation = randomchoice(gasChance);
     if(gasStation)
         curtext = printList(curtext, gasStationSpotted);
-    if (gameState.Companion.bladderState >= BladderState.Lose) {
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) {
         sayText(curtext);
         wetherself();
     }
-    else if (gameState.Player.bladderState >= BladderState.Lose) {
+    else if (runtimeContext.Player.bladderState >= BladderLevel.Lose) {
         sayText(curtext);
         wetyourself();
     }
@@ -51,7 +51,7 @@ export function driveAround(){
         let listenerList: any[] = []
         sayText(curtext);
         curtext = [] as any[]
-        if (gameState.Player.bladderState >= BladderState.Emergency) {
+        if (runtimeContext.Player.bladderState >= BladderLevel.Emergency) {
             listenerList.push([[drivetell, "Tell her you need to go."], "drivetell"]);
         }
         if (gottagoflag > 0) {

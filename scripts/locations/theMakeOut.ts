@@ -1,36 +1,97 @@
-﻿import { fetchJson, printList, sayText, cListenerGen, cListenerGenList, general, appearance, girlname, pantycolor, setPantycolor } from '../quotes';
-import { pickrandom, randomchoice, pushloc, poploc, formatAll, getCurrentLocationTag, attraction, setAttraction, shyness, setShyness, flirtcounter, setFlirtcounter, playerbladder } from '../shims';
-import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, gomakeoutthresh, hottubthresh, flushdrank, bladder, setBladder, tummy, setTummy, gottagoflag, blademer } from '../bladder';
-import { displayyourneed, wetyourself, ypeeoutside, yPeeInTub, yourbladder, setYourbladder, yourtummy, setYourtummy, yourblademer } from '../yourbladder';
-import { standobjs, backPackItems, allowItems, setAllowItems } from '../backPackItems';
-import { kissher, feelup, checkherout } from '../actions';
-import { leavehm, driveout } from '../drive';
-import { lookAround, locations, sharedLoc } from '../locations';
-import { haveSex } from '../fuckHer';
-import { gameState } from '../gameState/gameState';
-import { BladderState } from '../gameState/bladderState';
-import { heroutfit } from '../settings';
+﻿import {
+    appearance,
+    cListenerGen,
+    cListenerGenList,
+    general,
+    girlname,
+    pantycolor,
+    printList,
+    sayText,
+    setPantycolor
+} from '../quotes';
+import {
+    attraction,
+    flirtcounter,
+    formatAll,
+    getCurrentLocationTag,
+    pickrandom,
+    playerbladder,
+    poploc,
+    pushloc,
+    randomchoice,
+    setAttraction,
+    setFlirtcounter,
+    setShyness,
+    shyness
+} from '../shims';
+import {
+    bladder,
+    blademer,
+    displayneed,
+    flushdrank,
+    gomakeoutthresh,
+    gottagoflag,
+    hottubthresh,
+    interpbladder,
+    noteholding,
+    preventpee,
+    setBladder,
+    setTummy,
+    showneed,
+    tummy,
+    wetherself
+} from '../bladder';
+import {
+    displayyourneed,
+    setYourbladder,
+    setYourtummy,
+    wetyourself,
+    yourbladder,
+    yourblademer,
+    yourtummy,
+    yPeeInTub,
+    ypeeoutside
+} from '../yourbladder';
+import {backPackItems, setAllowItems, standobjs} from '../backPackItems';
+import {checkherout, feelup, kissher} from '../actions';
+import {driveout, leavehm} from '../drive';
+import {locations, lookAround, sharedLoc} from '../locations';
+import {haveSex} from '../fuckHer';
+import {runtimeContext, RuntimeContext} from '../gameState/runtimeContext';
+import {BladderLevel} from '../gameState/bladderLevel';
+import {heroutfit} from '../settings';
+import makeOut from '../../Json/locations/makeOut.json'
+import {ILocation} from "./ILocation";
+import {LocationCategory} from "../gameState/locationCategory";
 
-export let makeOut; //This stores the JSON quotes regarding the makeOut
-export let askedswim = 0; // She's asked about a swim
-export function setAskedswim(val: number) { askedswim = val; }
-export let walkcounter = 0; // How far have you walked
-export function setWalkcounter(val: number) { walkcounter = val; }
-export function setMakeOut(val: any) { makeOut = val; }
-
-export function makeOutSetup(){
-    fetchJson("locations/makeOut").then(makeOutJson);
-    return {
-        "visit": [theMakeOut, "Go to the make-out spot"],
-        "wantVisit": [theMakeOut, "Take her up to the make-out spot"],
-        "group": 1,
-        "visited": 0
+export class TheMakeOut implements ILocation {
+    private readonly _runtimeContext: RuntimeContext;
+    constructor(runtimeContext: RuntimeContext) {
+        this._runtimeContext = runtimeContext;
     }
+
+    private hasAskedForSwim : boolean = false;
+    private walkCounter : number = 0;
+
+    get Category(): LocationCategory {
+        return LocationCategory.TheMakeOut;
+    }
+
+    Enter(): void {
+    }
+
+    Leave(): void {
+    }
+
+    Main(): void {
+    } // TODO maybe make like a stage (enum)
+
+
+
 }
 
-function makeOutJson(data: any){
-    makeOut = data;
-}
+export let askedswim = 0; // She's asked about a swim
+export let walkcounter = 0; // How far have you walked
 
 export function theMakeOut() {
     setAllowItems(1);
@@ -58,8 +119,8 @@ export function theMakeOut() {
     locations.makeOut.visited = 1;
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
-    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
-    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) wetherself();
+    else if (runtimeContext.Player.bladderState >= BladderLevel.Lose) wetyourself();
     else {
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
@@ -70,7 +131,7 @@ export function theMakeOut() {
                 listenerList.push([[function () {lookAround("theTheatre")}, sharedLoc["choices"]["lookAround"]], "lookAround"]);
             }
             curtext = standobjs(curtext, listenerList);
-            if (gameState.Player.bladderState >= BladderState.Urge)
+            if (runtimeContext.Player.bladderState >= BladderLevel.Urge)
                 listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "ypeeOutside"])
         }
         listenerList.push([[leavehm, makeOut["choices"]["leaveHm"]], "leaveHm"]);
@@ -161,8 +222,8 @@ export function theWalk() {
         curtext.push(pickrandom(makeOut["walkDesc"][0]));
     walkcounter++;
     let listenerList: any[] = [];
-    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
-    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) wetherself();
+    else if (runtimeContext.Player.bladderState >= BladderLevel.Lose) wetyourself();
     else {
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
@@ -170,7 +231,7 @@ export function theWalk() {
             if (darkYard) {
                 listenerList.push([[examineGate, makeOut["choices"]["examineGate"]], "examineGate"]);
             }
-            if (gameState.Player.bladderState >= BladderState.Urge)
+            if (runtimeContext.Player.bladderState >= BladderLevel.Urge)
                 listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "yPeeOutside"]);
             curtext = standobjs(curtext, listenerList);
             listenerList.push([[theWalk, makeOut["choices"]["keepWalking"]], "theWalk"]);
@@ -228,8 +289,8 @@ export function theYard() {
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
     let listenerList: any[] = [];
-    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
-    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) wetherself();
+    else if (runtimeContext.Player.bladderState >= BladderLevel.Lose) wetyourself();
     else {
         if (gottagoflag > 0) {
              listenerList = preventpee(listenerList);
@@ -238,8 +299,8 @@ export function theYard() {
             listenerList.push([[kissher, "Kiss her."], "kissHer"]);
             listenerList.push([[feelup, "Feel her up."], "FeelUp"]);
                 curtext = standobjs(curtext, listenerList);
-            if (!gameState.Interactions.CheckedHerOut) listenerList.push([[checkherout, "Check her out."], "checkHerOut"]);
-            if (gameState.Player.bladderState >= BladderState.Urge) listenerList.push([[ypeeoutside, "Pee outside."], "yPeeOutside"]);
+            if (!runtimeContext.Interactions.CheckedHerOut) listenerList.push([[checkherout, "Check her out."], "checkHerOut"]);
+            if (runtimeContext.Player.bladderState >= BladderLevel.Urge) listenerList.push([[ypeeoutside, "Pee outside."], "yPeeOutside"]);
         }
         listenerList.push([[exitYard, "Leave the yard."], "goBack"]);
         sayText(curtext);
@@ -296,8 +357,8 @@ export function theHotTub() {
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
     let listenerList: any[] = [];
-    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
-    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) wetherself();
+    else if (runtimeContext.Player.bladderState >= BladderLevel.Lose) wetyourself();
     else {
         if (gottagoflag > 0) {
             listenerList = preventpee(listenerList);
@@ -308,7 +369,7 @@ export function theHotTub() {
                 listenerList.push([[function () {haveSex("theHotTub")}, makeOut["choices"]["makeOut"]], "sexTub"]);
             }
             curtext = standobjs(curtext, listenerList);
-            if (gameState.Player.bladderState >= BladderState.Urge)
+            if (runtimeContext.Player.bladderState >= BladderLevel.Urge)
                 listenerList.push([[yPeeInTub, makeOut["choices"]["youPeeInTub"]], "ypeetub"]);
         }
         listenerList.push([[exitHotTub, makeOut["choices"]["exitHotTub"]], "goBack"]);
@@ -351,7 +412,7 @@ export function theBeach() {
     }
 
     let listenerList: any[] = [];
-    if ((gameState.Companion.bladderState >= BladderState.Emergency && (shyness > 15 || randomchoice(1)) && !askedswim)) {
+    if ((runtimeContext.Companion.bladderState >= BladderLevel.Emergency && (shyness > 15 || randomchoice(1)) && !askedswim)) {
         curtext = displayneed(curtext);
         askedswim = 7;
         curtext = printList(curtext, askSwim);
@@ -360,11 +421,11 @@ export function theBeach() {
     } else {
         curtext = showneed(curtext);
         curtext = displayyourneed(curtext);
-        if (gameState.Companion.bladderState >= BladderState.Lose) {
+        if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) {
             wetherself();
             return;
         }
-        else if (gameState.Player.bladderState >= BladderState.Lose) {
+        else if (runtimeContext.Player.bladderState >= BladderLevel.Lose) {
             wetyourself();
             return;
         }
@@ -375,8 +436,8 @@ export function theBeach() {
                 listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
                 listenerList.push([[feelup, general["feelUp"]], "FeelUp"]);
                 curtext = standobjs(curtext, listenerList);
-                if (!gameState.Interactions.CheckedHerOut) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);
-                if (gameState.Player.bladderState >= BladderState.Urge) listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "yPeeOutside"]);
+                if (!runtimeContext.Interactions.CheckedHerOut) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);
+                if (runtimeContext.Player.bladderState >= BladderLevel.Urge) listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "yPeeOutside"]);
                 if (attraction > 100 && shyness < 10)
                     listenerList.push([[function () {haveSex("theBeach")}, makeOut["choices"]["makeOut"]], "sexTub"]);
             }

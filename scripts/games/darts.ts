@@ -2,8 +2,8 @@ import { formatAllVarsList, printList, sayText, cListenerGen, cListener, callCho
 import { range, randomchoice, pickrandom } from '../shims';
 import { showneed, displayneed, wetherself } from '../bladder';
 import { displayyourneed, wetyourself } from '../yourbladder';
-import { gameState } from '../gameState/gameState';
-import { BladderState } from '../gameState/bladderState';
+import { runtimeContext } from '../gameState/runtimeContext';
+import { BladderLevel } from '../gameState/bladderLevel';
 
 export function dartSetup(data: any){
     setDarts(data);
@@ -134,8 +134,8 @@ export function playDarts() {
         "you": 301,
         "her": 301
     }
-    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
-    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) wetherself();
+    else if (runtimeContext.Player.bladderState >= BladderLevel.Lose) wetyourself();
     else {
         sayText(curtext);
         let round = function () {
@@ -176,8 +176,8 @@ export function dartRound(dartPoints: any){
     }
     curText = displayneed(curText);
     curText = displayyourneed(curText);
-    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
-    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) wetherself();
+    else if (runtimeContext.Player.bladderState >= BladderLevel.Lose) wetyourself();
     else {
         sayText(curText);
         let listenerList: any[] = [];

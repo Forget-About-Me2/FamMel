@@ -80,6 +80,15 @@
 				"$msCompile"
 			]
 		}
+,
+		{
+			"label": "tests: vitest",
+			"type": "shell",
+			"command": "npx vitest",
+			"args": ["run"],
+			"group": "test",
+			"problemMatcher": []
+		}
 	],
 	"inputs": [
 		{

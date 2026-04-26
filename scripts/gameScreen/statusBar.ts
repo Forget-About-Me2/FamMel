@@ -1,4 +1,4 @@
-import {gameState} from "../gameState/gameState";
+import {runtimeContext} from "../gameState/runtimeContext";
 
 export class StatusBar {
     private readonly _moneyValueElem: HTMLElement;
@@ -21,15 +21,15 @@ export class StatusBar {
 
 
     Update() {
-        this._moneyValueElem.innerText = "$" + gameState.Money;
-        this._attractionValueElem.innerText = gameState.Attraction.toString();
-        this._shynessValueElem.innerText = gameState.Shyness.toString();
-        this._tummyValueElement.innerText = gameState.Companion.Tummy.toString();
-        this._bladderValueElement.innerText = gameState.Companion.Bladder.toString();
-        this._timeValueElem.innerText = gameState.Time.toString();
+        this._moneyValueElem.innerText = "$" + runtimeContext.Money;
+        this._attractionValueElem.innerText = runtimeContext.Attraction.toString();
+        this._shynessValueElem.innerText = runtimeContext.Shyness.toString();
+        this._tummyValueElement.innerText = runtimeContext.Companion.Tummy.toString();
+        this._bladderValueElement.innerText = runtimeContext.Companion.Bladder.toString();
+        this._timeValueElem.innerText = runtimeContext.Time.toString();
 
-        this._yourTumValueElem.innerText = gameState.Player.Tummy.toString();
-        this._yourBladValueElem.innerText = gameState.Player.Bladder.toString();
+        this._yourTumValueElem.innerText = runtimeContext.Player.TummyVolume.toString();
+        this._yourBladValueElem.innerText = runtimeContext.Player.Bladder.toString();
 
         this.flashChanged();
         this.TemporaryShowOutOfBounds();
@@ -73,26 +73,26 @@ export class StatusBar {
     }
 
     private flashChanged() {
-        if (gameState.Attraction < gameState.LastAttraction) {
+        if (runtimeContext.Attraction < runtimeContext.LastAttraction) {
             this.setTempColour(this._attractionValueElem, "red", "white");
-        } else if (gameState.Attraction > gameState.LastAttraction)
+        } else if (runtimeContext.Attraction > runtimeContext.LastAttraction)
             this.setTempColour(this._attractionValueElem, "green", "white");
 
-        if (gameState.Shyness < gameState.LastShyness) {
+        if (runtimeContext.Shyness < runtimeContext.LastShyness) {
             this.setTempColour(this._shynessValueElem, "green", "blue");
-        } else if (gameState.Shyness > gameState.LastShyness) {
+        } else if (runtimeContext.Shyness > runtimeContext.LastShyness) {
             this.setTempColour(this._shynessValueElem, "red", "blue");
         }
 
-        if (gameState.Money < gameState.LastMoney) {
+        if (runtimeContext.Money < runtimeContext.LastMoney) {
             this.setTempColour(this._moneyValueElem, "red", "blue");
-        } else if (gameState.Money > gameState.LastMoney) {
+        } else if (runtimeContext.Money > runtimeContext.LastMoney) {
             this.setTempColour(this._moneyValueElem, "green", "blue");
         }
 
-        gameState.LastMoney = gameState.Money;
-        gameState.LastAttraction = gameState.Attraction;
-        gameState.LastShyness = gameState.Shyness;
+        runtimeContext.LastMoney = runtimeContext.Money;
+        runtimeContext.LastAttraction = runtimeContext.Attraction;
+        runtimeContext.LastShyness = runtimeContext.Shyness;
     }
 
     private setTempColour(fieldElem: HTMLElement, colour: string, original: string) {
@@ -104,20 +104,20 @@ export class StatusBar {
 
     private TemporaryShowOutOfBounds() {
         //  Hard Limits on shyness and attraction
-        if (gameState.Shyness < 0) {
-            gameState.Shyness = 0;
+        if (runtimeContext.Shyness < 0) {
+            runtimeContext.Shyness = 0;
             this.changeValueAfterDelay(this._shynessValueElem, 0);
         }
-        if (gameState.Shyness > 100) {
-            gameState.Shyness = 100;
+        if (runtimeContext.Shyness > 100) {
+            runtimeContext.Shyness = 100;
             this.changeValueAfterDelay(this._shynessValueElem, 100);
         }
-        if (gameState.Attraction < 0) {
-            gameState.Attraction = 0;
+        if (runtimeContext.Attraction < 0) {
+            runtimeContext.Attraction = 0;
             this.changeValueAfterDelay(this._attractionValueElem, 0);
         }
-        if (gameState.Attraction > 130) {
-            gameState.Attraction = 130;
+        if (runtimeContext.Attraction > 130) {
+            runtimeContext.Attraction = 130;
             this.changeValueAfterDelay(this._attractionValueElem, 130);
         }
     }

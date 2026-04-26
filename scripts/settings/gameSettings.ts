@@ -1,153 +1,90 @@
+import {baseCompanionDefaultSettings, CompanionSettings} from "./companionSettings";
 import {ImageSettings} from "./imageSettings";
-import {Movie} from "../models/movie";
+import {Outfit} from "../models/outfit";
 
-export enum baseCompanion{
-    Jennifer = 'Jennifer',
-    Laura = 'Laura',
-    Karen = 'Karen',
-    Melissa = 'Melissa'
-}
-
-export enum ImageChoice{
+export enum ImageChoice {
     Images,
     Ascii,
     None
 }
 
-export class GameSettings{
-    private _playerBladder : boolean = true;
-
-    get PlayerBladder(): boolean {
-        return this._playerBladder;
-    }
-
-    set PlayerBladder(value: boolean) {
-        this._playerBladder = value;
-    }
-
+// TODO split up settings per page
+export interface GameSettings {
+    /**
+     * The companion's settings (character, stats, etc.)
+     */
+    Companion: CompanionSettings;
+    CompanionOutfit : Outfit;
     /**
      * Whether the player bladder is enabled in the drinking game, if the player bladder is disabled otherwise. When player bladder is enabled this setting is ignored.
      */
-    PlayerDrinkGame : boolean = true
+    EnablePlayerInDrinkGame: boolean;
 
-    StartMoney : number = 200
+    /**
+     * Whether sex moves can be repeated during a "make-out" session.
+     * this makes the game significantly easier.
+     */
+    AllowRepeatedSexActions: boolean;
 
-    ClubClosingTime : number = 7 * 60; // 2: 00 AM
+    /**
+     * whether sex moves are reset after a "make-out" session ended.
+     * This makes the game easier.
+     */
+    ResetSexMovesOnExit: boolean;
 
-    TheaterClosingTime : number = 3 * 60; // 10: 00 PM last showing
-
-    BarClosingTime : number = 6 * 60; // 1: 00 AM
-
-    TimeSpeed: number = 2;
-
+    /**
+     * The starting amount of money for the player.
+     */
+    StartMoney: number;
     /**
      * Option for which image type is shown.
      */
-    ImageChoice : ImageChoice = ImageChoice.Ascii;
-
+    ImageChoice: ImageChoice;
     /**
      * Show detailed stats about bladder and tummy.
      */
-    ShowStats : boolean = true;
-
-    /**
-     * The number of cycles for tummy decay to average bladder filling.
-     * This prevents the bladder filling exponentially once a lot is drunk.
-     */
-    TummyDecayCycles : number = 6;
-
+    ShowStats: boolean;
     /**
      * Whether the bladder should decay if peeing on bladder failure.
      */
-    BladderDecay : boolean = true;
-
+    BladderDecay: boolean;
     /**
      * Whether the bladder should also decay when peeing on bladder emergency. Requires bladder decay to be enabled.
      */
-    BladderDecayOnEmer : boolean = true;
-
+    BladderDecayOnEmer: boolean;
     /**
      * Whether the bladder should also decay when peeing after drinking alcohol. Requires bladder decay to be enabled.
      */
-    BladderDecayOnBreakingTheSeal : boolean = true;
-
-    /**
-     * Sets the max value of the random counter.
-     */
-    RandCounterMax : number = 5;
-
+    BladderDecayOnBreakingTheSeal: boolean;
     /**
      * Image settings to show the state of the date.
      */
-    ImageSettings : ImageSettings = new ImageSettings();
+    ImageSettings: ImageSettings;
+    /**
+     * The percentage of the initial capacity that the bladder can decay to. It will never decay below this percentage.
+     */
+    MinBladderPercentage: number;
 }
 
-class CompanionSettings {
-    DateName : string = "Laura"
-    BaseCompanion: baseCompanion = baseCompanion.Laura
-    IsCustomCompanion: boolean = false
-
-    CustomCompanionSettings : PersonSettings = {
-        bladderUrge: 250,
-        minPercentage: 75,
-        startBladderVolume: 300,
-        startMaxTummy: 250,
-        startMaxAlcohol: 1000,
-        startTummyVolume: 100,
+export function createDefaultGameSettings(): GameSettings {
+    return {
+        Companion: baseCompanionDefaultSettings.Laura,
+        CompanionOutfit : Outfit.Jeans,
+        EnablePlayerInDrinkGame: true,
+        StartMoney: 200,
+        ImageChoice: ImageChoice.Ascii,
+        ShowStats: true,
+        BladderDecay: true,
+        BladderDecayOnEmer: true,
+        BladderDecayOnBreakingTheSeal: true,
+        ImageSettings: new ImageSettings(),
+        MinBladderPercentage: 75,
     };
-
-    /**
-     * Max number of kisses that have an effect per location.
-     */
-    MaxKissCount: number = 7;
-
-    /**
-     * Max number of feelings that have an effect per location.
-     */
-    MaxFeelCount: number = 7;
-
-    /**
-     * Max number of flirt points per venue.
-     */
-
-    MaxFlirtCount: number = 2;
 }
 
-
-
-/**
- * Settings for a person, can be player or date.
- */
-export interface PersonSettings {
-    /**
-     * The bladder volume at which point the person starts feeling it.
-     */
-    bladderUrge : number;
-
-    /**
-     * The bladder volume at the start of the game.
-     */
-    startBladderVolume: number;
-
-    /**
-     * The tummy volume at the start of the game.
-     */
-    startTummyVolume: number;
-
-    /*
-     * The max amount of drink volume the person can stomach before rejecting non-alcoholic drinks.
-     */
-    startMaxTummy: number;
-
-    /*
-     * The max amount of alcohol volume the person can drink before rejecting alcoholic drinks.
-     */
-    startMaxAlcohol: number;
-
-    /**
-     * The percentage of the initial bladder urge, the urge can decay to.
-     */
-    minPercentage: number;
+export function updateGameSettingsFromJson(json: string): void {
+    // Merge loaded values with defaults for forward compatibility
+    gameSettings = { ...createDefaultGameSettings(), ...JSON.parse(json) };
 }
 
-export const gameSettings = new GameSettings();
+export let gameSettings = createDefaultGameSettings();

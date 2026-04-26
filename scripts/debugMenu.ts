@@ -1,5 +1,5 @@
 import { backPackItems } from './backPackItems';
-import { gameState } from './gameState/gameState';
+import { runtimeContext } from './gameState/runtimeContext';
 import { go } from './main';
 import { theYard, exitYard, theWalk } from './locations/theMakeOut';
 import { openPopUp } from './pop-up';
@@ -36,8 +36,8 @@ export const Debug: DebugFunctions = function () {
 
 //Makes her fully into you.
     function fullStats() {
-        gameState.Attraction = 130;
-        gameState.Shyness = 0;
+        runtimeContext.Attraction = 130;
+        runtimeContext.Shyness = 0;
         setAttraction(130);
         setShyness(0);
     }
@@ -137,7 +137,7 @@ export function OpenDebugMenu() {
     CreateLocationButtons(locationsDiv, locStack ?? []);
 
     CreateSectionHeading(locationsDiv, "Typed Location Stack");
-    CreateTypedLocationButtons(locationsDiv, gameState.LocStack ?? []);
+    CreateTypedLocationButtons(locationsDiv, runtimeContext.LocStack ?? []);
 
     const functionsDiv = GetRequiredElementById('debug-functions');
     CreateSectionHeading(functionsDiv, "Debug Functions");
@@ -160,17 +160,17 @@ export function OpenDebugMenu() {
     CreateSectionHeading(infoDiv, "Core State");
     const table = document.createElement('table');
     CreateValueRow(table, "Random Seed", getRandomSeed().toString());
-    CreateValueRow(table, "Money", gameState.Money.toString());
-    CreateValueRow(table, "Attraction", gameState.Attraction.toString());
-    CreateValueRow(table, "Shyness", gameState.Shyness.toString());
+    CreateValueRow(table, "Money", runtimeContext.Money.toString());
+    CreateValueRow(table, "Attraction", runtimeContext.Attraction.toString());
+    CreateValueRow(table, "Shyness", runtimeContext.Shyness.toString());
     CreateValueRow(table, "Legacy Attraction", String(attraction));
     CreateValueRow(table, "Legacy Shyness", String(shyness));
-    CreateValueRow(table, "Game Time", gameState.Time.timeString);
-    CreateValueRow(table, "Current Typed Location", GetTypedLocationLabel(gameState.CurrentLocation));
+    CreateValueRow(table, "Game Time", runtimeContext.Time.timeString);
+    CreateValueRow(table, "Current Typed Location", GetTypedLocationLabel(runtimeContext.CurrentLocation));
     CreateValueRow(table, "Legacy Stack (full)", (locStack ?? []).join(" -> ") || "(empty)");
-    CreateValueRow(table, "Typed Stack (full)", GetTypedLocationStackLabel(gameState.LocStack ?? []));
-    CreatePersonRows(gameState.Companion, "Companion", table)
-    CreatePersonRows(gameState.Player, "Player", table)
+    CreateValueRow(table, "Typed Stack (full)", GetTypedLocationStackLabel(runtimeContext.LocStack ?? []));
+    CreatePersonRows(runtimeContext.Companion, "Companion", table)
+    CreatePersonRows(runtimeContext.Player, "Player", table)
     infoDiv.appendChild(table);
 
     CreateSectionHeading(infoDiv, "State Dump");
@@ -305,51 +305,51 @@ export function CreateTypedLocationButtons(container: HTMLElement, stack: any[])
 
 export function CreateQuickActions(container: HTMLElement) {
     CreateQuickActionButton(container, 'Set Time 22:00', function () {
-        gameState.Time.hour = 22;
-        gameState.Time.minute = 0;
+        runtimeContext.Time.hour = 22;
+        runtimeContext.Time.minute = 0;
         setHour(22);
         SetDebugMessage('Time set to 22:00');
     });
 
     CreateQuickActionButton(container, 'Add 1 Hour', function () {
-        gameState.Time.hour = (gameState.Time.hour + 1) % 24;
-        setHour(gameState.Time.hour);
-        SetDebugMessage(`Time advanced to ${gameState.Time.timeString}`);
+        runtimeContext.Time.hour = (runtimeContext.Time.hour + 1) % 24;
+        setHour(runtimeContext.Time.hour);
+        SetDebugMessage(`Time advanced to ${runtimeContext.Time.timeString}`);
     });
 
     CreateQuickActionButton(container, 'Companion Fill Bladder', function () {
-        if (!gameState.Companion) return;
-        gameState.Companion.Bladder = gameState.Companion.bladderLose + 50;
+        if (!runtimeContext.Companion) return;
+        runtimeContext.Companion.Bladder = runtimeContext.Companion.bladderLose + 50;
         SetDebugMessage('Companion bladder set near lose threshold');
     });
 
     CreateQuickActionButton(container, 'Companion Empty Bladder', function () {
-        if (!gameState.Companion) return;
-        gameState.Companion.Bladder = 0;
-        gameState.Companion.pee();
+        if (!runtimeContext.Companion) return;
+        runtimeContext.Companion.Bladder = 0;
+        runtimeContext.Companion.pee();
         SetDebugMessage('Companion bladder emptied');
     });
 
     CreateQuickActionButton(container, 'Player Fill Bladder', function () {
-        if (!gameState.Player) return;
-        gameState.Player.Bladder = gameState.Player.bladderLose + 50;
+        if (!runtimeContext.Player) return;
+        runtimeContext.Player.Bladder = runtimeContext.Player.bladderLose + 50;
         SetDebugMessage('Player bladder set near lose threshold');
     });
 
     CreateQuickActionButton(container, 'Player Empty Bladder', function () {
-        if (!gameState.Player) return;
-        gameState.Player.Bladder = 0;
-        gameState.Player.pee();
+        if (!runtimeContext.Player) return;
+        runtimeContext.Player.Bladder = 0;
+        runtimeContext.Player.pee();
         SetDebugMessage('Player bladder emptied');
     });
 
     CreateQuickActionButton(container, 'Money +100', function () {
-        gameState.ReceiveMoney(100);
+        runtimeContext.ReceiveMoney(100);
         SetDebugMessage('Added 100 money');
     });
 
     CreateQuickActionButton(container, 'Money -100', function () {
-        gameState.PayAmount(100);
+        runtimeContext.PayAmount(100);
         SetDebugMessage('Removed 100 money');
     });
 }
@@ -383,44 +383,44 @@ export function BuildDebugDump() {
     return {
         randomSeed: getRandomSeed(),
         gameTime: {
-            hour: gameState.Time.hour,
-            minute: gameState.Time.minute,
-            text: gameState.Time.timeString,
-            totalTime: gameState.Time.totalTime
+            hour: runtimeContext.Time.hour,
+            minute: runtimeContext.Time.minute,
+            text: runtimeContext.Time.timeString,
+            totalTime: runtimeContext.Time.totalTime
         },
         resources: {
-            money: gameState.Money,
-            attraction: gameState.Attraction,
-            shyness: gameState.Shyness,
+            money: runtimeContext.Money,
+            attraction: runtimeContext.Attraction,
+            shyness: runtimeContext.Shyness,
             legacyAttraction: attraction,
             legacyShyness: shyness
         },
         locationStack: {
             legacy: [...(locStack ?? [])],
-            typed: (gameState.LocStack ?? []).map((location: any) => ({
+            typed: (runtimeContext.LocStack ?? []).map((location: any) => ({
                 category: location?.category,
                 functionName: typeof location?.function === 'function' ? (location.function.name || 'anonymous') : 'unknown'
             }))
         },
         companion: {
-            bladder: gameState.Companion?.Bladder,
-            bladderUrge: gameState.Companion?.bladderUrge,
-            bladderNeed: gameState.Companion?.bladderNeed,
-            bladderEmer: gameState.Companion?.bladderEmer,
-            bladderLose: gameState.Companion?.bladderLose,
-            tummy: gameState.Companion?.Tummy,
-            alcoholInTummy: gameState.Companion?.AlcoholInTummy,
-            nowPeeing: gameState.Companion?.NowPeeing
+            bladder: runtimeContext.Companion?.Bladder,
+            bladderUrge: runtimeContext.Companion?.bladderUrge,
+            bladderNeed: runtimeContext.Companion?.bladderNeed,
+            bladderEmer: runtimeContext.Companion?.bladderEmer,
+            bladderLose: runtimeContext.Companion?.bladderLose,
+            tummy: runtimeContext.Companion?.Tummy,
+            alcoholInTummy: runtimeContext.Companion?.AlcoholInTummy,
+            nowPeeing: runtimeContext.Companion?.NowPeeing
         },
         player: {
-            bladder: gameState.Player?.Bladder,
-            bladderUrge: gameState.Player?.bladderUrge,
-            bladderNeed: gameState.Player?.bladderNeed,
-            bladderEmer: gameState.Player?.bladderEmer,
-            bladderLose: gameState.Player?.bladderLose,
-            tummy: gameState.Player?.Tummy,
-            alcoholInTummy: gameState.Player?.AlcoholInTummy,
-            nowPeeing: gameState.Player?.NowPeeing
+            bladder: runtimeContext.Player?.Bladder,
+            bladderUrge: runtimeContext.Player?.bladderUrge,
+            bladderNeed: runtimeContext.Player?.bladderNeed,
+            bladderEmer: runtimeContext.Player?.bladderEmer,
+            bladderLose: runtimeContext.Player?.bladderLose,
+            tummy: runtimeContext.Player?.TummyVolume,
+            alcoholInTummy: runtimeContext.Player?.AlcoholInTummy,
+            nowPeeing: runtimeContext.Player?.NowPeeing
         }
     };
 }

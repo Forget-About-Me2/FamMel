@@ -1,20 +1,34 @@
-import {gameSettings, PersonSettings} from "../settings/gameSettings";
+import {gameSettings} from "../settings/gameSettings";
 import {getRandomValueFromNormalDistribution} from "../helperFiles/helperFunctions";
-import {gameState} from "./gameState";
-import {BladderState} from "./bladderState";
+import {runtimeContext} from "./runtimeContext";
+import {BladderLevel} from "./bladderLevel";
 import { IBackpackItem, IDrink } from "../backPackItems";
 import { lastpeetime, minperc } from "../bladder";
+import {PersonSaveObject} from "./SaveObject/PersonSaveObject";
+import {PersonSettings} from "../settings/personSettings";
 
 export type LegacyBladderMirror = "companion" | "player";
 
 export class Person {
+
+    constructor(settings: PersonSettings, legacyBladderMirror: LegacyBladderMirror = "companion") {
+        this._bladderUrge = settings.bladderUrge;
+        this.legacyBladderMirror = legacyBladderMirror;
+        this.MinUrge = settings.bladderUrge * minperc / 100
+        this.Bladder = settings.startBladderVolume;
+        this.TummyVolume = settings.startTummyVolume;
+        this.MaxTummy = settings.startMaxTummy;
+        this.TummyAverage = settings.startTummyVolume;
+        this.MaxAlcohol = settings.startMaxAlcohol;
+    }
+
     private _bladderUrge: number;
     private _timeLastBreakingSeal: number = 0;
     readonly MinUrge: number;
     private _arousal: number = 0;
     UnderWearColour: string = "black";
     Bladder: number;
-    Tummy: number;
+    TummyVolume: number;
     MaxTummy: number;
     MaxAlcohol: number;
     ItemsDrankSinceLastPee: IBackpackItem[] = [];
@@ -106,22 +120,41 @@ export class Person {
         return this._bladderUrge * 5;
     }
 
-    get bladderState() : BladderState {
-        // Prepare thresholds and sort them ascending to establish category boundaries
-        const thresholds = [
-            { value: this.bladderUrge, state: BladderState.Urge },
-            { value: this.bladderNeed, state: BladderState.Need },
-            { value: this.bladderEmer, state: BladderState.Emergency },
-            { value: this.bladderCumLose, state: BladderState.CumLose },
-            { value: this.bladderSexLose, state: BladderState.SexLose },
-            { value: this.bladderLose, state: BladderState.Lose }
-        ].sort((a, b) => a.value - b.value);
+    /**
+     * Tries to drain the given amount from the tummy to the bladder, simulating digestion.
+     * Returns true if successful, false if not enough volume in tummy.
+     * @param amount
+     */
+    tryDrainTummyVolumeBy(amount: number) : boolean {
+        if (this.TummyVolume < amount) {
+            return false;
+        }
+        this.TummyVolume -= amount;
+        return true;
+    }
 
-        if (thresholds.length === 0) return BladderState.Empty;
+
+    /**
+     * Returns the current bladder thresholds as an array, always calculated on the fly.
+     */
+    private getBladderThresholds() {
+        return [
+            { value: this.bladderUrge, state: BladderLevel.Urge },
+            { value: this.bladderNeed, state: BladderLevel.Need },
+            { value: this.bladderEmer, state: BladderLevel.Emergency },
+            { value: this.bladderCumLose, state: BladderLevel.CumLose },
+            { value: this.bladderSexLose, state: BladderLevel.SexLose },
+            { value: this.bladderLose, state: BladderLevel.Lose }
+        ].sort((a, b) => a.value - b.value);
+    }
+
+    get bladderState(): BladderLevel {
+        const thresholds = this.getBladderThresholds();
+        if (thresholds.length === 0) return BladderLevel.Empty;
 
         // Below the first threshold is Empty
         if (this.Bladder < thresholds[0].value) {
-            return BladderState.Empty;
+            return BladderLevel.Empty;
         }
 
         // Find the interval [threshold[i], threshold[i+1])
@@ -135,17 +168,60 @@ export class Person {
         return thresholds[thresholds.length - 1].state;
     }
 
+    /**
+     * Returns true if the current bladder state is below the given level
+     * @param level the BladderLEvel to comapre against.
+     */
+    isBladderStateBelow(level: BladderLevel): boolean {
+        const thresholds = this.getBladderThresholds();
+        // Find the index of the given level in the sorted thresholds
+        const idx = thresholds.findIndex(t => t.state === level);
+        if (idx === -1) throw new Error(`Invalid bladder level: ${level}`);
+        // If bladder is below the threshold for this level, it's "below"
+        return this.Bladder < thresholds[idx].value;
+    }
+
+    /**
+     * Returns true if the current bladder state is above the given level.
+     * @param level The BladderLevel to compare against.
+     */
+    isBladderStateAbove(level: BladderLevel): boolean {
+        const thresholds = this.getBladderThresholds();
+        // Find the index of the given level in the sorted thresholds
+        const idx = thresholds.findIndex(t => t.state === level);
+        if (idx === -1) throw new Error(`Invalid bladder level: ${level}`);
+        // If bladder is above the threshold for this level, it's "above"
+        return this.Bladder >= thresholds[idx].value;
+    }
+
+    /**
+     * Returns the number of millilitres until the next threshold of the given level is reached.
+     * If the current bladder state is already above the given level,
+     * returns a negative number to indicate how far above it is
+     * @param level The BladderLevel to compare against.
+     */
+    millilitresTillBladderThreshold(level: BladderLevel): number {
+        const thresholds = this.getBladderThresholds();
+        const idx = thresholds.findIndex(t => t.state === level);
+        if (idx === -1) throw new Error(`Invalid bladder level: ${level}`);
+        return thresholds[idx].value - this.Bladder;
+    }
+
     processFluidsDigestion() {
-        this.TummyAverage = Math.round((this.TummyAverage * (gameSettings.TummyDecayCycles - 1) + this.Tummy) / (gameSettings.TummyDecayCycles))
+        this.TummyAverage = Math.round((this.TummyAverage * (gameSettings.TummyDecayCycles - 1) + this.TummyVolume) / (gameSettings.TummyDecayCycles))
         let tummyDecrease = Math.round(this.TummyAverage / 10);
         if (this.AlcoholInTummy === 0 && tummyDecrease > 12) tummyDecrease = 12;
         else if (this.AlcoholInTummy > 0 && tummyDecrease > 18) tummyDecrease = 18;
         else if (tummyDecrease < 1) tummyDecrease = 2;
         tummyDecrease = getRandomValueFromNormalDistribution(tummyDecrease);
-        this.Tummy -= tummyDecrease;
-        if (this.Tummy < 0) this.Tummy = 0;
+        this.TummyVolume -= tummyDecrease;
+        if (this.TummyVolume < 0) this.TummyVolume = 0;
         this.Bladder += tummyDecrease;
         if (this.AlcoholInTummy > 0) this.AlcoholInTummy -= 1;
+    }
+
+    fillBladderBy(amount : number) {
+        this.Bladder += amount;
     }
 
     /**
@@ -157,16 +233,16 @@ export class Person {
                 this._bladderUrge = this.bladderUrge * 0.9; // Decay by 10 percent
             else if (gameSettings.BladderDecayOnEmer && this.Bladder > this.bladderEmer)
                 this._bladderUrge = this.bladderUrge * 0.95; // Decay by 5 percent
-            else if (gameSettings.BladderDecayOnBreakingTheSeal && this.AlcoholInTummy > 15 && gameState.Time.timeSince(this._timeLastBreakingSeal) > 60) {
+            else if (gameSettings.BladderDecayOnBreakingTheSeal && this.AlcoholInTummy > 15 && runtimeContext.Time.timeSince(this._timeLastBreakingSeal) > 60) {
                 // breaking the seal decay can only happen once an hour
                 this._bladderUrge = this.bladderUrge * 0.95; // Decay by 5 percent
-                this._timeLastBreakingSeal = gameState.Time.totalTime;
+                this._timeLastBreakingSeal = runtimeContext.Time.totalTime;
             }
         }
 
         this.Bladder = 0;
         this.NowPeeing = true;
-        this.lastPeeTime = gameState.Time.totalTime;
+        this.lastPeeTime = runtimeContext.Time.totalTime;
         this.syncThresholdsToLegacy();
         this.ItemsDrankSinceLastPee = [];
     }
@@ -207,14 +283,14 @@ export class Person {
         if ((this.IsTummyFull || this.IsAlcoholLimitExceeded) && drink.tumInc === 0) return false;
         this.Bladder -= drink.volume;
         this.ItemsDrankSinceLastPee.push(drink);
-        this.Tummy += drink.volume;
+        this.TummyVolume += drink.volume;
         this.AlcoholInTummy += drink.alhocolVolume;
         this.MaxTummy += drink.tumInc;
         return true;
     }
 
     get IsTummyFull(): boolean {
-        return this.Tummy > this.MaxTummy;
+        return this.TummyVolume > this.MaxTummy;
     }
 
     get IsAlcoholLimitExceeded(): boolean {
@@ -222,17 +298,82 @@ export class Person {
     }
 
     get TimeSinceLastPeed() {
-        return gameState.Time.timeSince(this.lastPeeTime);
+        return runtimeContext.Time.timeSince(this.lastPeeTime);
     }
 
-    constructor(settings: PersonSettings, legacyBladderMirror: LegacyBladderMirror = "companion") {
-        this._bladderUrge = settings.bladderUrge;
-        this.legacyBladderMirror = legacyBladderMirror;
-        this.MinUrge = settings.bladderUrge * minperc / 100
-        this.Bladder = settings.startBladderVolume;
-        this.Tummy = settings.startTummyVolume;
-        this.MaxTummy = settings.startMaxTummy;
-        this.TummyAverage = settings.startTummyVolume;
-        this.MaxAlcohol = settings.startMaxAlcohol;
+    /**
+     * Fills the bladder to emergency level, provided there is enough liquid in the tummy.
+     * returns true if any filling happened, false if no filling happened (either because already at emergency or not enough in tummy).
+     * @constructor
+     */
+    TryMagicFillBladderToEmergency() : boolean{
+        if (this.isBladderStateAbove(BladderLevel.Emergency)){
+            return false; // We're already at emergency so no need to fill
+        }
+
+        if (this.TummyVolume < 30){
+            return false; // Tummy is virtually empty so nothing to fill from.
+        }
+
+        let neededTillEmergency = this.millilitresTillBladderThreshold(BladderLevel.Emergency)
+        if (neededTillEmergency < 0) throw new Error("Needed to fill to bladder emergency level, " +
+            "but found bladder already above level despite checking it wasn't")
+
+        // If enough volume in tummy fill up till emergency.
+        if (neededTillEmergency < this.TummyVolume){
+            this.Bladder = this.bladderEmer;
+            if (!this.tryDrainTummyVolumeBy(neededTillEmergency)){
+                throw new Error("Despite validating there is enough in tummy to fill to emergency, it was found there wasn't");
+            }
+            return true;
+        }
+
+        // Just flush all what's in tummy into bladder.
+        this.fillBladderBy(this.TummyVolume);
+        this.TummyVolume = 0;
+        return true;
+    }
+
+    /**
+     * Exports the current Person state to a PersonSaveObject for serialization.
+     */
+    get ExportToSaveObject(): PersonSaveObject {
+        return {
+            BladderUrge: this._bladderUrge,
+            Bladder: this.Bladder,
+            TimeOfLastBreakingSeal: this._timeLastBreakingSeal,
+            Tummy: this.TummyVolume,
+            MaxTummy: this.MaxTummy,
+            MaxAlcohol: this.MaxAlcohol,
+            ItemsDrankSinceLastPee: this.ItemsDrankSinceLastPee.slice(),
+            AlcoholInTummy: this.AlcoholInTummy,
+            NowPeeing: this.NowPeeing,
+            TummyAverage: this.TummyAverage,
+            lastPeeTime: this.lastPeeTime,
+            lastAskedToHoldTime: this.lastAskedToHoldTime
+        };
+    }
+
+    /**
+     * Restores a Person from a PersonSaveObject and PersonSettings.
+     * @param save The PersonSaveObject to restore from.
+     * @param settings The PersonSettings used for construction.
+     * @param legacyBladderMirror Optional legacy mirror type.
+     */
+    static fromSaveObject(save: PersonSaveObject, settings: PersonSettings, legacyBladderMirror: LegacyBladderMirror = "companion"): Person {
+        const person = new Person(settings, legacyBladderMirror);
+        person._bladderUrge = save.BladderUrge;
+        person.Bladder = save.Bladder;
+        person._timeLastBreakingSeal = save.TimeOfLastBreakingSeal;
+        person.TummyVolume = save.Tummy;
+        person.MaxTummy = save.MaxTummy;
+        person.MaxAlcohol = save.MaxAlcohol;
+        person.ItemsDrankSinceLastPee = save.ItemsDrankSinceLastPee.slice();
+        person.AlcoholInTummy = save.AlcoholInTummy;
+        person.NowPeeing = save.NowPeeing;
+        person.TummyAverage = save.TummyAverage;
+        person.lastPeeTime = save.lastPeeTime;
+        person.lastAskedToHoldTime = save.lastAskedToHoldTime;
+        return person;
     }
 }

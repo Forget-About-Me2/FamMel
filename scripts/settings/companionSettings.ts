@@ -1,18 +1,18 @@
-import {PersonSettings} from "./gameSettings";
 import {Movie} from "../models/movie";
 import {BaseCompanion} from "../models/baseCompanion";
-import {Outfit} from "../models/outfit";
+import {PersonSettings} from "./personSettings";
 
 export interface CompanionSettings extends PersonSettings {
     FavouriteMovie: Movie;
-    Outfit?: Outfit;
+    DateName : string
+    BaseCompanion: BaseCompanion
+    IsCustomCompanion: boolean
 }
 
 /*
  * Note that the descriptions of the girls here are not actually in the game *yet* they're more ideas for characterization later on.
  */
-export const baseCompanionDefaultSettings: Record<string, CompanionSettings> =
-    {
+export const baseCompanionDefaultSettings = {
         /**
          * Jennifer is blonde.
          * Never really given a thought about her bladder, just reacts to the urge. Grew up in the city, so the idea of peeing outside
@@ -26,7 +26,9 @@ export const baseCompanionDefaultSettings: Record<string, CompanionSettings> =
             startTummyVolume: 100,
             startMaxTummy: 300,
             startMaxAlcohol: 750,
-            minPercentage: 70,
+            DateName: "Jennifer",
+            BaseCompanion: BaseCompanion.Jennifer,
+            IsCustomCompanion: false
         },
 
         /**
@@ -44,7 +46,9 @@ export const baseCompanionDefaultSettings: Record<string, CompanionSettings> =
             startTummyVolume: 400,
             startMaxTummy: 250,
             startMaxAlcohol: 500,
-            minPercentage: 50,
+            DateName: "Laura",
+            BaseCompanion: BaseCompanion.Laura,
+            IsCustomCompanion: false
         },
 
         /**
@@ -65,13 +69,15 @@ export const baseCompanionDefaultSettings: Record<string, CompanionSettings> =
             startTummyVolume: 0,
             startMaxTummy: 100,
             startMaxAlcohol: 150,
-            minPercentage: 90,
+            DateName: "Karen",
+            BaseCompanion: BaseCompanion.Karen,
+            IsCustomCompanion: false
         },
 
         /**
          * Melissa is good at holding her pee, doesn't think too much about it so starts with a slightly fuller bladder and probably unconsciously drank a lot.
          * She's a typical college student, likes a party, hardly innocent, so probably quite open about things, especially after a few drinks.
-         * Bladder decay is low because again, she's used to holding it. Esspecially after drinking a lot.s
+         * Bladder decay is low because again, she's used to holding it. Especially after drinking a lot.
          */
         Melissa: {
             FavouriteMovie: Movie.TwoLitres,
@@ -80,6 +86,8 @@ export const baseCompanionDefaultSettings: Record<string, CompanionSettings> =
             startTummyVolume: 500,
             startMaxTummy: 250,
             startMaxAlcohol: 1000,
-            minPercentage: 80,
+            DateName: "Melissa",
+            BaseCompanion: BaseCompanion.Melissa,
+            IsCustomCompanion: false
         }
 }

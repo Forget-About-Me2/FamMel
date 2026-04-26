@@ -1,4 +1,4 @@
-import {GameLocation, gameState, LocationCategory} from "../gameState/gameState";
+import {GameLocation, runtimeContext, LocationCategory} from "../gameState/runtimeContext";
 import {go} from "../main";
 
 export class ContentScreen {
@@ -43,14 +43,14 @@ export class ContentScreen {
 
         try {
             const replacements: [RegExp, string][] = [
-                [/girlname/g, ContentScreen.safeString(gameState.Companion.name)],
-                [/girltalk/g, ContentScreen.safeString(gameState.Companion.talkHtml)],
-                [/girlgasp/g, ContentScreen.safeString(gameState.Companion.gaspHtml)],
-                [/bladlose/g, ContentScreen.safeString(gameState.Companion.bladderLose)],
-                [/pantyColor/g, ContentScreen.safeString(gameState.Companion.UnderWearColour)],
-                [/timeheld/g, ContentScreen.safeString(gameState.Companion.TimeSinceLastPeed)],
-                [/bladderAm/g, ContentScreen.safeString(gameState.Companion.Bladder)],
-                [/money/g, ContentScreen.safeString(gameState.Money)]
+                [/girlname/g, ContentScreen.safeString(runtimeContext.Companion.name)],
+                [/girltalk/g, ContentScreen.safeString(runtimeContext.Companion.talkHtml)],
+                [/girlgasp/g, ContentScreen.safeString(runtimeContext.Companion.gaspHtml)],
+                [/bladlose/g, ContentScreen.safeString(runtimeContext.Companion.bladderLose)],
+                [/pantyColor/g, ContentScreen.safeString(runtimeContext.Companion.UnderWearColour)],
+                [/timeheld/g, ContentScreen.safeString(runtimeContext.Companion.TimeSinceLastPeed)],
+                [/bladderAm/g, ContentScreen.safeString(runtimeContext.Companion.Bladder)],
+                [/money/g, ContentScreen.safeString(runtimeContext.Money)]
             ];
 
             return replacements.reduce((text, [pattern, replacement]) =>

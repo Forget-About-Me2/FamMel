@@ -6,8 +6,8 @@ import { openPopUp } from './pop-up';
 import { sellPanties, bar } from './locations/theBar';
 import { flirtBarGirl, club } from './locations/theClub';
 import { assertExists } from './helperFiles/helperFunctions';
-import { gameState } from './gameState/gameState';
-import { BladderState } from './gameState/bladderState';
+import { runtimeContext } from './gameState/runtimeContext';
+import { BladderLevel } from './gameState/bladderLevel';
 import { heroutfit } from './settings';
 import { setDrankChamp } from './fuckHer';
 
@@ -526,7 +526,7 @@ export function buyItem2(item, value, price){
     }
     let choice: any[] = []
     //Check if you have the money to buy as many as you indicated.
-    if (gameState.Money < price){
+    if (runtimeContext.Money < price){
         curtext = printList(curtext, objQuotes["buyItem2"][0]);
         listenerList.push([[again, "Try again."], "buyItem"]);
         choice = callChoice(["curloc", "Forget it."], choice);
@@ -543,7 +543,7 @@ export function buyItem2(item, value, price){
             curtext = printList(curtext, objQuotes["buyItem2"][3]);
         else
             curtext = printList(curtext, objQuotes["buyItem2"][4]);
-        gameState.PayAmount(price);
+        runtimeContext.PayAmount(price);
         backPackItems[item].value += value;
         choice = callChoice(["curloc", "Continue..."], choice);
     }
@@ -577,10 +577,10 @@ export function displaypos(itemobj, number, buy=false) {
             else formatList.push("s");
         } else formatList.push("");
         if (itemobj.hasOwnProperty("options")){
-            if (gameState.Romance.ChampagneCounter > 0){
-                if (gameState.Romance.ChampagneCounter < 6) formatList.push(itemobj.options[0]);
+            if (runtimeContext.Romance.ChampagneCounter > 0){
+                if (runtimeContext.Romance.ChampagneCounter < 6) formatList.push(itemobj.options[0]);
                 else formatList.push(itemobj.options[1]);
-            } else if (gameState.Romance.ChampagneCounter === 0) formatList.push("");
+            } else if (runtimeContext.Romance.ChampagneCounter === 0) formatList.push("");
         }
         description = description.format(formatList);
         setComma(1);
@@ -708,7 +708,7 @@ export function giveHer(item){
                 giveHer("sexyPanties");
             }, "Offer her a clean pair of panties."], "oPanties"]);
         }
-    } else if (gameState.Companion.bladderState < BladderState.Emergency) {
+    } else if (runtimeContext.Companion.bladderState < BladderLevel.Emergency) {
         curtext = printList(curtext, quotes[1]);
         setAttraction(attraction + (obj.attr ?? 0));
         if (item === "earrings") {
@@ -874,12 +874,12 @@ type DrinkMode = 'her' | 'you' | 'together';
 
 function doesCompanionRefuseDrink(item: string): boolean {
     return ((tummy > maxtummy && (item !== "beer" || tummy > maxbeer)) && item !== "cocktail") ||
-        (attraction < 10 && gameState.Companion.bladderState >= BladderState.Need) ||
-        (attraction < 20 && gameState.Companion.bladderState >= BladderState.Emergency);
+        (attraction < 10 && runtimeContext.Companion.bladderState >= BladderLevel.Need) ||
+        (attraction < 20 && runtimeContext.Companion.bladderState >= BladderLevel.Emergency);
 }
 
 function generateDrinkQuotes(curtext: any[], drink: IBackpackItem, mode: DrinkMode): any[] {
-    if (mode !== 'you' && gameState.Companion.bladderState >= BladderState.Emergency && shyness < 90 && brokeice) {
+    if (mode !== 'you' && runtimeContext.Companion.bladderState >= BladderLevel.Emergency && shyness < 90 && brokeice) {
         curtext.push(pickrandom(needs["drinkquote"]));
         const verb = mode === 'her' ? "She drinks the " : "You both drink your ";
         curtext.push(verb + drink.bpName.toLowerCase() + ".");
@@ -979,7 +979,7 @@ const CHAMPAGNE_GLASSES_REQUIRED = 2;
 const CHAMPAGNE_MAX_COUNTER = 6;
 
 function consumeChampagne(bottles: number[] | undefined) {
-    gameState.Romance.ChampagneCounter += CHAMPAGNE_GLASSES_REQUIRED;
+    runtimeContext.Romance.ChampagneCounter += CHAMPAGNE_GLASSES_REQUIRED;
     setDrankChamp(0);
     if (bottles) bottles[0] -= CHAMPAGNE_GLASSES_REQUIRED;
 }
@@ -1003,11 +1003,11 @@ export function champagneNow() {
         }
         curtext = displayneed(curtext);
 
-        if (gameState.Companion.bladderState < BladderState.Emergency) {
+        if (runtimeContext.Companion.bladderState < BladderLevel.Emergency) {
             curtext.push(pickrandom(appearance["clothes"][heroutfit]["fillchampok"]));
             consumeChampagne(bottles);
             curtext = printList(curtext, champOk);
-        } else if (gameState.Companion.bladderState < BladderState.Lose) {
+        } else if (runtimeContext.Companion.bladderState < BladderLevel.Lose) {
             curtext.push(girltalk + pickrandom(drinklines["wonderWhy"]));
             curtext = showneed(curtext);
             curtext.push(pickrandom(drinklines["fillChamp"]));
@@ -1018,12 +1018,12 @@ export function champagneNow() {
             curtext = printList(curtext, champRefuseIntro);
             curtext = showneed(curtext);
             curtext.push(pickrandom(drinklines["fillChampBad"]));
-            gameState.Romance.ChampagneCounter = CHAMPAGNE_MAX_COUNTER;
+            runtimeContext.Romance.ChampagneCounter = CHAMPAGNE_MAX_COUNTER;
             curtext = printList(curtext, champRefuse);
         }
     } else if (backPackItems["champ-glass"].value >= CHAMPAGNE_GLASSES_REQUIRED) {
         curtext.push("You get out the glasses and champagne and fill up both glasses");
-        if (gameState.Companion.bladderState < BladderState.Emergency) {
+        if (runtimeContext.Companion.bladderState < BladderLevel.Emergency) {
             curtext.push("She smiles at you before you toast and drink the champagne together.");
         } else {
             curtext.push(girlgasp + "Oh I have to go so bad, but if you want me to drink it, I will.");

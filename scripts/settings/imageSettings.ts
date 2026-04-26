@@ -1,8 +1,8 @@
 import {BaseCompanion} from "../models/baseCompanion";
-import {BladderState} from "../gameState/bladderState";
+import {BladderLevel} from "../gameState/bladderLevel";
 import { ImageType } from "./imageType";
 
 export class ImageSettings {
-    Urls: Map<BaseCompanion, Map<BladderState, string>> = new Map<BaseCompanion, Map<BladderState, string>>();
+    Urls: Map<BaseCompanion, Map<BladderLevel, string>> = new Map<BaseCompanion, Map<BladderLevel, string>>();
     ImageType: ImageType = ImageType.Ascii
 }

@@ -7,7 +7,7 @@ import { exposeShimsOnWindow } from './shims';
 import './helperFiles/documentFunctions';
 import { go, start, gamestart } from './main';
 import { callHer, yourHome } from './yourHome';
-import { gameState, runtimeContext } from './gameState/gameState';
+import { runtimeContext, runtimeContext } from './gameState/runtimeContext';
 import { gameScreen } from './gameScreen/gameScreen';
 import { gameSettings } from './settings/gameSettings';
 import { animationManager } from './gameScreen/animationManager';
@@ -21,7 +21,6 @@ import { exposeDartsOnWindow } from './games/darts';
 
 // Batch 2 — former script-style files now bundled
 import { exposeBladderOnWindow } from './bladder';
-import { exposeYourBladderOnWindow } from './yourbladder';
 import { exposeSettingsOnWindow } from './settings';
 import { exposeFuckHerOnWindow } from './fuckHer';
 import { exposeDriveOnWindow } from './drive';
@@ -70,29 +69,6 @@ exposeLocationsOnWindow();
 exposeBackPackItemsOnWindow();
 exposeStoreOnWindow();
 exposeDebugMenuOnWindow();
-
-// Expose to global scope for JS files and script-style TS files
-(window as any).go = go;
-(window as any).start = start;
-(window as any).gameState = gameState;
-(window as any).runtimeContext = runtimeContext;
-(window as any).gameScreen = gameScreen;
-(window as any).gameSettings = gameSettings;
-(window as any).animationManager = animationManager;
-(window as any).GetRequiredElementById = document.GetRequiredElementById.bind(document);
-
-// CamelCase aliases used by legacy JSON/script routing.
-(window as any).yourHome = yourHome;
-(window as any).callHer = callHer;
-(window as any).gamestart = gamestart;
-
-// Save/load API — available from console or future UI
-(window as any).saveGame = saveToSlot;
-(window as any).loadGame = loadFromSlot;
-(window as any).hasSave = hasSave;
-(window as any).deleteSave = deleteSave;
-(window as any).exportSave = exportSave;
-(window as any).importSave = importSave;
 
 // Wire up static UI elements
 document.getElementById("backpack-link")?.addEventListener("click", function (e) {

@@ -146,7 +146,13 @@ Responsibility split:
 
 ## Execution handoff note
 
-Wave 1 is no longer blocked on the absence of a JS/TS test runner. The next execution slice is to move the first compatibility/bridge assertions into dedicated JS/TS tests while keeping the C# userflow classes intact until parity is proven.
+2026-04-24: All bridge/compatibility tests for AttractionShyness, DriveImages, and SettingsSexScene have been implemented in the JS/TS Vitest lane as:
+
+- tests/attraction-shyness-bridge.test.ts
+- tests/drive-images-ownership-bridge.test.ts
+- tests/settings-sex-scene-ownership-bridge.test.ts
+
+Each test file covers the mapped assertions from the original C# suite. Parity validation and C# suite cleanup are now pending review.
 
 ## Proposed C# cleanup list (planning)
 

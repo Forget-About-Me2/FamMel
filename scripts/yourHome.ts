@@ -1,5 +1,5 @@
-﻿import { gameState, LocationCategory } from "./gameState/gameState";
-import { BladderState } from "./gameState/bladderState";
+﻿import { runtimeContext, LocationCategory } from "./gameState/runtimeContext";
+import { BladderLevel } from "./gameState/bladderLevel";
 
 import { gameSettings } from "./settings/gameSettings";
 import { loadLocationScene, printIntro, printAlways, printChoices, printChoicesList, printSDialogue, sayText, c, handleFlirt, cListenerGenList, printList, locjson, drinklines, calledjsons, girltalk, printDialogue } from './quotes';
@@ -22,9 +22,9 @@ export function yourHome() {
     setAllowItems(1);
     let curtext: string[] = [];
     const currentLocationTag = getCurrentLocationTag();
-    if (!gameState.DidIntro) {
+    if (!runtimeContext.DidIntro) {
         loadLocationScene("yourhome", "yourhome");
-        gameState.DidIntro = true;
+        runtimeContext.DidIntro = true;
         curtext = printIntro(curtext, 0);
     } else {
         if (currentLocationTag !== "yourhome" || onphone || shopping) {
@@ -36,7 +36,7 @@ export function yourHome() {
     }
     curtext = printAlways(curtext);
     curtext = displayyourneed(curtext);
-    if (gameSettings.PlayerBladder && gameState.Player.bladderState >= BladderState.Lose) {
+    if (gameSettings.PlayerBladder && runtimeContext.Player.bladderState >= BladderLevel.Lose) {
         wetyourself();
         return;
     }
@@ -57,10 +57,10 @@ function buy(number){
     const price = Number(item[1]);
     let curtext: any[] = [];
     let obj = backPackItems[item[2]];
-    if (gameState.Money >= price){
+    if (runtimeContext.Money >= price){
         curtext.push("You buy a "+ item[0]+ ".")
         obj.value += 1;
-        gameState.PayAmount(price);
+        runtimeContext.PayAmount(price);
         if (obj.hasOwnProperty("bottles"))
             obj.bottles?.push(6);
     } else curtext.push("You don't have enough money!");
@@ -75,7 +75,7 @@ function buy(number){
 //TODO you can't see her looking away on the phone
 //TODO show your need?
 export function callHer() {
-    const companion = gameState.Companion;
+    const companion = runtimeContext.Companion;
     setAllowItems(1);
     let curtext: any[] = [];
     if (getCurrentLocationTag() !== "callher") {
@@ -129,7 +129,7 @@ function favor() {
 }
 
 function gotta() {
-    const companion = gameState.Companion;
+    const companion = runtimeContext.Companion;
     let curtext: any[] = []
     if (shyness > 80) {
         curtext = printSDialogue(curtext, "gotta", 0, 0, 0);

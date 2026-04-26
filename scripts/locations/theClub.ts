@@ -7,8 +7,8 @@ import { kissher, feelup, checkherout } from '../actions';
 import { leavehm, driveout } from '../drive';
 import { lookAround, itsClosed, locations, sharedLoc, emerHold, setEmerHold, emerBreak, setEmerBreak } from '../locations';
 import { go } from '../main';
-import { gameState } from '../gameState/gameState';
-import { BladderState } from '../gameState/bladderState';
+import { runtimeContext } from '../gameState/runtimeContext';
+import { BladderLevel } from '../gameState/bladderLevel';
 import { photoChoice, setPhotoChoice, heroutfit } from '../settings';
 
 export let club;
@@ -61,11 +61,11 @@ export function theClub() {
 
             curtext = displayyourneed(curtext);
             curtext = showneed(curtext);
-            if (gameState.Companion.bladderState >= BladderState.Lose) {
+            if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) {
                 wetherself();
                 return;
             }
-            else if (gameState.Player.bladderState >= BladderState.Lose) {
+            else if (runtimeContext.Player.bladderState >= BladderLevel.Lose) {
                 wetyourself();
                 return;
             }
@@ -77,7 +77,7 @@ export function theClub() {
                 if (!locations.theClub.foundKey)
                     listenerList.push([[function () {lookAround("theClub")}, sharedLoc["choices"]["lookAround"]], "lookAround"]);
                 curtext = standobjs(curtext, listenerList);
-                if (gameState.Player.bladderState >= BladderState.Urge)
+                if (runtimeContext.Player.bladderState >= BladderLevel.Urge)
                     listenerList.push([[youpee, club["choices"]["youPee"]], "youpee"]);
                 listenerList.push([[leavehm, club["choices"]["leaveHm"]], "leavehm"]);
             }
@@ -108,7 +108,7 @@ export function reClub() {
 
 export function goDance(){
     pushloc("doDance");
-    gameState.Interactions.ChangeVenueFlag = true;
+    runtimeContext.Interactions.ChangeVenueFlag = true;
     const goDanceIntro = club["theClub"][3];
     let curtext = showneed();
     curtext = displayyourneed(curtext);
@@ -132,8 +132,8 @@ export function doDance(){
     if (randomchoice(3)) curtext = noteholding(curtext);
     else if (randomchoice(5)) curtext = interpbladder(curtext);
 
-    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
-    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) wetherself();
+    else if (runtimeContext.Player.bladderState >= BladderLevel.Lose) wetyourself();
     else {
         let listenerList: any[] = [];
         if (gottagoflag > 0)
@@ -142,7 +142,7 @@ export function doDance(){
             listenerList.push([[doDance, club["choices"]["keepDancing"]], "doDance"]);
             listenerList.push([[kissher,  general["kissHer"]], "kissHer"]);
             listenerList.push([[feelup, general["feelUp"]], "feelup"]);
-            if (gameState.Player.bladderState >= BladderState.Urge)
+            if (runtimeContext.Player.bladderState >= BladderLevel.Urge)
                 listenerList.push([[youpee, club["choices"]["youPee"]], "youpee"]);
         }
         listenerList.push([[leaveDance, club["choices"]["leaveDance"]], "leaveDance"]);
@@ -180,8 +180,8 @@ export function darkClub() {
 
     curtext = showneed(curtext);
     curtext = displayyourneed(curtext);
-    if (gameState.Companion.bladderState >= BladderState.Lose) wetherself();
-    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) wetherself();
+    else if (runtimeContext.Player.bladderState >= BladderLevel.Lose) wetyourself();
     else {
         let listenerList: any[] = [];
         if (gottagoflag > 0) {
@@ -191,9 +191,9 @@ export function darkClub() {
             sayText(curtext);
             listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
             listenerList.push([[feelup, general["feelUp"]], "feelUp"]);
-            if (!gameState.Interactions.CheckedHerOut)
+            if (!runtimeContext.Interactions.CheckedHerOut)
                 listenerList.push([[checkherout, general["checkHerOut"]], "checkOut"]);
-            if (gameState.Player.bladderState >= BladderState.Urge)
+            if (runtimeContext.Player.bladderState >= BladderLevel.Urge)
                 listenerList.push([[youpee, club["choices"]["youPee"]], "youPee"]);
             listenerList.push([[leavehm, club["choices"]["leaveHm"]], "LeaveHm"]);
         }
@@ -267,18 +267,18 @@ export function photoGame() {
         if (photoChoice === "costumes")
             curtext.push(club["midPhotoGame"]["costume"].format(appearance["clothes"][heroutfit][outfitctr]));
             // s("She's wearing " + poseoutfit[outfitctr] + ".");
-        if (gameState.Companion.bladderState >= BladderState.Emergency) {
+        if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency) {
             curtext = interpbladder(curtext);
             curtext = noteholding(curtext);
         }
     }
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);
-    if (gameState.Companion.bladderState >= BladderState.Lose) {
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) {
         wetPhoto = 1;
         wetherself();
     }
-    else if (gameState.Player.bladderState >= BladderState.Lose) wetyourself();
+    else if (runtimeContext.Player.bladderState >= BladderLevel.Lose) wetyourself();
     else {
         sayText(curtext);
         let listenerList: any[] = [];
@@ -301,7 +301,7 @@ export function photoPose() {
     else
         curtext.push(appearance["clothes"][heroutfit]["posenorm"][posectr].formatVars());
     posectr++;
-    if (gameState.Companion.bladderState >= BladderState.Emergency) {
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency) {
         curtext.push(pickrandom(club["poseEmer"]));
         // s(poseemer[randcounter]);
         // incrandom();
@@ -313,7 +313,7 @@ export function photoPose() {
 export function photoChange() {
     let curtext = [club["photoChange"]["common"]];
     // s("<b>YOU:</b> How about changing into a costume?");
-    if (gameState.Companion.bladderState >= BladderState.Emergency) {
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency) {
         curtext.push(club["photoChange"]["emer"].formatVars().format([appearance["clothes"][heroutfit]["poseoutfit"][outfitctr]]));
         // s(girlname + " is almost doubled over as she takes little baby steps back to the closet and returns with a " + poseoutfit[outfitctr]);
         curtext.push(appearance["clothes"][heroutfit]["donemer"][outfitctr]);
@@ -332,7 +332,7 @@ export function photoChange() {
 export function photoNude() {
     let curtext = [club["photoNude"]["common"]];
     // s("<b>YOU:</b> Okay - so you can take off your clothes.");
-    if (gameState.Companion.bladderState >= BladderState.Emergency) {
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency) {
         curtext.push(girlname + appearance["clothes"][heroutfit]["undressquoteemer"]);
         curtext = printList(curtext, club["photoNude"]["emerStart"]);
         // s("<i>You can see her face filled with a look of concentration as she waits for an opportune moment to continue.</i>");
@@ -364,11 +364,11 @@ export function photoNude() {
 export function photoFinish(){
     let curtext: any[] = [];
     if (isNude){
-        if (gameState.Companion.bladderState >= BladderState.Emergency)
+        if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency)
             curtext.push(club["photoFinish"]["nudeDesp"]);
         curtext.push(club["photoFinish"]["nude"]);
     } else if (photoChoice==="costume"){
-        if (gameState.Companion.bladderState >= BladderState.Emergency)
+        if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency)
             curtext.push(club["photoFinish"]["costumeDesp"]);
         curtext.push(club["photoFinish"]["costume"]);
     } else curtext.push(club["photoFinish"]["normal"]);
@@ -376,7 +376,7 @@ export function photoFinish(){
     curtext = displayyourneed(curtext);
     poploc();
     sayText(curtext);
-    if (gameState.Companion.bladderState >= BladderState.Need)
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Need)
         cListenerGen([indepee, "Continue..."], "indepee");
     else
         cListenerGen([darkClub, "Continue..."], "darkClub");

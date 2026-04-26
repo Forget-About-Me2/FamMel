@@ -6,7 +6,7 @@ import { pdrinkinggame } from './locations/theBar';
 import { doDance, pphotogame, externalflirt } from './locations/theClub';
 import { displayyourneed } from './yourbladder';
 import { kissher } from './actions';
-import { gameState } from './gameState/gameState';
+import { runtimeContext } from './gameState/runtimeContext';
 import { assertExists } from './helperFiles/helperFunctions';
 import { heroutfit } from './settings';
 import { theatre, rrMovieLineThresh } from './locations/theatre';
@@ -35,15 +35,15 @@ export let bladsexlose = bladurge * 5; // Level where she can't control it durin
 export let maxtummy = 250; // Drink capacity of stomach
 export function setMaxtummy(val: number) {
     maxtummy = Number(val) || 0;
-    if (gameState.Companion) {
-        gameState.Companion.MaxTummy = maxtummy;
+    if (runtimeContext.Companion) {
+        runtimeContext.Companion.MaxTummy = maxtummy;
     }
 }
 export let maxbeer = 500; // Beer capacity of stomach
 export function setMaxbeer(val: number) {
     maxbeer = Number(val) || 0;
-    if (gameState.Companion) {
-        gameState.Companion.MaxAlcohol = maxbeer;
+    if (runtimeContext.Companion) {
+        runtimeContext.Companion.MaxAlcohol = maxbeer;
     }
 }
 
@@ -62,9 +62,9 @@ export let tummy = 0;
  */
 export function setTummy(val: number) {
     const nextTummy = Number(val) || 0;
-    if (gameState.Companion) {
-        gameState.Companion.Tummy = nextTummy;
-        tummy = gameState.Companion.Tummy;
+    if (runtimeContext.Companion) {
+        runtimeContext.Companion.Tummy = nextTummy;
+        tummy = runtimeContext.Companion.Tummy;
         return;
     }
     tummy = nextTummy;
@@ -83,9 +83,9 @@ export let bladder = 0;
  */
 export function setBladder(val: number) {
     const nextBladder = Number(val) || 0;
-    if (gameState.Companion) {
-        gameState.Companion.Bladder = nextBladder;
-        bladder = gameState.Companion.Bladder;
+    if (runtimeContext.Companion) {
+        runtimeContext.Companion.Bladder = nextBladder;
+        bladder = runtimeContext.Companion.Bladder;
         return;
     }
     bladder = nextBladder;
@@ -117,9 +117,9 @@ export let peedoutside = 0; // has she peed outside
 export let lastpeetime = 0;  // When did she last go?
 export function setLastpeetime(val: number) {
     const nextLastPeeTime = Number(val) || 0;
-    if (gameState.Companion) {
-        gameState.Companion.LastPeeTime = nextLastPeeTime;
-        lastpeetime = gameState.Companion.LastPeeTime;
+    if (runtimeContext.Companion) {
+        runtimeContext.Companion.LastPeeTime = nextLastPeeTime;
+        lastpeetime = runtimeContext.Companion.LastPeeTime;
         return;
     }
     lastpeetime = nextLastPeeTime;
@@ -188,9 +188,9 @@ export function setWetherpanties(val: number) { wetherpanties = val; }
 export let nowpeeing = 0; // flag: she is currently peeing
 export function setNowpeeing(val: number) {
     const nextNowPeeing = Number(val) || 0;
-    if (gameState.Companion) {
-        gameState.Companion.NowPeeing = !!nextNowPeeing;
-        nowpeeing = gameState.Companion.NowPeeing ? 1 : 0;
+    if (runtimeContext.Companion) {
+        runtimeContext.Companion.NowPeeing = !!nextNowPeeing;
+        nowpeeing = runtimeContext.Companion.NowPeeing ? 1 : 0;
         return;
     }
     nowpeeing = nextNowPeeing;
@@ -226,13 +226,13 @@ export function syncCompanionLegacyThresholdsFromCanonical(urge: number) {
 export function updateurge(newurge: number) {
     if (newurge < minurge) newurge = minurge;
     newurge = Math.round(newurge);
-    gameState.Companion?.setUrge(newurge);
-    bladurge = gameState.Companion?.bladderUrge ?? newurge;
-    bladneed = gameState.Companion?.bladderNeed ?? newurge * 2;
-    blademer = gameState.Companion?.bladderEmer ?? newurge * 3;
-    bladlose = gameState.Companion?.bladderLose ?? (newurge * 3 + 150);
-    bladcumlose = gameState.Companion?.bladderCumLose ?? newurge * 4;
-    bladsexlose = gameState.Companion?.bladderSexLose ?? newurge * 5;
+    runtimeContext.Companion?.setUrge(newurge);
+    bladurge = runtimeContext.Companion?.bladderUrge ?? newurge;
+    bladneed = runtimeContext.Companion?.bladderNeed ?? newurge * 2;
+    blademer = runtimeContext.Companion?.bladderEmer ?? newurge * 3;
+    bladlose = runtimeContext.Companion?.bladderLose ?? (newurge * 3 + 150);
+    bladcumlose = runtimeContext.Companion?.bladderCumLose ?? newurge * 4;
+    bladsexlose = runtimeContext.Companion?.bladderSexLose ?? newurge * 5;
 }
 
 // Slightly randomizes the calculated tuminc
@@ -334,7 +334,7 @@ export function showneed(curtext: any[] = []): any[] {
     if (bladder >= (bladlose - 2 * tuminc) && shyness < SHYNESS_ALWAYS_VOCALIZE) {
         if (externalflirt) curtext = voccurse(curtext);
         curtext = displaygottavoc(curtext);
-    } else if (gameState.Interactions.ChangeVenueFlag) {
+    } else if (runtimeContext.Interactions.ChangeVenueFlag) {
         // She's almost always going to ask to go if you're off somewhere
         if ((bladder >= blademer) ||
             (bladder >= bladneed && shyness < SHYNESS_VENUE_ASK)) {
@@ -366,7 +366,7 @@ export function showneed(curtext: any[] = []): any[] {
     } else if (showsRandomSymptom()) {
         curtext = displayneed(curtext);
     }
-    gameState.Interactions.ChangeVenueFlag = false;
+    runtimeContext.Interactions.ChangeVenueFlag = false;
     return curtext;
 }
 
@@ -554,7 +554,7 @@ const SEATED_LOCATIONS = ["themakeout", "driveout", "drivearound", "domovie"];
 export function displayneed(curtext: any[]): any[] {
     setShowedneed(1);
     // Pick the quote prefix based on whether she's seated, in the tub, or standing
-    const prefix = (SEATED_LOCATIONS.includes(locStack[0]) || gameState.Romance.FuckingNow > 0) ? "sit"
+    const prefix = (SEATED_LOCATIONS.includes(locStack[0]) || runtimeContext.Romance.FuckingNow > 0) ? "sit"
         : locStack[0] === "thehottub" ? "tub"
         : "";
     const needKey =

@@ -4,7 +4,7 @@ import { showneed, displayneed, gottagoflag, rrlockedflag, setRrlockedflag } fro
 import { displayyourneed } from './yourbladder';
 import { updateSuggestedLocation, printLocationMenu } from './locations';
 import { allowItems, setAllowItems } from './backPackItems';
-import { gameState } from './gameState/gameState';
+import { runtimeContext } from './gameState/runtimeContext';
 import { externalflirt, setExternalflirt } from './locations/theClub';
 import { suggestedloc, setSuggestedloc, heroutfit } from './settings';
 
@@ -21,9 +21,9 @@ export function setHasWetTheCar(val: number) {
         return;
     }
 
-    if (gameState.isInitialized) {
-        gameState.HasWetTheCar = nextValue;
-        hasWetTheCar = gameState.HasWetTheCar;
+    if (runtimeContext.isInitialized) {
+        runtimeContext.HasWetTheCar = nextValue;
+        hasWetTheCar = runtimeContext.HasWetTheCar;
         return;
     }
 
@@ -31,17 +31,17 @@ export function setHasWetTheCar(val: number) {
 }
 
 function getHasWetTheCar(): number {
-    return gameState.isInitialized ? gameState.HasWetTheCar : hasWetTheCar;
+    return runtimeContext.isInitialized ? runtimeContext.HasWetTheCar : hasWetTheCar;
 }
 
 //
 //  This function is used to leave ANY location and drive off.
 //
 export function leavehm() {
-    gameState.Interactions.ChangeVenueFlag = true;
-    gameState.Interactions.CheckedHerOut = false;
-    gameState.Romance.KissCounter = 0;
-    gameState.Romance.FeelCounter = 0;
+    runtimeContext.Interactions.ChangeVenueFlag = true;
+    runtimeContext.Interactions.CheckedHerOut = false;
+    runtimeContext.Romance.KissCounter = 0;
+    runtimeContext.Romance.FeelCounter = 0;
     setRrlockedflag(0);
     setExternalflirt(0);
 

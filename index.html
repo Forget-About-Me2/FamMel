@@ -79,6 +79,9 @@
         </table>
     </div>
 <script>
+    import {gameScreen} from "./scripts/gameScreen/gameScreen";
+    import {start} from "./scripts/main";
+
     const fallbackHomeScreen = {
         title: "Melissa Explains it All",
         matureWarning: "This game contains mature content.",
@@ -92,7 +95,7 @@
         const stack = errorObj && errorObj.stack ? errorObj.stack : "";
         const message = "Error: " + errorMsg + " Script: " + url + " Line: " + lineNumber
             + " Column: " + column + " StackTrace: \n" + stack;
-        setErrorPopup(message);
+        gameScreen.PopUps.setErrorPopup(message);
     };
 
     window.onunhandledrejection = (message) => {
@@ -100,7 +103,7 @@
         if (reason && reason.stack !== undefined) {
             reason = reason.stack;
         }
-        setErrorPopup(reason);
+        gameScreen.PopUps.setErrorPopup(reason);
     };
 
     function renderHomeScreen(homeScreenJson) {

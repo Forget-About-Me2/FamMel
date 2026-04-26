@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { gameState, runtimeContext } from '../scripts/gameState/gameState';
+import { runtimeContext, runtimeContext } from '../scripts/gameState/runtimeContext';
 
 describe('gameState module', () => {
     it('should expose runtime context alias with stable defaults', () => {
-        expect(gameState).toBe(runtimeContext);
-        expect(gameState.GirlName).toBe('Laura');
-        expect(gameState.PantyColor).toBe('black');
+        expect(runtimeContext).toBe(runtimeContext);
+        expect(runtimeContext.GirlName).toBe('Laura');
+        expect(runtimeContext.PantyColor).toBe('black');
     });
 });

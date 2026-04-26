@@ -4,17 +4,17 @@ import { showneed, displayneed, flushdrank, holdit, allowpee, bladder, bladlose,
 import { displayyourneed } from './yourbladder';
 import { kissher } from './actions';
 import { gameOver, gameWet, gameSexBoth, gameWon } from './main';
-import { gameState } from './gameState/gameState';
-import { BladderState } from './gameState/bladderState';
+import { runtimeContext } from './gameState/runtimeContext';
+import { BladderLevel } from './gameState/bladderLevel';
 import { heroutfit, multiplemoves, rstmoves } from './settings';
 import { herHome } from './herhome';
 
 // Fucking Parameters — now owned by gameState.Romance
-export function setArousal(val: number) { gameState.Romance.Arousal = val; }
-export function setKisscounter(val: number) { gameState.Romance.KissCounter = val; }
-export function setFeelcounter(val: number) { gameState.Romance.FeelCounter = val; }
-export function setFuckingnow(val: number) { gameState.Romance.FuckingNow = val; }
-export function setChampagnecounter(val: number) { gameState.Romance.ChampagneCounter = val; }
+export function setArousal(val: number) { runtimeContext.Romance.Arousal = val; }
+export function setKisscounter(val: number) { runtimeContext.Romance.KissCounter = val; }
+export function setFeelcounter(val: number) { runtimeContext.Romance.FeelCounter = val; }
+export function setFuckingnow(val: number) { runtimeContext.Romance.FuckingNow = val; }
+export function setChampagnecounter(val: number) { runtimeContext.Romance.ChampagneCounter = val; }
 let stagedDrankChamp = 0;
 
 export function setDrankChamp(val: number) {
@@ -23,25 +23,25 @@ export function setDrankChamp(val: number) {
         return;
     }
 
-    if (!gameState.isInitialized) {
+    if (!runtimeContext.isInitialized) {
         stagedDrankChamp = normalizedValue;
         return;
     }
 
-    gameState.setDrankChamp(normalizedValue);
-    stagedDrankChamp = gameState.DrankChamp;
+    runtimeContext.setDrankChamp(normalizedValue);
+    stagedDrankChamp = runtimeContext.DrankChamp;
 }
 
 export function setSexActions(val: any) {
     const normalizedState = normalizeSexActions(val);
 
-    if (!gameState.isInitialized) {
+    if (!runtimeContext.isInitialized) {
         sexActions = normalizedState;
         return;
     }
 
-    gameState.setSexActions(normalizedState);
-    sexActions = gameState.SexActions;
+    runtimeContext.setSexActions(normalizedState);
+    sexActions = runtimeContext.SexActions;
 }
 
 export function deepClone(value: any) {
@@ -316,10 +316,10 @@ function normalizeSexActions(value: any) {
  * Pre-init compatibility writes remain staged until start() executes this bridge once.
  */
 export function hydrateSexSceneStateToGameState(): void {
-    gameState.setDrankChamp(stagedDrankChamp);
-    gameState.setSexActions(normalizeSexActions(sexActions));
-    stagedDrankChamp = gameState.DrankChamp;
-    sexActions = gameState.SexActions;
+    runtimeContext.setDrankChamp(stagedDrankChamp);
+    runtimeContext.setSexActions(normalizeSexActions(sexActions));
+    stagedDrankChamp = runtimeContext.DrankChamp;
+    sexActions = runtimeContext.SexActions;
 }
 
 //This object is used to keep track of everything related to the sexActions
@@ -352,8 +352,8 @@ export function haveSex(location: string){
     let curtext: any[] = [];
     let sexQuotes = sexLines[location];
     if (getCurrentLocationTag()!== "haveSex"){
-        gameState.Romance.KissCounter = 0;
-        gameState.Romance.Arousal = 0;
+        runtimeContext.Romance.KissCounter = 0;
+        runtimeContext.Romance.Arousal = 0;
         pushloc("haveSex");
         // intro[0]: first-time intro variants - [0][0]=hot tub/losing, [0][1]=normal
         // intro[1]: returning intro
@@ -363,7 +363,7 @@ export function haveSex(location: string){
             curtext = printList(curtext, firstIntroVariants[0]);
         } else {
             if (pantycolor === "none") sexActions.takeOff("panties");
-            if (gameState.Companion.bladderState >= BladderState.Lose)
+            if (runtimeContext.Companion.bladderState >= BladderLevel.Lose)
                 curtext = printList(curtext, firstIntroVariants[0]);
             else
                 curtext = printList(curtext, firstIntroVariants[1]);
@@ -372,7 +372,7 @@ export function haveSex(location: string){
         curtext = printList(curtext, sexQuotes["intro"][1]); // returningIntro
     }
     let listenerList: any[] = [];
-    if (gameState.Romance.KissCounter > gameState.Romance.MaxKiss){
+    if (runtimeContext.Romance.KissCounter > runtimeContext.Romance.MaxKiss){
         curtext = printList(curtext, sexQuotes["maxKiss"]);
         if (location === "theBed")
             listenerList.push([[gameOver, "Continue..."], "gameOver"]);
@@ -384,13 +384,13 @@ export function haveSex(location: string){
     curtext = displayyourneed(curtext);
 
     let choice = 4;
-    if (gameState.Romance.Arousal < 40)
+    if (runtimeContext.Romance.Arousal < 40)
         choice = 0;
-    else if (gameState.Romance.Arousal < 70)
+    else if (runtimeContext.Romance.Arousal < 70)
         choice = 1;
-    else if (gameState.Romance.Arousal < 100)
+    else if (runtimeContext.Romance.Arousal < 100)
         choice = 2;
-    else if (gameState.Romance.Arousal < 140)
+    else if (runtimeContext.Romance.Arousal < 140)
         choice = 3;
 
     //The only quote here that is location dependent is if her arousal is through the roof.
@@ -417,9 +417,9 @@ export function haveSex(location: string){
                 takeOff(item, location);
             }, appearance["clothes"][heroutfit]["sextakeoff" + item]], item]);
         }});
-    if (gameState.Romance.Arousal > 120 && !sexActions.isOn("skirt") && !sexActions.isOn("panties")) {
+    if (runtimeContext.Romance.Arousal > 120 && !sexActions.isOn("skirt") && !sexActions.isOn("panties")) {
         if (location === "theBed")
-            if (gameState.Romance.Arousal >= 140)
+            if (runtimeContext.Romance.Arousal >= 140)
                 listenerList.push([[fuckNow, "Fuck her <b>NOW</b>."], "fuckNow"]);
             else
                 listenerList.push([[fuckNow, "Fuck her"], "fuckNow"]);
@@ -435,12 +435,12 @@ export function haveSex(location: string){
 }
 
 export function takeOff(item: string, location: string){
-    gameState.Romance.Arousal += 4;
+    runtimeContext.Romance.Arousal += 4;
     let info = sexActions.clothes[item];
     let processed = false;
     let failTakeOff = false;
     let curtext: any[] = [];
-    if (item === "skirt" && gameState.Companion.bladderState >= BladderState.Emergency)
+    if (item === "skirt" && runtimeContext.Companion.bladderState >= BladderLevel.Emergency)
         curtext.push(appearance["clothes"][heroutfit]["sextoskirtquoteemer"].formatVars());
     for (let i = 0; !processed; i++){
         // clothesInfo tuple: [prerequisite, bladderCheck, failMode]
@@ -455,16 +455,16 @@ export function takeOff(item: string, location: string){
             temp = appearance["clothes"][heroutfit]["sex"+item+prerequisite.formatVars()];
             if (typeof temp !== "undefined")
                 curtext.push(temp);
-            if (item === "panties" && gameState.Companion.bladderState >= BladderState.Lose)
+            if (item === "panties" && runtimeContext.Companion.bladderState >= BladderLevel.Lose)
                 curtext = printList(curtext, sexLines["clothes"][item][i][3]); // extraText
             curtext = printList(curtext, sexLines["clothes"][item][i][0]); // baseText
             if (bladderCheck === "lose") {
-                if (gameState.Companion.bladderState >= BladderState.Lose)
+                if (runtimeContext.Companion.bladderState >= BladderLevel.Lose)
                     curtext = printList(curtext, sexLines["clothes"][item][i][1]); // desperateText
                 else
                     curtext = printList(curtext, sexLines["clothes"][item][i][2]); // normalText
             } else if (bladderCheck === "emer"){
-                if (gameState.Companion.bladderState >= BladderState.Emergency)
+                if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency)
                     curtext = printList(curtext, sexLines["clothes"][item][i][1]); // desperateText
                 else
                     curtext = printList(curtext, sexLines["clothes"][item][i][2]); // normalText
@@ -480,17 +480,17 @@ export function takeOff(item: string, location: string){
             if (item === "panties")
                 curtext.push(appearance["clothes"][heroutfit]["sexPantiesTOSkirt"]);
             if (bladderCheck === "lose") {
-                if (gameState.Companion.bladderState >= BladderState.Lose)
+                if (runtimeContext.Companion.bladderState >= BladderLevel.Lose)
                     curtext = printList(curtext, sexLines["clothes"][item][i][1]); // desperateText
                 else
                     curtext = printList(curtext, sexLines["clothes"][item][i][2]); // normalText
             } else if (bladderCheck === "emer"){
-                if (gameState.Companion.bladderState >= BladderState.Emergency)
+                if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency)
                     curtext = printList(curtext, sexLines["clothes"][item][i][1]); // desperateText
                 else
                     curtext = printList(curtext, sexLines["clothes"][item][i][2]); // normalText
             }
-            if (item === "skirt" && gameState.Companion.bladderState >= BladderState.Lose)
+            if (item === "skirt" && runtimeContext.Companion.bladderState >= BladderLevel.Lose)
                 curtext = printList(curtext, sexLines["clothes"][item][i][3]); // extraText
             processed = true;
         }
@@ -526,7 +526,7 @@ export function performAction(action: string, location: string){
                 sumName += item;
             });
             if (met){
-                gameState.Romance.Arousal += arousalBonus;
+                runtimeContext.Romance.Arousal += arousalBonus;
                 processed = true;
                 let temp;
                 if (info.clothesArousal.length > 2)
@@ -537,7 +537,7 @@ export function performAction(action: string, location: string){
                     curtext.push(temp)
             }
         }else if (prerequisite === "none" || sexActions.isOn(prerequisite)){
-            gameState.Romance.Arousal += arousalBonus;
+            runtimeContext.Romance.Arousal += arousalBonus;
             if (prerequisite !== "none"){
                 let temp;
                 if (info.clothesArousal.length > 2)
@@ -549,7 +549,7 @@ export function performAction(action: string, location: string){
             }
             curtext = printList(curtext, sexLines["actions"][action][i][0]); // baseText
             if (bladderCheck === "emer") {
-                if (gameState.Companion.bladderState >= BladderState.Emergency)
+                if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency)
                     curtext = printList(curtext, sexLines["actions"][action][i][1]); // desperateText
                 else {
                     if (action === "kPussy" && wetherpanties)
@@ -557,14 +557,14 @@ export function performAction(action: string, location: string){
                     curtext = printList(curtext, sexLines["actions"][action][i][2]); // normalText
                 }
             } else if (bladderCheck === "lose"){
-                if (gameState.Companion.bladderState >= BladderState.Lose)
+                if (runtimeContext.Companion.bladderState >= BladderLevel.Lose)
                     curtext = printList(curtext, sexLines["actions"][action][i][1]); // desperateText
                 else
                     if (action === "kPussy" && wetherpanties && prerequisite==="none")
                         curtext = printList(curtext, sexLines["actions"][action][i][3]); // wetPantiesText
                     curtext = printList(curtext, sexLines["actions"][action][i][2]); // normalText
             }
-            if (action === "kPussy" && gameState.Companion.bladderState >= BladderState.Lose && prerequisite === "none")
+            if (action === "kPussy" && runtimeContext.Companion.bladderState >= BladderLevel.Lose && prerequisite === "none")
                 curtext = printList(curtext, sexLines["actions"][action][i][4]); // bladderLoseExtraText
 
             processed = true;
@@ -618,12 +618,12 @@ export function theBedroom() {
 
 //TODO chance of failure upon pausing(still cuming)
 export function fuckNow() {
-    gameState.Romance.FuckingNow = 1;
+    runtimeContext.Romance.FuckingNow = 1;
     let curtext = printList([], sexLines["fuckNow"][0]);
-    if (gameState.Companion.bladderState >= BladderState.Lose) {
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Lose) {
         curtext = printList(curtext, sexLines["fuckNow"][1]);
     }
-    if (gameState.Companion.bladderState >= BladderState.Emergency) {
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency) {
         curtext = printList(curtext, sexLines["fuckNow"][2]);
     } else {
         curtext = printList(curtext, sexLines["fuckNow"][3]);
@@ -638,7 +638,7 @@ export function fuckNow() {
 
 export function fuckHer2() {
     let curtext = printList([], sexLines["fuckNow"][4]);
-    if (gameState.Companion.bladderState >= BladderState.Emergency) {
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency) {
         curtext = printList(curtext, sexLines["fuckNow"][5]);
         sayText(curtext);
         cListenerGen([wetBed, "Continue..."], "wetBed");
@@ -655,7 +655,7 @@ export function wetBed() {
 
 export function bothCum() {
     let curtext = printList([], sexLines["fuckNow"][7]);
-    if (gameState.Companion.bladderState >= BladderState.Need)
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Need)
         curtext = printList(curtext, sexLines["fuckNow"][8]);
     else
         curtext = printList(curtext, sexLines["fuckNow"][9]);
@@ -665,7 +665,7 @@ export function bothCum() {
 
 export function fuckHer2b() {
     let curtext = printList([], sexLines["fuckNow"][10]);
-    if (gameState.Companion.bladderState >= BladderState.Emergency)
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency)
         curtext = printList(curtext, sexLines["fuckNow"][11]);
     else
         curtext = printList(curtext, sexLines["fuckNow"][12]);
@@ -675,7 +675,7 @@ export function fuckHer2b() {
 
 export function fuckHer3() {
     let curtext: any[] = [], listenerList: any[] = [];
-    if (gameState.Companion.bladderState >= BladderState.Emergency) {
+    if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency) {
         curtext = printList(curtext, sexLines["fuckNow"][13]);
         listenerList.push([[preWet, "Keep fucking her"], "preWet"]);
         listenerList.push([[fuckHer4, "Pause for a second"], "fuckHer"]);
@@ -699,7 +699,7 @@ export function fuckHer4() {
     sayText(sexLines["fuckNow"][16]);
     let listenerList: any[] = [];
     let func;
-    if (gameState.Companion.bladderState < BladderState.SexLose)
+    if (runtimeContext.Companion.bladderState < BladderLevel.SexLose)
         func = fuckHer5;
     else
         func = fuckHer5b;
@@ -722,15 +722,15 @@ export function fuckHer5b() {
 export function fuckHer6() {
     let curtext: any[] = [];
     let listenerList: any[] = [];
-    if (gameState.Companion.bladderState < BladderState.Need) {
+    if (runtimeContext.Companion.bladderState < BladderLevel.Need) {
         curtext = printList(curtext, sexLines["fuckNow"][19]);
         listenerList.push([[gameSexBoth, "Continue..."], "gameSex"]);
     } else {
         curtext = printList(curtext, sexLines["fuckNow"][20]);
-        if (gameState.Companion.bladderState >= BladderState.CumLose)
+        if (runtimeContext.Companion.bladderState >= BladderLevel.CumLose)
             curtext = printList(curtext, sexLines["fuckNow"][21]);
         curtext = printList(curtext, sexLines["fuckNow"][22]);
-        if (gameState.Companion.bladderState >= BladderState.CumLose)
+        if (runtimeContext.Companion.bladderState >= BladderLevel.CumLose)
             curtext = printList(curtext, sexLines["fuckNow"][23]);
         curtext = printList(curtext, sexLines["fuckNow"][24]);
         listenerList.push([[fuckHer7, "Continue..."], "fuckHer"]);
@@ -749,13 +749,13 @@ export function fuckHer7() {
 export function exposeFuckHerOnWindow(): void {
     const w = window as any;
     const props: Array<[string, () => any, (v: any) => void]> = [
-        ['arousal', () => gameState.Romance.Arousal, (v) => { gameState.Romance.Arousal = v; }],
-        ['kisscounter', () => gameState.Romance.KissCounter, (v) => { gameState.Romance.KissCounter = v; }],
-        ['feelcounter', () => gameState.Romance.FeelCounter, (v) => { gameState.Romance.FeelCounter = v; }],
-        ['fuckingnow', () => gameState.Romance.FuckingNow, (v) => { gameState.Romance.FuckingNow = v; }],
-        ['champagnecounter', () => gameState.Romance.ChampagneCounter, (v) => { gameState.Romance.ChampagneCounter = v; }],
-        ['drankChamp', () => gameState.isInitialized ? gameState.DrankChamp : stagedDrankChamp, (v) => { setDrankChamp(v); }],
-        ['sexActions', () => gameState.isInitialized ? gameState.SexActions : sexActions, (v) => { setSexActions(v); }],
+        ['arousal', () => runtimeContext.Romance.Arousal, (v) => { runtimeContext.Romance.Arousal = v; }],
+        ['kisscounter', () => runtimeContext.Romance.KissCounter, (v) => { runtimeContext.Romance.KissCounter = v; }],
+        ['feelcounter', () => runtimeContext.Romance.FeelCounter, (v) => { runtimeContext.Romance.FeelCounter = v; }],
+        ['fuckingnow', () => runtimeContext.Romance.FuckingNow, (v) => { runtimeContext.Romance.FuckingNow = v; }],
+        ['champagnecounter', () => runtimeContext.Romance.ChampagneCounter, (v) => { runtimeContext.Romance.ChampagneCounter = v; }],
+        ['drankChamp', () => runtimeContext.isInitialized ? runtimeContext.DrankChamp : stagedDrankChamp, (v) => { setDrankChamp(v); }],
+        ['sexActions', () => runtimeContext.isInitialized ? runtimeContext.SexActions : sexActions, (v) => { setSexActions(v); }],
     ];
     for (const [name, getter, setter] of props) {
         Object.defineProperty(w, name, { get: getter, set: setter, configurable: true, enumerable: true });

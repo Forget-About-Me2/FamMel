@@ -3,7 +3,8 @@ import { formatAll, setMoney, playerbladder, setPlayerbladder, settings, setSett
 import { initUrge, bladDec, setBladDec, bladDespDec, setBladDespDec, bladurge, setBladurge, customurge, setCustomurge, minperc, setMinperc, seal, setSeal } from './bladder';
 import { initYUrge, yourcustomurge, setYourcustomurge } from './yourbladder';
 import { displaypix, importimgs } from './images';
-import { gameState } from './gameState/gameState';
+import { runtimeContext } from './gameState/runtimeContext';
+import {gameSettings, updateGameSettingsFromJson} from "./settings/gameSettings";
 
 export let enableimages: number = 1;
 export let enableascii: number = 0;
@@ -21,13 +22,6 @@ export function setFavoritemovie(val: any) { favoritemovie = val; }
 export let suggestedloc = "thebar";
 export function setSuggestedloc(val: string) { suggestedloc = val; }
 
-export let heroutfit = "jeans";  //  Her clothing choice for the date
-export function setHeroutfit(val: string) { heroutfit = val; }
-                          //  Possible values: skirt, jeans
-
-export let multiplemoves = 1; //Whether sex moves can be repeated during a make-out session
-export let rstmoves = 0; //Whether the sex moves reset after a make-out session
-
 function normalizeLegacyToggleValue(value: number | boolean): number | undefined {
     if (typeof value === 'boolean') {
         return value ? 1 : 0;
@@ -42,10 +36,10 @@ function normalizeLegacyToggleValue(value: number | boolean): number | undefined
 }
 
 function syncStory12LegacySettingsFromCanonical(): void {
-    enableimages = gameState.IsImagesEnabled ? 1 : 0;
-    showstats = gameState.IsStatsVisible ? 1 : 0;
-    multiplemoves = gameState.IsMultipleMovesEnabled ? 1 : 0;
-    rstmoves = gameState.IsMovesAutoReset ? 1 : 0;
+    enableimages = runtimeContext.IsImagesEnabled ? 1 : 0;
+    showstats = runtimeContext.IsStatsVisible ? 1 : 0;
+    multiplemoves = runtimeContext.IsMultipleMovesEnabled ? 1 : 0;
+    rstmoves = runtimeContext.IsMovesAutoReset ? 1 : 0;
 }
 
 /**
@@ -54,10 +48,10 @@ function syncStory12LegacySettingsFromCanonical(): void {
  * until start() calls this lifecycle bridge.
  */
 export function hydrateSettingsToGameState(): void {
-    gameState.setIsImagesEnabled(enableimages);
-    gameState.setIsStatsVisible(showstats);
-    gameState.setIsMultipleMovesEnabled(multiplemoves);
-    gameState.setIsMovesAutoReset(rstmoves);
+    runtimeContext.setIsImagesEnabled(enableimages);
+    runtimeContext.setIsStatsVisible(showstats);
+    runtimeContext.setIsMultipleMovesEnabled(multiplemoves);
+    runtimeContext.setIsMovesAutoReset(rstmoves);
     syncStory12LegacySettingsFromCanonical();
 }
 
@@ -71,12 +65,12 @@ export function setEnableimages(val: number | boolean) {
         return;
     }
 
-    if (!gameState.isInitialized) {
+    if (!runtimeContext.isInitialized) {
         enableimages = normalizedValue;
         return;
     }
 
-    gameState.setIsImagesEnabled(normalizedValue);
+    runtimeContext.setIsImagesEnabled(normalizedValue);
     syncStory12LegacySettingsFromCanonical();
 }
 
@@ -90,12 +84,12 @@ export function setShowstats(val: number | boolean) {
         return;
     }
 
-    if (!gameState.isInitialized) {
+    if (!runtimeContext.isInitialized) {
         showstats = normalizedValue;
         return;
     }
 
-    gameState.setIsStatsVisible(normalizedValue);
+    runtimeContext.setIsStatsVisible(normalizedValue);
     syncStory12LegacySettingsFromCanonical();
 }
 
@@ -109,12 +103,12 @@ export function setMultiplemoves(val: number | boolean) {
         return;
     }
 
-    if (!gameState.isInitialized) {
+    if (!runtimeContext.isInitialized) {
         multiplemoves = normalizedValue;
         return;
     }
 
-    gameState.setIsMultipleMovesEnabled(normalizedValue);
+    runtimeContext.setIsMultipleMovesEnabled(normalizedValue);
     syncStory12LegacySettingsFromCanonical();
 }
 
@@ -128,12 +122,12 @@ export function setRstmoves(val: number | boolean) {
         return;
     }
 
-    if (!gameState.isInitialized) {
+    if (!runtimeContext.isInitialized) {
         rstmoves = normalizedValue;
         return;
     }
 
-    gameState.setIsMovesAutoReset(normalizedValue);
+    runtimeContext.setIsMovesAutoReset(normalizedValue);
     syncStory12LegacySettingsFromCanonical();
 }
 
@@ -141,69 +135,13 @@ export function setup(){
     fetchJson("options").then(function (data){
         setSettings(data);
     })
-    if(typeof(Storage) !== "undefined") {
-        if (localStorage.girlname) {
-            setGirlname(localStorage.girlname);
-            if (localStorage.custom === "true") {
-                setCustomgirlname(girlname);
-                if (localStorage.basegirl) {
-                    setBasegirl(localStorage.basegirl);
-                }
-                if (localStorage.customurge) {
-                    setCustomurge(localStorage.customurge);
-                }
-            }
-            setbasegirl(basegirl);
-            setgirl(girlname)
-        }
-        if (localStorage.heroutfit) {
-            heroutfit = localStorage.heroutfit;
-        }
-        if (localStorage.images) {
-            switch (localStorage.images) {
-                case "off":
-                    enableimages = 0;
-                    enableascii = 0;
-                    break;
-                case "ascii":
-                    enableascii = 1;
-                    enableimages = 0;
-                    break;
-                case "images":
-                    enableascii = 0;
-                    enableimages = 1;
-                    break;
-            }
-        }
-        if (localStorage.imgs) {
-            importimgs();
-        }
-        if (localStorage.showstats) {
-            if (localStorage.showstats === "false") {
-                showstats = 0;
-            }
-        }
-        if (localStorage.multiplemoves) {
-            if (localStorage.multiplemoves === "false") {
-                multiplemoves = 0;
-            }
-        }
-        if (localStorage.rstmoves) {
-            if (localStorage.rstmoves === "true")
-                rstmoves = 1;
-        }
-        if (localStorage.bladDec) {
-            if (localStorage.bladDec === "false")
-                setBladDec(0);
-        }
-        if (localStorage.bladDespDec) {
-            if (localStorage.bladDespDec === "false")
-                setBladDespDec(0);
-        }
-        if (localStorage.seal){
-            if (localStorage.seal === "false")
-                setSeal(0);
-        }
+    if (typeof(Storage) === "undefined") {
+        return; // There is nothing saved yet
+    }
+    if (localStorage.gameSettings){
+        updateGameSettingsFromJson(localStorage.gameSettings);
+    }
+    // TODO continue migration.
         if(localStorage.yourcustomurge){
             setYourcustomurge(localStorage.yourcustomurge);
             initYUrge(yourcustomurge);
@@ -280,7 +218,7 @@ export function options() {
     if (!localStorage.disclaimer || localStorage.disclaimer === "true") checked.push(26)
     else checked.push(27);
 
-    vars[28] = [gameState.Money];
+    vars[28] = [runtimeContext.Money];
 
     checked.forEach(i => vars[i] = ["checked"]);
     let curtext = formatAll(settings.html, vars);
@@ -422,7 +360,7 @@ export function setyourcustbladurge() {
 
 export function setyourmoney() {
     setMoney(parseInt(document.GetRequiredElementById<HTMLInputElement>('yourmoney').value));
-    setLocal("money", gameState.Money);
+    setLocal("money", runtimeContext.Money);
 }
 
 export function setBladPer(){

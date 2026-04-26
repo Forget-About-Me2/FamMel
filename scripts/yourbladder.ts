@@ -5,25 +5,6 @@ import { haveItem, backPackItems, playOnly, allowItems, setAllowItems } from './
 import { theHotTub, theMakeOut } from './locations/theMakeOut';
 import { rrMovieLineThresh } from './locations/theatre';
 
-//Your bladder variables
-export let yourbladder = 500;
-/**
- * Compatibility setter for player bladder volume.
- *
- * Usage:
- * - Use this when code writes player bladder state.
- * - Avoid direct `yourbladder = ...` assignments in gameplay code.
- *
- * Relevance:
- * - Runtime ownership is converging to `gameState.Player.Bladder`.
- * - Legacy `yourbladder` remains available for script-style/global consumers.
- */
-export function setYourbladder(val: number) {
-    yourbladder = Number(val) || 0;
-    if (gameState.Player) {
-        gameState.Player.Bladder = yourbladder;
-    }
-}
 
 export function drainYourBladderBy(amount: number) {
     const drainAmount = Math.max(0, Number(amount) || 0);
@@ -595,7 +576,6 @@ export function spurtedyourself(curtext: any[]) {
 
 export function exposeYourBladderOnWindow() {
     const mutableVars: [string, () => any, (v: any) => void][] = [
-        ["yourbladder", () => yourbladder, (v) => { setYourbladder(v); }],
         ["yourtummy", () => yourtummy, (v) => { setYourtummy(v); }],
         ["yourtumavg", () => yourtumavg, (v) => { yourtumavg = v; }],
         ["holdself", () => holdself, (v) => { holdself = v; }],

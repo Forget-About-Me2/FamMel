@@ -1,5 +1,5 @@
-import {GameLocation, gameState, LocationCategory} from "./gameState/gameState";
-import { BladderState } from "./gameState/bladderState";
+import {GameLocation, runtimeContext, LocationCategory} from "./gameState/runtimeContext";
+import { BladderLevel } from "./gameState/bladderLevel";
 
 import {gameSettings} from "./settings/gameSettings";
 import {yourHome} from './yourHome';
@@ -121,70 +121,69 @@ function syncLegacyLocStackFromTypedLocation(location: GameLocation): void {
 }
 
 function syncCompanionFromLegacyGlobals(): void {
-    if (!gameState.Companion) return;
-    gameState.Companion.Bladder = Number(bladder) || 0;
-    gameState.Companion.Tummy = Number(tummy) || 0;
-    gameState.Companion.MaxTummy = Number(maxtummy) || gameState.Companion.MaxTummy;
-    gameState.Companion.MaxAlcohol = Number(maxbeer) || gameState.Companion.MaxAlcohol;
-    gameState.Companion.AlcoholInTummy = Number(drankbeer) || 0;
-    gameState.Companion.NowPeeing = !!nowpeeing;
+    if (!runtimeContext.Companion) return;
+    runtimeContext.Companion.Bladder = Number(bladder) || 0;
+    runtimeContext.Companion.Tummy = Number(tummy) || 0;
+    runtimeContext.Companion.MaxTummy = Number(maxtummy) || runtimeContext.Companion.MaxTummy;
+    runtimeContext.Companion.MaxAlcohol = Number(maxbeer) || runtimeContext.Companion.MaxAlcohol;
+    runtimeContext.Companion.AlcoholInTummy = Number(drankbeer) || 0;
+    runtimeContext.Companion.NowPeeing = !!nowpeeing;
     const legacyUrge = Number(bladurge);
     if (Number.isFinite(legacyUrge) && legacyUrge > 0) {
-        gameState.Companion.setUrge(legacyUrge);
+        runtimeContext.Companion.setUrge(legacyUrge);
     }
 }
 
 function syncLegacyGlobalsFromCompanion(): void {
-    if (!gameState.Companion) return;
-    setBladder(gameState.Companion.Bladder);
-    setTummy(gameState.Companion.Tummy);
-    setMaxtummy(gameState.Companion.MaxTummy);
-    setMaxbeer(gameState.Companion.MaxAlcohol);
-    setDrankbeer(gameState.Companion.AlcoholInTummy);
-    setNowpeeing(gameState.Companion.NowPeeing ? 1 : 0);
-    setBladurge(gameState.Companion.bladderUrge);
+    if (!runtimeContext.Companion) return;
+    setBladder(runtimeContext.Companion.Bladder);
+    setTummy(runtimeContext.Companion.Tummy);
+    setMaxtummy(runtimeContext.Companion.MaxTummy);
+    setMaxbeer(runtimeContext.Companion.MaxAlcohol);
+    setDrankbeer(runtimeContext.Companion.AlcoholInTummy);
+    setNowpeeing(runtimeContext.Companion.NowPeeing ? 1 : 0);
+    setBladurge(runtimeContext.Companion.bladderUrge);
 }
 
 function syncPlayerFromLegacyGlobals(): void {
-    if (!gameState.Player) {
+    if (!runtimeContext.Player) {
         return;
     }
 
-    gameState.Player.Bladder = Number(yourbladder) || 0;
-    gameState.Player.Tummy = Number(yourtummy) || 0;
-    gameState.Player.MaxTummy = Number(ymaxtummy) || gameState.Player.MaxTummy;
-    gameState.Player.MaxAlcohol = Number(ymaxbeer) || gameState.Player.MaxAlcohol;
-    gameState.Player.AlcoholInTummy = Number(ydrankbeer) || 0;
-    gameState.Player.NowPeeing = !!ynowpeeing;
+    runtimeContext.Player.TummyVolume = Number(yourtummy) || 0;
+    runtimeContext.Player.MaxTummy = Number(ymaxtummy) || runtimeContext.Player.MaxTummy;
+    runtimeContext.Player.MaxAlcohol = Number(ymaxbeer) || runtimeContext.Player.MaxAlcohol;
+    runtimeContext.Player.AlcoholInTummy = Number(ydrankbeer) || 0;
+    runtimeContext.Player.NowPeeing = !!ynowpeeing;
 
     const legacyUrge = Number(yourbladurge);
     if (Number.isFinite(legacyUrge) && legacyUrge > 0) {
-        gameState.Player.setUrge(legacyUrge);
+        runtimeContext.Player.setUrge(legacyUrge);
     }
 }
 
 function syncLegacyGlobalsFromPlayer(): void {
-    if (!gameState.Player) {
+    if (!runtimeContext.Player) {
         return;
     }
 
-    setYourbladder(gameState.Player.Bladder);
-    setYourtummy(gameState.Player.Tummy);
-    setYmaxtummy(gameState.Player.MaxTummy);
-    setYmaxbeer(gameState.Player.MaxAlcohol);
-    setYdrankbeer(gameState.Player.AlcoholInTummy);
-    setYnowpeeing(gameState.Player.NowPeeing ? 1 : 0);
+    setYourbladder(runtimeContext.Player.Bladder);
+    setYourtummy(runtimeContext.Player.TummyVolume);
+    setYmaxtummy(runtimeContext.Player.MaxTummy);
+    setYmaxbeer(runtimeContext.Player.MaxAlcohol);
+    setYdrankbeer(runtimeContext.Player.AlcoholInTummy);
+    setYnowpeeing(runtimeContext.Player.NowPeeing ? 1 : 0);
 
-    setYourbladurge(gameState.Player.bladderUrge);
+    setYourbladurge(runtimeContext.Player.bladderUrge);
 }
 
 export function go(location: unknown) {
-    gameState.init();
+    runtimeContext.init();
     syncCompanionFromLegacyGlobals();
     syncPlayerFromLegacyGlobals();
     setAllowItems(0);
 
-    const previousLocation = gameState.CurrentLocation;
+    const previousLocation = runtimeContext.CurrentLocation;
     const currentLegacyTag = locStack[0];
     const typedLocation = isGameLocation(location) ? location : undefined;
     const shouldProcessTick = !typedLocation || !typedLocation.isPreGame;
@@ -195,42 +194,42 @@ export function go(location: unknown) {
         || isLegacyDrinkingGameLocation(currentLegacyTag);
 
     if (shouldProcessTick) {
-        gameState.Interactions.ShowedNeed = false; // clear the showed need flag - only active in the current window.
-        gameState.Interactions.ChangeVenueFlag = false;
-        gameState.Interactions.AllowedToFlirt = true;
-        gameState.Companion.NowPeeing = false; // clear the currently peeing flag.
+        runtimeContext.Interactions.ShowedNeed = false; // clear the showed need flag - only active in the current window.
+        runtimeContext.Interactions.ChangeVenueFlag = false;
+        runtimeContext.Interactions.AllowedToFlirt = true;
+        runtimeContext.Companion.NowPeeing = false; // clear the currently peeing flag.
 
-        gameState.Companion.processFluidsDigestion();
+        runtimeContext.Companion.processFluidsDigestion();
         syncLegacyGlobalsFromCompanion();
 
         //  If she's not with you, then she can go pee
         if (isPlayerOnlyLocation &&
-            gameState.Companion.bladderState >= BladderState.Emergency && !askholditcounter)
+            runtimeContext.Companion.bladderState >= BladderLevel.Emergency && !askholditcounter)
             if (!isCallHerLocation) {
-                gameState.Companion.pee();
+                runtimeContext.Companion.pee();
                 syncLegacyGlobalsFromCompanion();
             }
 
         if (gameSettings.PlayerBladder
-            || (isDrinkingGameLocation && gameSettings.PlayerDrinkGame)) {
-            gameState.Player.processFluidsDigestion();
+            || (isDrinkingGameLocation && gameSettings.EnablePlayerInDrinkGame)) {
+            runtimeContext.Player.processFluidsDigestion();
             syncLegacyGlobalsFromPlayer();
         }
 
-        if (gameState.Interactions.FlirtCounter > 0) {
-            gameState.Interactions.FlirtCounter -= 1;
+        if (runtimeContext.Interactions.FlirtCounter > 0) {
+            runtimeContext.Interactions.FlirtCounter -= 1;
         }
 
-        gameState.Time.nextTick();
+        runtimeContext.Time.nextTick();
     }
 
     document.GetRequiredElementById('textsp').innerText = "";
-    if (gameState.DidIntro) {
+    if (runtimeContext.DidIntro) {
         gameScreen.StatusBar.Update();
     }
 
     if (typedLocation) {
-        gameState.setCurrentLocation(typedLocation);
+        runtimeContext.setCurrentLocation(typedLocation);
         syncLegacyLocStackFromTypedLocation(typedLocation);
         typedLocation.function();
         return;
@@ -260,15 +259,12 @@ export async function gamestart(){
 // Introduction page.
 export async function start() {
     gameScreen.PopUps.Disclaimer.displayDisclaimerPopup();
-    setup();
-    // Keep typed settings in sync with legacy setup() localStorage behavior.
-    try { gameSettings.PlayerBladder = !!playerbladder; } catch {}
-    gameState.init();
+    runtimeContext.init();
     hydrateSettingsToGameState();
     hydrateSexSceneStateToGameState();
     animationManager.start();
     // Connect window bridges to gameState — auto-seeds from current window values.
-    connectToGameState(gameState);
+    connectToGameState(runtimeContext);
     syncCompanionFromLegacyGlobals();
     syncPlayerFromLegacyGlobals();
     await fetchAndCacheJson("start");

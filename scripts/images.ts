@@ -3,7 +3,7 @@ import { enableimages } from './settings';
 import { setText, imagedesc } from './quotes';
 import { setjpgimgs } from './settings';
 import { settings } from './shims';
-import { gameState } from './gameState/gameState';
+import { runtimeContext } from './gameState/runtimeContext';
 
 const DEFAULT_IMAGE_GIRLS = ["Jennifer", "Karen", "Laura", "Melissa"] as const;
 
@@ -56,11 +56,11 @@ function normalizeImgsMap(value: Record<string, unknown>): Record<string, Record
 }
 
 function canWriteCanonicalImgs(): boolean {
-    return !!(gameState && gameState.isInitialized);
+    return !!(runtimeContext && runtimeContext.isInitialized);
 }
 
 function getActiveImgs(): Record<string, Record<string, string>> {
-    return canWriteCanonicalImgs() ? gameState.Imgs : imgs;
+    return canWriteCanonicalImgs() ? runtimeContext.Imgs : imgs;
 }
 
 function persistImgsSnapshot(): void {
@@ -103,45 +103,19 @@ export function setImgs(nextImgs: unknown): void {
     const normalized = normalizeImgsMap(nextImgs);
 
     if (canWriteCanonicalImgs()) {
-        gameState.setImgs(normalized);
-        imgs = gameState.Imgs;
+        runtimeContext.setImgs(normalized);
+        imgs = runtimeContext.Imgs;
         return;
     }
 
     imgs = normalized;
 }
 
-//sets imgs to the local stored version
-export function importimgs(){
-    if (canWriteCanonicalImgs()) {
-        gameState.tryImportImgsFromStorage();
-        imgs = gameState.Imgs;
-        return;
-    }
-
-    const imgString = localStorage.getItem("imgs");
-    if (!imgString) {
-        imgs = createDefaultImgsMap();
-        return;
-    }
-
-    try {
-        const parsed = JSON.parse(imgString);
-        if (!isObjectRecord(parsed)) {
-            imgs = createDefaultImgsMap();
-            return;
-        }
-        setImgs(parsed);
-    } catch {
-        imgs = createDefaultImgsMap();
-    }
-}
-
 //resets imgs to the default version
 function resetImg(){
     if (canWriteCanonicalImgs()) {
-        gameState.resetImgsToDefault();
-        imgs = gameState.Imgs;
+        runtimeContext.resetImgsToDefault();
+        imgs = runtimeContext.Imgs;
     } else {
         imgs = createDefaultImgsMap();
     }
@@ -157,9 +131,9 @@ export function setPicset(val: number) {
         return;
     }
 
-    if (gameState.isInitialized) {
-        gameState.PicSet = nextValue;
-        picset = gameState.PicSet;
+    if (runtimeContext.isInitialized) {
+        runtimeContext.PicSet = nextValue;
+        picset = runtimeContext.PicSet;
         return;
     }
 
@@ -167,7 +141,7 @@ export function setPicset(val: number) {
 }
 
 function getPicset(): number {
-    return gameState.isInitialized ? gameState.PicSet : picset;
+    return runtimeContext.isInitialized ? runtimeContext.PicSet : picset;
 }
 // displaypix will set the current picture to be displayed
 //TODO figure out why need is called before urge

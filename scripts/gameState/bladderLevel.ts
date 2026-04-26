@@ -1,4 +1,4 @@
-export enum BladderState {
+export enum BladderLevel {
     Empty = 0,
     Urge = 1,
     Need = 2,
