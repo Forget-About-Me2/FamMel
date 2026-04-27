@@ -1,6 +1,7 @@
 import {baseCompanionDefaultSettings, CompanionSettings} from "./companionSettings";
 import {ImageSettings} from "./imageSettings";
 import {Outfit} from "../models/outfit";
+import {PlayerBladderSettings} from "./playerBladderSettings";
 
 export enum ImageChoice {
     Images,
@@ -14,11 +15,8 @@ export interface GameSettings {
      * The companion's settings (character, stats, etc.)
      */
     Companion: CompanionSettings;
+    PlayerBladder: PlayerBladderSettings;
     CompanionOutfit : Outfit;
-    /**
-     * Whether the player bladder is enabled in the drinking game, if the player bladder is disabled otherwise. When player bladder is enabled this setting is ignored.
-     */
-    EnablePlayerInDrinkGame: boolean;
 
     /**
      * Whether sex moves can be repeated during a "make-out" session.
@@ -60,25 +58,31 @@ export interface GameSettings {
      * Image settings to show the state of the date.
      */
     ImageSettings: ImageSettings;
-    /**
-     * The percentage of the initial capacity that the bladder can decay to. It will never decay below this percentage.
-     */
-    MinBladderPercentage: number;
 }
 
 export function createDefaultGameSettings(): GameSettings {
     return {
+        AllowRepeatedSexActions: false,
+        PlayerBladder: {
+            EnablePlayerBladder: true,
+            EnablePlayerInDrinkGame: false,
+            bladderUrge: 500,
+            startBladderVolume: 500,
+            startTummyVolume: 200,
+            startMaxTummy: 500,
+            startMaxAlcohol: 1000,
+            bladderDecayMaxPercentage: 30
+        },
+        ResetSexMovesOnExit: false,
         Companion: baseCompanionDefaultSettings.Laura,
         CompanionOutfit : Outfit.Jeans,
-        EnablePlayerInDrinkGame: true,
         StartMoney: 200,
         ImageChoice: ImageChoice.Ascii,
         ShowStats: true,
         BladderDecay: true,
         BladderDecayOnEmer: true,
         BladderDecayOnBreakingTheSeal: true,
-        ImageSettings: new ImageSettings(),
-        MinBladderPercentage: 75,
+        ImageSettings: new ImageSettings()
     };
 }
 

@@ -79,8 +79,10 @@
         </table>
     </div>
 <script>
-    import {gameScreen} from "./scripts/gameScreen/gameScreen";
-    import {start} from "./scripts/main";
+    import {displayIntroSequence} from "./scripts/main";
+
+    const gameScreen = window.gameScreen;
+    const start = window.displayIntroSequence;
 
     const fallbackHomeScreen = {
         title: "Melissa Explains it All",
@@ -118,7 +120,7 @@
             + "<li class='cListener choices-items-start' id='changeLog'>" + homeScreenJson.Changelog + "</li>"
             + "<li class='cListener choices-items-start' id='credits'>" + homeScreenJson.Credits + "</li>";
 
-        document.getElementById("start").addEventListener("click", () => start());
+        document.getElementById("start").addEventListener("click", () => displayIntroSequence());
         document.getElementById("changeLog").addEventListener("click", () => gameScreen.PopUps.ChangeLog.displayPopup());
         document.getElementById("credits").addEventListener("click", () => gameScreen.PopUps.Credits.displayPopup());
     }

@@ -5,11 +5,12 @@
  */
 import { exposeShimsOnWindow } from './shims';
 import './helperFiles/documentFunctions';
-import { go, start, gamestart } from './main';
+import { go, displayIntroSequence, gamestart } from './main';
 import { callHer, yourHome } from './yourHome';
 import { runtimeContext, runtimeContext } from './gameState/runtimeContext';
 import { gameScreen } from './gameScreen/gameScreen';
 import { gameSettings } from './settings/gameSettings';
+import { showSettingsScreen } from './settings/settingsScreen';
 import { animationManager } from './gameScreen/animationManager';
 import { exposeQuotesOnWindow, initDelegatedClickHandler } from './quotes';
 import { exposePopUpOnWindow } from './pop-up';
@@ -55,7 +56,6 @@ exposeDartsOnWindow();
 
 // Expose Batch 2 — former script-style files
 exposeBladderOnWindow();
-exposeYourBladderOnWindow();
 exposeSettingsOnWindow();
 exposeFuckHerOnWindow();
 exposeDriveOnWindow();
@@ -70,8 +70,21 @@ exposeBackPackItemsOnWindow();
 exposeStoreOnWindow();
 exposeDebugMenuOnWindow();
 
+
 // Wire up static UI elements
 document.getElementById("backpack-link")?.addEventListener("click", function (e) {
     e.preventDefault();
     backpack();
 });
+
+// New: Wire up settings navigation (replace legacy navigation)
+export function showSettingsPage() {
+    // Find or create a container for the settings screen
+    let container = document.getElementById("settings-container");
+    if (!container) {
+        container = document.createElement("div");
+        container.id = "settings-container";
+        document.body.appendChild(container);
+    }
+    showSettingsScreen(container);
+}

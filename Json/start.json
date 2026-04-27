@@ -1,12 +1,10 @@
 {
   "intro" : [] ,
-  "choices" : [
-    ["gamestart()", "Start the game."],
-    ["options", "Options."]
-  ],
-  "girlname" : [],
-  "money": [],
-  "always" : [
+  "choices" : {
+    "startGame": "Start the game.",
+    "options": "Options."
+  },
+  "introText" : [
     "This game is a date simulation with a desperation twist.",
     "Your goal is to get your date in bed with a full bladder, before the night is over.",
     "On your way there, convince your date to hold her pee, pee in a glass, squat outside, or even take you into the restroom with her.  Just don't make her wet her panties...",

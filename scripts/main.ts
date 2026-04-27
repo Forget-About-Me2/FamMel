@@ -7,11 +7,14 @@ import {gameScreen} from "./gameScreen/gameScreen";
 import { animationManager } from "./gameScreen/animationManager";
 import { setupQuotes, fetchAndCacheJson, locationSetup, locjson, printAllChoices, sayText, printList, setText, fetchJson } from "./quotes";
 import { pushloc, poploc, randomInt, connectToGameState, locStack, endScreens, playerbladder, setCurrentLegacyLocationTag } from './shims';
-import { hydrateSettingsToGameState, setup } from './settings';
+import { hydrateSettingsToGameState, loadSettingsFromStorage } from './settings';
 import { updateyoururge, yourbladder, setYourbladder, yourtummy, setYourtummy, ymaxtummy, setYmaxtummy, ymaxbeer, setYmaxbeer, ydrankbeer, setYdrankbeer, ynowpeeing, setYnowpeeing, yourbladurge, setYourbladurge } from './yourbladder';
 import { updateurge, bladder, setBladder, tummy, setTummy, maxtummy, setMaxtummy, maxbeer, setMaxbeer, drankbeer, setDrankbeer, nowpeeing, setNowpeeing, bladurge, setBladurge, askholditcounter } from './bladder';
 import { allowItems, setAllowItems } from './backPackItems';
 import { hydrateSexSceneStateToGameState } from './fuckHer';
+import {ContentScreen, DirectFunctionChoiceItems} from "./gameScreen/contentScreen";
+import startJson from '../Json/start.json';
+import {renderGeneralSection, showSettingsScreen} from "./settings/settingsScreen";
 
 /**
  * Main program loop that handles location transitions and game state updates
@@ -120,67 +123,8 @@ function syncLegacyLocStackFromTypedLocation(location: GameLocation): void {
     setCurrentLegacyLocationTag(mappedTag);
 }
 
-function syncCompanionFromLegacyGlobals(): void {
-    if (!runtimeContext.Companion) return;
-    runtimeContext.Companion.Bladder = Number(bladder) || 0;
-    runtimeContext.Companion.Tummy = Number(tummy) || 0;
-    runtimeContext.Companion.MaxTummy = Number(maxtummy) || runtimeContext.Companion.MaxTummy;
-    runtimeContext.Companion.MaxAlcohol = Number(maxbeer) || runtimeContext.Companion.MaxAlcohol;
-    runtimeContext.Companion.AlcoholInTummy = Number(drankbeer) || 0;
-    runtimeContext.Companion.NowPeeing = !!nowpeeing;
-    const legacyUrge = Number(bladurge);
-    if (Number.isFinite(legacyUrge) && legacyUrge > 0) {
-        runtimeContext.Companion.setUrge(legacyUrge);
-    }
-}
-
-function syncLegacyGlobalsFromCompanion(): void {
-    if (!runtimeContext.Companion) return;
-    setBladder(runtimeContext.Companion.Bladder);
-    setTummy(runtimeContext.Companion.Tummy);
-    setMaxtummy(runtimeContext.Companion.MaxTummy);
-    setMaxbeer(runtimeContext.Companion.MaxAlcohol);
-    setDrankbeer(runtimeContext.Companion.AlcoholInTummy);
-    setNowpeeing(runtimeContext.Companion.NowPeeing ? 1 : 0);
-    setBladurge(runtimeContext.Companion.bladderUrge);
-}
-
-function syncPlayerFromLegacyGlobals(): void {
-    if (!runtimeContext.Player) {
-        return;
-    }
-
-    runtimeContext.Player.TummyVolume = Number(yourtummy) || 0;
-    runtimeContext.Player.MaxTummy = Number(ymaxtummy) || runtimeContext.Player.MaxTummy;
-    runtimeContext.Player.MaxAlcohol = Number(ymaxbeer) || runtimeContext.Player.MaxAlcohol;
-    runtimeContext.Player.AlcoholInTummy = Number(ydrankbeer) || 0;
-    runtimeContext.Player.NowPeeing = !!ynowpeeing;
-
-    const legacyUrge = Number(yourbladurge);
-    if (Number.isFinite(legacyUrge) && legacyUrge > 0) {
-        runtimeContext.Player.setUrge(legacyUrge);
-    }
-}
-
-function syncLegacyGlobalsFromPlayer(): void {
-    if (!runtimeContext.Player) {
-        return;
-    }
-
-    setYourbladder(runtimeContext.Player.Bladder);
-    setYourtummy(runtimeContext.Player.TummyVolume);
-    setYmaxtummy(runtimeContext.Player.MaxTummy);
-    setYmaxbeer(runtimeContext.Player.MaxAlcohol);
-    setYdrankbeer(runtimeContext.Player.AlcoholInTummy);
-    setYnowpeeing(runtimeContext.Player.NowPeeing ? 1 : 0);
-
-    setYourbladurge(runtimeContext.Player.bladderUrge);
-}
-
 export function go(location: unknown) {
     runtimeContext.init();
-    syncCompanionFromLegacyGlobals();
-    syncPlayerFromLegacyGlobals();
     setAllowItems(0);
 
     const previousLocation = runtimeContext.CurrentLocation;
@@ -200,20 +144,17 @@ export function go(location: unknown) {
         runtimeContext.Companion.NowPeeing = false; // clear the currently peeing flag.
 
         runtimeContext.Companion.processFluidsDigestion();
-        syncLegacyGlobalsFromCompanion();
 
         //  If she's not with you, then she can go pee
         if (isPlayerOnlyLocation &&
             runtimeContext.Companion.bladderState >= BladderLevel.Emergency && !askholditcounter)
             if (!isCallHerLocation) {
                 runtimeContext.Companion.pee();
-                syncLegacyGlobalsFromCompanion();
             }
 
-        if (gameSettings.PlayerBladder
-            || (isDrinkingGameLocation && gameSettings.EnablePlayerInDrinkGame)) {
+        if (gameSettings.PlayerBladder.EnablePlayerBladder
+            || (isDrinkingGameLocation && gameSettings.PlayerBladder.EnablePlayerInDrinkGame)) {
             runtimeContext.Player.processFluidsDigestion();
-            syncLegacyGlobalsFromPlayer();
         }
 
         if (runtimeContext.Interactions.FlirtCounter > 0) {
@@ -246,9 +187,10 @@ export function go(location: unknown) {
 
 //This sets the game up when you click start
 export async function gamestart(){
-    if (!gameSettings.PlayerBladder) {
-        gameScreen.StatusBar.TogglePlayerBladder(false);
+    if (!gameSettings.PlayerBladder.EnablePlayerBladder) {
+        gameScreen.StatusBar.SetPlayerBladderStats(false);
     }
+    runtimeContext.init();
     gameScreen.StatusBar.Update();
     await fetchAndCacheJson("yourhome");
     await setupQuotes();
@@ -257,22 +199,14 @@ export async function gamestart(){
 
 
 // Introduction page.
-export async function start() {
+export async function displayIntroSequence() {
     gameScreen.PopUps.Disclaimer.displayDisclaimerPopup();
-    runtimeContext.init();
-    hydrateSettingsToGameState();
-    hydrateSexSceneStateToGameState();
+    loadSettingsFromStorage();
     animationManager.start();
-    // Connect window bridges to gameState — auto-seeds from current window values.
-    connectToGameState(runtimeContext);
-    syncCompanionFromLegacyGlobals();
-    syncPlayerFromLegacyGlobals();
-    await fetchAndCacheJson("start");
-    pushloc("yourhome");
-    locationSetup("start");
-    let curtext = locjson["always"];
-    curtext = printAllChoices(curtext);
-    sayText(curtext);
+    const introductionContent = new ContentScreen();
+    introductionContent.CurText.push(...startJson.introText);
+    introductionContent.ChoicesList.push(new DirectFunctionChoiceItems("options", showSettingsScreen() => ))
+
 }
 
 export function gameOver() {

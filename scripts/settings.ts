@@ -131,41 +131,12 @@ export function setRstmoves(val: number | boolean) {
     syncStory12LegacySettingsFromCanonical();
 }
 
-export function setup(){
-    fetchJson("options").then(function (data){
-        setSettings(data);
-    })
+export function loadSettingsFromStorage(){
     if (typeof(Storage) === "undefined") {
         return; // There is nothing saved yet
     }
     if (localStorage.gameSettings){
         updateGameSettingsFromJson(localStorage.gameSettings);
-    }
-    // TODO continue migration.
-        if(localStorage.yourcustomurge){
-            setYourcustomurge(localStorage.yourcustomurge);
-            initYUrge(yourcustomurge);
-        }
-        if(localStorage.money){
-            setMoney(localStorage.money);
-        }
-        if (localStorage.minPerc)
-            setMinperc(localStorage.minPerc);
-
-        if (localStorage.playerBladder) {
-            if (localStorage.playerBladder === "false") {
-                setPlayerbladder(0);
-                fetchJson("statsBars").then(function (data) {
-                    setStatsBars(data);
-                });
-            }
-        }
-
-        if (localStorage.playerGame) {
-            if (localStorage.playerGame === "true")
-                playerGame = 1;
-        }
-
     }
 }
 
@@ -553,7 +524,7 @@ export function exposeSettingsOnWindow(): void {
     for (const [name, getter, setter] of props) {
         Object.defineProperty(w, name, { get: getter, set: setter, configurable: true, enumerable: true });
     }
-    w.setup = setup;
+    w.setup = loadSettingsFromStorage;
     w.setLocal = setLocal;
     w.options = options;
     w.customgirl = customgirl;

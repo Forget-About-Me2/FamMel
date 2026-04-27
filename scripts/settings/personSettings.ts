@@ -26,4 +26,9 @@ export interface PersonSettings {
      * The max amount of alcohol volume the person can drink before rejecting alcoholic drinks.
      */
     startMaxAlcohol: number;
+
+    /*
+        * The max percentage the bladder can decay from the initial capacity.
+     */
+    bladderDecayMaxPercentage: number;
 }

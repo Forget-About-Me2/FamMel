@@ -1,4 +1,5 @@
 import {runtimeContext} from "../gameState/runtimeContext";
+import {GameSettings} from "../settings/gameSettings";
 
 export class StatusBar {
     private readonly _moneyValueElem: HTMLElement;
@@ -24,7 +25,7 @@ export class StatusBar {
         this._moneyValueElem.innerText = "$" + runtimeContext.Money;
         this._attractionValueElem.innerText = runtimeContext.Attraction.toString();
         this._shynessValueElem.innerText = runtimeContext.Shyness.toString();
-        this._tummyValueElement.innerText = runtimeContext.Companion.Tummy.toString();
+        this._tummyValueElement.innerText = runtimeContext.Companion.TummyVolume.toString();
         this._bladderValueElement.innerText = runtimeContext.Companion.Bladder.toString();
         this._timeValueElem.innerText = runtimeContext.Time.toString();
 
@@ -36,7 +37,7 @@ export class StatusBar {
 
     }
 
-    TogglePlayerBladder(value: boolean) {
+    SetPlayerBladderStats(value: boolean) {
         if (!value) {
             this._yourBladHeaderElem.style.display = "none";
             this._yourBladValueElem.style.display = "none";
@@ -50,7 +51,7 @@ export class StatusBar {
         }
     }
 
-    ToggleShowStats(value: boolean) {
+    SetShowStats(value: boolean) {
         if (!value) {
             this._attractionHeaderElem.style.display = "none";
             this._attractionValueElem.style.display = "none";
@@ -149,3 +150,4 @@ export class StatusBar {
         this._yourBladHeaderElem = document.GetRequiredElementById("ybladHeader");
     }
 }
+

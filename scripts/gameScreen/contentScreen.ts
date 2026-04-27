@@ -6,7 +6,6 @@ export class ContentScreen {
     readonly ChoicesList: IChoicesItem[] = [];
     readonly CurText: string[] = [];
     readonly TextElem: HTMLElement;
-    private _customChoiceLocation: string = "";
 
     PrintContentToScreen() {
         let i;
@@ -16,9 +15,7 @@ export class ContentScreen {
         }
 
         let curElem = this.TextElem;
-        if (this._customChoiceLocation.length !== 0) {
-            curElem = document.GetRequiredElementById(this._customChoiceLocation);
-        }
+
         for (i = 0; i < this.ChoicesList.length; i++) {
             curElem.innerHTML += this.ChoicesList[i].ToHtml();
         }
@@ -30,11 +27,6 @@ export class ContentScreen {
 
     KeepExistingHtml(): ContentScreen {
         this._existingHtml = this.TextElem.innerHTML;
-        return this;
-    }
-
-    CustomChoiceLocation(id: string) {
-        this._customChoiceLocation = id;
         return this;
     }
 
