@@ -1,4 +1,4 @@
-﻿import { runtimeContext, LocationCategory } from "./gameState/runtimeContext";
+﻿import { runtimeContext} from "./gameState/runtimeContext";
 import { BladderLevel } from "./gameState/bladderLevel";
 
 import { gameSettings } from "./settings/gameSettings";
@@ -7,7 +7,7 @@ import { pushloc, incrandom, randomchoice, formatString, getCurrentLocationTag, 
 import { displaygottavoc, flushdrank, phoneholdthresh, bladder, tummy, setTummy, maxtummy, askholditcounter, setAskholditcounter, waitcounter, setWaitcounter } from './bladder';
 import { displayyourneed, wetyourself, yourtummy, setYourtummy, ymaxtummy } from './yourbladder';
 import { haveItem, backPackItems, allowItems, setAllowItems } from './backPackItems';
-import { heroutfit } from './settings';
+import yourHomeJson from '../Json/yourhome.json'
 
 //This contains everything you can do from your home before you pick-up your date
 
@@ -23,12 +23,10 @@ export function yourHome() {
     let curtext: string[] = [];
     const currentLocationTag = getCurrentLocationTag();
     if (!runtimeContext.DidIntro) {
-        loadLocationScene("yourhome", "yourhome");
         runtimeContext.DidIntro = true;
         curtext = printIntro(curtext, 0);
     } else {
         if (currentLocationTag !== "yourhome" || onphone || shopping) {
-            loadLocationScene("yourhome", "yourhome");
             onphone = 0;
             setShopping(0);
         }

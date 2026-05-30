@@ -65,7 +65,7 @@ export interface IContainer extends IBackpackItem{
 
 //TODO add keys and phone
 export const backPackItems: { [key: string]: IBackpackItem } = {
-    "water": {
+    water: {
         bpName: "Water bottle",
         price: 10,
         value: 0,
@@ -87,7 +87,7 @@ export const backPackItems: { [key: string]: IBackpackItem } = {
             }, "Give her a drink of water"]
         ]
     } as IDrink,
-    "roses": {
+    roses: {
         bpName: "Bouquet",
         price: 20,
         value: 0,
@@ -152,7 +152,7 @@ export const backPackItems: { [key: string]: IBackpackItem } = {
         description: "You're not quite sure how you managed to fit this in your backpack," +
             " but it can hold an insane amount of liquid. You wonder if it's bigger on the inside."
     } as IContainer,
-    shotglass: {
+    shotGlass: {
         bpName: "Shotglass",
         price: 10,
         value: 0,
@@ -174,7 +174,7 @@ export const backPackItems: { [key: string]: IBackpackItem } = {
         description: "You can't quite recall why you thought it was a good idea to bring this glass to your date. " +
             "It can hold about 100ml, maybe it will be of use?"
     } as IContainer,
-    ptowels: {
+    pTowels: {
         bpName: "Paper Towels",
         price: 10,
         value: 0,

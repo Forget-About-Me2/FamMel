@@ -7,6 +7,7 @@ import { bladurge } from '../bladder';
 import { girlname } from '../quotes';
 import {Companion} from "./Companion";
 import {PersonSettings} from "../settings/personSettings";
+import {LocationCategory} from "./locationCategory";
 
 class InteractionState {
     FlirtCounter: number = 0;

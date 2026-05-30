@@ -422,32 +422,6 @@ export function locationSetup(tag: string){
     resolveWildcards(["girlname", "money"]);
 }
 
-// Load a subtag from a multi-subtag location into locjson and resolve wildcards.
-// e.g. loadLocationScene("yourhome", "callher") deep-copies calledjsons["yourhome"]["callher"]
-// into locjson, then replaces girlname/money/girltalk placeholders throughout intro, always,
-// choices, and dialogue sections.
-export function loadLocationScene(tag: string, subtag: string){
-    locjson = JSON.parse(JSON.stringify(calledjsons[tag][subtag]));
-    const wildcardProcessors: Record<string, (q: any[]) => any[]> = {
-        girlname: addGirlname,
-        money: addMoney,
-        girltalk: addGirlTalk,
-    };
-    for (const [key, processor] of Object.entries(wildcardProcessors)) {
-        if (locjson.hasOwnProperty(key))
-            locjson[key] = processor(locjson[key]);
-    }
-    resolveWildcards(["girlname", "money", "girltalk"]);
-    replaceChoices("girlname");
-    if (locjson.hasOwnProperty("dialogue")){
-        for (const [key, value] of Object.entries(locjson.dialogue) as [string, any][]) {
-            locjson.dialogue[key] = ["girlname", "money", "girltalk"].reduce(
-                (v, wc) => replaceWCLI(v, wc), value
-            );
-        }
-    }
-}
-
 // Load a scene from a custom (non-cached) JSON object into locjson with wildcard replacement.
 // Used by locations that store their JSON in a module variable rather than calledjsons.
 export function locationMCSetup(subtag: string, customloc: any){

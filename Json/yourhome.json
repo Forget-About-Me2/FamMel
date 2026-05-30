@@ -1,57 +1,20 @@
 {
-  "yourhome" : {
-    "intro": [
+    "homeIntro": [
      ["You have a hot date tonight at 8 pm.",
-    "girlname0",
-    "You've heard she might be into desperation play... but you're not sure."],
-      [""]
+    "Her name is girlname",
+    "You've heard she might be into desperation play... but you're not sure."]
     ],
-    "girlname": [
-      "Her name is {0}."
-    ],
-    "always": [
+    "whatDo": [
       "So what are you going to do?"
     ],
-    "money": [],
-    "choices": [
-      ["gostore", "Go to the store"],
-      ["callher", "Call her on the phone"],
-      ["youpee", "Pee before you leave"],
-      ["ypredrink", "Drink some water"],
-      ["herhome", "Pick her up"]
-    ]},
-  "store": {
-    "intro": [],
-    "girlname": [
-      "Her name is {0}."
-    ],
-    "money": [
-      "You have ${0}"
-    ],
-    "always": ["money0",
-      "What are you going to buy?"],
-    "choices": [
-      ["buyItem(&quot;water&quot;)", "An overpriced bottle of water ($10)"],
-      ["buyItem(&quot;roses&quot;)", "A bouquet of red roses ($20)"],
-      ["buyItem(&quot;earrings&quot;)", "A pair of diamond earrings ($60)"],
-      ["buyItem(&quot;vase&quot;)", "A flower vase ($30)"],
-      ["buyItem(&quot;shotglass&quot;)", "A shot glass ($10)"],
-      ["buyItem(&quot;champ-glass&quot;)", "A champagne glass ($12)"],
-      ["buyItem(&quot;ptowels&quot;)", "A roll of paper towels ($10)"],
-      ["buyItem(&quot;sexyPanties&quot;)", "A pair of sexy panties ($30)"],
-      ["buyItem(&quot;champagne&quot;)", "A bottle of fancy champagne ($50)"],
-      ["goback", "Nothing"]
-    ],
-  "buying": [
-    ["bottle of water", "10", "water"],
-    ["bouquet of red roses", "20", "roses"],
-    ["pair of diamond earrings", "60", "earrings"],
-    ["flower vase", "30", "vase"],
-    ["shot glass", "10", "shotglass"],
-    ["roll of paper towels", "10", "ptowels"],
-    ["pair of sexy panties", "30","panties"],
-    ["bottle of fancy champagne", "50", "champagne"]
-  ]},
+    "choices": {
+      "goStore": "Go to the store",
+      "callHer": "Call her on the phone",
+      "youPee": "Pee before you leave",
+      "yPreDrink": "Drink some water",
+      "herHome": "Pick her up"
+    },
+
   "callher": {
    "intro": [
     ["girlname0",

@@ -58,6 +58,8 @@ export interface GameSettings {
      * Image settings to show the state of the date.
      */
     ImageSettings: ImageSettings;
+
+    RandCounterMax: number;
 }
 
 export function createDefaultGameSettings(): GameSettings {
@@ -82,7 +84,8 @@ export function createDefaultGameSettings(): GameSettings {
         BladderDecay: true,
         BladderDecayOnEmer: true,
         BladderDecayOnBreakingTheSeal: true,
-        ImageSettings: new ImageSettings()
+        ImageSettings: new ImageSettings(),
+        RandCounterMax: 5
     };
 }
 

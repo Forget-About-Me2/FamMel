@@ -1,0 +1,26 @@
+{
+  "storePrompt": ["You have $money",
+    "What are you going to buy?"],
+  "choices": [
+    ["buyItem(&quot;water&quot;)", "An overpriced bottle of water ($10)"],
+    ["buyItem(&quot;roses&quot;)", "A bouquet of red roses ($20)"],
+    ["buyItem(&quot;earrings&quot;)", "A pair of diamond earrings ($60)"],
+    ["buyItem(&quot;vase&quot;)", "A flower vase ($30)"],
+    ["buyItem(&quot;shotglass&quot;)", "A shot glass ($10)"],
+    ["buyItem(&quot;champ-glass&quot;)", "A champagne glass ($12)"],
+    ["buyItem(&quot;ptowels&quot;)", "A roll of paper towels ($10)"],
+    ["buyItem(&quot;sexyPanties&quot;)", "A pair of sexy panties ($30)"],
+    ["buyItem(&quot;champagne&quot;)", "A bottle of fancy champagne ($50)"],
+    ["goback", "Nothing"]
+  ],
+  "buyingOptions": {
+    "water": "bottle of water",
+    "roses": "bouquet of red roses",
+    "earrings": "pair of diamond earrings",
+    "vase": "flower vase",
+    "shotGlass": "shot glass",
+    "pTowels": "roll of paper towels",
+    "panties": "pair of sexy panties",
+    "champagne": "bottle of champagne"
+  }
+}
