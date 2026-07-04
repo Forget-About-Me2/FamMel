@@ -4,7 +4,11 @@ import { displayneed, rrlockedthresh, rrlinethresh, bladDec, bladDespDec, gottag
 import { haveItem, backPackItems, playOnly, allowItems, setAllowItems } from './backPackItems';
 import { theHotTub, theMakeOut } from './locations/theMakeOut';
 import { rrMovieLineThresh } from './locations/theatre';
+import { runtimeContext } from './gameState/runtimeContext';
 
+
+export let yourbladder = 500; // Current bladder volume for the player
+export function setYourbladder(val: number) { yourbladder = Number(val) || 0; }
 
 export function drainYourBladderBy(amount: number) {
     const drainAmount = Math.max(0, Number(amount) || 0);
@@ -19,13 +23,13 @@ export let yourtummy = 200;
  * - Avoid direct `yourtummy = ...` assignments in gameplay code.
  *
  * Relevance:
- * - Runtime ownership is converging to `gameState.Player.Tummy`.
+ * - Runtime ownership is converging to `runtimeContext.Player.Tummy`.
  * - Legacy `yourtummy` remains for script-style/global compatibility.
  */
 export function setYourtummy(val: number) {
     yourtummy = Number(val) || 0;
-    if (gameState.Player) {
-        gameState.Player.Tummy = yourtummy;
+    if (runtimeContext.Player) {
+        runtimeContext.Player.Tummy = yourtummy;
     }
 }
 export let yourtumavg = yourtummy;
@@ -46,7 +50,7 @@ export let yourbladsexlose = yourbladurge * 5; // Level where you can't control 
  *
  * Usage:
  * - Call this from canonical player-state owners that need to refresh legacy read compatibility.
- * - Do not use this as a gameplay write path; gameplay should still set `gameState.Player` urge.
+ * - Do not use this as a gameplay write path; gameplay should still set `runtimeContext.Player` urge.
  *
  * Relevance:
  * - Derived thresholds are legacy mirrors of the canonical first-urge value.
@@ -65,15 +69,15 @@ export function syncPlayerLegacyThresholdsFromCanonical(urge: number) {
 export let ymaxtummy = 500; // Drink capacity of stomach
 export function setYmaxtummy(val: number) {
     ymaxtummy = Number(val) || 0;
-    if (gameState.Player) {
-        gameState.Player.MaxTummy = ymaxtummy;
+    if (runtimeContext.Player) {
+        runtimeContext.Player.MaxTummy = ymaxtummy;
     }
 }
 export let ymaxbeer = 1000; // Beer capacity of stomach
 export function setYmaxbeer(val: number) {
     ymaxbeer = Number(val) || 0;
-    if (gameState.Player) {
-        gameState.Player.MaxAlcohol = ymaxbeer;
+    if (runtimeContext.Player) {
+        runtimeContext.Player.MaxAlcohol = ymaxbeer;
     }
 }
 
@@ -83,8 +87,8 @@ export let yminurge = 375; // min bladder urge
 export let ynowpeeing = 0; // flag: you are currently peeing
 export function setYnowpeeing(val: number) {
     ynowpeeing = Number(val) || 0;
-    if (gameState.Player) {
-        gameState.Player.NowPeeing = !!ynowpeeing;
+    if (runtimeContext.Player) {
+        runtimeContext.Player.NowPeeing = !!ynowpeeing;
     }
 }
 
@@ -93,8 +97,8 @@ export function setYnowpeeing(val: number) {
 export let ylastpeetime = 0;  // When did you last go?
 export function setYlastpeetime(val: number) {
     ylastpeetime = Number(val) || 0;
-    if (gameState.Player) {
-        gameState.Player.LastPeeTime = ylastpeetime;
+    if (runtimeContext.Player) {
+        runtimeContext.Player.LastPeeTime = ylastpeetime;
     }
 }
 export let ytimeheld = 0; // for stats
@@ -119,8 +123,8 @@ export function initYUrge(urge: number){
 export function updateyoururge(newurge: number) {
     if (newurge < yminurge) newurge = yminurge;
     newurge = Math.round(newurge);
-    gameState.Player?.setUrge(newurge);
-    syncPlayerLegacyThresholdsFromCanonical(gameState.Player?.bladderUrge ?? newurge);
+    runtimeContext.Player?.setUrge(newurge);
+    syncPlayerLegacyThresholdsFromCanonical(runtimeContext.Player?.bladderUrge ?? newurge);
 }
 
 export function flushyourdrank() {
@@ -249,7 +253,7 @@ export function youbegtoilet(curtext: any[]): any[] {
 }
 
 function getPlayerBladderThresholds() {
-    const player = gameState.Player;
+    const player = runtimeContext.Player;
     return {
         bladderUrge: player?.bladderUrge ?? yourbladurge,
         bladderNeed: player?.bladderNeed ?? yourbladneed,

@@ -11,6 +11,9 @@ export let enableascii: number = 0;
 export function setEnableascii(val: number) { enableascii = val; }
 export let playerGame: number = 0;
 export function setPlayerGame(val: number) { playerGame = val; }
+export let heroutfit = "jeans";
+export let multiplemoves = 1;
+export let rstmoves = 0;
 
 export let showstats = 1; // 1 = Show her bladder state, etc.
 // Girl Selection Parameters

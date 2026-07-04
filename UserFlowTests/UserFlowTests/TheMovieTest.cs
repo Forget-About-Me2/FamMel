@@ -14,6 +14,7 @@ public class TheMovieTest {
   [TearDown]
   protected void TearDown() {
     driver.Quit();
+    driver.Dispose();
   }
 
   [Test]

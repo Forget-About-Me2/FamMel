@@ -22,6 +22,7 @@ import { exposeDartsOnWindow } from './games/darts';
 
 // Batch 2 — former script-style files now bundled
 import { exposeBladderOnWindow } from './bladder';
+import { exposeYourBladderOnWindow } from './yourbladder';
 import { exposeSettingsOnWindow } from './settings';
 import { exposeFuckHerOnWindow } from './fuckHer';
 import { exposeDriveOnWindow } from './drive';
@@ -56,6 +57,7 @@ exposeDartsOnWindow();
 
 // Expose Batch 2 — former script-style files
 exposeBladderOnWindow();
+exposeYourBladderOnWindow();
 exposeSettingsOnWindow();
 exposeFuckHerOnWindow();
 exposeDriveOnWindow();
@@ -70,6 +72,17 @@ exposeBackPackItemsOnWindow();
 exposeStoreOnWindow();
 exposeDebugMenuOnWindow();
 
+
+// Expose gameScreen on window for inline scripts
+try {
+    (globalThis as any).gameScreen = gameScreen;
+    console.log("gameScreen assigned successfully:", typeof gameScreen);
+} catch (e) {
+    console.error("Failed to assign gameScreen:", e);
+}
+
+// Expose go on window for data-action delegated click handler
+(globalThis as any).go = go;
 
 // Wire up static UI elements
 document.getElementById("backpack-link")?.addEventListener("click", function (e) {

@@ -23,6 +23,7 @@ public class SettingsSexSceneOwnershipBridgeTests
     public void TearDown()
     {
         _driver.Quit();
+        _driver.Dispose();
     }
 
     [Test]

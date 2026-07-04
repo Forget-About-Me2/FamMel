@@ -42,6 +42,7 @@ public class NavigationSmokeTests
     public void TearDown()
     {
         _driver.Quit();
+        _driver.Dispose();
     }
 
     [Test]

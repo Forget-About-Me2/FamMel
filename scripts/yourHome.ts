@@ -24,13 +24,13 @@ export function yourHome() {
     const currentLocationTag = getCurrentLocationTag();
     if (!runtimeContext.DidIntro) {
         runtimeContext.DidIntro = true;
-        curtext = printIntro(curtext, 0);
+        curtext = [...locjson["homeIntro"][0]];
     } else {
         if (currentLocationTag !== "yourhome" || onphone || shopping) {
             onphone = 0;
             setShopping(0);
         }
-        curtext = printIntro(curtext, 1);
+        curtext = [...locjson["homeIntro"][1]];
     }
     curtext = printAlways(curtext);
     curtext = displayyourneed(curtext);
@@ -47,7 +47,6 @@ export function yourHome() {
     curtext = printChoices(curtext, choices);
     sayText(curtext);
 }
-
 
 
 function buy(number){

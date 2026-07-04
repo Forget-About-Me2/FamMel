@@ -17,4 +17,11 @@ class GameScreen {
     }
 }
 
-export const gameScreen = new GameScreen();
+let gameScreenInstance: GameScreen | undefined;
+try {
+    gameScreenInstance = new GameScreen();
+} catch (e) {
+    console.error("Failed to create GameScreen:", e);
+}
+
+export const gameScreen = gameScreenInstance;

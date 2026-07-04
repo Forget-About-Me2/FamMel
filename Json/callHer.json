@@ -1,0 +1,50 @@
+{
+  "callHerIntro":[
+    "girlname answers after a couple of rings",
+    "girltalk Hello?",
+    "<b>YOU:</b> Hey!"
+  ],
+  "onThePhone": "You're on the phone with girlname",
+  "yourLateDialogue": [
+    "girltalk Where are you?",
+    "girltalk You're late",
+    "girltalk You're in big trouble, mister. Het over here now!"
+  ],
+  "yourLateAndSheEmerDialogue": [
+    "girltalk Hey do you realise what time it is!!?",
+    "girltalk Klik! Byeeeeeeeeeeeeee...",
+    "...",
+    "girltalk Just kidding. But get your arse in gear over there!"
+  ],
+  "sheEmerDialogue": [
+    "girltalk Hey. Listen. I've gotta go now. Bye!",
+    "She hangs up."
+  ],
+  "cantWaitDialogue": [
+    "girltalk Hey! I've been trying to wait to pee like you asked."
+  ],
+  "askFavour": [
+    "<b>YOU:</b> Hey! I have a little favour to ask you...",
+    "girltalk Okay ... What do you want me to do?"
+  ],
+  "FavourDenyNeed": [
+    "girltalk Nope."
+  ],
+  "FavourNoNeed": [
+    "girltalk Not especially. Why do you ask?"
+  ],
+  "FavourUrge": [
+    "girltalk Yeah, I sorta do have to go. How'd you know?"
+  ],
+  "FavourNeed": [
+    "girltalk Actually, I have to pee pretty bad. How'd you know?"
+  ],
+  "FavourReally": [
+    "girltalk Oh, really?"
+  ],
+  "choices": {
+    "continue" : "Continue...",
+    "favour" : "Ask her for a favour",
+    "hangUp": ""
+  }
+}

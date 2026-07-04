@@ -1,3 +1,3 @@
-class GameState {
+export class GameState {
 
 }

@@ -94,7 +94,7 @@ class ChoiceItem {
     protected readonly _tag: string;
 
     ToHtml(): string {
-        return "<li class=cListener id=" + this._tag + ">" + ContentScreen.FormatVars(this._text) + "</li>"
+        return "<li class=cListener id=" + this._tag + "><a href=\"javascript:void(0)\">" + ContentScreen.FormatVars(this._text) + "</a></li>"
     }
 
     constructor(text: string, tag: string) {
@@ -108,10 +108,16 @@ export class DirectFunctionChoiceItems extends ChoiceItem implements IChoicesIte
     readonly _action: () => void;
 
     AddListener() {
-        document.GetRequiredElementById(this._tag).addEventListener("click", this._action);
+        document.GetRequiredElementById(this._tag).addEventListener("click", (e) => {
+            e.preventDefault();
+            this._action();
+        });
     }
 
-    constructor(text: string, action: () => void, tag: string) {
+    constructor(text: string, action: () => void, tag: string = "") {
+        if (tag.length === 0) {
+            tag = text.toLowerCase().replace(/\s+/g, '_');
+        }
         super(text, tag);
         this._action = action;
     }

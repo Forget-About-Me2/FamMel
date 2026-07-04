@@ -264,6 +264,38 @@ function picStore(name: string, imgtype: string, url: string){
     persistImgsSnapshot();
 }
 
+function importimgs(): void {
+    const raw = localStorage.getItem("imgs");
+    if (!raw) {
+        setImgs(createDefaultImgsMap());
+        return;
+    }
+    try {
+        const parsed = JSON.parse(raw);
+        if (isObjectRecord(parsed)) {
+            const normalized: Record<string, Record<string, string>> = {};
+            for (const [girlName, imageMap] of Object.entries(parsed)) {
+                if (isObjectRecord(imageMap)) {
+                    const perGirl: Record<string, string> = {};
+                    for (const [imageKey, urlValue] of Object.entries(imageMap)) {
+                        if (typeof urlValue === "string") {
+                            perGirl[imageKey] = urlValue;
+                        }
+                    }
+                    normalized[girlName] = perGirl;
+                } else {
+                    normalized[girlName] = {};
+                }
+            }
+            setImgs(normalized);
+        } else {
+            setImgs(createDefaultImgsMap());
+        }
+    } catch {
+        setImgs(createDefaultImgsMap());
+    }
+}
+
 export function exposeImagesOnWindow(): void {
     const w = window as any;
     w.displaypix = displaypix;

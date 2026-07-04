@@ -5,9 +5,6 @@
     <!-- External libraries -->
     <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>  <!-- markdown to html converter -->
 
-    <!-- Module bundle (all game code: shims, gameState, gameScreen, settings, helpers, quotes, locations, etc.) -->
-    <script src="dist/app.js"></script>
-
     <link rel="icon" type="image/png" href="icons/GitHub-Mark-32px.png">
     <title></title>
 </head>
@@ -78,9 +75,22 @@
             </tbody>
         </table>
     </div>
+<!-- Module bundle (all game code: shims, gameState, gameScreen, settings, helpers, quotes, locations, etc.) -->
 <script>
-    import {displayIntroSequence} from "./scripts/main";
-
+    window.__capturedErrors = [];
+    window.__origOnError = window.onerror;
+    window.onerror = function(msg, url, line, col, err) {
+        window.__capturedErrors.push({msg: msg, url: url, line: line, col: col, stack: err && err.stack});
+        if (window.__origOnError) return window.__origOnError.apply(this, arguments);
+        return false;
+    };
+    window.addEventListener('unhandledrejection', function(e) {
+        window.__capturedErrors.push({msg: 'Unhandled rejection: ' + e.reason, stack: e.reason && e.reason.stack});
+        e.preventDefault();
+    });
+</script>
+<script src="dist/app.js"></script>
+<script>
     const gameScreen = window.gameScreen;
     const start = window.displayIntroSequence;
 
@@ -97,7 +107,13 @@
         const stack = errorObj && errorObj.stack ? errorObj.stack : "";
         const message = "Error: " + errorMsg + " Script: " + url + " Line: " + lineNumber
             + " Column: " + column + " StackTrace: \n" + stack;
-        gameScreen.PopUps.setErrorPopup(message);
+        try {
+            if (window.gameScreen && window.gameScreen.PopUps) {
+                window.gameScreen.PopUps.setErrorPopup(message);
+            }
+        } catch(e) {
+            console.error('onerror handler failed:', e, 'original error:', message);
+        }
     };
 
     window.onunhandledrejection = (message) => {
@@ -105,7 +121,13 @@
         if (reason && reason.stack !== undefined) {
             reason = reason.stack;
         }
-        gameScreen.PopUps.setErrorPopup(reason);
+        try {
+            if (window.gameScreen && window.gameScreen.PopUps) {
+                window.gameScreen.PopUps.setErrorPopup(reason);
+            }
+        } catch(e) {
+            console.error('onunhandledrejection handler failed:', e);
+        }
     };
 
     function renderHomeScreen(homeScreenJson) {
@@ -120,9 +142,24 @@
             + "<li class='cListener choices-items-start' id='changeLog'>" + homeScreenJson.Changelog + "</li>"
             + "<li class='cListener choices-items-start' id='credits'>" + homeScreenJson.Credits + "</li>";
 
-        document.getElementById("start").addEventListener("click", () => displayIntroSequence());
-        document.getElementById("changeLog").addEventListener("click", () => gameScreen.PopUps.ChangeLog.displayPopup());
-        document.getElementById("credits").addEventListener("click", () => gameScreen.PopUps.Credits.displayPopup());
+        document.getElementById("start").addEventListener("click", () => {
+            try {
+                if (typeof start === 'function') start();
+                else console.error('start is not a function:', start);
+            } catch (e) {
+                console.error('start click handler failed:', e);
+            }
+        });
+        document.getElementById("changeLog").addEventListener("click", () => {
+            try {
+                if (window.gameScreen && window.gameScreen.PopUps) window.gameScreen.PopUps.ChangeLog.displayPopup();
+            } catch (e) { console.error('changelog click failed:', e); }
+        });
+        document.getElementById("credits").addEventListener("click", () => {
+            try {
+                if (window.gameScreen && window.gameScreen.PopUps) window.gameScreen.PopUps.Credits.displayPopup();
+            } catch (e) { console.error('credits click failed:', e); }
+        });
     }
 
     fetch("Json/homeScreen.json")

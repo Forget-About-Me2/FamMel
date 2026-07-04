@@ -29,20 +29,42 @@ namespace UserFlowTests
 
         public static void ClickWhenInteractable(this IWebDriver driver, By by, int timeoutSeconds = 10)
         {
-            var element = driver.WaitForInteractable(by, timeoutSeconds);
+            var timeoutAt = Stopwatch.StartNew();
+            Exception? lastError = null;
 
-            try
+            while (timeoutAt.Elapsed < TimeSpan.FromSeconds(timeoutSeconds))
             {
-                element.Click();
+                try
+                {
+                    var element = driver.WaitForInteractable(by, timeoutSeconds);
+                    element.Click();
+                    return;
+                }
+                catch (StaleElementReferenceException ex)
+                {
+                    lastError = ex;
+                }
+                catch (ElementClickInterceptedException ex)
+                {
+                    lastError = ex;
+                    var element = driver.FindElement(by);
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", element);
+                    return;
+                }
+                catch (ElementNotInteractableException ex)
+                {
+                    lastError = ex;
+                    var element = driver.FindElement(by);
+                    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", element);
+                    return;
+                }
+                catch (UnknownErrorException ex) when (ex.Message.Contains("Node with given id does not belong to the document"))
+                {
+                    lastError = ex;
+                }
             }
-            catch (ElementClickInterceptedException)
-            {
-                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", element);
-            }
-            catch (ElementNotInteractableException)
-            {
-                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", element);
-            }
+
+            throw new WebDriverTimeoutException($"Timed out waiting to click interactable element: {by}", lastError);
         }
 
         public static IWebElement WaitForInteractable(this IWebDriver driver, By by, int timeoutSeconds = 10)
@@ -65,6 +87,10 @@ namespace UserFlowTests
                     lastError = ex;
                 }
                 catch (StaleElementReferenceException ex)
+                {
+                    lastError = ex;
+                }
+                catch (UnknownErrorException ex) when (ex.Message.Contains("Node with given id does not belong to the document"))
                 {
                     lastError = ex;
                 }

@@ -20,6 +20,7 @@ public class EndgameIntegrationTests
     public void TearDown()
     {
         _driver.Quit();
+        _driver.Dispose();
     }
 
     [Test]

@@ -23,6 +23,7 @@ public class DriveImagesOwnershipBridgeTests
     public void TearDown()
     {
         _driver.Quit();
+        _driver.Dispose();
     }
 
     [Test]

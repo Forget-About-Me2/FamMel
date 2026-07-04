@@ -5,7 +5,7 @@ import {gameSettings} from "./settings/gameSettings";
 import {yourHome} from './yourHome';
 import {gameScreen} from "./gameScreen/gameScreen";
 import { animationManager } from "./gameScreen/animationManager";
-import { setupQuotes, fetchAndCacheJson, locationSetup, locjson, printAllChoices, sayText, printList, setText, fetchJson } from "./quotes";
+import { setupQuotes, fetchAndCacheJson, getMLocations, loadLocationScene, locationSetup, locjson, printAllChoices, sayText, printList, setText, fetchJson } from "./quotes";
 import { pushloc, poploc, randomInt, connectToGameState, locStack, endScreens, playerbladder, setCurrentLegacyLocationTag } from './shims';
 import { hydrateSettingsToGameState, loadSettingsFromStorage } from './settings';
 import { updateyoururge, yourbladder, setYourbladder, yourtummy, setYourtummy, ymaxtummy, setYmaxtummy, ymaxbeer, setYmaxbeer, ydrankbeer, setYdrankbeer, ynowpeeing, setYnowpeeing, yourbladurge, setYourbladurge } from './yourbladder';
@@ -193,6 +193,7 @@ export async function gamestart(){
     runtimeContext.init();
     gameScreen.StatusBar.Update();
     await fetchAndCacheJson("yourhome");
+    loadLocationScene("yourhome", "yourhome");
     await setupQuotes();
     yourHome();
 }
@@ -200,13 +201,19 @@ export async function gamestart(){
 
 // Introduction page.
 export async function displayIntroSequence() {
-    gameScreen.PopUps.Disclaimer.displayDisclaimerPopup();
-    loadSettingsFromStorage();
-    animationManager.start();
-    const introductionContent = new ContentScreen();
-    introductionContent.CurText.push(...startJson.introText);
-    introductionContent.ChoicesList.push(new DirectFunctionChoiceItems("options", showSettingsScreen() => ))
-
+    try {
+        gameScreen.PopUps.Disclaimer.displayDisclaimerPopup();
+        loadSettingsFromStorage();
+        animationManager.start();
+        const introductionContent = new ContentScreen();
+        introductionContent.CurText.push(...startJson.introText);
+        introductionContent.ChoicesList.push(new DirectFunctionChoiceItems(startJson.choices.startGame, () => gamestart()));
+        introductionContent.ChoicesList.push(new DirectFunctionChoiceItems("options", () => showSettingsScreen()));
+        introductionContent.PrintContentToScreen();
+    } catch (e) {
+        console.error("displayIntroSequence error:", e);
+        gameScreen.PopUps.setErrorPopup(String(e));
+    }
 }
 
 export function gameOver() {
@@ -215,6 +222,7 @@ export function gameOver() {
 
 // Expose legacy-facing functions to global scope for legacy JS modules
 (globalThis as any).gameOver = gameOver;
+(globalThis as any).displayIntroSequence = displayIntroSequence;
 
 //TODO maybe combine the game ending function into one
 //Basically you got her into bed but not desperate

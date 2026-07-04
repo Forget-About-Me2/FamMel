@@ -741,8 +741,10 @@ export function fuckHer6() {
 
 export function fuckHer7() {
     let curtext = printList([], sexLines["fuckNow"][18]);
-    sayText(curtext);
+
     setTimeheld(thetime - lastpeetime);
+
+    sayText(curtext);
     cListenerGen([gameWon, "Continue..."], "gameWon");
 }
 

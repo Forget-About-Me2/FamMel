@@ -18,6 +18,7 @@ public class RandomSeedDeterminismTest
     public void TearDown()
     {
         _driver.Quit();
+        _driver.Dispose();
     }
 
     [Test]

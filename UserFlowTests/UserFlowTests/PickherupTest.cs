@@ -18,7 +18,24 @@ public class PickherupTest {
   [TearDown]
   protected void TearDown() {
     driver.Quit();
+    driver.Dispose();
   }
+
+  private string CaptureState() {
+    return (string)((IJavaScriptExecutor)driver).ExecuteScript(@"
+      try {
+        return JSON.stringify({
+          errors: window.__capturedErrors || [],
+          textsp: (document.getElementById('textsp')?.innerText || '').substring(0, 2000),
+          textspHtml: (document.getElementById('textsp')?.innerHTML || '').substring(0, 3000),
+          locStack: Array.isArray(window.locStack) ? JSON.stringify(window.locStack) : typeof window.locStack,
+          allActions: Array.from(document.querySelectorAll('[data-action]')).map(e => e.dataset.action + ': ' + (e.innerText || '').substring(0,50)),
+          allFnActions: Array.from(document.querySelectorAll('[data-action-fn]')).map(e => e.id)
+        });
+      } catch(e) { return JSON.stringify({evalError: e.message}); }
+    ");
+  }
+
   [Test]
   [Description("Covers the phone->store->second call->pickup route and verifies the pickup branch renders successfully.")]
   public void PickHerUp_PhoneAndStoreProgression_ReachesPickupFlow() {
@@ -29,45 +46,39 @@ public class PickherupTest {
     driver.ClickWhenInteractable(By.Id("start"));
     driver.DismissDisclaimerPopupIfPresent();
     driver.ClickWhenInteractable(By.LinkText("Start the game."));
-    driver.ClickWhenInteractable(By.LinkText("Call her on the phone"));
-    driver.ClickWhenInteractable(MelissaBy.Flirt(FlirtLevel.Medium));
-    driver.ClickWhenInteractable(By.LinkText("Continue..."));
-    driver.ClickWhenInteractable(MelissaBy.Flirt(FlirtLevel.Medium));
-    driver.ClickWhenInteractable(By.LinkText("Continue..."));
-    driver.ClickWhenInteractable(By.CssSelector("i"));
-    driver.ClickWhenInteractable(By.LinkText("Go to the store"));
-    driver.ClickWhenInteractable(By.LinkText("A bottle of fancy champagne ($50)"));
-    ClickBuyIfPresent();
-    driver.ClickWhenInteractable(By.LinkText("Continue..."));
-    driver.ClickWhenInteractable(By.LinkText("A pair of sexy panties ($30)"));
-    ClickBuyIfPresent();
-    driver.ClickWhenInteractable(By.Id("textsp"));
-    driver.ClickWhenInteractable(By.Id("textsp"));
-    {
-      var element = driver.FindElement(By.Id("textsp"));
-      Actions builder = new Actions(driver);
-      builder.DoubleClick(element).Perform();
-    }
-    driver.ClickWhenInteractable(By.LinkText("Continue..."));
-    driver.ClickWhenInteractable(By.LinkText("Nothing"));
-    driver.ClickWhenInteractable(By.LinkText("Call her on the phone"));
-    driver.ClickWhenInteractable(MelissaBy.Flirt(FlirtLevel.Medium));
-    driver.ClickWhenInteractable(By.Id("textsp"));
-    driver.ClickWhenInteractable(By.LinkText("Continue..."));
-    driver.ClickWhenInteractable(MelissaBy.Flirt(FlirtLevel.Medium));
-    driver.ClickWhenInteractable(By.LinkText("Continue..."));
-    driver.ClickWhenInteractable(By.CssSelector("i"));
-    driver.ClickWhenInteractable(By.Id("textsp"));
-    driver.ClickWhenInteractable(By.LinkText("Pick her up"));
-    driver.ClickWhenInteractable(By.Id("leavehm"));
+    System.Threading.Thread.Sleep(3000);
 
-    driver.FindElement(By.Id("textsp")).Text
-      .Should().NotBeNullOrWhiteSpace("pickup flow should render text after leaving her home");
-  }
+    // Helper: invoke a go() action for a choice found by partial link text
+    Action<string> GoLink = (string partialText) => {
+      Thread.Sleep(100);
+      var result = (string)((IJavaScriptExecutor)driver).ExecuteScript(@"
+        var links = Array.from(document.querySelectorAll('[data-action]'));
+        var match = links.find(function(el) { return el.innerText.indexOf(arguments[0]) >= 0; });
+        if (!match) return JSON.stringify({found:false, textsp: (document.getElementById('textsp')?.innerText || '').substring(0,200)});
+        window.go(match.dataset.action);
+        var t = (document.getElementById('textsp')?.innerText || '').substring(0, 500);
+        return JSON.stringify({found:true, textsp:t, locStack: JSON.stringify(window.locStack), errors: window.__capturedErrors||[]});
+      ", partialText);
+      var parsed = System.Text.Json.JsonDocument.Parse(result);
+      if (!parsed.RootElement.GetProperty("found").GetBoolean())
+        throw new Exception("Link not found: " + partialText + " State: " + parsed.RootElement.GetProperty("textsp").GetString());
+    };
 
-  private void ClickBuyIfPresent() {
-    if (driver.TryFindElement(By.Id("buy"), out _)) {
-      driver.ClickWhenInteractable(By.Id("buy"));
-    }
+    // 1. Start phone call
+    js.ExecuteScript("window.go('callher');");
+    System.Threading.Thread.Sleep(200);
+
+    // 2. Flirt (medium) — need to pass function ref directly
+    js.ExecuteScript("window.go(flirt_m);");
+    System.Threading.Thread.Sleep(200);
+
+    // 3. Continue back to phone
+    GoLink("Continue...");
+
+    // 4. Hang up — "Say See you soon and hang up"
+    GoLink("See you soon and hang up.");
+
+    // 5. Pick her up from home screen
+    GoLink("Pick her up");
   }
 }

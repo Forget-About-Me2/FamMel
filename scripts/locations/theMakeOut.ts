@@ -60,7 +60,8 @@ import {haveSex} from '../fuckHer';
 import {runtimeContext, RuntimeContext} from '../gameState/runtimeContext';
 import {BladderLevel} from '../gameState/bladderLevel';
 import {heroutfit} from '../settings';
-import makeOut from '../../Json/locations/makeOut.json'
+import _makeOut from '../../Json/locations/makeOut.json'
+let makeOut = _makeOut;
 import {ILocation} from "./ILocation";
 import {LocationCategory} from "../gameState/locationCategory";
 
@@ -571,6 +572,15 @@ export function leaveBeach(){
     sayText(curtext);
     poploc();
     cListenerGen([theWalk, "Continue..."], "theWalk");
+}
+
+export function makeOutSetup(){
+    return {
+        "visit": [theMakeOut, "Go to the make-out spot"],
+        "wantVisit": [theMakeOut, "Take her up to the make-out spot"],
+        "group": 1,
+        "visited": 0
+    }
 }
 
 export function exposeTheMakeOutOnWindow(): void {

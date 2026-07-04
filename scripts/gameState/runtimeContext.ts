@@ -2,12 +2,14 @@ import {gameSettings} from "../settings/gameSettings";
 import {getRandomValueFromNormalDistribution} from "../helperFiles/helperFunctions";
 import {Person} from "./Person";
 import { randomInt } from "../shims";
-import { yourbladurge, yourcustomurge, yourtummy, ymaxtummy, ymaxbeer, ydrankbeer, ynowpeeing } from '../yourbladder';
+import { yourbladurge, yourcustomurge, yourtummy, ymaxtummy, ymaxbeer, ydrankbeer, ynowpeeing, yourbladder } from '../yourbladder';
 import { bladurge } from '../bladder';
 import { girlname } from '../quotes';
 import {Companion} from "./Companion";
 import {PersonSettings} from "../settings/personSettings";
 import {LocationCategory} from "./locationCategory";
+import {GameState} from "./gameState";
+export {LocationCategory};
 
 class InteractionState {
     FlirtCounter: number = 0;

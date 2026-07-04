@@ -1,20 +1,22 @@
 {
-    "homeIntro": [
-     ["You have a hot date tonight at 8 pm.",
+    "yourhome": {
+        "homeIntro": [
+            ["You have a hot date tonight at 8 pm.",
     "Her name is girlname",
     "You've heard she might be into desperation play... but you're not sure."]
-    ],
-    "whatDo": [
-      "So what are you going to do?"
-    ],
-    "choices": {
-      "goStore": "Go to the store",
-      "callHer": "Call her on the phone",
-      "youPee": "Pee before you leave",
-      "yPreDrink": "Drink some water",
-      "herHome": "Pick her up"
+        ],
+        "always": [
+            "So what are you going to do?"
+        ],
+        "choices": [
+            ["gostore", "Go to the store"],
+            ["callher", "Call her on the phone"],
+            ["youpee", "Pee before you leave"],
+            ["ypredrink", "Drink some water"],
+            ["herhome", "Pick her up"]
+        ],
+        "girlname": []
     },
-
   "callher": {
    "intro": [
     ["girlname0",
@@ -64,93 +66,38 @@
     "money": [],
     "always": [],
     "dialogue": {
-      "callher": [
-      [
-        "girltalk1",
-        "girltalk2",
-        "girltalk3",
-        "She hung up on you. And she sounds pretty upset."
+      "favor": [
+        ["<b>YOU:</b> Hey!  I have a little favor to ask you...", "girltalk8"]
       ],
-      [
-        "girltalk4",
-        "girltalk5",
-        "...",
-        "girltalk6"
+      "gotta": [
+        ["girltalk9", "girltalk10", "girltalk11", "girltalk12"],
+        ["girltalk13"],
+        ["girlname4", "girlname5", "girltalk14"]
       ],
-      [
-        "girltalk7",
-        "She hangs up."
-      ]],
-      "favor":
-      [["<b>YOU:</b> Hey!  I have a little favor to ask you...",
-      "girltalk8"]
-    ],
-      "gotta":  [[
-        "girltalk9",
-        "girltalk10",
-        "girltalk11",
-        "girltalk12"
+      "bribes": [
+        ["girltalk15", "girltalk16"],
+        ["girltalk17", "girltalk18"],
+        ["girltalk19", "girltalk16"]
       ],
-      ["girltalk13"],
-      [
-        "girlname4",
-        "girlname5",
-        "girltalk14"]
+      "panties": [
+        ["girltalk20"],
+        ["girltalk21"],
+        ["girltalk22"]
       ],
-    "bribes": [[
-      "girltalk15",
-      "girltalk16"
+      "changepanties": [
+        ["{0}Okay, I'll put on my {1} panties for you."],
+        ["girltalk23"],
+        ["{0}I'm peeling off my {1} panties..."],
+        ["{0}and slipping on my {1} ones."],
+        ["girltalk24"]
       ],
-      [
-      "girltalk17",
-      "girltalk18"
-      ],
-      [
-      "girltalk19",
-      "girltalk16"
-      ]],
-    "panties":  [
-      [
-        "girltalk20"
-      ],
-      [
-        "girltalk21"
-      ],
-      [
-        "girltalk22"
+      "predrink": [
+        ["girltalk25"],
+        ["girltalk26", "She drinks two glasses of refreshing water."],
+        ["girltalk27"],
+        ["girltalk28"]
       ]
-    ],
-    "changepanties":[
-      [
-        "{0}Okay, I'll put on my {1} panties for you."
-      ],
-      [
-        "girltalk23"
-      ],
-      [
-        "{0}I'm peeling off my {1} panties..."
-      ],
-      [
-        "{0}and slipping on my {1} ones."
-      ],
-      ["girltalk24"]
-    ],
-    "predrink": [
-      [
-        "girltalk25"
-      ],
-      [
-        "girltalk26",
-        "She drinks two glasses of refreshing water."
-      ],
-      [
-        "girltalk27"
-      ],
-      [
-        "girltalk28"
-      ]
-    ]}
-  ,
+    },
     "choices": [
       ["goback", "Continue..."],
       ["favor", "Ask her for a favor"],
