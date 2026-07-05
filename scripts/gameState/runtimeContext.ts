@@ -499,22 +499,16 @@ export class RuntimeContext {
     }
 
     /**
-     * Sets canonical attraction state and mirrors to the legacy global.
+     * Sets canonical attraction state with clamping and LastAttraction tracking.
      *
      * Numeric contract: accepts finite number inputs only. Non-finite values
      * (`NaN`, `Infinity`, `-Infinity`) are deterministic no-op.
      *
-     * Bridge contract: legacy compatibility setters in shims delegate here after
-     * runtime initialization. This method is the authoritative write path.
-     *
      * Side effects on valid write: (1) LastAttraction is set to the prior
-     * canonical value, (2) Attraction is updated with the clamped value,
-     * (3) window.attraction is mirrored to that clamped value. All three
-     * updates occur atomically in one execution.
+     * canonical value, (2) Attraction is updated with the clamped value.
      *
      * @param value Numeric value to set. Must be finite.
      * @side-effect Updates LastAttraction to the prior canonical value.
-     * @side-effect Updates window.attraction to mirror the canonical value.
      */
     setAttraction(value: number): void {
         if (!Number.isFinite(value)) {
@@ -526,7 +520,6 @@ export class RuntimeContext {
 
         this.LastAttraction = previous;
         this._attraction = clamped;
-        (globalThis as any).__syncLegacyAttractionMirror(clamped);
     }
 
     get Shyness(): number {
@@ -538,22 +531,16 @@ export class RuntimeContext {
     }
 
     /**
-     * Sets canonical shyness state and mirrors to the legacy global.
+     * Sets canonical shyness state with clamping and LastShyness tracking.
      *
      * Numeric contract: accepts finite number inputs only. Non-finite values
      * (`NaN`, `Infinity`, `-Infinity`) are deterministic no-op.
      *
-     * Bridge contract: legacy compatibility setters in shims delegate here after
-     * runtime initialization. This method is the authoritative write path.
-     *
      * Side effects on valid write: (1) LastShyness is set to the prior
-     * canonical value, (2) Shyness is updated with the clamped value,
-     * (3) window.shyness is mirrored to that clamped value. All three
-     * updates occur atomically in one execution.
+     * canonical value, (2) Shyness is updated with the clamped value.
      *
      * @param value Numeric value to set. Must be finite.
      * @side-effect Updates LastShyness to the prior canonical value.
-     * @side-effect Updates window.shyness to mirror the canonical value.
      */
     setShyness(value: number): void {
         if (!Number.isFinite(value)) {
@@ -565,7 +552,6 @@ export class RuntimeContext {
 
         this.LastShyness = previous;
         this._shyness = clamped;
-        (globalThis as any).__syncLegacyShynessMirror(clamped);
     }
 
     get CurRandCounter() : number {

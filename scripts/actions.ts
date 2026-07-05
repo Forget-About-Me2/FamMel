@@ -1,5 +1,5 @@
 import { callChoice, sayText, c, printList, cListenerGenList, flirtresps, appearance, feelUp, kissing, girlname, basegirl } from './quotes';
-import { pickrandom, incrandom, getCurrentLocationTag, randcounter, attraction, setAttraction, shyness, setShyness, flirtcounter, setFlirtcounter, flirtedflag, setFlirtedflag } from './shims';
+import { pickrandom, incrandom, getCurrentLocationTag, randcounter, flirtcounter, setFlirtcounter, flirtedflag, setFlirtedflag } from './shims';
 import { haveSex } from './fuckHer';
 import { runtimeContext } from './gameState/runtimeContext';
 import { BladderLevel } from './gameState/bladderLevel';
@@ -8,14 +8,14 @@ import { heroutfit } from './settings';
 export function flirt_l() {
     let curtext: any[] = []
     const currentLocationTag = getCurrentLocationTag();
-    setShyness(shyness - 1);
+    runtimeContext.setShyness(runtimeContext.Shyness - 1);
     if (flirtcounter < 1) {
         if (currentLocationTag === "callher")
             curtext.push(flirtresps["lowcell"][randcounter]);
         else
             curtext.push(flirtresps["low"][randcounter]);
         incrandom();
-        setAttraction(attraction + 2);
+        runtimeContext.setAttraction(runtimeContext.Attraction + 2);
     } else
         //TODO have there be more quotes/responsive choice based on length of array
         curtext.push(flirtresps["neutral"][0])
@@ -28,14 +28,14 @@ export function flirt_l() {
 export function flirt_m() {
     let curtext: any[] = [];
     const currentLocationTag = getCurrentLocationTag();
-    setShyness(shyness - 2);
+    runtimeContext.setShyness(runtimeContext.Shyness - 2);
     if (flirtcounter < 1) {
         if (currentLocationTag === "callher")
             curtext.push(flirtresps["lowcell"][randcounter]);
         else
             curtext.push(flirtresps["low"][randcounter]);
         incrandom();
-        setAttraction(attraction + 3);
+        runtimeContext.setAttraction(runtimeContext.Attraction + 3);
     }
     if (flirtcounter === 1) {
         if (currentLocationTag === "callher")
@@ -43,7 +43,7 @@ export function flirt_m() {
         else
             curtext.push(flirtresps["med"][randcounter]);
         incrandom();
-        setAttraction(attraction + 6);
+        runtimeContext.setAttraction(runtimeContext.Attraction + 6);
     }
     if (flirtcounter > 1) {
         curtext.push(flirtresps["neutral"][0])
@@ -54,18 +54,18 @@ export function flirt_m() {
     sayText(curtext);
 }
 
-//High level responses only available when attraction is >35.
+//High level responses only available when runtimeContext.Attraction is >35.
 export function flirt_h() {
     let curtext: any[] = [];
     const currentLocationTag = getCurrentLocationTag();
-    if (attraction > 35 && shyness < 70) {
+    if (runtimeContext.Attraction > 35 && runtimeContext.Shyness < 70) {
         curtext.push(flirtresps["high"][randcounter]);
         incrandom();
-        setAttraction(attraction + 10);
+        runtimeContext.setAttraction(runtimeContext.Attraction + 10);
     } else {
         curtext.push(flirtresps["bad"][randcounter]);
-        setShyness(shyness + 10);
-        if (shyness > 100) setShyness(100);
+        runtimeContext.setShyness(runtimeContext.Shyness + 10);
+        if (runtimeContext.Shyness > 100) runtimeContext.setShyness(100);
     }
     setFlirtcounter(flirtcounter + 4);
     setFlirtedflag(flirtedflag + 1);
@@ -93,31 +93,31 @@ export function feelup() {
         if (runtimeContext.Companion.bladderState >= BladderLevel.Emergency) curtext.push(pickrandom(feelUp["peeTub"]));
         else curtext.push(pickrandom(feelUp["resTub"]));
     }
-    if (flirtcounter > 1 && attraction > 35) {
+    if (flirtcounter > 1 && runtimeContext.Attraction > 35) {
         curtext.push(pickrandom(feelUp["resp"]));
         if (currentLocationTag !== "thehottub")
             curtext.push("She" + pickrandom(feelUp["you"]));
         else
             curtext.push("She" + pickrandom(feelUp["youTub"]));
         if (runtimeContext.Romance.FeelCounter < runtimeContext.Romance.MaxFeel) {
-            setAttraction(attraction + 5);
-            setShyness(shyness - 2);
+            runtimeContext.setAttraction(runtimeContext.Attraction + 5);
+            runtimeContext.setShyness(runtimeContext.Shyness - 2);
             runtimeContext.Romance.Arousal += 1;
         }
-    } else if (attraction > 20) {
+    } else if (runtimeContext.Attraction > 20) {
         if (currentLocationTag !== "thehottub")
             curtext.push(girlname + pickrandom(feelUp["you"]));
         else
             curtext.push(girlname + pickrandom(feelUp["youTub"]));
         if (runtimeContext.Romance.FeelCounter < runtimeContext.Romance.MaxFeel) {
-            setAttraction(attraction + 3);
-            setShyness(shyness - 5);
+            runtimeContext.setAttraction(runtimeContext.Attraction + 3);
+            runtimeContext.setShyness(runtimeContext.Shyness - 5);
             runtimeContext.Romance.Arousal += 2;
         }
     } else {
         curtext.push(pickrandom(feelUp["bad"]));
-        setAttraction(attraction - 2);
-        setShyness(shyness + 5);
+        runtimeContext.setAttraction(runtimeContext.Attraction - 2);
+        runtimeContext.setShyness(runtimeContext.Shyness + 5);
     }
     setFlirtcounter(flirtcounter + 4);
     curtext = callChoice(["curloc", "Continue..."], curtext);
@@ -129,30 +129,30 @@ export function kissher(curtext: any[] = [], sexLoc?: string) {
     const currentLocationTag = getCurrentLocationTag();
     const [kissAttempt, kissRejected, kissPleasedResponse, kissReturnedKiss, kissPassionateReturn] = kissing["diag"];
     curtext = printList(curtext, kissAttempt);
-    if (attraction < 10 || (flirtcounter > 1 && attraction < 20)) {
+    if (runtimeContext.Attraction < 10 || (flirtcounter > 1 && runtimeContext.Attraction < 20)) {
         curtext = printList(curtext, kissRejected);
-        setAttraction(attraction - 3);
-    } else if (attraction < 20 || (flirtcounter > 2 && attraction < 30)) {
+        runtimeContext.setAttraction(runtimeContext.Attraction - 3);
+    } else if (runtimeContext.Attraction < 20 || (flirtcounter > 2 && runtimeContext.Attraction < 30)) {
         curtext = printList(curtext, kissPleasedResponse);
         if (runtimeContext.Romance.KissCounter < runtimeContext.Romance.MaxKiss) {
             setFlirtcounter(flirtcounter + 3);
-            setAttraction(attraction + 3);
-            setShyness(shyness - 3);
+            runtimeContext.setAttraction(runtimeContext.Attraction + 3);
+            runtimeContext.setShyness(runtimeContext.Shyness - 3);
             runtimeContext.Romance.Arousal += 2;
         }
-    } else if (attraction < 30) {
+    } else if (runtimeContext.Attraction < 30) {
         curtext = printList(curtext, kissReturnedKiss);
         if (runtimeContext.Romance.KissCounter < runtimeContext.Romance.MaxKiss) {
             setFlirtcounter(flirtcounter + 3);
-            setAttraction(attraction + 3);
-            setShyness(shyness - 3);
+            runtimeContext.setAttraction(runtimeContext.Attraction + 3);
+            runtimeContext.setShyness(runtimeContext.Shyness - 3);
             runtimeContext.Romance.Arousal += 4;
         }
-    } else if (attraction < 50) {
+    } else if (runtimeContext.Attraction < 50) {
         curtext = printList(curtext, kissPassionateReturn);
         if (runtimeContext.Romance.KissCounter < runtimeContext.Romance.MaxKiss) {
-            setAttraction(attraction + 3);
-            setShyness(shyness - 3);
+            runtimeContext.setAttraction(runtimeContext.Attraction + 3);
+            runtimeContext.setShyness(runtimeContext.Shyness - 3);
             runtimeContext.Romance.Arousal += 6;
         }
     } else {
@@ -177,8 +177,8 @@ export function kissher(curtext: any[] = [], sexLoc?: string) {
             }
         }
         if (runtimeContext.Romance.KissCounter < runtimeContext.Romance.MaxKiss) {
-            setAttraction(attraction + 3);
-            setShyness(shyness - 3);
+            runtimeContext.setAttraction(runtimeContext.Attraction + 3);
+            runtimeContext.setShyness(runtimeContext.Shyness - 3);
         }
     }
     runtimeContext.Romance.Arousal += 2;

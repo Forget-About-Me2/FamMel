@@ -1,5 +1,5 @@
 import { printList, printListSelection, printAllChoicesList, callChoice, sayText, c, cListener, cListenerGenList, addListenersList, addSayText, addGirlTalk, formatAllVarsList, fetchJson, setText, handleFlirt, objQuotes, setObjQuotes, needs, drinklines, appearance, girlname, girltalk, girlgasp, pantycolor, setPantycolor, comma, setComma } from './quotes';
-import { randomchoice, pickrandom, randomIndex, formatAll, getCurrentLocationTag, locStack, attraction, setAttraction, shyness, setShyness, haveherpurse, setHaveherpurse, maxflirts, noflirtflag, flirtedflag, showedneed, playerbladder } from './shims';
+import { randomchoice, pickrandom, randomIndex, formatAll, getCurrentLocationTag, locStack, haveherpurse, setHaveherpurse, maxflirts, noflirtflag, flirtedflag, showedneed, playerbladder } from './shims';
 import { peein, displayneed, displayholdquip, indepee, showneed, tummy, setTummy, maxtummy, setMaxtummy, maxbeer, setMaxbeer, drankbeer, setDrankbeer, gottagoflag, askholditcounter, setAskholditcounter, bribeAskBase, setBribeAskBase, bribeaskthresh, setBribeaskthresh, wetlegs, setWetlegs, brokeice } from './bladder';
 import { ypeein, yourtummy, setYourtummy, ymaxtummy, setYmaxtummy, ymaxbeer, setYmaxbeer, ydrankbeer, setYdrankbeer } from './yourbladder';
 import { openPopUp } from './pop-up';
@@ -699,7 +699,7 @@ export function giveHer(item){
 
     if (item === "sexyPanties") {
         setPantycolor("sexy");
-        if (!wetlegs) setAttraction(attraction + 5);
+        if (!wetlegs) runtimeContext.setAttraction(runtimeContext.Attraction + 5);
         else curtext = printList(curtext, quotes[1]);
     } else if (item === "ptowels") {
         setWetlegs(0);
@@ -710,7 +710,7 @@ export function giveHer(item){
         }
     } else if (runtimeContext.Companion.bladderState < BladderLevel.Emergency) {
         curtext = printList(curtext, quotes[1]);
-        setAttraction(attraction + (obj.attr ?? 0));
+        runtimeContext.setAttraction(runtimeContext.Attraction + (obj.attr ?? 0));
         if (item === "earrings") {
             // Giving earrings raises the chance she holds it when you ask when desperate.
             setBribeAskBase(Math.min(bribeAskBase + 1, MAX_BRIBE_LEVEL));
@@ -719,11 +719,11 @@ export function giveHer(item){
     } else {
         // She's past emergency — less grateful, but will hold it longer
         curtext = printList(curtext, quotes[2]);
-        setAttraction(attraction + (obj.emerAttr ?? 0));
+        runtimeContext.setAttraction(runtimeContext.Attraction + (obj.emerAttr ?? 0));
         setAskholditcounter(askholditcounter + (obj.holdCount ?? 0));
     }
 
-    setAttraction(attraction + (obj.attraction ?? 0));
+    runtimeContext.setAttraction(runtimeContext.Attraction + (obj.runtimeContext.Attraction ?? 0));
     sayText(curtext);
     listenerList.forEach(item => cListener(item[0], item[1]));
     curtext = callChoice(["curloc", "Continue..."] );
@@ -874,12 +874,12 @@ type DrinkMode = 'her' | 'you' | 'together';
 
 function doesCompanionRefuseDrink(item: string): boolean {
     return ((tummy > maxtummy && (item !== "beer" || tummy > maxbeer)) && item !== "cocktail") ||
-        (attraction < 10 && runtimeContext.Companion.bladderState >= BladderLevel.Need) ||
-        (attraction < 20 && runtimeContext.Companion.bladderState >= BladderLevel.Emergency);
+        (runtimeContext.Attraction < 10 && runtimeContext.Companion.bladderState >= BladderLevel.Need) ||
+        (runtimeContext.Attraction < 20 && runtimeContext.Companion.bladderState >= BladderLevel.Emergency);
 }
 
 function generateDrinkQuotes(curtext: any[], drink: IBackpackItem, mode: DrinkMode): any[] {
-    if (mode !== 'you' && runtimeContext.Companion.bladderState >= BladderLevel.Emergency && shyness < 90 && brokeice) {
+    if (mode !== 'you' && runtimeContext.Companion.bladderState >= BladderLevel.Emergency && runtimeContext.Shyness < 90 && brokeice) {
         curtext.push(pickrandom(needs["drinkquote"]));
         const verb = mode === 'her' ? "She drinks the " : "You both drink your ";
         curtext.push(verb + drink.bpName.toLowerCase() + ".");
@@ -915,8 +915,8 @@ function applyDrinkStats(drink: IBackpackItem, mode: DrinkMode) {
         setTummy(tummy + (drink.volume ?? 0));
         drink.sheDrank = (drink.sheDrank ?? 0) + 1;
         setDrankbeer(drankbeer + (drink.drankBeer ?? 0));
-        setAttraction(attraction + (drink.attraction ?? 0));
-        setShyness(shyness - (drink.shyness ?? 0));
+        runtimeContext.setAttraction(runtimeContext.Attraction + (drink.runtimeContext.Attraction ?? 0));
+        runtimeContext.setShyness(runtimeContext.Shyness - (drink.runtimeContext.Shyness ?? 0));
     }
     if (youDrink) {
         setYourtummy(yourtummy + (drink.volume ?? 0));

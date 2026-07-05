@@ -5,7 +5,8 @@ import { theatreSetup } from './locations/theatre';
 import { makeOutSetup } from './locations/theMakeOut';
 import { herHomeSetup, homeConditions } from './herhome';
 import { fetchJson, formatAllVarsList, printList, callChoice, sayText, cListener, cListenerGen, addSayText, addListenersList, addListeners } from './quotes';
-import { pickrandom, randomchoice, pushloc, formatAll, attraction, shyness } from './shims';
+import { pickrandom, randomchoice, pushloc, formatAll } from './shims';
+import { runtimeContext } from './gameState/runtimeContext';
 import { displayneed, displaygottavoc, showneed, holdit, indepee } from './bladder';
 import { displayyourneed } from './yourbladder';
 import { backPackItems, haveItem } from './backPackItems';
@@ -37,15 +38,15 @@ export function locJsonSetup(data: any){
 
 //Determines whether the wants to visit a location.
 export function updateSuggestedLocation(){
-    if (shyness < 30 && attraction > 50 && !locations.makeOut.visited) {
+    if (runtimeContext.Shyness < 30 && runtimeContext.Attraction > 50 && !locations.makeOut.visited) {
         setSuggestedloc("themakeout");
     } else if (homeConditions()) {
         setSuggestedloc("thehome");
-    } else if (shyness > 80 && attraction < 30 && !seenmovie) {
+    } else if (runtimeContext.Shyness > 80 && runtimeContext.Attraction < 30 && !seenmovie) {
         setSuggestedloc("themovie");
-    } else if (shyness < 60 && attraction > 30 && !locations.theClub.visited) {
+    } else if (runtimeContext.Shyness < 60 && runtimeContext.Attraction > 30 && !locations.theClub.visited) {
         setSuggestedloc("theclub");
-    } else if (runtimeContext.Companion.bladderState >= BladderLevel.Need && shyness < 50 && !locations.theBar.visited) {
+    } else if (runtimeContext.Companion.bladderState >= BladderLevel.Need && runtimeContext.Shyness < 50 && !locations.theBar.visited) {
         setSuggestedloc("thebar");
     }
 }

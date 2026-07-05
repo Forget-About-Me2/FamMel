@@ -1,5 +1,6 @@
 import { fetchJson, printList, sayText, cListenerGen, cListenerGenList, appearance, general, objQuotes } from '../quotes';
-import { pickrandom, randomchoice, pushloc, poploc, formatAll, getCurrentLocationTag, thetime, theaterclosingtime, attraction, setAttraction, shyness, setShyness, owedfavor, setOwedfavor } from '../shims';
+import { pickrandom, randomchoice, pushloc, poploc, formatAll, getCurrentLocationTag, thetime, theaterclosingtime, owedfavor, setOwedfavor } from '../shims';
+import { runtimeContext } from '../gameState/runtimeContext';
 import { showneed, noteholding, interpbladder, wetherself, preventpee, holdit, allowpee, gottagoflag } from '../bladder';
 import { displayyourneed, wetyourself, youpee } from '../yourbladder';
 import { standobjs, haveItem, buyItem, backPackItems, allowItems, setAllowItems } from '../backPackItems';
@@ -105,7 +106,7 @@ export function askMovie() {
         curtext = printList(curtext, temp);
         listenerList.push([[function () {
             moviechoice = favoritemovie;
-            setAttraction(attraction + 2);
+            runtimeContext.setAttraction(runtimeContext.Attraction + 2);
             preMoviePee();}, "Let's watch that then."], "movieFavour"]);
         listenerList.push([[chooseOtherMovie, theatre["favouriteMovie"][favoritemovie]["choice"]], "chooseOther"]);
     } else {
@@ -164,7 +165,7 @@ export function movieArgue() {
     if (askedfavourite) {
         //You asked her which movie she wanted to watch and then deliberately chose a different one.
         curtext = printList(curtext, theatre["watchMovie"][4]); // argueBadFaith
-        setAttraction(attraction - 5);
+        runtimeContext.setAttraction(runtimeContext.Attraction - 5);
         preMoviePee(curtext);
     } else {
         let moviename = theatre["favouriteMovie"][favoritemovie]["name"];
@@ -268,10 +269,10 @@ export function movieRomance() {
     let curtext: any[] = [];
     const [attempt, success, failure] = theatre["movieRomance"];
     curtext = printList(curtext, attempt);
-    if (moviecounter === 4 || moviecounter === 6 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 30)) {
+    if (moviecounter === 4 || moviecounter === 6 || ((moviecounter >= 7 || moviecounter ===0) && runtimeContext.Attraction > 30)) {
         curtext = printList(curtext, success);
-        setAttraction(attraction + 3);
-        setShyness(shyness - 3);
+        runtimeContext.setAttraction(runtimeContext.Attraction + 3);
+        runtimeContext.setShyness(runtimeContext.Shyness - 3);
     } else {
         curtext = printList(curtext, failure);
     }
@@ -288,10 +289,10 @@ export function movieSex() {
     let curtext: any[] = [];
     const [attempt, success] = theatre["movieSex"];
     curtext = printList(curtext, attempt);
-    if (moviecounter === 3 || moviecounter === 5 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 70)) {
+    if (moviecounter === 3 || moviecounter === 5 || ((moviecounter >= 7 || moviecounter ===0) && runtimeContext.Attraction > 70)) {
         curtext.push(pickrandom(appearance["clothes"][heroutfit]["thighresp"]));
-        setAttraction(attraction + 3);
-        setShyness(shyness - 3);
+        runtimeContext.setAttraction(runtimeContext.Attraction + 3);
+        runtimeContext.setShyness(runtimeContext.Shyness - 3);
     } else {
         curtext = printList(curtext, theatre["movieSex"][1]);
     }
@@ -307,10 +308,10 @@ export function movieScary() {
     setAllowItems(1);
     const [attempt, success, failure] = theatre["movieScary"];
     let curtext = printList([], attempt);
-    if (moviecounter === 2 || ((moviecounter >= 7 || moviecounter ===0) && attraction > 40)) {
+    if (moviecounter === 2 || ((moviecounter >= 7 || moviecounter ===0) && runtimeContext.Attraction > 40)) {
         curtext = printList(curtext, success);
-        setAttraction(attraction + 3);
-        setShyness(shyness - 3);
+        runtimeContext.setAttraction(runtimeContext.Attraction + 3);
+        runtimeContext.setShyness(runtimeContext.Shyness - 3);
     } else {
         curtext = printList(curtext, failure);
     }
@@ -326,10 +327,10 @@ export function movieDoh() {
     setAllowItems(1);
     const [attempt, success, failure] = theatre["movieDoh"];
     let curtext = printList([], attempt);
-    if (moviecounter === 1 || ((moviecounter >= 7 || moviecounter === 0) && attraction > 50)) {
+    if (moviecounter === 1 || ((moviecounter >= 7 || moviecounter === 0) && runtimeContext.Attraction > 50)) {
         curtext = printList(curtext, success);
-        setAttraction(attraction + 3);
-        setShyness(shyness - 3);
+        runtimeContext.setAttraction(runtimeContext.Attraction + 3);
+        runtimeContext.setShyness(runtimeContext.Shyness - 3);
     } else {
         curtext = printList(curtext, failure);
     }

@@ -10,7 +10,6 @@
     setPantycolor
 } from '../quotes';
 import {
-    attraction,
     flirtcounter,
     formatAll,
     getCurrentLocationTag,
@@ -19,11 +18,9 @@ import {
     poploc,
     pushloc,
     randomchoice,
-    setAttraction,
     setFlirtcounter,
-    setShyness,
-    shyness
 } from '../shims';
+import { runtimeContext } from '../gameState/runtimeContext';
 import {
     bladder,
     blademer,
@@ -98,10 +95,10 @@ export function theMakeOut() {
     setAllowItems(1);
     let curtext: any[] = [];
     let listenerList: any[] = [];
-    // theMakeOut: [0]=arrival (attraction high enough), [1]=attraction too low, [2]=ambient, [3]=rejection
+    // theMakeOut: [0]=arrival (runtimeContext.Attraction high enough), [1]=runtimeContext.Attraction too low, [2]=ambient, [3]=rejection
     const [makeOutArrival, attractionLow, makeOutAmbient, makeOutRejection] = makeOut["theMakeOut"];
     if (getCurrentLocationTag() !== "theMakeOut") {
-        if (attraction > gomakeoutthresh) {
+        if (runtimeContext.Attraction > gomakeoutthresh) {
             curtext = printList(curtext, makeOutArrival);
             pushloc("theMakeOut");
         } else {
@@ -142,8 +139,8 @@ export function theMakeOut() {
 }
 
 export function failMakeOut() {
-    setShyness(shyness + 10);
-    setAttraction(attraction - 10);
+    runtimeContext.setShyness(runtimeContext.Shyness + 10);
+    runtimeContext.setAttraction(runtimeContext.Attraction - 10);
     const makeOutRejection = makeOut["theMakeOut"][3];
     let curtext = printList([], makeOutRejection);
     curtext = displayneed(curtext);
@@ -192,7 +189,7 @@ export function viewStars() {
             curtext = displayyourneed(curtext);
         }
     }
-    if (flirtcounter < 1) setAttraction(attraction + 5);
+    if (flirtcounter < 1) runtimeContext.setAttraction(runtimeContext.Attraction + 5);
     setFlirtcounter(flirtcounter + 4);
     sayText(curtext);
     cListenerGen([theMakeOut, "Continue..."], "Continue...");
@@ -258,7 +255,7 @@ export function examineGate() {
     let listenerList: any[] = [];
     if (walkcounter < 10) {
         curtext = printList(curtext, gateLocked);
-        if (shyness < 30 && attraction > 75) {
+        if (runtimeContext.Shyness < 30 && runtimeContext.Attraction > 75) {
             curtext = printList(curtext, gateInviting);
             listenerList.push([[theYard, "Take her into the dark yard."], "theYard"]);
         }
@@ -323,7 +320,7 @@ export function preHotTub() {
     const tubRefused = makeOut["theYard"]["tubRefused"];
     let curtext: any[] = [];
     let listenerList: any[] = [];
-    if (attraction > hottubthresh && shyness < 12) {
+    if (runtimeContext.Attraction > hottubthresh && runtimeContext.Shyness < 12) {
         curtext = printList(curtext, tubWilling);
         // s(girltalk + "Are you sure it's going to be alright?  What if somebody sees us?");
         curtext = showneed(curtext);
@@ -366,7 +363,7 @@ export function theHotTub() {
         } else {
             listenerList.push([[kissher, general["kissHer"]], "kissHer"]);
             listenerList.push([[feelup, general["feelUp"]], "FeelUp"]);
-            if (attraction >= 130 && shyness <= 0) {
+            if (runtimeContext.Attraction >= 130 && runtimeContext.Shyness <= 0) {
                 listenerList.push([[function () {haveSex("theHotTub")}, makeOut["choices"]["makeOut"]], "sexTub"]);
             }
             curtext = standobjs(curtext, listenerList);
@@ -413,7 +410,7 @@ export function theBeach() {
     }
 
     let listenerList: any[] = [];
-    if ((runtimeContext.Companion.bladderState >= BladderLevel.Emergency && (shyness > 15 || randomchoice(1)) && !askedswim)) {
+    if ((runtimeContext.Companion.bladderState >= BladderLevel.Emergency && (runtimeContext.Shyness > 15 || randomchoice(1)) && !askedswim)) {
         curtext = displayneed(curtext);
         askedswim = 7;
         curtext = printList(curtext, askSwim);
@@ -439,7 +436,7 @@ export function theBeach() {
                 curtext = standobjs(curtext, listenerList);
                 if (!runtimeContext.Interactions.CheckedHerOut) listenerList.push([[checkherout, general["checkHerOut"]], "checkHerOut"]);
                 if (runtimeContext.Player.bladderState >= BladderLevel.Urge) listenerList.push([[ypeeoutside, makeOut["choices"]["youPeeOutside"]], "yPeeOutside"]);
-                if (attraction > 100 && shyness < 10)
+                if (runtimeContext.Attraction > 100 && runtimeContext.Shyness < 10)
                     listenerList.push([[function () {haveSex("theBeach")}, makeOut["choices"]["makeOut"]], "sexTub"]);
             }
             listenerList.push([[leaveBeach, makeOut["choices"]["leaveBeach"]], "goBack"]);

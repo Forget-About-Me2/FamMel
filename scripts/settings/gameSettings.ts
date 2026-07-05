@@ -60,6 +60,7 @@ export interface GameSettings {
     ImageSettings: ImageSettings;
 
     RandCounterMax: number;
+    TummyDecayCycles: number;
 }
 
 export function createDefaultGameSettings(): GameSettings {
@@ -85,7 +86,8 @@ export function createDefaultGameSettings(): GameSettings {
         BladderDecayOnEmer: true,
         BladderDecayOnBreakingTheSeal: true,
         ImageSettings: new ImageSettings(),
-        RandCounterMax: 5
+        RandCounterMax: 5,
+        TummyDecayCycles: 6
     };
 }
 

@@ -6,7 +6,7 @@ import {yourHome} from './yourHome';
 import {gameScreen} from "./gameScreen/gameScreen";
 import { animationManager } from "./gameScreen/animationManager";
 import { setupQuotes, fetchAndCacheJson, getMLocations, loadLocationScene, locationSetup, locjson, printAllChoices, sayText, printList, setText, fetchJson } from "./quotes";
-import { pushloc, poploc, randomInt, connectToGameState, locStack, endScreens, playerbladder, setCurrentLegacyLocationTag } from './shims';
+import { pushloc, poploc, randomInt, locStack, endScreens, playerbladder, setCurrentLegacyLocationTag } from './shims';
 import { hydrateSettingsToGameState, loadSettingsFromStorage } from './settings';
 import { updateyoururge, yourbladder, setYourbladder, yourtummy, setYourtummy, ymaxtummy, setYmaxtummy, ymaxbeer, setYmaxbeer, ydrankbeer, setYdrankbeer, ynowpeeing, setYnowpeeing, yourbladurge, setYourbladurge } from './yourbladder';
 import { updateurge, bladder, setBladder, tummy, setTummy, maxtummy, setMaxtummy, maxbeer, setMaxbeer, drankbeer, setDrankbeer, nowpeeing, setNowpeeing, bladurge, setBladurge, askholditcounter } from './bladder';

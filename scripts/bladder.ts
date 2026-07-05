@@ -1,5 +1,5 @@
 import { printList, printListSelection, printLList, printChoicesList, callChoice, sayText, c, cListener, cListenerGen, cListenerGenList, addSayText, addListenersList, voccurse, needs, peelines, appearance, girlname, girltalk, girlgasp, pantycolor, setPantycolor, general } from './quotes';
-import { pickrandom, randomchoice, range, gameRandom, randomInt, incrandom, pushloc, poploc, locStack, attraction, setAttraction, shyness, setShyness, thetime, haveherpurse, setHaveherpurse, owedfavor, setOwedfavor, randcounter, showedneed, setShowedneed } from './shims';
+import { pickrandom, randomchoice, range, gameRandom, randomInt, incrandom, pushloc, poploc, locStack, thetime, haveherpurse, setHaveherpurse, owedfavor, setOwedfavor, randcounter, showedneed, setShowedneed } from './shims';
 import { haveItem, backPackItems, displaydrank, holdpurse, giveHer } from './backPackItems';
 import { nextstop } from './locations/driveAround';
 import { pdrinkinggame } from './locations/theBar';
@@ -331,13 +331,13 @@ export function showneed(curtext: any[] = []): any[] {
     // no matter what.
     let tuminc = calcTuminc(); //Gets the current tuminc, used to calculate if she's within the 2 turns
     //TODO use this calculation globally, instead of a fixed constant
-    if (bladder >= (bladlose - 2 * tuminc) && shyness < SHYNESS_ALWAYS_VOCALIZE) {
+    if (bladder >= (bladlose - 2 * tuminc) && runtimeContext.Shyness < SHYNESS_ALWAYS_VOCALIZE) {
         if (externalflirt) curtext = voccurse(curtext);
         curtext = displaygottavoc(curtext);
     } else if (runtimeContext.Interactions.ChangeVenueFlag) {
         // She's almost always going to ask to go if you're off somewhere
         if ((bladder >= blademer) ||
-            (bladder >= bladneed && shyness < SHYNESS_VENUE_ASK)) {
+            (bladder >= bladneed && runtimeContext.Shyness < SHYNESS_VENUE_ASK)) {
             if (waitcounter <= WAIT_RECENT_THRESHOLD) {
                 curtext.push(girltalk + "Hey! Before we go...");
                 waitcounter = WAIT_AFTER_VENUE_CHANGE;
@@ -351,13 +351,13 @@ export function showneed(curtext: any[] = []): any[] {
     } else if (waitcounter === 0 && !externalflirt) {
         // Then there are generic instances where she might ask
         // She'll try to hold it if you flirted with somebody at that location
-        if (shyness < SHYNESS_EMERGENCY_ASK && bladder > blademer) {
+        if (runtimeContext.Shyness < SHYNESS_EMERGENCY_ASK && bladder > blademer) {
             waitcounter = Math.max(Math.round(bladlose / 150), 6);
             curtext = displaygottavoc(curtext);
-        } else if (shyness < SHYNESS_NEED_ASK && bladder > bladneed) {
+        } else if (runtimeContext.Shyness < SHYNESS_NEED_ASK && bladder > bladneed) {
             waitcounter = Math.max(Math.round(bladlose / 90), 9);
             curtext = displaygottavoc(curtext);
-        } else if (shyness < SHYNESS_URGE_ASK && bladder > bladurge) {
+        } else if (runtimeContext.Shyness < SHYNESS_URGE_ASK && bladder > bladurge) {
             waitcounter = Math.max(Math.round(bladlose / 75), 12);
             curtext = displaygottavoc(curtext);
         } else if (showsRandomSymptom()) {
@@ -575,11 +575,11 @@ export function askpee() {
     const [askQuestion, shyBlush, casualResponse, consideringIt] = needs["askpee"];
     let curtext = [askQuestion];
     let listenerList: any[] = [];
-    if (shyness > 60) curtext.push(shyBlush);
+    if (runtimeContext.Shyness > 60) curtext.push(shyBlush);
     else curtext.push(casualResponse);
     if (bladder > bladneed && bladder < blademer)
         curtext.push(consideringIt);
-    if (((shyness < 50 && bladder > bladneed) ||
+    if (((runtimeContext.Shyness < 50 && bladder > bladneed) ||
             bladder > blademer) &&
         (locStack[0] !== "drinkinggame" && !externalflirt)) {
         curtext = displaygottavoc(curtext);
@@ -651,9 +651,9 @@ export function holdit() {
     waitcounter = 6;
     const [holdUnsure, holdPhonePanic, holdPhoneLosing, holdPhoneWet,
            holdPhoneSorry, holdPhoneHangUp, holdRefusal] = needs["holdIt"];
-    if ((bladder >= bladlose && attraction > holditlosethresh) ||
-        (bladder >= blademer && attraction > holditemerthresh) ||
-        (bladder >= bladneed && attraction > holditneedthresh)) {
+    if ((bladder >= bladlose && runtimeContext.Attraction > holditlosethresh) ||
+        (bladder >= blademer && runtimeContext.Attraction > holditemerthresh) ||
+        (bladder >= bladneed && runtimeContext.Attraction > holditneedthresh)) {
 
         if (bladder >= blademer) {
             curtext.push(girltalk + pickrandom(needs["surpriseexcl"])); //TODO this shouldn't be allowed
@@ -677,7 +677,7 @@ export function holdit() {
                     setBladder(0);
                     waitcounter = 0;
                     askholditcounter = 0;
-                    setAttraction(0);
+                    runtimeContext.setAttraction(0);
                 } else {
                     curtext = displayneed(curtext);
                 }
@@ -689,13 +689,13 @@ export function holdit() {
             curtext.push(holdPhoneSorry);
             curtext.push(holdPhoneHangUp);
             //She's not holding it while on the phone
-            setAttraction(attraction - 5);
+            runtimeContext.setAttraction(runtimeContext.Attraction - 5);
             setBladder(0);
             curtext = callChoice(["curloc", "Continue..."], curtext);
         } else {
             curtext.push(holdRefusal);
             // she's not holding it for you
-            setAttraction(attraction - 5);
+            runtimeContext.setAttraction(runtimeContext.Attraction - 5);
             curtext = indepee(curtext, true) ?? curtext;
         }
     }
@@ -847,9 +847,9 @@ export function bribeask() {
     let listenerList: any[] = [];
     curtext = printList(curtext, needs["bribeask"]);
     if (!randomInt(askholditcounter) && (
-        (bladder >= bladlose && attraction > holditlosethresh) ||
-        (bladder >= blademer && attraction > holditemerthresh) ||
-        (bladder >= bladneed && attraction > holditneedthresh))) {
+        (bladder >= bladlose && runtimeContext.Attraction > holditlosethresh) ||
+        (bladder >= blademer && runtimeContext.Attraction > holditemerthresh) ||
+        (bladder >= bladneed && runtimeContext.Attraction > holditneedthresh))) {
         curtext.push(girltalk + pickrandom(general["okayforyou"]));
         askholditcounter++;
         curtext = displayholdquip(curtext);
@@ -890,7 +890,7 @@ export function allowpee(): void {
         listenerList.push([[indepee, "Continue..."], "indePee"]);
     } else {
         curtext.push(allowOfferPurse);
-        setAttraction(attraction + 7);
+        runtimeContext.setAttraction(runtimeContext.Attraction + 7);
         listenerList.push([[indepee, "Continue..."], "indePee"]);
         listenerList.push([[holdpurse, needs["choices"]["holdPurse"]], "holdPurse"]);
     }
@@ -904,10 +904,10 @@ export function peephone() {
     const PHONE_PEE_OPEN = 0;    // she pees openly on the phone
     const PHONE_PEE_PRIVATE = 1; // she excuses herself to pee
     const PHONE_PEE_HANGUP = 2;  // she hangs up to pee
-    if (attraction > 30) {
-        if (bladder > blademer && shyness < 75) {
+    if (runtimeContext.Attraction > 30) {
+        if (bladder > blademer && runtimeContext.Shyness < 75) {
             curtext = printLList(curtext, peelines["peephone"], PHONE_PEE_OPEN);
-            setAttraction(attraction + 10);
+            runtimeContext.setAttraction(runtimeContext.Attraction + 10);
             flushdrank();
         } else {
             curtext = printLList(curtext, peelines["peephone"], PHONE_PEE_PRIVATE);
@@ -931,20 +931,20 @@ export function peein(item: string) {
     let itemAttr = 30;
     if (object.hasOwnProperty("attrThresh"))
         itemAttr = list.attrThresh;
-    if (attraction > itemAttr) {
+    if (runtimeContext.Attraction > itemAttr) {
         gottagoflag = 0;
         if (bladder < bladneed) {
-            if (attraction < 130) {
+            if (runtimeContext.Attraction < 130) {
                 //She doesn't have to go and therefore refuses
                 curtext = printList(curtext, list[0]);
                 curtext = callChoice(["curloc", "Continue..."], curtext);
             } else {
-                //Only if you maxed attraction, she'll try to pee even if she doesn't have to go.
+                //Only if you maxed runtimeContext.Attraction, she'll try to pee even if she doesn't have to go.
                 curtext = printList(curtext, list[1]);
                 curtext = callChoice(["peein2(&quot;" + item + "&quot;)", "Continue..."], curtext);
             }
         } else if (bladder < blademer) {
-            if (attraction < 100) {
+            if (runtimeContext.Attraction < 100) {
                 //She's not quite willing to try it but not against the idea.
                 curtext = printList(curtext, list[2]);
                 curtext = displayholdquip(curtext);
@@ -957,7 +957,7 @@ export function peein(item: string) {
             }
         } else {
             //She's desperate so uses it.
-            if (attraction < 70 && !backPackItems[item].peed) {
+            if (runtimeContext.Attraction < 70 && !backPackItems[item].peed) {
                 //An exclamation about the idea of it
                 curtext = printList(curtext, list[4]);
             }
@@ -968,8 +968,8 @@ export function peein(item: string) {
     } else {
         //She outrightly refuses the idea.
         curtext = printList(curtext, list[6]);
-        setAttraction(attraction - 3);
-        if (attraction < 0) setAttraction(0);
+        runtimeContext.setAttraction(runtimeContext.Attraction - 3);
+        if (runtimeContext.Attraction < 0) runtimeContext.setAttraction(0);
         //TODO add check for makeout
         if (locStack[0] === "driveout") {
             //When in the car she'll throw the item out of the window.
@@ -1012,7 +1012,7 @@ export function peein3(item: string) {
     if (bladder < bladurge) {
         curtext.push(girltalk + "I'm sorry. I really don't have to go.");
         curtext.push(girltalk + "I just can't. Maybe later.");
-        setShyness(shyness + 1);
+        runtimeContext.setShyness(runtimeContext.Shyness + 1);
     } else {
         const container = backPackItems[item];
         const containerVolume = container.volume;
@@ -1041,7 +1041,7 @@ export function peein3(item: string) {
             flushdrank();
         }
         sawherpee = 1;
-        setAttraction(attraction + 4);
+        runtimeContext.setAttraction(runtimeContext.Attraction + 4);
         container.peed = 1;
     }
     curtext = callChoice(["curloc", "Continue..."], curtext);
@@ -1081,7 +1081,7 @@ export function peeoutside() {
     let listenerList: any[] = [];
     const outsideRepeat = needs["peeoutside"][0]; // embarrassed to pee outside again
     const outsideFirst = needs["peeoutside"][1];  // never gone outside before
-    if (attraction > 30) {
+    if (runtimeContext.Attraction > 30) {
         if (bladder > blademer) {
             if (peedoutside)
                 curtext.push(outsideRepeat);
@@ -1100,11 +1100,11 @@ export function peeoutside() {
             curtext = callChoice(["curloc", "Continue..."], curtext);
         }
     } else {
-        //TODO this code is almost impossible to reach? since you need at least 40 attraction to get outside
+        //TODO this code is almost impossible to reach? since you need at least 40 runtimeContext.Attraction to get outside
         const outsideRefusal = needs["peeoutside"][6]; // "No way am I exposing my privates"
         curtext.push(outsideRefusal);
-        setAttraction(attraction - 3);
-        if (attraction < 0) setAttraction(0);
+        runtimeContext.setAttraction(runtimeContext.Attraction - 3);
+        if (runtimeContext.Attraction < 0) runtimeContext.setAttraction(0);
         curtext = callChoice(["curloc", "Continue..."], curtext);
     }
     sayText(curtext);
@@ -1143,7 +1143,7 @@ export function peeoutside2b() {
 export function peeoutside3() {
     let curtext = itscomingout([]);
     curtext = printListSelection(curtext, needs["peeoutside"], range(8, 10));
-    setAttraction(attraction + 3);
+    runtimeContext.setAttraction(runtimeContext.Attraction + 3);
     flushdrank();
     peedoutside = 1;
     sawherpee = 1;
@@ -1155,7 +1155,7 @@ export function peeoutside3() {
 export function peeoutside3b() {
     let curtext = itscomingout([]);
     curtext = printListSelection(curtext, needs["peeoutside"], range(11, 13));
-    setAttraction(attraction + 3);
+    runtimeContext.setAttraction(runtimeContext.Attraction + 3);
     flushdrank();
     peedoutside = 1;
     sawherpee = 1;
@@ -1167,7 +1167,7 @@ export function peeoutside3b() {
 export function peeoutside3c() {
     let curtext = itscomingout([]);
     curtext = printListSelection(curtext, needs["peeoutside"], range(14, 16));
-    setAttraction(attraction + 3);
+    runtimeContext.setAttraction(runtimeContext.Attraction + 3);
     flushdrank();
     peedoutside = 1;
     sawherpee = 1;
@@ -1239,8 +1239,8 @@ export function wetherself2c() {
 
 export function wetherself3c() {
     let curtext = printListSelection([], needs["wetherself"], [9, 10]);
-    setShyness(shyness + 20);
-    if (shyness > 100) setShyness(100);
+    runtimeContext.setShyness(runtimeContext.Shyness + 20);
+    if (runtimeContext.Shyness > 100) runtimeContext.setShyness(100);
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
 }
@@ -1248,9 +1248,9 @@ export function wetherself3c() {
 //TODO check this, for unfilled in variables
 export function wetherself3() {
     let curtext: any[] = [];
-    if (pantycolor !== "none" && shyness < 70) {
+    if (pantycolor !== "none" && runtimeContext.Shyness < 70) {
         curtext.push(appearance["clothes"][heroutfit]["wetherselfquote"].format([pantycolor]));
-        if (attraction > 40) {
+        if (runtimeContext.Attraction > 40) {
             curtext = printListSelection(curtext, needs["wetherself"], [11, 12]);
             backPackItems.wetPanties.value++
         }
@@ -1259,8 +1259,8 @@ export function wetherself3() {
         curtext.push(needs["wetherself"][13]);
     curtext.push(pickrandom(appearance["clothes"][heroutfit]["dryquote"]));
     if (locStack[0] !== "drinkinggame") {
-        setShyness(shyness + 15);
-        if (shyness > 100) setShyness(100);
+        runtimeContext.setShyness(runtimeContext.Shyness + 15);
+        if (runtimeContext.Shyness > 100) runtimeContext.setShyness(100);
     }
     let listenerList: any[] = [[[scoldher, "Scold her for wetting herself"]]];
     if (haveItem("ptowels")) {
@@ -1283,8 +1283,8 @@ export function wetherself3() {
 // In the tub
 export function wetherself3t() {
     let curtext = printListSelection([], needs["wetherself"], range(14, 16));
-    setShyness(shyness + 10);
-    if (shyness > 100) setShyness(100);
+    runtimeContext.setShyness(runtimeContext.Shyness + 10);
+    if (runtimeContext.Shyness > 100) runtimeContext.setShyness(100);
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
 }
@@ -1320,11 +1320,11 @@ export function checkspurted() {
     const dontBelieveYou = needs["askspurted"][1]; // "I'm not sure I believe you."
     let curtext = [dontBelieveYou];
     let listenerList: any[] = [];
-    if (attraction < 75) {
+    if (runtimeContext.Attraction < 75) {
         curtext = printListSelection(curtext, needs["askspurted"], [2, 3]);
         curtext = displayneed(curtext);
-        setAttraction(attraction - 10);
-        setShyness(shyness + 10);
+        runtimeContext.setAttraction(runtimeContext.Attraction - 10);
+        runtimeContext.setShyness(runtimeContext.Shyness + 10);
     } else {
         if (pantycolor === "none") {
             curtext = printListSelection(curtext, needs["askspurted"], [4, 5]);
@@ -1353,7 +1353,7 @@ export function smellspurted() {
 export function scoldher() {
     console.log("test: scoldHer");
     let curtext = printList([], needs["scoldher"]);
-    setAttraction(attraction - 20);
+    runtimeContext.setAttraction(runtimeContext.Attraction - 20);
     sayText(curtext);
     cListenerGen([comforther, needs["choices"]["comfortHer"]], "comfortHer");
 }
@@ -1362,8 +1362,8 @@ export function scoldher() {
 export function comforther() {
     let curtext = printList([], needs["comforther"]);
     curtext = callChoice(["curloc", "Continue..."], curtext);
-    setAttraction(attraction + 5);
-    setShyness(shyness - 2);
+    runtimeContext.setAttraction(runtimeContext.Attraction + 5);
+    runtimeContext.setShyness(runtimeContext.Shyness - 2);
     sayText(curtext);
 }
 
@@ -1385,7 +1385,7 @@ export function pgirlsroom() {
     // pgirlsroom indices: 0=request to watch, 1=she agrees, 2=she refuses, 3=leads to stall, 4=toilet urgency
     let curtext = printList([], peelines["pgirlsroom"][0]); // Player asks "Can I watch?"
     let listenerList: any[] = [];
-    if (attraction >= pwatchthreshold) {
+    if (runtimeContext.Attraction >= pwatchthreshold) {
         curtext = displayneed(curtext);
         curtext = printList(curtext, peelines["pgirlsroom"][1]); // She agrees, takes hand
         curtext = displayneed(curtext);
@@ -1413,7 +1413,7 @@ export function pGirlsRoom2() {
 export function ptogether() {
     let curtext = printList([], peelines["ptogether"][0]); // Ask her not to leave alone
     let listenerList: any[] = [];
-    if (attraction >= ptogetherthreshold) {
+    if (runtimeContext.Attraction >= ptogetherthreshold) {
         pushloc("ptogether");
         curtext = displayneed(curtext);
         curtext = printList(curtext, peelines["ptogether"][1]); // She agrees
@@ -1578,8 +1578,8 @@ export function pTogether5c() {
     else
         curtext.push(appearance["clothes"][heroutfit]["ptogetherdumpquotebare"]);
     flushdrank();
-    setAttraction(attraction + 6);
-    setShyness(shyness - 6);
+    runtimeContext.setAttraction(runtimeContext.Attraction + 6);
+    runtimeContext.setShyness(runtimeContext.Shyness - 6);
     sawherpee = 1;
     curtext = printList(curtext, peelines["ptogether"][26]);
     sayText(curtext);
@@ -1599,14 +1599,14 @@ export function pTogether6() {
     curtext = printList(curtext, peelines["ptogether"][28]);
     sayText(curtext);
     poploc();
-    setAttraction(attraction - 3);
+    runtimeContext.setAttraction(runtimeContext.Attraction - 3);
     cListenerGen([doDance, "Continue..."], "doDance");
 }
 
 //TODO let her choose.
 export function pnorestroom() {
     let curtext = printList([], theatre["noRest"][0]);
-    if (attraction >= pnorestroomthreshold) {
+    if (runtimeContext.Attraction >= pnorestroomthreshold) {
         curtext = displayneed(curtext);
         curtext = printList(curtext, theatre["noRest"][1]);
         curtext = displayneed(curtext);

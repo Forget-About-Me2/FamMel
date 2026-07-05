@@ -3,7 +3,7 @@ import { BladderLevel } from "./gameState/bladderLevel";
 
 import { gameSettings } from "./settings/gameSettings";
 import { loadLocationScene, printIntro, printAlways, printChoices, printChoicesList, printSDialogue, sayText, c, handleFlirt, cListenerGenList, printList, locjson, drinklines, calledjsons, girltalk, printDialogue } from './quotes';
-import { pushloc, incrandom, randomchoice, formatString, getCurrentLocationTag, shopping, setShopping, flirtedflag, setFlirtedflag, late, setLate, attraction, setAttraction, shyness, setShyness, maxflirts, thetime } from './shims';
+import { pushloc, incrandom, randomchoice, formatString, getCurrentLocationTag, shopping, setShopping, flirtedflag, setFlirtedflag, late, setLate, maxflirts, thetime } from './shims';
 import { displaygottavoc, flushdrank, phoneholdthresh, bladder, tummy, setTummy, maxtummy, askholditcounter, setAskholditcounter, waitcounter, setWaitcounter } from './bladder';
 import { displayyourneed, wetyourself, yourtummy, setYourtummy, ymaxtummy } from './yourbladder';
 import { haveItem, backPackItems, allowItems, setAllowItems } from './backPackItems';
@@ -93,8 +93,8 @@ export function callHer() {
         let startI = curtext.length;
         curtext = printDialogue(curtext, "callher",0);
         if (askholditcounter) curtext = displaygottavoc(curtext, startI+2);
-        setAttraction(attraction - 5);
-        setShyness(shyness - 10);
+        runtimeContext.setAttraction(runtimeContext.Attraction - 5);
+        runtimeContext.setShyness(runtimeContext.Shyness - 10);
         curtext = printChoices(curtext, [0]);
     } else if (thetime > 75 && bladder < companion.bladderEmer) {
         curtext = printDialogue(curtext,"callher", 1);
@@ -106,7 +106,7 @@ export function callHer() {
     } else if (bladder > companion.bladderEmer && askholditcounter && waitcounter === 0) {
         curtext = cantwait(curtext);
     } else {
-        if (shyness > 80) setShyness(shyness - 1);
+        if (runtimeContext.Shyness > 80) runtimeContext.setShyness(runtimeContext.Shyness - 1);
         //TODO This also prints highflirts while in the original that can't happen over the phone
         if(flirtedflag < maxflirts){
             handleFlirt(listenerList);
@@ -128,28 +128,28 @@ function favor() {
 function gotta() {
     const companion = runtimeContext.Companion;
     let curtext: any[] = []
-    if (shyness > 80) {
+    if (runtimeContext.Shyness > 80) {
         curtext = printSDialogue(curtext, "gotta", 0, 0, 0);
-        setAttraction(attraction - 2);
-        setShyness(shyness + 5);
+        runtimeContext.setAttraction(runtimeContext.Attraction - 2);
+        runtimeContext.setShyness(runtimeContext.Shyness + 5);
     } else if (bladder < companion.bladderUrge) {
         curtext = printSDialogue(curtext, "gotta", 0, 1, 1);
     } else {
-        if (bladder < companion.bladderNeed || shyness > 75) {
+        if (bladder < companion.bladderNeed || runtimeContext.Shyness > 75) {
             curtext = printSDialogue(curtext, "gotta", 0, 2, 2);
         } else {
             curtext = printSDialogue(curtext, "gotta", 0, 3, 3);
         }
     }
 
-    if (bladder >= companion.bladderNeed && shyness <= 75)
+    if (bladder >= companion.bladderNeed && runtimeContext.Shyness <= 75)
         curtext = printChoices(curtext, [9])
     curtext = printChoices(curtext, [7,8,6]);
     sayText(curtext);
 }
 
 function ohreally() {
-    setAttraction(attraction - 5);
+    runtimeContext.setAttraction(runtimeContext.Attraction - 5);
     let curtext = printDialogue([], "gotta", 1);
     curtext = printChoices(curtext, [10]);
     sayText(curtext);
@@ -158,10 +158,10 @@ function ohreally() {
 //TODO maybe option to bluff about bribe with consequences later
 function waitpickup() {
     let curtext: any[] = []
-    if (attraction > 13) {
+    if (runtimeContext.Attraction > 13) {
         curtext = printSDialogue(curtext, "gotta", 2, 0, 1);
         let choice = [12]
-        if (randomchoice(phoneholdthresh) && attraction > 60) {
+        if (randomchoice(phoneholdthresh) && runtimeContext.Attraction > 60) {
             choice = [11];
         }
         choice.push(13);
@@ -173,7 +173,7 @@ function waitpickup() {
     } else {
         curtext = printSDialogue(curtext, "gotta", 2, 2, 2);
         flushdrank();
-        setAttraction(0);
+        runtimeContext.setAttraction(0);
         curtext = printChoices(curtext, [10]);
     }
     sayText(curtext);
@@ -202,11 +202,11 @@ function acceptbribe() {
 
 function pantyq() {
     let curtext: any[] = [];
-    if (attraction < 10 || shyness > 85) {
+    if (runtimeContext.Attraction < 10 || runtimeContext.Shyness > 85) {
         curtext = printDialogue(curtext, "panties", 0);
         curtext = printChoices(curtext, [10])
     } else {
-        if (attraction < 20 || shyness > 80) {
+        if (runtimeContext.Attraction < 20 || runtimeContext.Shyness > 80) {
             curtext = printDialogue(curtext, "panties", 1);
             curtext = printChoices(curtext, [10])
         } else {
@@ -223,15 +223,15 @@ function pantyq() {
 
 function predrink() {
     let curtext: any[] = [];
-    if (attraction < 10) {
+    if (runtimeContext.Attraction < 10) {
         curtext = printDialogue(curtext, "predrink", 0);
-        setAttraction(0);
+        runtimeContext.setAttraction(0);
     } else {
-        if (tummy < maxtummy / 2 && attraction > 12) {
+        if (tummy < maxtummy / 2 && runtimeContext.Attraction > 12) {
             curtext = printDialogue(curtext, "predrink", 1);
             setTummy(tummy + 200);
             backPackItems.water.sheDrank = (backPackItems.water.sheDrank ?? 0) + 2;
-        } else if (tummy < maxtummy && attraction > 15) {
+        } else if (tummy < maxtummy && runtimeContext.Attraction > 15) {
             curtext = printDialogue(curtext, "predrink", 2);
             setTummy(tummy + 200);
             backPackItems.water.sheDrank = (backPackItems.water.sheDrank ?? 0) + 2;
@@ -303,7 +303,7 @@ function anscell() {
 function ignorecell() {
     const callData = getYourHomeCallData();
     let curtext = [callData.ignorecell];
-    setAttraction(attraction - 1);
+    runtimeContext.setAttraction(runtimeContext.Attraction - 1);
     curtext = c([getCurrentLocationTag(), "Continue..."], curtext);
     sayText(curtext);
 }

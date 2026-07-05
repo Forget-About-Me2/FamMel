@@ -3,7 +3,7 @@ import { runtimeContext } from './gameState/runtimeContext';
 import { go } from './main';
 import { theYard, exitYard, theWalk } from './locations/theMakeOut';
 import { openPopUp } from './pop-up';
-import { getRandomSeed, clubclosingtime, hour, setHour, locStack, thetime, setThetime, attraction, setAttraction, shyness, setShyness } from './shims';
+import { getRandomSeed, clubclosingtime, hour, setHour, locStack, thetime, setThetime } from './shims';
 import { drankbeer, setDrankbeer, tummy, setTummy } from './bladder';
 import { locations } from './locations';
 import { seenmovie, setSeenmovie } from './locations/theatre';
@@ -38,8 +38,8 @@ export const Debug: DebugFunctions = function () {
     function fullStats() {
         runtimeContext.Attraction = 130;
         runtimeContext.Shyness = 0;
-        setAttraction(130);
-        setShyness(0);
+        runtimeContext.setAttraction(130);
+        runtimeContext.setShyness(0);
     }
 
 //Sets the clock to night
@@ -163,8 +163,8 @@ export function OpenDebugMenu() {
     CreateValueRow(table, "Money", runtimeContext.Money.toString());
     CreateValueRow(table, "Attraction", runtimeContext.Attraction.toString());
     CreateValueRow(table, "Shyness", runtimeContext.Shyness.toString());
-    CreateValueRow(table, "Legacy Attraction", String(attraction));
-    CreateValueRow(table, "Legacy Shyness", String(shyness));
+    CreateValueRow(table, "Legacy Attraction", String(runtimeContext.Attraction));
+    CreateValueRow(table, "Legacy Shyness", String(runtimeContext.Shyness));
     CreateValueRow(table, "Game Time", runtimeContext.Time.timeString);
     CreateValueRow(table, "Current Typed Location", GetTypedLocationLabel(runtimeContext.CurrentLocation));
     CreateValueRow(table, "Legacy Stack (full)", (locStack ?? []).join(" -> ") || "(empty)");
@@ -392,8 +392,8 @@ export function BuildDebugDump() {
             money: runtimeContext.Money,
             attraction: runtimeContext.Attraction,
             shyness: runtimeContext.Shyness,
-            legacyAttraction: attraction,
-            legacyShyness: shyness
+            legacyAttraction: runtimeContext.Attraction,
+            legacyShyness: runtimeContext.Shyness
         },
         locationStack: {
             legacy: [...(locStack ?? [])],

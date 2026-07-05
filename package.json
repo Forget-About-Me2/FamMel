@@ -19,6 +19,6 @@
     "watch": "node esbuild.config.mjs --watch",
     "test:unit": "vitest run",
     "typecheck": "npx tsc -p . --noEmit",
-    "dev": "concurrently \"npm:watch\" \"npx live-server --no-browser --port=8080\""
+    "dev": "node predev.mjs && concurrently \"npm:watch\" \"npx live-server --no-browser --port=8080\""
   }
 }

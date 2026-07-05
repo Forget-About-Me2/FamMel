@@ -1,5 +1,6 @@
 ﻿import { printList, callChoice, sayText, c, cListenerGen, cListenerGenList, ypeelines, yneeds } from './quotes';
-import { pickrandom, randomchoice, locStack, thetime, attraction, setAttraction, shyness } from './shims';
+import { pickrandom, randomchoice, locStack, thetime } from './shims';
+import { runtimeContext } from './gameState/runtimeContext';
 import { displayneed, rrlockedthresh, rrlinethresh, bladDec, bladDespDec, gottagoflag, setGottagoflag, minperc, seal, ybeerdecCounter, setYbeerdecCounter, yspurtthresh, setYspurtthresh } from './bladder';
 import { haveItem, backPackItems, playOnly, allowItems, setAllowItems } from './backPackItems';
 import { theHotTub, theMakeOut } from './locations/theMakeOut';
@@ -317,9 +318,9 @@ export function ypeein(item: string){
         //Prints a quote about how full you are and what you are planning to do.
         curtext.push(initialQuotes[yneedtype]);
         //If she doesn't like you enough she'll act embarrassed and prevent you from doing this.
-        if (yneedtype === URGENCY_MILD && attraction > 100 ||
-            yneedtype === URGENCY_MODERATE && attraction > 70 ||
-            yneedtype === URGENCY_DESPERATE && attraction > 30){
+        if (yneedtype === URGENCY_MILD && runtimeContext.Attraction > 100 ||
+            yneedtype === URGENCY_MODERATE && runtimeContext.Attraction > 70 ||
+            yneedtype === URGENCY_DESPERATE && runtimeContext.Attraction > 30){
             if (yneedtype === URGENCY_DESPERATE) {
                 // if you're desperate print a quote about giving her the item so you can focus on your trousers
                 if (locStack[0] === "driveout")
@@ -336,7 +337,7 @@ export function ypeein(item: string){
             curtext.push("\"Are you out of your mind!?\" She hisses urgently. \"You can't do that! What if someone sees?!\"");
             curtext.push("You sigh, but put away the " + backPackItems[item].bpname.toLowerCase() + ".");
             curtext = callChoice(["curloc", "Continue..."], curtext);
-            setAttraction(attraction - Math.round(10 / (yneedtype + 1)));
+            runtimeContext.setAttraction(runtimeContext.Attraction - Math.round(10 / (yneedtype + 1)));
         }
     }
     sayText(curtext);
@@ -387,7 +388,7 @@ export function ypeein3(item: string, yneedtype: number){
             curtext = printList(curtext, peeResult[yneedtype]);
             flushyourdrank();
         }
-        setAttraction(attraction + Math.round(10 / (yneedtype + 1)));
+        runtimeContext.setAttraction(runtimeContext.Attraction + Math.round(10 / (yneedtype + 1)));
     }
     curtext = callChoice(["curloc", "Continue..."], curtext);
     sayText(curtext);
@@ -415,7 +416,7 @@ export function ypeeoutside() {
         curtext = printList(curtext, ypeelines["peeOutside"][1]); // desperate announcement
     }
     let listenerList: any[] = [];
-    if (attraction > 100 && shyness < 10 && randomchoice(7)){
+    if (runtimeContext.Attraction > 100 && runtimeContext.Shyness < 10 && randomchoice(7)){
         curtext = printList(curtext, ypeelines["peeOutside"][2]); // she asks to watch
         listenerList.push([[ypeeOutsideWatch, "Of Course!"], "peeWatch"]);
     } else {

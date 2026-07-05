@@ -1,5 +1,6 @@
 ﻿import { fetchJson, fetchAndCacheJson, getMLocations, printList, sayText, cListenerGen, cListenerGenList, addSayText, voccurse, locjson, appearance, setAppearance, girlname, pantycolor } from './quotes';
-import { pushloc, poploc, pickrandom, randomchoice, randomize, getCurrentLocationTag, thetime, attraction, setAttraction, shyness, setShyness } from './shims';
+import { pushloc, poploc, pickrandom, randomchoice, randomize, getCurrentLocationTag, thetime } from './shims';
+import { runtimeContext } from './gameState/runtimeContext';
 import { showneed, displayneed, displaygottavoc, noteholding, preventpee, flushdrank, allowpee, wetherself, bladder, bladlose, gottagoflag, setGottagoflag, askholditcounter, setAskholditcounter, waitcounter, setWaitcounter } from './bladder';
 import { displayyourneed, wetyourself, youpee } from './yourbladder';
 import { standobjs, haveItem, backPackItems, allowItems, setAllowItems } from './backPackItems';
@@ -38,7 +39,7 @@ export function herHomeSetup() {
 }
 
 export function homeConditions() {
-    return shyness < 50 && attraction > 100 && locations.makeOut.visited &&
+    return runtimeContext.Shyness < 50 && runtimeContext.Attraction > 100 && locations.makeOut.visited &&
         locations.theBar.visited && locations.theClub.visited && seenmovie;
 }
 
@@ -78,8 +79,8 @@ export function pickup() {
             curtext = printList(curtext, locjson["lateComment"]);
             curtext =  showneed(curtext);
             curtext.push(pickrandom(locjson["upsetDesc"]));
-            setAttraction(attraction - 5);
-            setShyness(shyness - 10);
+            runtimeContext.setAttraction(runtimeContext.Attraction - 5);
+            runtimeContext.setShyness(runtimeContext.Shyness - 10);
         }
         curtext = displayneed(curtext);
         if (prepeed) {
@@ -247,14 +248,14 @@ export function keyNevermind() {
 export function keyGoodExcuse(){
     let curtext = printList([], herHome["keysGood"]);
     sayText(curtext);
-    setAttraction(attraction + 10);
+    runtimeContext.setAttraction(runtimeContext.Attraction + 10);
     cListenerGen([theHome, "Continue..."], "theHome");
 }
 
 export function keyBadExcuse(){
     let curtext = printList([], herHome["keysBad"]);
     sayText(curtext);
-    setAttraction(0);
+    runtimeContext.setAttraction(0);
     cListenerGen([gameOver, herHome["choices"]["keySlap"]], "gameOver");
 }
 

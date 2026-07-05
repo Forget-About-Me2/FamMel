@@ -1,5 +1,6 @@
 ﻿import { fetchJson, printList, sayText, cListenerGen, cListenerGenList, general, objQuotes, appearance, girlname, pantycolor } from '../quotes';
-import { pickrandom, randomchoice, pushloc, poploc, getCurrentLocationTag, thetime, clubclosingtime, attraction, setAttraction } from '../shims';
+import { pickrandom, randomchoice, pushloc, poploc, getCurrentLocationTag, thetime, clubclosingtime } from '../shims';
+import { runtimeContext } from '../gameState/runtimeContext';
 import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, holdit, allowpee, displayholdquip, photoGameThresholds, bladder, gottagoflag, askholditcounter, setAskholditcounter } from '../bladder';
 import { displayyourneed, wetyourself, youpee } from '../yourbladder';
 import { standobjs, haveItem, buyItem, backPackItems, allowItems, setAllowItems } from '../backPackItems';
@@ -217,7 +218,7 @@ export function pphotogame() {
 
 export function photoConvince(choice: string) {
     let curtext: any[] = [];
-    if (attraction >= photoGameThresholds[choice]) {
+    if (runtimeContext.Attraction >= photoGameThresholds[choice]) {
         curtext = displayneed(curtext);
         curtext.push(club["gameAccept"][choice].formatVars());
         // s(girltalk + "Okay.  But can I please go pee first?");
@@ -230,7 +231,7 @@ export function photoConvince(choice: string) {
         ]);
     } else {
         curtext.push(club["gameFail"]);
-        setAttraction(attraction - 2);
+        runtimeContext.setAttraction(runtimeContext.Attraction - 2);
         // s(girltalk + "No way, dude.  I'm outta here.");
         indepee(curtext);
     }

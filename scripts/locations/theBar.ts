@@ -1,5 +1,6 @@
 ﻿import { fetchJson, printList, sayText, cListener, cListenerGen, cListenerGenList, addListenersList, addSayText, callChoice, general, objQuotes, appearance, basegirl, girltalk } from '../quotes';
-import { pickrandom, randomchoice, randomIndex, randomInt, pushloc, poploc, getCurrentLocationTag, thetime, barclosingtime, attraction, setAttraction, shyness, setShyness } from '../shims';
+import { pickrandom, randomchoice, randomIndex, randomInt, pushloc, poploc, getCurrentLocationTag, thetime, barclosingtime } from '../shims';
+import { runtimeContext } from '../gameState/runtimeContext';
 import { showneed, displayneed, noteholding, interpbladder, wetherself, preventpee, indepee, flushdrank, drinkinggamethreshold, askcanhold, pstory, gottagoflag, notdesperate, setNotdesperate, notydesperate, setNotydesperate, nothdesperate, setNothdesperate, drankbeer, setDrankbeer, shespurted, bladder, tummy, setTummy } from '../bladder';
 import { displayyourneed, wetyourself, youpee, flushyourdrank, holdpeethresh, holdself, setHoldself, yourtummy, setYourtummy, yourbladder, setYourbladder, ydrankbeer, setYdrankbeer, youSpurted } from '../yourbladder';
 import { standobjs, haveItem, buyItem, backPackItems, allowItems, setAllowItems } from '../backPackItems';
@@ -128,7 +129,7 @@ export function barResp(choice: number){
     let curtext = [pickrandom(bar["barResp"][choice-1]).formatVars()];
     if (choice === GOOD && randomchoice(7))
         curtext.push(pickrandom(appearance["girls"][basegirl]["stareather"][heroutfit]));
-    setAttraction(attraction + 6 - 3*choice); // good=+3, neutral=0, bad=-3
+    runtimeContext.setAttraction(runtimeContext.Attraction + 6 - 3*choice); // good=+3, neutral=0, bad=-3
     bartopic++;
     talkUnused.splice(curTopicI,1);
     sayText(curtext);
@@ -242,7 +243,7 @@ export function pdrinkinggame() {
     const [gameProposal, needsToPeeFirst, gameRejection, bathroomScene,
            gameRules, gameStatus, drinkRound, staringWaiting] = bar["drinkingGame"];
     let curtext = printList([], gameProposal);
-    if (attraction >= drinkinggamethreshold) {
+    if (runtimeContext.Attraction >= drinkinggamethreshold) {
         curtext = displayneed(curtext);
         curtext = printList(curtext, needsToPeeFirst);
         curtext = displayneed(curtext);
@@ -250,8 +251,8 @@ export function pdrinkinggame() {
         cListenerGen([pDrinkingGame2, "Continue..."], "pdrinking");
     } else {
         curtext = printList(curtext, gameRejection);
-        if (attraction < 50)
-            setAttraction(attraction - 2);
+        if (runtimeContext.Attraction < 50)
+            runtimeContext.setAttraction(runtimeContext.Attraction - 2);
         indepee(curtext);
     }
 
@@ -349,8 +350,8 @@ export function postgame() {
             flushyourdrank();
         } else {
             curtext = printList(curtext, neitherDesperate);
-            setAttraction(attraction + 5);
-            setShyness(shyness - 7);
+            runtimeContext.setAttraction(runtimeContext.Attraction + 5);
+            runtimeContext.setShyness(runtimeContext.Shyness - 7);
             setNotdesperate(1);
         }
     }
@@ -368,16 +369,16 @@ export function postGame2(situation: string){
     } else if(situation === "her"){
         //TODO move back to her own chair
         curtext = printList(curtext, pgHerDesperate);
-        setAttraction(attraction + 5);
-        setShyness(shyness - 7);
+        runtimeContext.setAttraction(runtimeContext.Attraction + 5);
+        runtimeContext.setShyness(runtimeContext.Shyness - 7);
     } else if(situation === "you"){
-        //TODO probably have a shyness/attraction check
+        //TODO probably have a runtimeContext.Shyness/runtimeContext.Attraction check
         //Create a deepCopy of the dialogue that needs to be added so if you insert an element the bar variable itself won't be changed
         let temp = printList([], pgYouDesperate);
         if (loser === "her") temp.splice(2, 0, "<em>Yes, you won the game. But it had been a close one.</em>");
         curtext = printList([], temp);
-        setAttraction(attraction + 10);
-        setShyness(shyness - 10);
+        runtimeContext.setAttraction(runtimeContext.Attraction + 10);
+        runtimeContext.setShyness(runtimeContext.Shyness - 10);
     }
     else{
         curtext = printList(curtext, pgBothDesperate);
