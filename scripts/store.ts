@@ -1,4 +1,4 @@
-import { loadLocationScene, printAlways, printAllChoices, sayText } from './quotes';
+import { printAlways, printAllChoices, sayText, locjson } from './quotes';
 import { pushloc, getCurrentLocationTag, shopping, setShopping } from './shims';
 import { displayyourneed } from './yourbladder';
 import { runtimeContext } from './gameState/runtimeContext';
@@ -6,6 +6,13 @@ import { BladderLevel } from './gameState/bladderLevel';
 import { allowItems, setAllowItems } from './backPackItems';
 import { askholditcounter, setAskholditcounter, waitcounter, setWaitcounter, bladder, setBladder } from './bladder';
 import { prepeed, setPrepeed } from './herhome';
+import storeJson from '../Json/store.json';
+
+function loadStoreScene() {
+    const data = JSON.parse(JSON.stringify(storeJson.store));
+    data.always = data.always.map((line: string) => line.replace("$money", String(runtimeContext.Money)));
+    Object.assign(locjson, data);
+}
 
 // Buy stuff at the store.
 export function goStore() {
@@ -14,7 +21,7 @@ export function goStore() {
         pushloc("gostore");
         setShopping(1);
     }
-    loadLocationScene("yourhome", "store");
+    loadStoreScene();
     if (askholditcounter > 0 && runtimeContext.Companion.bladderState >= BladderLevel.Emergency && runtimeContext.Companion.bladderState < BladderLevel.Lose && !waitcounter) {
         cellphone();
     } else {

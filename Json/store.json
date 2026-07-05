@@ -1,4 +1,28 @@
 {
+  "store": {
+    "always": ["You have $money", "What are you going to buy?"],
+    "choices": [
+      ["buy(0)", "An overpriced bottle of water"],
+      ["buy(1)", "A bouquet of red roses"],
+      ["buy(2)", "A pair of diamond earrings"],
+      ["buy(3)", "A flower vase"],
+      ["buy(4)", "A shot glass"],
+      ["buy(5)", "A champagne glass"],
+      ["buy(6)", "A pair of sexy panties"],
+      ["buy(7)", "A bottle of fancy champagne"],
+      ["goback", "Nothing"]
+    ],
+    "buying": [
+      ["Water", 5, "water"],
+      ["Roses", 15, "roses"],
+      ["Earrings", 100, "earrings"],
+      ["Vase", 10, "vase"],
+      ["Shot Glass", 10, "shotGlass"],
+      ["Champagne Glass", 10, "pTowels"],
+      ["Panties", 25, "panties"],
+      ["Champagne", 50, "champagne"]
+    ]
+  },
   "storePrompt": ["You have $money",
     "What are you going to buy?"],
   "choices": {

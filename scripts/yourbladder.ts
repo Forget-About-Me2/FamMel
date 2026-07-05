@@ -581,6 +581,7 @@ export function spurtedyourself(curtext: any[]) {
 
 export function exposeYourBladderOnWindow() {
     const mutableVars: [string, () => any, (v: any) => void][] = [
+        ["yourbladder", () => yourbladder, (v) => { setYourbladder(v); if (runtimeContext.Player) runtimeContext.Player.Bladder = Number(v) || 0; }],
         ["yourtummy", () => yourtummy, (v) => { setYourtummy(v); }],
         ["yourtumavg", () => yourtumavg, (v) => { yourtumavg = v; }],
         ["holdself", () => holdself, (v) => { holdself = v; }],

@@ -126,7 +126,7 @@ public class YourHomeIntegrationTests
         // Modify state to prove load restores it
         ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             window.money = 999;
-            window.attraction = 99;
+            window.runtimeContext.Attraction = 99;
         ");
 
         var moneyAfterModify = ((IJavaScriptExecutor)_driver).ExecuteScript("return window.money;");
@@ -138,7 +138,6 @@ public class YourHomeIntegrationTests
             return JSON.stringify({
                 success: success,
                 money: window.money,
-                attraction: window.attraction,
                 gameStateMoney: window.runtimeContext.Money,
                 gameStateAttraction: window.runtimeContext.Attraction
             });
@@ -147,7 +146,7 @@ public class YourHomeIntegrationTests
         loadResult.Should().NotBeNullOrWhiteSpace("loadGame should execute and return state");
         loadResult.Should().Contain("\"success\":true", "loadGame(0) should return true");
         loadResult.Should().NotContain("\"money\":999", "money should be restored to pre-save value, not 999");
-        loadResult.Should().NotContain("\"attraction\":99", "attraction should be restored to pre-save value, not 99");
+        loadResult.Should().NotContain("\"gameStateAttraction\":99", "runtimeContext.Attraction should be restored to pre-save value, not 99");
 
         // Verify gameState was synced
         loadResult.Should().NotContain("\"gameStateMoney\":999", "gameState.Money should be synced from restored globals");

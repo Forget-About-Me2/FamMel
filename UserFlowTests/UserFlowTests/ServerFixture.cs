@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 
 namespace UserFlowTests;
 
@@ -54,21 +55,46 @@ public class ServerFixture
         var projectRoot = FindProjectRoot();
         Console.WriteLine($"Starting web server from {projectRoot}...");
 
-        var psi = new ProcessStartInfo
-        {
-            FileName = "npx.cmd",
-            Arguments = "live-server --no-browser --port=8081",
-            WorkingDirectory = projectRoot,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-        };
-
+        var psi = BuildProcessStartInfo(projectRoot);
         _serverProcess = new Process { StartInfo = psi };
-        _serverProcess.Start();
 
+        var stderr = new StringBuilder();
+        _serverProcess.ErrorDataReceived += (_, e) =>
+        {
+            if (e.Data != null) stderr.AppendLine(e.Data);
+        };
+        _serverProcess.OutputDataReceived += (_, _) => { };
+
+        _serverProcess.Start();
+        _serverProcess.BeginErrorReadLine();
+        _serverProcess.BeginOutputReadLine();
+
+        // Short wait to detect immediate crashes
+        Thread.Sleep(500);
+        if (_serverProcess.HasExited)
+        {
+            var err = stderr.ToString();
+            var code = _serverProcess.ExitCode;
+            _serverProcess.Dispose();
+            _serverProcess = null;
+            throw new InvalidOperationException(
+                $"Server process exited immediately (code {code}). Stderr:\n{err}");
+        }
+
+        // Poll until the server responds or timeout
         var timeout = DateTime.UtcNow.AddSeconds(15);
         while (DateTime.UtcNow < timeout)
         {
+            if (_serverProcess.HasExited)
+            {
+                var err = stderr.ToString();
+                var code = _serverProcess.ExitCode;
+                _serverProcess.Dispose();
+                _serverProcess = null;
+                throw new InvalidOperationException(
+                    $"Server process exited (code {code}) before becoming ready. Stderr:\n{err}");
+            }
+
             if (IsServerRunning())
             {
                 Console.WriteLine($"Web server is ready on {ServerUrl.Origin}");
@@ -79,13 +105,56 @@ public class ServerFixture
             Thread.Sleep(250);
         }
 
+        var diag = stderr.ToString();
         _serverProcess.Kill(entireProcessTree: true);
         _serverProcess.Dispose();
         _serverProcess = null;
 
         throw new InvalidOperationException(
-            "Web server failed to start within 15 seconds. " +
-            "Check that npx.cmd and live-server are available.");
+            $"Web server failed to start within 15 seconds.\nStderr:\n{diag}");
+    }
+
+    private static ProcessStartInfo BuildProcessStartInfo(string projectRoot)
+    {
+        // Prefer running live-server directly via node from local node_modules.
+        var liveServerJs = Path.Combine(projectRoot, "node_modules", "live-server", "live-server.js");
+        if (File.Exists(liveServerJs))
+        {
+            var nodeExe = FindOnPath("node.exe") ?? FindOnPath("node") ?? "node";
+            return new ProcessStartInfo
+            {
+                FileName = nodeExe,
+                Arguments = $"\"{liveServerJs}\" --no-browser --port=8081",
+                WorkingDirectory = projectRoot,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+            };
+        }
+
+        // Fallback: try npx (handles cases where live-server is not locally installed)
+        Console.WriteLine("live-server not found in node_modules, falling back to npx...");
+        return new ProcessStartInfo
+        {
+            FileName = "npx.cmd",
+            Arguments = "live-server --no-browser --port=8081",
+            WorkingDirectory = projectRoot,
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardError = true,
+            RedirectStandardOutput = true,
+        };
+    }
+
+    private static string? FindOnPath(string filename)
+    {
+        foreach (var dir in Environment.GetEnvironmentVariable("PATH")?.Split(Path.PathSeparator) ?? [])
+        {
+            var full = Path.Combine(dir.Trim(), filename);
+            if (File.Exists(full)) return full;
+        }
+        return null;
     }
 
     private static void KillServer()

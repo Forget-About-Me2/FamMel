@@ -36,7 +36,7 @@ import { exposeLocationsOnWindow } from './locations';
 import { exposeBackPackItemsOnWindow, backpack } from './backPackItems';
 import { exposeStoreOnWindow } from './store';
 import { exposeDebugMenuOnWindow } from './debugMenu';
-import { saveToSlot, loadFromSlot, hasSave, deleteSave, exportSave, importSave } from './saveLoad';
+import { saveToSlot, loadFromSlot, hasSave, deleteSave, exportSave, importSave, exposeSaveLoadOnWindow } from './saveLoad';
 
 // Shims FIRST — state variables and RNG that all other modules depend on
 exposeShimsOnWindow();
@@ -71,7 +71,7 @@ exposeLocationsOnWindow();
 exposeBackPackItemsOnWindow();
 exposeStoreOnWindow();
 exposeDebugMenuOnWindow();
-
+exposeSaveLoadOnWindow();
 
 // Expose gameScreen on window for inline scripts
 try {

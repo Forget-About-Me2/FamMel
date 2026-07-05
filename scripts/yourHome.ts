@@ -30,7 +30,7 @@ export function yourHome() {
             onphone = 0;
             setShopping(0);
         }
-        curtext = [...locjson["homeIntro"][1]];
+        curtext = locjson["homeIntro"]?.[1] ? [...locjson["homeIntro"][1]] : [...locjson["homeIntro"][0]];
     }
     curtext = printAlways(curtext);
     curtext = displayyourneed(curtext);
