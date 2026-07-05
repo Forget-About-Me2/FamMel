@@ -7,7 +7,7 @@ import { exposeShimsOnWindow } from './shims';
 import './helperFiles/documentFunctions';
 import { go, displayIntroSequence, gamestart } from './main';
 import { callHer, yourHome } from './yourHome';
-import { runtimeContext, runtimeContext } from './gameState/runtimeContext';
+import { runtimeContext } from './gameState/runtimeContext';
 import { gameScreen } from './gameScreen/gameScreen';
 import { gameSettings } from './settings/gameSettings';
 import { showSettingsScreen } from './settings/settingsScreen';
@@ -83,6 +83,9 @@ try {
 
 // Expose go on window for data-action delegated click handler
 (globalThis as any).go = go;
+
+// Expose runtimeContext on window for integration tests and legacy script-style callers
+(globalThis as any).runtimeContext = runtimeContext;
 
 // Wire up static UI elements
 document.getElementById("backpack-link")?.addEventListener("click", function (e) {

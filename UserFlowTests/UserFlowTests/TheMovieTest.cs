@@ -97,7 +97,7 @@ public class TheMovieTest {
         try {
           return typeof calledjsons !== 'undefined'
             && !!calledjsons['yourhome']
-            && !!calledjsons['yourhome']['store']
+            && !!calledjsons['yourhome']['yourhome']
             && typeof objQuotes !== 'undefined'
             && !!objQuotes
             && typeof general !== 'undefined'

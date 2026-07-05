@@ -77,7 +77,7 @@ public class DartsIntegrationTests
                 try {
                     return typeof calledjsons !== 'undefined'
                         && !!calledjsons['yourhome']
-                        && !!calledjsons['yourhome']['store']
+                        && !!calledjsons['yourhome']['yourhome']
                         && typeof darts !== 'undefined'
                         && !!darts
                         && !!darts['play']

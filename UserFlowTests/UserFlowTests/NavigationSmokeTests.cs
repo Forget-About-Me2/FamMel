@@ -170,8 +170,8 @@ public class NavigationSmokeTests
                 const finalTop = Array.isArray(locStack) ? String(locStack[0]) : '';
 
                 // Check the canonical mirror matches the legacy global
-                const canonical = Array.isArray(window.gameState?.LegacyLocStack)
-                    ? window.gameState.LegacyLocStack
+                const canonical = Array.isArray(window.runtimeContext?.LegacyLocStack)
+                    ? window.runtimeContext.LegacyLocStack
                     : [];
                 const parity = JSON.stringify(locStack) === JSON.stringify(canonical);
 
@@ -265,8 +265,8 @@ public class NavigationSmokeTests
 
                 // Canonical mirror should still match
                 const parity = JSON.stringify(locStack)
-                    === JSON.stringify(Array.isArray(window.gameState?.LegacyLocStack)
-                        ? window.gameState.LegacyLocStack
+                    === JSON.stringify(Array.isArray(window.runtimeContext?.LegacyLocStack)
+                        ? window.runtimeContext.LegacyLocStack
                         : []);
 
                 return JSON.stringify({ underflow, finalDepth, finalTop, currentTag, parity });
@@ -315,7 +315,7 @@ public class NavigationSmokeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
 
                 // --- SETUP: give companion and player different urge values ---
                 // Companion urge = 250, Player urge = 500.
@@ -381,7 +381,7 @@ public class NavigationSmokeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
 
                 // --- SETUP: companion urge = 250, player urge = 500 ---
                 window.bladurge = 250;       // companion's legacy urge (should NOT change)
@@ -451,7 +451,7 @@ public class NavigationSmokeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
 
                 // --- Simulate old-style code writing directly to globals ---
                 window.bladder = 321;         // companion bladder fill level
@@ -520,7 +520,7 @@ public class NavigationSmokeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
 
                 // Set a known canonical urge and force a pee decay path (> lose threshold => 10% decay).
                 gs.Player.setUrge(500);
@@ -597,7 +597,7 @@ public class NavigationSmokeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
 
                 // --- SETUP: simulate being on the phone at the store ---
                 // locStack[0] = 'gostore' triggers the phone-call branch in holdit()
@@ -726,7 +726,7 @@ public class NavigationSmokeTests
                 try {
                     return typeof calledjsons !== 'undefined'
                         && !!calledjsons['yourhome']
-                        && !!calledjsons['yourhome']['store']
+                        && !!calledjsons['yourhome']['yourhome']
                         && typeof objQuotes !== 'undefined'
                         && !!objQuotes
                         && typeof general !== 'undefined'

@@ -139,8 +139,8 @@ public class YourHomeIntegrationTests
                 success: success,
                 money: window.money,
                 attraction: window.attraction,
-                gameStateMoney: window.gameState.Money,
-                gameStateAttraction: window.gameState.Attraction
+                gameStateMoney: window.runtimeContext.Money,
+                gameStateAttraction: window.runtimeContext.Attraction
             });
         ")?.ToString();
 

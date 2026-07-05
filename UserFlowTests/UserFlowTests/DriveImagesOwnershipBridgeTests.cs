@@ -39,11 +39,11 @@ public class DriveImagesOwnershipBridgeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const keys = Object.keys(window.gameState.Imgs).sort();
+                const keys = Object.keys(window.runtimeContext.Imgs).sort();
                 const expected = ['Jennifer', 'Karen', 'Laura', 'Melissa'];
                 const exactKeys = JSON.stringify(keys) === JSON.stringify(expected);
                 const allEmptyMaps = expected.every(k => {
-                    const map = window.gameState.Imgs[k];
+                    const map = window.runtimeContext.Imgs[k];
                     return map && typeof map === 'object' && !Array.isArray(map) && Object.keys(map).length === 0;
                 });
 
@@ -71,7 +71,7 @@ public class DriveImagesOwnershipBridgeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
                 const canonicalBefore = JSON.stringify(gs.Imgs);
 
                 localStorage.setItem('imgs', JSON.stringify({
@@ -123,18 +123,18 @@ public class DriveImagesOwnershipBridgeTests
 
                 window.importimgs();
 
-                const importedCanonical = window.gameState.Imgs?.Jennifer?.pixdrive === 'j-drive';
-                const extraPreserved = window.gameState.Imgs?.ExtraGirl?.pixintro === 'extra-intro';
+                const importedCanonical = window.runtimeContext.Imgs?.Jennifer?.pixdrive === 'j-drive';
+                const extraPreserved = window.runtimeContext.Imgs?.ExtraGirl?.pixintro === 'extra-intro';
                 const defaultsStillPresent = ['Jennifer', 'Karen', 'Laura', 'Melissa']
-                    .every(k => !!window.gameState.Imgs[k]);
+                    .every(k => !!window.runtimeContext.Imgs[k]);
 
                 // Save snapshot, mutate live reference, then load to verify deep clone restore.
                 window.saveGame(0);
                 window.imgs.Jennifer.pixdrive = 'mutated-after-save';
                 window.loadGame(0);
 
-                const restoredFromSave = window.gameState.Imgs?.Jennifer?.pixdrive === 'j-drive';
-                const legacyParity = window.imgs?.Jennifer?.pixdrive === window.gameState.Imgs?.Jennifer?.pixdrive;
+                const restoredFromSave = window.runtimeContext.Imgs?.Jennifer?.pixdrive === 'j-drive';
+                const legacyParity = window.imgs?.Jennifer?.pixdrive === window.runtimeContext.Imgs?.Jennifer?.pixdrive;
 
                 return JSON.stringify({
                     importedCanonical,
@@ -180,7 +180,7 @@ public class DriveImagesOwnershipBridgeTests
                 };
                 localStorage.setItem('imgs', JSON.stringify(window.imgs));
 
-                const beforeCanonical = JSON.stringify(window.gameState.Imgs);
+                const beforeCanonical = JSON.stringify(window.runtimeContext.Imgs);
                 const beforeLegacy = JSON.stringify(window.imgs);
                 const beforeStored = localStorage.getItem('imgs');
 
@@ -191,7 +191,7 @@ public class DriveImagesOwnershipBridgeTests
 
                 return JSON.stringify({
                     threw,
-                    canonicalUnchanged: JSON.stringify(window.gameState.Imgs) === beforeCanonical,
+                    canonicalUnchanged: JSON.stringify(window.runtimeContext.Imgs) === beforeCanonical,
                     legacyUnchanged: JSON.stringify(window.imgs) === beforeLegacy,
                     storedUnchanged: localStorage.getItem('imgs') === beforeStored
                 });
@@ -222,7 +222,7 @@ public class DriveImagesOwnershipBridgeTests
 
         var preInit = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
                 const canonicalBefore = gs.HasWetTheCar;
                 window.wetthecar = 1;
                 return JSON.stringify({
@@ -252,7 +252,7 @@ public class DriveImagesOwnershipBridgeTests
 
         var postInit = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
                 const seededFromPreInit = gs.HasWetTheCar === 1;
 
                 window.wetthecar = 2;
@@ -298,9 +298,9 @@ public class DriveImagesOwnershipBridgeTests
                 window.loadGame(1);
 
                 return JSON.stringify({
-                    canonical: window.gameState.PicSet,
+                    canonical: window.runtimeContext.PicSet,
                     legacy: window.picset,
-                    parity: window.gameState.PicSet === window.picset
+                    parity: window.runtimeContext.PicSet === window.picset
                 });
             } catch (e) {
                 window.__testErrors = window.__testErrors || [];
@@ -359,7 +359,7 @@ public class DriveImagesOwnershipBridgeTests
                 try {
                     return typeof calledjsons !== 'undefined'
                         && !!calledjsons['yourhome']
-                        && !!calledjsons['yourhome']['store']
+                        && !!calledjsons['yourhome']['yourhome']
                         && typeof objQuotes !== 'undefined'
                         && !!objQuotes
                         && typeof general !== 'undefined'

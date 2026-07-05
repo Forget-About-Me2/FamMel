@@ -34,7 +34,7 @@ public class SettingsSexSceneOwnershipBridgeTests
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
                 // Setup: capture canonical defaults before initialization.
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
                 const before = {
                     images: gs.IsImagesEnabled,
                     stats: gs.IsStatsVisible,
@@ -102,7 +102,7 @@ public class SettingsSexSceneOwnershipBridgeTests
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
                 // Setup: instrument the canonical setter to catch accidental re-entry.
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
                 let imageSetterCalls = 0;
                 const originalSetImages = gs.setIsImagesEnabled.bind(gs);
                 gs.setIsImagesEnabled = function (value) {
@@ -179,7 +179,7 @@ public class SettingsSexSceneOwnershipBridgeTests
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
                 // Setup: instrument the canonical sexActions setter to guard against bridge recursion.
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
                 let sexActionSetterCalls = 0;
                 const originalSetSexActions = gs.setSexActions.bind(gs);
                 gs.setSexActions = function (value) {
@@ -243,7 +243,7 @@ public class SettingsSexSceneOwnershipBridgeTests
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
                 // Setup: save a known-good snapshot through the public API.
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
                 window.enableimages = 0;
                 window.showstats = 0;
                 window.multiplemoves = 0;
@@ -373,7 +373,7 @@ public class SettingsSexSceneOwnershipBridgeTests
                 try {
                     return typeof calledjsons !== 'undefined'
                         && !!calledjsons['yourhome']
-                        && !!calledjsons['yourhome']['store']
+                        && !!calledjsons['yourhome']['yourhome']
                         && typeof objQuotes !== 'undefined'
                         && !!objQuotes
                         && typeof general !== 'undefined'

@@ -33,7 +33,7 @@ public class AttractionShynessBridgeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
 
                 // Setup: establish a known prior canonical value.
                 // window.attraction = 10 routes through the canonical setter post-init,
@@ -77,7 +77,7 @@ public class AttractionShynessBridgeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
 
                 // Setup: explicit baseline before initialization.
                 const canonicalBefore = gs.Shyness;
@@ -120,7 +120,7 @@ public class AttractionShynessBridgeTests
 
         var preInitResult = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
                 const canonicalBefore = gs.Attraction;
                 const legacyBefore = window.attraction;
 
@@ -159,7 +159,7 @@ public class AttractionShynessBridgeTests
 
         var postStartResult = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
                 return JSON.stringify({
                     canonical: gs.Attraction,
                     last: gs.LastAttraction,
@@ -193,7 +193,7 @@ public class AttractionShynessBridgeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
 
                 // Setup: lock known baseline.
                 window.setAttraction(50);
@@ -242,7 +242,7 @@ public class AttractionShynessBridgeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
                 const initial = gs.Attraction;
 
                 // Act: successive legacy writes should advance LastAttraction one step behind.
@@ -294,7 +294,7 @@ public class AttractionShynessBridgeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
 
                 // Setup: set a known in-range value.
                 window.setAttraction(20);
@@ -350,7 +350,7 @@ public class AttractionShynessBridgeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
 
                 // Setup: direct global writes should route through canonical shyness setter semantics.
                 window.shyness = 70;
@@ -417,7 +417,7 @@ public class AttractionShynessBridgeTests
 
         var result = ((IJavaScriptExecutor)_driver).ExecuteScript(@"
             try {
-                const gs = window.gameState;
+                const gs = window.runtimeContext;
                 const originalLegacySetter = window.setAttraction;
                 let legacySetterCalls = 0;
 
@@ -497,7 +497,7 @@ public class AttractionShynessBridgeTests
                 try {
                     return typeof calledjsons !== 'undefined'
                         && !!calledjsons['yourhome']
-                        && !!calledjsons['yourhome']['store']
+                        && !!calledjsons['yourhome']['yourhome']
                         && typeof objQuotes !== 'undefined'
                         && !!objQuotes
                         && typeof general !== 'undefined'
