@@ -4,6 +4,8 @@ using OpenQA.Selenium.Interactions;
 using UserFlowTests;
 using AwesomeAssertions;
 
+namespace UserFlowTests;
+
 [TestFixture]
 public class PickherupTest {
   private IWebDriver driver;
