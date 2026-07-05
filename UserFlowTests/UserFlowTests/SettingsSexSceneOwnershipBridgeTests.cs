@@ -10,7 +10,7 @@ namespace UserFlowTests;
 [TestFixture]
 public class SettingsSexSceneOwnershipBridgeTests
 {
-    private const string BaseUrl = "http://127.0.0.1:8080/index.html?seed=20260422";
+    private const string BaseUrl = ServerUrl.Origin + "/index.html?seed=20260422";
     private IWebDriver _driver = null!;
 
     [SetUp]

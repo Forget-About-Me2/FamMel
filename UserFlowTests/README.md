@@ -31,10 +31,9 @@ For high-risk refactors, run the full suite twice to confirm stability.
 
 1. Install dependencies:
    - `npm install`
-2. Start the dev server (required by Selenium tests):
-   - `npm run dev`
-3. Ensure the game is reachable at:
-   - `http://127.0.0.1:8080`
+
+The test suite automatically starts a dedicated web server on port 8081
+before running and stops it when finished. No manual server setup needed.
 
 ## Common Commands
 

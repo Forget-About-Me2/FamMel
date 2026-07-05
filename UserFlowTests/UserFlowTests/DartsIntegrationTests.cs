@@ -6,7 +6,7 @@ namespace UserFlowTests;
 [TestFixture]
 public class DartsIntegrationTests
 {
-    private const string BaseUrl = "http://127.0.0.1:8080/index.html?seed=20260416";
+    private const string BaseUrl = ServerUrl.Origin + "/index.html?seed=20260416";
     private IWebDriver _driver = null!;
 
     [SetUp]

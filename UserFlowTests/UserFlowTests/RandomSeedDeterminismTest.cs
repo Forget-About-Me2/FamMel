@@ -24,7 +24,7 @@ public class RandomSeedDeterminismTest
     [Test]
     public void SeededRandom_IsRepeatable_AndDifferentAcrossSeeds()
     {
-        _driver.Navigate().GoToUrl("http://localhost:8080?seed=1");
+        _driver.Navigate().GoToUrl(ServerUrl.Origin + "/index.html?seed=1");
 
         var seqA = SequenceForSeed(20260307, 12, 1000);
         var seqB = SequenceForSeed(20260307, 12, 1000);
@@ -37,7 +37,7 @@ public class RandomSeedDeterminismTest
     [Test]
     public void QueryParamSeed_IsDeterministicAcrossReloads()
     {
-        _driver.Navigate().GoToUrl("http://localhost:8080?seed=4242");
+        _driver.Navigate().GoToUrl(ServerUrl.Origin + "/index.html?seed=4242");
         var first = SequenceFromCurrentState(10, 500);
 
         _driver.Navigate().Refresh();

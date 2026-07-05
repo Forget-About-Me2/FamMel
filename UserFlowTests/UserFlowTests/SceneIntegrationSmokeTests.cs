@@ -6,7 +6,7 @@ namespace UserFlowTests;
 [TestFixture]
 public class SceneIntegrationSmokeTests
 {
-    private const string BaseUrl = "http://127.0.0.1:8080/index.html?seed=20260308";
+    private const string BaseUrl = ServerUrl.Origin + "/index.html?seed=20260308";
     private IWebDriver _driver = null!;
 
     private static readonly string[] SceneFunctions =

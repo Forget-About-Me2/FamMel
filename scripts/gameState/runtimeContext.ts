@@ -4,6 +4,7 @@ import {Person} from "./Person";
 import { randomInt } from "../shims";
 import { yourbladurge, yourcustomurge, yourtummy, ymaxtummy, ymaxbeer, ydrankbeer, ynowpeeing, yourbladder } from '../yourbladder';
 import { bladurge } from '../bladder';
+import { hasWetTheCar } from '../drive';
 import { girlname } from '../quotes';
 import {Companion} from "./Companion";
 import {PersonSettings} from "../settings/personSettings";
@@ -334,6 +335,11 @@ export class RuntimeContext {
             startMaxAlcohol: 750,
             minPercentage: 70
         }, companionName);
+
+        // Seed canonical HasWetTheCar from legacy pre-init value so that
+        // pre-init writes to window.wetthecar are reflected in canonical state
+        // once the game initializes.
+        this.HasWetTheCar = hasWetTheCar;
 
         this.initialized = true;
     }
