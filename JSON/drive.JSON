@@ -11,10 +11,10 @@
     "choices": [
       ["holdit", "Ask her to hold it."],
       ["allowpee", "Let her go."],
-      ["driveout", "Continue..."]
+      ["driveOut", "Continue..."]
     ]
   },
-  "driveout": {
+  "driveOut": {
     "intro": [
       [
         "girlname0"

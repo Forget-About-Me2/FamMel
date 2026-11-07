@@ -28,7 +28,7 @@ function theMakeOut() {
             curtext = printList(curtext, makeOut["theMakeOut"][1]);
             sayText(curtext);
             listenerList.push([[failMakeOut, "There's this nice secluded spot I know..."], "failMakeOut"]);
-            listenerList.push([[driveout, "Ummmm... Actually I'm not sure."]]);
+            listenerList.push([[driveOut, "Ummmm... Actually I'm not sure."], "driveOut"]);
             cListenerGenList(listenerList);
             return
         }
@@ -68,7 +68,7 @@ function failMakeOut() {
     curtext = displayneed(curtext);
     curtext = displayyourneed(curtext);
     sayText(curtext);
-    cListenerGen([driveout, "Okay. Sorry"], "driveOut");
+    cListenerGen([driveOut, "Okay. Sorry"], "driveOut");
 }
 
 //Watch the stars with her.

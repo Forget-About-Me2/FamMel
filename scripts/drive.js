@@ -31,12 +31,12 @@ function leavehm() {
 }
 
 //TODO fix the go to the bar like she asked
-function driveout() {
+function driveOut() {
     allowItems = 1;
     let curtext = [];
-    if (locstack[0] !== "driveout") {
-        pushloc("driveout");
-        locationMCSetup("driveout", drive);
+    if (locstack[0] !== "driveOut") {
+        pushloc("driveOut");
+        locationMCSetup("driveOut", drive);
         curtext = printIntro(curtext, 0);
         suggestedloc = "none";
         if (wetthecar)

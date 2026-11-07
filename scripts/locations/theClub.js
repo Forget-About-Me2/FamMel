@@ -21,11 +21,11 @@ function theClub() {
     allowItems = 1;
     let curtext = [];
     let listenerList = []
-    if (locations.theClub.visited && locstack[0] === "driveout" && thetime < clubclosingtime) {
+    if (locations.theClub.visited && locstack[0] === "driveOut" && thetime < clubclosingtime) {
         curtext = printList(curtext, club["theClub"][0]);
         if (haveItem("theClubKey"))
             listenerList.push([[reClub, sharedLoc["choices"]["returnKey"]], "reClub"]);
-        listenerList.push([[driveout, general["continue"]], "driveOut"]);
+        listenerList.push([[driveOut, general["continue"]], "driveOut"]);
     } else if ((thetime < clubclosingtime) || locstack[0] === "theClub") {
             if (locstack[0] !== "theClub" && locstack[0] !== "doDance") {
                 curtext = printList(curtext, club["theClub"][1]);

@@ -56,7 +56,7 @@ function nextstop() {
     let curtext = printList([], driveRound["nextStop"]);
     curtext = displayneed(curtext);
     sayText(curtext);
-    cListenerGen([driveout, "Continue..."], "driveAround");
+    cListenerGen([driveOut, "Continue..."], "driveAround");
 }
 
 function drivetell() {
@@ -66,7 +66,7 @@ function drivetell() {
     sayText(curtext);
     cListenerGenList ([
         [[drivePee, driveRound["choices"]["youCanNotHold"]], "drivePee"],
-        [[driveout, driveRound["choices"]["youNextStop"]], "driveOut"]
+        [[driveOut, driveRound["choices"]["youNextStop"]], "driveOut"]
     ]);
 }
 
@@ -84,7 +84,7 @@ function drivePee() {
         listenerList.push([[function () {
         ypeein("vase");
     }, driveRound["choices"]["yPeeVase"]], "yPeeVase"]);
-    listenerList.push([[driveout, driveRound["choices"]["yHaveNothing"]], "yHaveNothing"]);
+    listenerList.push([[driveOut, driveRound["choices"]["yHaveNothing"]], "yHaveNothing"]);
     sayText(curtext);
     cListenerGenList(listenerList);
 }

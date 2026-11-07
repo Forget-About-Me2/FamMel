@@ -1,7 +1,8 @@
 # version 0.5.6
 * Improve the error pop up's output to be more readable for debugging
 * Fixed the game breaking when drinking champagne with her bladder limit is reached
-* 
+* Fixed the game breaking when entering the makeOut with not enough attraction
+
 # version 0.5.5
 * Fix selection of custom girl in settings
 * You no longer teleport to the car on wetting in the elevator
