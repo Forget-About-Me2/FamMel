@@ -33,7 +33,7 @@ function setErrorPopup(data){
         "<p>Issues with the game can be reported through <a href='https://github.com/Forget-About-Me2/FamMel/issues'>github</a></p>"+
         "<p>When doing so please be as detailed as possible about what caused the error.</p>"+
         "<p>In the box below is some extra error information that can help in solving the issue, please include in any report.</p>"+
-        "<div id='errorMessage'>"+ data + "</div>" +
+        "<pre id='errorMessage'>"+ data + "</pre>" +
         "<br> <button id='copyErrorMessage' onclick='copyErrorText()'>Copy text</button>"
 }
 
