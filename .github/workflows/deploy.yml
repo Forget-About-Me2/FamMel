@@ -1,0 +1,35 @@
+name: Deploy via FTP
+
+# master -> live server, dev -> test server
+on:
+  push:
+    branches: [master, dev]
+  workflow_dispatch:
+
+# Never run two deploys to the same server at once
+concurrency:
+  group: ftp-deploy-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Upload to ${{ github.ref_name == 'master' && 'live' || 'test' }} server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ github.ref_name == 'master' && secrets.PROD_FTP_USERNAME || secrets.DEV_FTP_USERNAME }}
+          password: ${{ github.ref_name == 'master' && secrets.PROD_FTP_PASSWORD || secrets.DEV_FTP_PASSWORD }}
+          protocol: ftp
+          server-dir: /htdocs/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.idea/**
+            .github/**
+            UserFlowTests/**
+            Dockerfile
+            *.md
