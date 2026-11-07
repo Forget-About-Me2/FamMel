@@ -7,7 +7,8 @@ namespace UserFlowTests
     {
         public static By Flirt(FlirtLevel level)
         {
-            return XPath("//a[contains(@href, 'flirt_" + level.ToString().ToLower().First() + "')]");
+            var suffix = level.ToString().ToLower().First();
+            return Id("flirt_" + suffix);
         }
 
         public static By Attraction()

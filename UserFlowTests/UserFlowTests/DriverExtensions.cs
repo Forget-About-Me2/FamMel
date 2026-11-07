@@ -1,37 +1,67 @@
-﻿using OpenQA.Selenium;
+﻿using System.Diagnostics;
+using OpenQA.Selenium;
 
 namespace UserFlowTests
 {
     public static class DriverExtensions
     {
-        public static IWebElement FindHighestFlirt(this IWebDriver driver)
+        extension(WebDriver driver)
         {
-            if (driver.TryFindElement(MelissaBy.Flirt(FlirtLevel.High), out var highFlirt))
+            public IWebElement FindHighestFlirt()
             {
-                var attraction = Int32.Parse(driver.FindElement(MelissaBy.Attraction()).Text);
-                var shyness = Int32.Parse(driver.FindElement(MelissaBy.Shyness()).Text);
-                if (attraction > 35 && shyness < 70)
+                if (driver.TryFindElement(MelissaBy.Flirt(FlirtLevel.High), out var highFlirt))
                 {
-                    return highFlirt!;
+                    var attraction = Int32.Parse(driver.FindElement(MelissaBy.Attraction()).Text);
+                    var shyness = Int32.Parse(driver.FindElement(MelissaBy.Shyness()).Text);
+                    if (attraction > 35 && shyness < 70)
+                    {
+                        return highFlirt!;
+                    }
+
+                    return driver.FindElement(MelissaBy.Flirt(FlirtLevel.Low));
                 }
 
-                return driver.FindElement(MelissaBy.Flirt(FlirtLevel.Low));
+                return driver.FindElement(MelissaBy.Flirt(FlirtLevel.Medium));
             }
 
-            return driver.FindElement(MelissaBy.Flirt(FlirtLevel.Medium));
-        }
-
-        public static bool TryFindElement(this IWebDriver driver, By by, out IWebElement? element)
-        {
-            try
+            public bool TryFindElement(By by, out IWebElement? element)
             {
-                element = driver.FindElement(by);
-                return true;
+                try
+                {
+                    element = driver.FindElement(by);
+                    return true;
+                }
+                catch (NoSuchElementException)
+                {
+                    element = null;
+                    return false;
+                }
             }
-            catch (NoSuchElementException)
+
+            public void ClickWhenInteractable(By by, int timeoutSeconds = 10)
             {
-                element = null;
-                return false;
+                var stopWatch = Stopwatch.StartNew();
+                var timeOutTimeSpan = TimeSpan.FromSeconds(timeoutSeconds);
+                Exception? lastError = null;
+
+                while (stopWatch.Elapsed < timeOutTimeSpan)
+                {
+                    try
+                    {
+                        var element = driver.FindElement(by);
+                        if (element is { Displayed: true, Enabled: true })
+                        {
+                            element.Click();
+                            return;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        lastError = ex;
+                    }
+                }
+
+                throw new WebDriverTimeoutException($"Timed out waiting to click interactable element: {by}", lastError);
             }
         }
     }
