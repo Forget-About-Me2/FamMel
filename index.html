@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
 <!-- TODO sort out imports?-->
+    <script src="scripts/helperFunctions.js"></script>
     <script src="scripts/main.js"></script>
     <script src="scripts/quotes.js"></script>
     <script src="scripts/animation.js"></script>
@@ -24,7 +25,7 @@
     <script src="scripts/locations.js"></script>
     <script src="scripts/games/darts.js"></script>
     <script src="scripts/fuckHer.js"></script>
-    <script src="scripts/debugFunctions.js"></script>
+    <script src="scripts/debugMenu.js"></script>
     <script src="scripts/pop-up.js"></script>
     <script src="scripts/validation.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
@@ -49,7 +50,10 @@
     </div>
     <div id="titlebar">
         <div id="engine">Game Engine 3.2a by drw</div>
-        <div id="version">V0.5.5: 4 September 2025</div>
+        <div id="version">V0.5.6: 8 November 2026</div>
+    </div>
+    <div id="debugMenuButton">
+        <button class="itembtn">Debug menu</button>
     </div>
     <br>
     <hr>
@@ -64,7 +68,7 @@
             <ul id="choices" class="choices-start"></ul>
             <pre style="padding-top: 13vh;padding-left:30vw;"><br>  ((<br>  -))<br>  /\) <br> ( |)<br>   \ \<br>   _/ )<br>  //-/<br>  ||<br>  d/<br></pre>
             <br><br><p style="text-align: center"> Follow this project on github:</p>
-            <p style="text-align: center"><a href="https://github.com/FamTroder/FamMel"><img src="icons/GitHub-Mark-32px.png" ></a></p>
+            <p style="text-align: center"><a href="https://github.com/FamTroder/FamMel"><img src="icons/GitHub-Mark-32px.png"  alt="Github logo"></a></p>
         </div>
         <a href="javascript:backpack()"><img id="backpack" src="icons/backpack.png" alt="Picture of girl" class="pic"></a>
     </div>
@@ -98,15 +102,26 @@
     </div>
 <script>
 
+    //Converts a stack trace to the Node/Chrome format with relative links to make the output consistent
+    // and usable with stacktrace explorers.
+    function formatStack(stack) {
+        const origin = location.origin + "/";
+        return stack.split("\n").map(line => {
+            line = line.split(origin).join("");
+            const m = line.match(/^(.*)@(.+:\d+:\d+)$/); // Safari/Firefox: name@file:line:col
+            return m ? `    at ${m[1] || "<anonymous>"} (${m[2]})` : line;
+        }).join("\n");
+    }
+
     window.onerror = (errorMsg, url, lineNumber, column, errorObj) => {
         const message = 'Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
-            + ' Column: ' + column + ' StackTrace: \n' + errorObj.stack;
+            + ' Column: ' + column + ' StackTrace: \n' + formatStack(errorObj.stack);
         setErrorPopup(message)
     }
     window.onunhandledrejection = (message) => {
         let reason = message.reason;
         if (reason.stack !== undefined){
-            reason = reason.stack;
+            reason = formatStack(reason.stack);
         }
         setErrorPopup(reason);
     }

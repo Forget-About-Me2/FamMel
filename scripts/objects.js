@@ -301,7 +301,7 @@ const playOnly = ["yourhome", "gostore", "callher"]
 
 //Locations where drinkitems can be used
 //This isn't used, but it's a handy list, might be useful for later
-const drinkLoc = ["pickup", "driveout", "domovie",
+const drinkLoc = ["pickup", "driveOut", "domovie",
     "thebar", "theclub", "themakeout", "thewalk", "thebeach", "theyard",
     "thehottub", "darkmovie", "photogame", "drinkinggame", "thehome"]
 
@@ -824,7 +824,7 @@ function champagneNow() {
             curtext = showneed(curtext);
             curtext.push(pickrandom(drinklines["fillChampBad"]));
             champagnecounter = 6;
-            curtext = printList(drinklines[5]);
+            curtext = printList(curtext, drinklines["champagne"][5]);
         }
     } else if (objects["champ-glass"].value >= 2) {
         curtext.push("You get out the glasses and champagne and fill up both glasses");

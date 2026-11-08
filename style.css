@@ -54,6 +54,12 @@ text {
     float: right;
 }
 
+#debugMenuButton {
+    display: none;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 #gamescreen {
     display: block;
     height: 90%;

@@ -81,7 +81,7 @@ function youpee() {
         curtext = printList(curtext, ypeelines["yourhome"]);
         peed = 1
     } else if (locstack[0] === "theHome" ||
-        locstack[0] === "thebedroom" || locstack[0] === "pickup" || locstack[0] === "fuckher6") {
+        locstack[0] === "theBedroom" || locstack[0] === "pickup" || locstack[0] === "fuckher6") {
         if(locstack[0] !== "fuckher6") {
             curtext = printList(curtext, ypeelines["thehome"][0]);
         }
@@ -209,7 +209,7 @@ function ypeein(item){
             yneedtype === 2 && attraction > 30){
             if (yneedtype === 2) {
                 // if you're desperate print a quote about giving her the item so you can focus on your trousers
-                if (locstack[0] === "driveout")
+                if (locstack[0] === "driveOut")
                     //The quote is slightly different when you're driving
                     curtext = printList(curtext, list[1]);
                 else
@@ -375,7 +375,7 @@ function wetyourself() {
         spurtedyourself(curtext);
     } else {
         yspurtthresh = 3;
-        if (locstack[0] === "driveout")
+        if (locstack[0] === "driveOut")
             cListenerGen([wetyourself2c, "Continue ..."], "wetyourself");
         else if (locstack[0] === "themakeout")
             cListenerGen([wetyourself2m, "Continue ..."], "wetyourself");

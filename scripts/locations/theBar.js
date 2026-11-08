@@ -22,13 +22,13 @@ function thebar(){
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
-    if (locstack[0] === "driveout" && locations.theBar.visited && thetime < barclosingtime){
+    if (locstack[0] === "driveOut" && locations.theBar.visited && thetime < barclosingtime){
         curtext = printList(curtext, bar["theBar"][0]);
         sayText(curtext);
         if (haveItem("theBarKey")) {
             listenerList.push([[rebar, sharedLoc["choices"]["returnKey"]], "reBar"]);
         }
-        listenerList.push([[driveout, general["continue"]], "driveOut"]);
+        listenerList.push([[driveOut, general["continue"]], "driveOut"]);
     } else if (!((thetime < barclosingtime) || locstack[0] === "thebar")) itsClosed("theBar", darkBar, "darkBar");
     else {
         if (locstack[0] !== "thebar"){

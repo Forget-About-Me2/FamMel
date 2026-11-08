@@ -25,10 +25,10 @@ function theTheatre(){
     allowItems = 1;
     let curtext = [];
     let listenerList = [];
-    if (locations.theTheatre.visited && locstack[0] === "driveout" && thetime < theaterclosingtime){
+    if (locations.theTheatre.visited && locstack[0] === "driveOut" && thetime < theaterclosingtime){
         curtext = printList(curtext, theatre["theatre"][0]);
         sayText(curtext);
-        listenerList.push([[driveout, general["continue"]], "driveOut"]);
+        listenerList.push([[driveOut, general["continue"]], "driveOut"]);
         if (haveItem("theTheatreKey")) {
             listenerList.push([[reTheatre, sharedLoc["choices"]["returnKey"]], "reTheatre"]);
         }
