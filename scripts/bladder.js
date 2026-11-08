@@ -296,7 +296,7 @@ function indepee(curtext = [], called = false) {
     if (haveherpurse) {
         haveherpurse = 0;
     } else if (locstack[0] === "thehome" ||
-        locstack[0] === "thebedroom" ||
+        locstack[0] === "theBedroom" ||
         locstack[0] === "pickup" ||
         locstack[0] === "fuckher6") {
         curtext.push(peelines["thehome"][0]);
@@ -305,7 +305,7 @@ function indepee(curtext = [], called = false) {
         locstack[0] === "theHotTub" ||
         locstack[0] === "driveOut" ||
         locstack[0] === "thehome" ||
-        locstack[0] === "thebedroom" ||
+        locstack[0] === "theBedroom" ||
         locstack[0] === "theWalk" || locstack[0] === "theYard" || locstack[0] === "theBeach") {
         curtext.push(peelines["noneavailable"][0]);
     } else
@@ -325,7 +325,7 @@ function indepee(curtext = [], called = false) {
         curtext = displayneed(curtext);
         curtext = interpbladder(curtext);
     } else if (locstack[0] === "thehome" ||
-        locstack[0] === "thebedroom" ||
+        locstack[0] === "theBedroom" ||
         locstack[0] === "fuckher6") {
         curtext.push(peelines["thehome"][1]);
         flushdrank();
@@ -730,7 +730,7 @@ function allowpee() {
     let listenerList = [];
     curtext.push(needs["allowpee"][0]);
     curtext.push(needs["allowpee"][1]);
-    if (locstack[0] === "fuckher6" || locstack[0] === "thehome" || locstack[0] === "thebedroom" || locstack[0] === "darkbar"
+    if (locstack[0] === "fuckher6" || locstack[0] === "thehome" || locstack[0] === "theBedroom" || locstack[0] === "darkbar"
         || locstack[0] === "pickup" || locstack[0] === "darkclub" || locstack[0] === "darkbar") {
         listenerList.push([[indepee, "Continue..."], "indePee"]);
     } else {
