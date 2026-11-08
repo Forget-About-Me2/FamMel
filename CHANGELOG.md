@@ -2,6 +2,8 @@
 * Improve the error pop up's output to be more readable for debugging
 * Fixed the game breaking when drinking champagne with her bladder limit is reached
 * Fixed the game breaking when entering the makeOut with not enough attraction
+* Fixed a issue where the location for the bedroom was not recognised correctly.
+* Add debug menu
 
 # version 0.5.5
 * Fix selection of custom girl in settings

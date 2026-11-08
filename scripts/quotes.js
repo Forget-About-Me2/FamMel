@@ -275,7 +275,7 @@ function sayText(lines){
     let result = "";
     try {
         lines.forEach(item => {
-            if (item === undefined || item === "") {
+            if (item === undefined) {
                 console.error("lines for say text not properly defined, lines:", lines);
                 console.log(lines);
             }

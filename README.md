@@ -11,9 +11,8 @@ The game is also offered on the following sites:
 
 
 # Debugging
-There is a list of usefull debug functions defined in the "debugFunctions.js" file.
-These functions are added to a debug object that can be called from the console when running the game.
-I.e. to get all items you can use 
-`Debug.allItems()`
+A debug menu is available, the button appears after clicking on the version text 3 times.
+The debug menu shows the location stack with buttons to navigate
+There is a list of useful debug functions, with descriptions on hover.
+And a list of the important stats.
 
-To get a list of all functions use `Debug.help()`

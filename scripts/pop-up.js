@@ -11,13 +11,12 @@ function setCloseButton(){
     const popUp = document.getElementById("pop-up");
     const btn = document.getElementById("close-pop-up");
     btn.style.display = "flex"
-    btn.onclick = function(){
-        popUp.style.display = "none";
-    }
+    btn.onclick = closePopUp;
+    // close when clicking outside the popup.
     window.onclick = function(event){
-        if (event.target === popUp)
-            popUp.style.display = "none";
-        window.onclick = null; // Remove the event listener after closing
+        if (event.target === popUp){
+            closePopUp()
+        }
     }
 }
 
@@ -49,12 +48,10 @@ async function copyErrorText(){
     )
 }
 
+function closePopUp(){
+    const popUp = document.getRequiredElementById("pop-up");
+    popUp.style.display = "none";
+    window.onclick = null;
+}
+
 const delay = ms => new Promise(res => setTimeout(res, ms));
-
-
-// window.onunhandledrejection = (errorMsg, url, lineNumber, column, errorObj) => {
-//     console.log("fuck");
-//     const message = 'Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
-//         + ' Column: ' + column + ' StackTrace: ' + errorObj;
-//     setErrorPopup(message)
-// }
